@@ -19,8 +19,6 @@ class MuleSoftApiHub:
         requested_amt = raw_payload.get("requested_amt", 0)
         origin = raw_payload.get("origin", "UNKNOWN_GATEWAY")
         tier = raw_payload.get("tier", "GREEN")
-        
-        # Capture the work profile from the simulator payload explicitly!
         work_profile = raw_payload.get("work_profile", "EOI")
 
         computed_record = self.agent.calculate_underwriting_decision(

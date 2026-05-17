@@ -11,10 +11,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. CAREFULLY REVIEWED CORPORATE BRANDING STYLES
+# 2. DESIGN SYSTEM CSS OVERRIDES
 st.markdown("""
     <style>
-        /* Baseline Layout Overrides */
         .stApp { background-color: #f7f9fc !important; color: #2d3748 !important; }
         [data-testid="collapsedControl"] { display: none !important; }
         #MainMenu, header { visibility: hidden; }
@@ -22,7 +21,6 @@ st.markdown("""
         .block-container { padding-top: 1.5rem !important; padding-bottom: 0rem !important; }
         h1, h2, h3, h4, p, span, label, button { font-family: 'Segoe UI', -apple-system, sans-serif !important; }
         
-        /* Brand Header Layout */
         .brand-container {
             display: flex; align-items: center; gap: 16px;
             padding: 0px 0px 16px 0px; border-bottom: 2px solid #00a5e6; margin-bottom: 16px;
@@ -34,13 +32,11 @@ st.markdown("""
         }
         .brand-text { font-size: 24px; font-weight: 700; color: #054c86; }
         
-        /* Clear Horizontal Domain Filter Bar */
         .filter-panel {
             background-color: #ffffff; border: 1px solid #e2e8f0; 
             padding: 12px 20px; border-radius: 6px; margin-bottom: 20px;
         }
         
-        /* Right Side Details Viewport - Forces identical starting line with zero alignment push */
         .viewer-box { 
             border-left: 2px solid #cbd5e0; 
             padding-left: 28px; 
@@ -48,20 +44,18 @@ st.markdown("""
             padding-top: 0px !important;
         }
         
-        /* Ledger Button Controls */
         .stButton > button {
             width: 100% !important; text-align: left !important; padding: 10px 14px !important;
             border-radius: 4px !important; border: 1px solid #e2e8f0 !important;
             background-color: #ffffff !important; margin-bottom: 3px !important;
         }
         
-        /* Metrics & Panels */
         .telemetry-card {
-            background-color: #ffffff; border: 1px solid #e2e8f0; padding: 20px;
-            border-radius: 4px; margin-bottom: 16px;
+            background-color: #ffffff; border: 1px solid #e2e8f0; padding: 16px;
+            border-radius: 4px; margin-bottom: 12px;
         }
-        .telemetry-label { color: #718096; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        .telemetry-value { color: #054c86; font-size: 24px; font-weight: 700; }
+        .telemetry-label { color: #718096; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .telemetry-value { color: #054c86; font-size: 20px; font-weight: 700; }
         
         .section-header { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #718096; margin-top: 14px; margin-bottom: 4px; }
         .data-text { font-size: 14px; color: #2d3748; background-color: #ffffff; padding: 12px 16px; border-radius: 4px; border: 1px solid #e2e8f0; line-height: 1.5; }
@@ -70,8 +64,6 @@ st.markdown("""
             background-color: #ffffff; border: 1px dashed #cbd5e0; padding: 60px;
             text-align: center; color: #718096; border-radius: 6px;
         }
-
-        /* Corporate Footer Styling */
         .aflac-footer {
             margin-top: 50px; padding: 24px 0px; border-top: 1px solid #cbd5e0;
             font-size: 11px; color: #718096; line-height: 1.6;
@@ -81,7 +73,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. INITIALIZE CACHED BACKEND INFRASTRUCTURE
+# 3. CONSTRUCT RECOVERY ARCHITECTURE INFRASTRUCTURE
 @st.cache_resource
 def get_backend_infrastructure():
     _hub = MuleSoftApiHub()
@@ -90,7 +82,7 @@ def get_backend_infrastructure():
 
 hub, simulator = get_backend_infrastructure()
 
-# 4. BRAND HEADER
+# 4. BRAND VIEWPORT HEADER
 st.markdown("""
 <div class="brand-container">
     <div class="brand-logo-vector"></div>
@@ -108,13 +100,13 @@ if os.path.exists(state_file):
     except:
         cases_data = []
 
-# Action Toolbar Layout
+# Action Controller Setup
 col_spacer, col_action = st.columns([3, 1])
 with col_action:
     if st.button("🔄 Initialize System Batch Sync", type="primary"):
         with st.spinner("Processing background stream data pipeline..."):
             hub.clear_ledger()
-            simulator.simulate_batch_stream(30)
+            simulator.simulate_batch_stream(50)
             if os.path.exists(state_file):
                 with open(state_file, 'r') as f:
                     fresh_data = json.load(f)
@@ -122,7 +114,6 @@ with col_action:
                         st.session_state.active_case_id = fresh_data[0]['id']
         st.rerun()
 
-# 5. TAB SYSTEM VIEWPORTS
 tab_workbench, tab_telemetry = st.tabs(["Bionic Underwriter Workbench", "Operational Telemetry Platform"])
 
 # ==========================================
@@ -139,11 +130,11 @@ with tab_workbench:
     else:
         st.markdown("### Operational Case Management Workspace")
         
-        # Radio Selector Panel Out of Column Scroll Boundaries
+        # Horizontal Domain Selection Control
         st.markdown('<div class="filter-panel">', unsafe_allow_html=True)
         filter_type = st.radio(
             "Select Global Workspace Domain Filter:",
-            ["ALL", "EOI", "ABSENCE", "BILLING"],
+            ["ALL", "EOI", "ABSENCE", "BILLING", "COB", "PORTABILITY"],
             horizontal=True,
             key="workload_filter"
         )
@@ -152,28 +143,26 @@ with tab_workbench:
         if not isinstance(cases_data, list):
             cases_data = []
 
-        # Case-Insensitive Matching Block with Structural Fallbacks
+        # Granular Case-Insensitive Matching Layout Block
         filtered_cases = []
         for c in cases_data:
             if isinstance(c, dict):
-                # Fallback Sequence A: Extract via common key targets
                 w_profile = str(c.get('work_profile', c.get('profile', ''))).strip().upper()
                 case_id = str(c.get('id', '')).upper()
                 
-                # Fallback Sequence B: If key structure is missing, deduce from semantic ID prefixes
                 if not w_profile:
                     if "EOI" in case_id: w_profile = "EOI"
                     elif "ABSENCE" in case_id: w_profile = "ABSENCE"
                     elif "BILLING" in case_id: w_profile = "BILLING"
+                    elif "COB" in case_id: w_profile = "COB"
+                    elif "PORTABILITY" in case_id: w_profile = "PORTABILITY"
 
                 if filter_type == "ALL" or w_profile == str(filter_type).upper():
                     filtered_cases.append(c)
         
-        # Diagnostics block displays only if a workspace partition displays empty rows
         if len(filtered_cases) == 0 and len(cases_data) > 0 and filter_type != "ALL":
             st.warning(f"Filter mismatch diagnostics: The ledger file contains keys like: {list(cases_data[0].keys())} and values like profile='{cases_data[0].get('work_profile') or cases_data[0].get('profile')}'")
         
-        # Align selection pointers dynamically upon filter modification
         if len(filtered_cases) > 0:
             allowed_ids = [c['id'] for c in filtered_cases]
             if st.session_state.get('active_case_id') not in allowed_ids:
@@ -211,10 +200,13 @@ with tab_workbench:
                 
                 st.markdown('<div class="section-header">Case Origination Footprint</div>', unsafe_allow_html=True)
                 
-                # Dynamic derivation of the output string for UI fallback rendering
                 raw_wp = str(selected_case.get('work_profile', '')).strip().upper()
                 if not raw_wp:
-                    raw_wp = "EOI" if "EOI" in str(selected_case.get('id', '')).upper() else "ABSENCE" if "ABSENCE" in str(selected_case.get('id', '')).upper() else "BILLING"
+                    if "EOI" in str(selected_case.get('id', '')).upper(): raw_wp = "EOI"
+                    elif "ABSENCE" in str(selected_case.get('id', '')).upper(): raw_wp = "ABSENCE"
+                    elif "BILLING" in str(selected_case.get('id', '')).upper(): raw_wp = "BILLING"
+                    elif "COB" in str(selected_case.get('id', '')).upper(): raw_wp = "COB"
+                    elif "PORTABILITY" in str(selected_case.get('id', '')).upper(): raw_wp = "PORTABILITY"
                 
                 st.markdown(f"""
                     <div class="data-text">
@@ -225,14 +217,15 @@ with tab_workbench:
                 
                 st.markdown('<div class="section-header">Compute Metric Summary</div>', unsafe_allow_html=True)
                 
+                # Contextual Data-Swapping Metric Structure (UC 1 to UC 5)
                 if raw_wp == "BILLING":
-                    label_curr = "Expected Ledger Invoice Premium:"
-                    label_req = "Actual Clearing Account Remittance:"
-                    label_delta = "Calculated Invoice Variance Delta:"
+                    label_curr, label_req, label_delta = "Expected Ledger Invoice Premium:", "Actual Clearing Account Remittance:", "Calculated Invoice Variance Delta:"
+                elif raw_wp == "COB":
+                    label_curr, label_req, label_delta = "Primary Carrier Liability Limit:", "Secondary Coordinated Claim Intake:", "System Subrogation Calculation Exposure:"
+                elif raw_wp == "PORTABILITY":
+                    label_curr, label_req, label_delta = "Baseline Group Census Volume:", "Active Ported Account Changes:", "Recalculated Aggregate TCV Break Delta:"
                 else:
-                    label_curr = "Baseline Policy Coverage Stake:"
-                    label_req = "Target Modification Threshold Request:"
-                    label_delta = "Computed Delta Variance Threshold:"
+                    label_curr, label_req, label_delta = "Baseline Policy Coverage Stake:", "Target Modification Threshold Request:", "Computed Delta Variance Threshold:"
                     
                 st.markdown(f"""
                     <div class="data-text">
@@ -266,22 +259,28 @@ with tab_telemetry:
         st.markdown("### Functional Workload Telemetry Streams")
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Diagnostic total aggregation using identical fallback logic structure
-        t_eoi, t_abs, t_bil = 0, 0, 0
+        t_eoi, t_abs, t_bil, t_cob, t_port = 0, 0, 0, 0, 0
         for c in cases_data:
             c_id = str(c.get('id', '')).upper()
             wp = str(c.get('work_profile', c.get('profile', ''))).strip().upper()
             if "EOI" in c_id or wp == "EOI": t_eoi += 1
             elif "ABSENCE" in c_id or wp == "ABSENCE": t_abs += 1
             elif "BILLING" in c_id or wp == "BILLING": t_bil += 1
+            elif "COB" in c_id or wp == "COB": t_cob += 1
+            elif "PORTABILITY" in c_id or wp == "PORTABILITY": t_port += 1
         
-        col_card_1, col_card_2, col_card_3 = st.columns(3)
-        with col_card_1:
-            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Evidence of Insurability (EOI)</div><div class="telemetry-value">{t_eoi} Streams Intercepted</div><p style="color:#10b981; font-size:12px; margin:4px 0 0 0; font-weight:600;">▲ Touchless core routing active</p></div>""", unsafe_allow_html=True)
-        with col_card_2:
-            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Absence & Claims Ingestion</div><div class="telemetry-value">{t_abs} Records Staged</div><p style="color:#fab25a; font-size:12px; margin:4px 0 0 0; font-weight:600;">● Mid-market regional scale</p></div>""", unsafe_allow_html=True)
-        with col_card_3:
-            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Retroactive Billing Reconciliation</div><div class="telemetry-value">{t_bil} Audits Routed</div><p style="color:#054c86; font-size:12px; margin:4px 0 0 0; font-weight:600;">■ Enterprise MDM Data Quality Risk bounds</p></div>""", unsafe_allow_html=True)
+        # Five-Column Telemetry Dashboard Component Layout
+        col_1, col_2, col_3, col_4, col_5 = st.columns(5)
+        with col_1:
+            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Evidence of Insurability</div><div class="telemetry-value">{t_eoi} Intercepts</div><p style="color:#10b981; font-size:11px; margin:4px 0 0 0; font-weight:600;">▲ Touchless Active</p></div>""", unsafe_allow_html=True)
+        with col_2:
+            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Absence & Claims</div><div class="telemetry-value">{t_abs} Staged</div><p style="color:#fab25a; font-size:11px; margin:4px 0 0 0; font-weight:600;">● Mid-Market Scale</p></div>""", unsafe_allow_html=True)
+        with col_3:
+            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Retro Invoicing</div><div class="telemetry-value">{t_bil} Audited</div><p style="color:#054c86; font-size:11px; margin:4px 0 0 0; font-weight:600;">■ MDM Bound Checked</p></div>""", unsafe_allow_html=True)
+        with col_4:
+            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Coordination of Benefits</div><div class="telemetry-value">{t_cob} Cross-Audited</div><p style="color:#73b51a; font-size:11px; margin:4px 0 0 0; font-weight:600;">▲ NAIC Rules Aligned</p></div>""", unsafe_allow_html=True)
+        with col_5:
+            st.markdown(f"""<div class="telemetry-card"><div class="telemetry-label">Premium Portability</div><div class="telemetry-value">{t_port} Optimized</div><p style="color:#e06666; font-size:11px; margin:4px 0 0 0; font-weight:600;">▼ Aggregation Tier-Match</p></div>""", unsafe_allow_html=True)
 
 # ==========================================
 # COMPLIANCE FOOTER
