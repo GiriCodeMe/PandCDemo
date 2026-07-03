@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartClaim — FNOL Mobile Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #060A12;
+      --panel:        #0F172A;
+      --surface:      #1E293B;
+      --border:       #334155;
+      --text:         #F1F5F9;
+      --muted:        #94A3B8;
+      --blue:         #3B82F6;
+      --blue-dark:    #1D4ED8;
+      --green:        #10B981;
+      --amber:        #F59E0B;
+      --red:          #EF4444;
+      --g-blue:       #4285F4;
+      --g-green:      #34A853;
+      --g-red:        #EA4335;
+      --g-yellow:     #FBBC05;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Google Sans', 'Segoe UI', -apple-system, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Top bar ─────────────────────────────────────────────── */
+    .top-bar {
+      width: 100%;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-brand { display: flex; align-items: center; gap: 12px; }
+    .top-brand-logo {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--muted);
+      padding: 4px 10px; border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .top-brand-sep { color: var(--border); font-size: 18px; }
+    .top-brand-title { font-size: 15px; font-weight: 600; color: var(--text); }
+    .top-right { display: flex; align-items: center; gap: 16px; }
+    .tag {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; padding: 4px 10px; border-radius: 20px;
+    }
+    .tag-env { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.25); }
+    .tag-vertex { background: rgba(52,168,83,0.12); color: #4ADE80; border: 1px solid rgba(52,168,83,0.25); }
+
+    /* ── Page grid ───────────────────────────────────────────── */
+    .page-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 280px;
+      gap: 40px;
+      padding: 40px;
+      max-width: 1200px;
+      width: 100%;
+      align-items: start;
+    }
+
+    /* ── Shared panel card ───────────────────────────────────── */
+    .panel-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .panel-card + .panel-card { margin-top: 12px; }
+    .panel-heading {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin-bottom: 14px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Left panel ──────────────────────────────────────────── */
+    .left-panel { grid-column: 1; }
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+    .step { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 22px; height: 22px; min-width: 22px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 10px; font-weight: 700;
+    }
+    .step-text { font-size: 12px; color: #CBD5E1; line-height: 1.55; padding-top: 2px; }
+
+    .sync-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .sync-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--muted);
+    }
+    .sync-dot.ready { background: var(--green); animation: pulseDot 2s infinite; }
+    .sync-dot.sent  { background: var(--green); }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(16,185,129,0); }
+    }
+    .sync-label { color: var(--muted); }
+    .sync-label.active { color: var(--green); }
+
+    .wb-link {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(29,78,216,0.12));
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px; padding: 12px 16px;
+      font-size: 12px; font-weight: 600; color: #93C5FD;
+      text-decoration: none; transition: all 0.2s; margin-top: 12px;
+      cursor: pointer;
+    }
+    .wb-link:hover { background: rgba(59,130,246,0.16); color: #FFF; }
+
+    .powered-by {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+    }
+    .pw-chip {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 6px; padding: 4px 10px;
+      font-size: 10px; font-weight: 600; color: var(--muted);
+    }
+
+    /* ── Phone section ───────────────────────────────────────── */
+    .phone-section {
+      grid-column: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .phone-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--muted);
+    }
+
+    .phone-frame {
+      width: 375px; height: 740px;
+      background: #F0F4F8;
+      border-radius: 50px;
+      border: 10px solid #1A2537;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 32px 80px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    /* Dynamic island / notch */
+    .dynamic-island {
+      position: absolute; top: 12px; left: 50%;
+      transform: translateX(-50%);
+      width: 118px; height: 34px;
+      background: #0A0F1A; border-radius: 20px; z-index: 20;
+    }
+
+    /* Status bar */
+    .status-bar {
+      background: #FFFFFF; padding: 52px 22px 8px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0;
+    }
+    .sb-time { font-size: 15px; font-weight: 700; color: #0F172A; }
+    .sb-icons { display: flex; gap: 5px; align-items: center; font-size: 12px; color: #0F172A; }
+
+    /* App header */
+    .app-header {
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 10px 18px 12px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .app-brand { display: flex; align-items: center; gap: 10px; }
+    .app-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #4285F4 0%, #0F9D58 100%);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .app-name { font-size: 17px; font-weight: 700; color: #0F172A; letter-spacing: -0.3px; }
+    .app-sub  { font-size: 10px; color: #64748B; font-weight: 500; margin-top: -1px; }
+    .secure-chip {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 20px; padding: 4px 10px;
+      font-size: 10px; font-weight: 600; color: #10B981;
+    }
+
+    /* Chat area */
+    .chat-area {
+      flex: 1; overflow-y: auto;
+      padding: 14px 14px 10px;
+      display: flex; flex-direction: column; gap: 10px;
+      background: #EEF2F7;
+    }
+    .chat-area::-webkit-scrollbar { width: 3px; }
+    .chat-area::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+    .bubble {
+      max-width: 82%; padding: 10px 14px;
+      border-radius: 18px; font-size: 13px; line-height: 1.5;
+    }
+    .bubble-agent {
+      background: #FFFFFF; color: #1E293B;
+      border-bottom-left-radius: 5px; align-self: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .bubble-agent .sender {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: #4285F4; margin-bottom: 4px;
+    }
+    .bubble-user {
+      background: linear-gradient(135deg, #4285F4, #3367D6);
+      color: #FFFFFF; border-bottom-right-radius: 5px;
+      align-self: flex-end;
+    }
+    .bubble-system {
+      background: linear-gradient(135deg, #F0FDF4, #EFF6FF);
+      border: 1px solid #BBF7D0; color: #065F46;
+      align-self: center; width: 92%; text-align: center;
+      border-radius: 12px; font-size: 12px; padding: 10px 14px;
+    }
+    .photo-bubble {
+      align-self: flex-end;
+      background: #FFFFFF; border: 1px solid #E2E8F0;
+      border-radius: 14px; overflow: hidden; max-width: 200px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .photo-bubble img { width: 100%; height: 130px; object-fit: cover; display: block; }
+    .photo-bubble-label { padding: 6px 10px; font-size: 10px; color: #64748B; }
+
+    /* Typing */
+    .typing-bubble {
+      background: #FFFFFF; border-bottom-left-radius: 5px;
+      padding: 12px 16px; align-self: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-radius: 18px;
+    }
+    .dots { display: flex; gap: 4px; }
+    .dot {
+      width: 7px; height: 7px; background: #94A3B8; border-radius: 50%;
+      animation: dotBounce 1.2s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-7px); opacity: 1; }
+    }
+
+    /* Success screen */
+    .success-screen {
+      display: none; flex: 1; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #EEF2F7; padding: 28px 24px; gap: 14px; text-align: center;
+    }
+    .success-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #10B981, #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 12px 32px rgba(16,185,129,0.3);
+    }
+    .success-title { font-size: 22px; font-weight: 700; color: #0F172A; }
+    .success-claimid {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px; font-weight: 600;
+      background: #E2E8F0; color: #1E293B;
+      padding: 8px 18px; border-radius: 8px;
+      border: 1px solid #CBD5E1;
+    }
+    .success-body { font-size: 12px; color: #64748B; line-height: 1.6; max-width: 260px; }
+    .btn-reset {
+      background: linear-gradient(135deg, #4285F4, #3367D6);
+      color: #FFF; border: none; padding: 12px 28px;
+      border-radius: 24px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-reset:hover { opacity: 0.9; }
+
+    /* Input bar */
+    .input-bar {
+      background: #FFFFFF; border-top: 1px solid #E2E8F0;
+      padding: 12px 14px; display: flex; gap: 8px; align-items: center;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 50%; border: none;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex-shrink: 0;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .icon-btn:active { transform: scale(0.88); }
+    .btn-camera { background: #EFF6FF; color: #3B82F6; }
+    .btn-mic    { background: #F0FDF4; color: #10B981; }
+    .btn-mic.recording { background: #FEF2F2; color: #EF4444; animation: micPulse 1s infinite; }
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.35); }
+      50% { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
+    }
+    .text-input {
+      flex: 1; border: 1px solid #E2E8F0; border-radius: 22px;
+      padding: 9px 16px; font-size: 13px; font-family: inherit;
+      color: #1E293B; background: #F8FAFC; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .text-input:focus { border-color: #4285F4; background: #FFFFFF; }
+    .btn-send {
+      width: 38px; height: 38px; border-radius: 50%; border: none;
+      background: linear-gradient(135deg, #4285F4, #3367D6);
+      color: #FFF; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; font-size: 15px;
+      flex-shrink: 0; transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-send:hover { opacity: 0.9; }
+    .btn-send:active { transform: scale(0.88); }
+    .btn-send:disabled { background: #CBD5E1; cursor: not-allowed; }
+
+    /* ── Right panel (scenarios) ─────────────────────────────── */
+    .right-panel { grid-column: 3; }
+    .scenario-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px 16px 20px;
+      cursor: pointer; transition: all 0.2s; position: relative;
+      overflow: hidden; margin-bottom: 10px;
+    }
+    .scenario-card::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+    }
+    .sc-auto::before     { background: var(--g-blue); }
+    .sc-home::before     { background: var(--green); }
+    .sc-commercial::before { background: var(--amber); }
+
+    .scenario-card:hover {
+      border-color: #60A5FA;
+      background: rgba(59,130,246,0.06);
+      transform: translateX(-2px);
+    }
+    .scenario-card.selected {
+      border-color: var(--blue);
+      background: rgba(59,130,246,0.1);
+    }
+    .scenario-card.selected.sc-home {
+      border-color: var(--green); background: rgba(16,185,129,0.08);
+    }
+    .scenario-card.selected.sc-commercial {
+      border-color: var(--amber); background: rgba(245,158,11,0.08);
+    }
+    .sc-icon  { font-size: 26px; margin-bottom: 8px; display: block; }
+    .sc-name  { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .sc-lob   { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sc-auto .sc-lob     { color: #60A5FA; }
+    .sc-home .sc-lob     { color: #34D399; }
+    .sc-commercial .sc-lob { color: #FCD34D; }
+    .sc-desc  { font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 6px; }
+    .sc-arrow {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 16px; color: var(--blue); opacity: 0; transition: opacity 0.2s;
+    }
+    .scenario-card:hover .sc-arrow { opacity: 1; }
+
+    .active-display {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px; font-size: 11px;
+      color: var(--muted); line-height: 1.6;
+    }
+    .active-display strong { color: var(--text); display: block; margin-bottom: 3px; }
+
+    /* ── Phone footer ────────────────────────────────────────── */
+    .phone-caption {
+      font-size: 10px; color: var(--muted); text-align: center;
+      margin-top: 4px; letter-spacing: 0.3px;
+    }
+
+    /* ── Hidden file input ───────────────────────────────────── */
+    #filePicker { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-brand">
+    <div class="top-brand-logo">EPAM</div>
+    <div class="top-brand-sep">/</div>
+    <div class="top-brand-title">SmartClaim — FNOL Mobile Channel Demo</div>
+  </div>
+  <div class="top-right">
+    <span class="tag tag-env">Demo Environment</span>
+    <span class="tag tag-vertex">Vertex AI · Gemini 2.0</span>
+  </div>
+</div>
+
+<!-- Page grid -->
+<div class="page-grid">
+
+  <!-- ── LEFT PANEL ─────────────────────────────────────────── -->
+  <aside class="left-panel">
+    <div class="panel-card">
+      <div class="panel-heading">Demo Flow</div>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Click a scenario on the right to inject a pre-built FNOL narrative into the phone</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Optionally record a voice description or upload a damage photo</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">Tap <strong>Send</strong> — the FNOL is broadcast through the mobile channel</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">Switch to the Workbench to see Vertex AI process the claim in real time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-heading">Channel Sync</div>
+      <div class="sync-row">
+        <div class="sync-dot ready" id="syncDot"></div>
+        <div class="sync-label" id="syncLabel">Ready — awaiting submission</div>
+      </div>
+      <div style="font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5;">
+        Claim payload is broadcast to the Workbench via the shared browser session store (localStorage).
+      </div>
+    </div>
+
+    <a href="ClaimsProfessionalWorkbench.html" target="_blank" class="wb-link">
+      <span>⚡ Open Claims Professional Workbench</span>
+      <span>→</span>
+    </a>
+
+    <div class="panel-card">
+      <div class="panel-heading">Powered By</div>
+      <div class="powered-by">
+        <div class="pw-chip">Google Cloud</div>
+        <div class="pw-chip">Vertex AI</div>
+        <div class="pw-chip">Gemini 2.0 Flash</div>
+        <div class="pw-chip">EPAM Applied AI</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── PHONE SECTION ──────────────────────────────────────── -->
+  <div class="phone-section">
+    <div class="phone-label">End-User Mobile Channel</div>
+
+    <div class="phone-frame">
+      <!-- Dynamic island -->
+      <div class="dynamic-island"></div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="sb-time" id="statusTime">9:41</span>
+        <div class="sb-icons">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <rect x="0" y="3" width="3" height="9" rx="1" fill="#0F172A"/>
+            <rect x="4.5" y="2" width="3" height="10" rx="1" fill="#0F172A"/>
+            <rect x="9" y="0" width="3" height="12" rx="1" fill="#0F172A"/>
+            <rect x="13.5" y="0" width="2.5" height="12" rx="1" fill="#CBD5E1"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 20 14" fill="none">
+            <path d="M10 2.8C12.7 2.8 15.1 3.9 16.8 5.7L18.5 4C16.4 1.8 13.4 0.5 10 0.5C6.6 0.5 3.6 1.8 1.5 4L3.2 5.7C4.9 3.9 7.3 2.8 10 2.8Z" fill="#0F172A"/>
+            <path d="M10 6.2C11.8 6.2 13.4 6.9 14.6 8L16.3 6.3C14.7 4.9 12.4 4 10 4C7.6 4 5.3 4.9 3.7 6.3L5.4 8C6.6 6.9 8.2 6.2 10 6.2Z" fill="#0F172A"/>
+            <circle cx="10" cy="11.5" r="2" fill="#0F172A"/>
+          </svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+            <rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="#0F172A" stroke-opacity="0.35"/>
+            <rect x="2" y="2" width="18" height="8" rx="2" fill="#0F172A"/>
+            <path d="M24 4.5V7.5C24.8 7.2 25.5 6.5 25.5 6C25.5 5.5 24.8 4.8 24 4.5Z" fill="#0F172A" fill-opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- App header -->
+      <div class="app-header">
+        <div class="app-brand">
+          <div class="app-icon">🛡️</div>
+          <div>
+            <div class="app-name">SmartClaim</div>
+            <div class="app-sub">by EPAM · Powered by Vertex AI</div>
+          </div>
+        </div>
+        <div class="secure-chip">
+          <svg width="8" height="10" viewBox="0 0 8 10" fill="none">
+            <path d="M4 0L0.5 1.5V4.5C0.5 6.7 2 8.7 4 9.5C6 8.7 7.5 6.7 7.5 4.5V1.5L4 0Z" fill="#10B981"/>
+          </svg>
+          Secure
+        </div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="chat-area" id="chatArea">
+        <div class="bubble bubble-agent">
+          <div class="sender">SmartClaim AI</div>
+          Hello! I'm here to help you report your insurance claim quickly and accurately. Please describe what happened and I'll guide you through the process.
+        </div>
+        <div class="bubble bubble-agent">
+          <div class="sender">SmartClaim AI</div>
+          You can <strong>type your description</strong>, use the <strong>🎙️ microphone</strong> to speak, or <strong>📷 upload a photo</strong> of the damage. I'll extract all the key claim details automatically.
+        </div>
+      </div>
+
+      <!-- Success screen (hidden) -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Claim Submitted</div>
+        <div class="success-claimid" id="successClaimId">CLM-XXXXX</div>
+        <div class="success-body">
+          Your First Notice of Loss has been received and dispatched to the AI Claims Processing Pipeline. An adjuster will be assigned within 1 business day.
+        </div>
+        <button class="btn-reset" onclick="resetApp()">Submit Another Claim</button>
+      </div>
+
+      <!-- Input bar -->
+      <div class="input-bar" id="inputBar">
+        <input type="file" id="filePicker" accept="image/*">
+        <button class="icon-btn btn-camera" title="Upload photo"
+          onclick="document.getElementById('filePicker').click()">📷</button>
+        <button class="icon-btn btn-mic" id="micBtn" title="Voice input">🎙️</button>
+        <input type="text" class="text-input" id="textInput" placeholder="Describe the incident...">
+        <button class="btn-send" id="sendBtn" onclick="submitClaim()" title="Send">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 7L13 1L7 13L6 8L1 7Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="phone-caption">Simulated mobile UI · Demo environment · 2026</div>
+  </div>
+
+  <!-- ── RIGHT PANEL (scenarios) ────────────────────────────── -->
+  <aside class="right-panel">
+    <div class="panel-heading" style="margin-bottom: 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+      Demo Scenarios — Click to Inject
+    </div>
+
+    <div class="scenario-card sc-auto" id="sc_auto" onclick="injectScenario('auto')">
+      <span class="sc-icon">🚗</span>
+      <div class="sc-name">Personal Auto Collision</div>
+      <div class="sc-lob">Auto · New Jersey</div>
+      <div class="sc-desc">Vehicle hydroplaned on Route 1 during heavy rain. Front bumper cracked, radiator leaking. Police report filed, vehicle towed.</div>
+      <span class="sc-arrow">→</span>
+    </div>
+
+    <div class="scenario-card sc-home" id="sc_home" onclick="injectScenario('home')">
+      <span class="sc-icon">🏡</span>
+      <div class="sc-name">Homeowners Wind &amp; Hail</div>
+      <div class="sc-lob">Homeowners · Florida</div>
+      <div class="sc-desc">Severe thunderstorm with 70 mph winds. A dozen shingles blown off rear roof. Active water leak staining master bedroom ceiling.</div>
+      <span class="sc-arrow">→</span>
+    </div>
+
+    <div class="scenario-card sc-commercial" id="sc_commercial" onclick="injectScenario('commercial')">
+      <span class="sc-icon">🏢</span>
+      <div class="sc-name">Commercial Property Fire</div>
+      <div class="sc-lob">Commercial · Texas</div>
+      <div class="sc-desc">Electrical fire in back storage room. Sprinkler contained the fire. Entire rear inventory damaged by soot, smoke, and standing water.</div>
+      <span class="sc-arrow">→</span>
+    </div>
+
+    <div class="panel-card" style="margin-top: 6px;">
+      <div class="panel-heading">Selected Scenario</div>
+      <div class="active-display" id="activeDisplay">No scenario selected.</div>
+    </div>
+  </aside>
+
+</div><!-- end page-grid -->
+
+<script>
+  /* ── Scenario data ─────────────────────────────────────────── */
+  const SCENARIOS = {
+    auto: {
+      key: 'auto',
+      claimId: 'CLM-92841-NJ',
+      title: 'Personal Auto Collision',
+      lob: 'Auto',
+      state: 'NJ',
+      photo: 'Sample Data/HydropanningEvent/VechileDamage_Front.png',
+      text: `I was driving northbound on Route 1 near Plainsboro, NJ when my 2023 Honda Accord hydroplaned during heavy rainfall and struck a guardrail. The front bumper is cracked and the radiator is actively leaking fluid. NJ State Police arrived on scene (Incident #NJSP-2026-874512) and arranged a tow through Garden State Towing LLC. No personal injuries. Policy number LMIC-7812456.`
+    },
+    home: {
+      key: 'home',
+      claimId: 'CLM-48271-FL',
+      title: 'Homeowners Wind & Hail',
+      lob: 'Homeowners',
+      state: 'FL',
+      photo: 'Sample Data/Home_Hail/RoofDamage.png',
+      text: `A severe thunderstorm with sustained winds of 70 mph and large hail struck our neighborhood last night. This morning I found approximately a dozen shingles completely blown off the rear roof pitch of my home at 412 Maple Drive, Gainesville, FL 32601. There is an active water leak forming a visible stain on the master bedroom ceiling drywall. Homeowners policy HO-FL-293847.`
+    },
+    commercial: {
+      key: 'commercial',
+      claimId: 'CLM-73019-TX',
+      title: 'Commercial Property Fire',
+      lob: 'Commercial Property',
+      state: 'TX',
+      photo: 'Sample Data/Commercial Fire Claim/Electrical Fire Damage.png',
+      text: `An electrical fire broke out in the back storage area of our retail boutique at 890 Commerce Blvd, Austin, TX 78701 at approximately 6:00 AM today. The building's commercial sprinkler system activated and successfully contained the fire, but the entire rear half of our inventory is now damaged by heavy soot, smoke, and standing water. Austin Fire Department responded (Report #AFD-2026-041879). Commercial policy CP-TX-884721.`
+    }
+  };
+
+  let activeScenario = null;
+  let attachedPhotoDataUrl = null;   /* base64 data URL of user-uploaded photo */
+  let attachedPhotoMime    = null;
+
+  /* ── Clock ─────────────────────────────────────────────────── */
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours() % 12 || 12;
+    const m = now.getMinutes().toString().padStart(2, '0');
+    document.getElementById('statusTime').textContent = `${h}:${m}`;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  /* ── Chat helpers ──────────────────────────────────────────── */
+  function addBubble(html, type) {
+    const area = document.getElementById('chatArea');
+    const el = document.createElement('div');
+    el.className = `bubble bubble-${type}`;
+    if (type === 'agent') {
+      el.innerHTML = `<div class="sender">SmartClaim AI</div>${html}`;
+    } else if (type === 'system') {
+      el.innerHTML = html;
+    } else {
+      el.textContent = html;
+    }
+    area.appendChild(el);
+    scrollChat();
+    return el;
+  }
+
+  function addPhoto(src, label) {
+    const area = document.getElementById('chatArea');
+    const el = document.createElement('div');
+    el.className = 'photo-bubble';
+    el.innerHTML = `
+      <img src="${src}" alt="${label}" onerror="this.style.display='none'">
+      <div class="photo-bubble-label">📷 ${label}</div>
+    `;
+    area.appendChild(el);
+    scrollChat();
+  }
+
+  function addTyping() {
+    const area = document.getElementById('chatArea');
+    const el = document.createElement('div');
+    el.className = 'typing-bubble';
+    el.id = 'typingEl';
+    el.innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+    area.appendChild(el);
+    scrollChat();
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typingEl');
+    if (el) el.remove();
+  }
+
+  function scrollChat() {
+    const area = document.getElementById('chatArea');
+    requestAnimationFrame(() => area.scrollTop = area.scrollHeight);
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  /* ── Scenario injection ────────────────────────────────────── */
+  function injectScenario(key) {
+    activeScenario = SCENARIOS[key];
+
+    document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById(`sc_${key}`).classList.add('selected');
+
+    document.getElementById('textInput').value = activeScenario.text;
+    document.getElementById('textInput').focus();
+
+    if (activeScenario.photo) {
+      const photoLabels = {
+        auto:       'Vehicle damage — uploaded from camera roll',
+        home:       'Roof damage — uploaded from camera roll',
+        commercial: 'Fire/water damage — uploaded from camera roll'
+      };
+      addPhoto(activeScenario.photo, photoLabels[key] || 'Damage photo');
+    }
+
+    document.getElementById('activeDisplay').innerHTML = `
+      <strong>${activeScenario.title}</strong>
+      Claim ID: <span style="color:#60A5FA;font-family:'Roboto Mono',monospace">${activeScenario.claimId}</span><br>
+      Line: ${activeScenario.lob} · State: ${activeScenario.state}
+    `;
+
+    scrollChat();
+  }
+
+  /* ── Submit claim ──────────────────────────────────────────── */
+  async function submitClaim() {
+    const text = document.getElementById('textInput').value.trim();
+    if (!text) return;
+
+    document.getElementById('sendBtn').disabled = true;
+
+    addBubble(text, 'user');
+    document.getElementById('textInput').value = '';
+
+    addTyping();
+    await sleep(1100);
+    removeTyping();
+
+    addBubble('Thank you. I\'ve received your incident report. Extracting key claim details and registering your case now…', 'agent');
+
+    addTyping();
+    await sleep(1600);
+    removeTyping();
+
+    const sc = activeScenario || { claimId: `CLM-${Math.floor(Math.random()*90000+10000)}-XX`, lob: 'Auto', state: 'XX', key: 'custom' };
+
+    addBubble(
+      `✓ Claim <strong>${sc.claimId}</strong> has been created and dispatched to the AI Claims Processing Pipeline. A licensed adjuster has been assigned to your case.`,
+      'agent'
+    );
+
+    await sleep(700);
+    addBubble(
+      `<strong>📋 What happens next:</strong> You'll receive a confirmation email shortly. An adjuster may contact you for additional documentation within 1 business day.`,
+      'system'
+    );
+
+    /* Build mobile attachment if user uploaded a photo */
+    let mobileAttachment = null;
+    if (attachedPhotoDataUrl) {
+      const comma = attachedPhotoDataUrl.indexOf(',');
+      mobileAttachment = {
+        data:     attachedPhotoDataUrl.slice(comma + 1),
+        mimeType: attachedPhotoMime || 'image/jpeg'
+      };
+    }
+
+    /* Broadcast to workbench via localStorage */
+    const payload = {
+      claimId:          sc.claimId,
+      scenarioKey:      sc.key,
+      narrative:        text,
+      lob:              sc.lob,
+      state:            sc.state,
+      channel:          'mobile_web',
+      mobileAttachment: mobileAttachment,
+      timestamp:        Date.now()
+    };
+    localStorage.setItem('smartclaim_fnol_payload', JSON.stringify(payload));
+    localStorage.setItem('latest_mobile_narrative', text);
+    localStorage.setItem('latest_mobile_sync_time', String(Date.now()));
+
+    /* Update sync indicator */
+    document.getElementById('syncDot').className = 'sync-dot sent';
+    document.getElementById('syncLabel').textContent = `Transmitted — ${new Date().toLocaleTimeString()}`;
+    document.getElementById('syncLabel').style.color = 'var(--green)';
+
+    await sleep(1400);
+
+    /* Show success screen */
+    document.getElementById('chatArea').style.display = 'none';
+    document.getElementById('inputBar').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'flex';
+    document.getElementById('successClaimId').textContent = sc.claimId;
+  }
+
+  /* ── Reset ─────────────────────────────────────────────────── */
+  function resetApp() {
+    activeScenario       = null;
+    attachedPhotoDataUrl = null;
+    attachedPhotoMime    = null;
+    document.getElementById('chatArea').style.display = 'flex';
+    document.getElementById('inputBar').style.display = 'flex';
+    document.getElementById('successScreen').style.display = 'none';
+    document.getElementById('sendBtn').disabled = false;
+
+    document.getElementById('chatArea').innerHTML = `
+      <div class="bubble bubble-agent">
+        <div class="sender">SmartClaim AI</div>
+        Hello! I'm here to help you report your insurance claim quickly and accurately. Please describe what happened and I'll guide you through the process.
+      </div>
+      <div class="bubble bubble-agent">
+        <div class="sender">SmartClaim AI</div>
+        You can <strong>type your description</strong>, use the <strong>🎙️ microphone</strong> to speak, or <strong>📷 upload a photo</strong> of the damage. I'll extract all the key claim details automatically.
+      </div>
+    `;
+
+    document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('activeDisplay').textContent = 'No scenario selected.';
+    document.getElementById('syncDot').className = 'sync-dot ready';
+    document.getElementById('syncLabel').textContent = 'Ready — awaiting submission';
+    document.getElementById('syncLabel').style.color = '';
+  }
+
+  /* ── Voice input ───────────────────────────────────────────── */
+  const micBtn = document.getElementById('micBtn');
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) {
+    const rec = new SR();
+    rec.continuous = false; rec.interimResults = false;
+    let isRecording = false;
+
+    micBtn.addEventListener('click', () => {
+      if (isRecording) {
+        rec.stop(); isRecording = false;
+        micBtn.classList.remove('recording'); micBtn.textContent = '🎙️';
+      } else {
+        rec.start(); isRecording = true;
+        micBtn.classList.add('recording'); micBtn.textContent = '⏹️';
+      }
+    });
+    rec.onresult = e => {
+      document.getElementById('textInput').value = e.results[0][0].transcript;
+      isRecording = false; micBtn.classList.remove('recording'); micBtn.textContent = '🎙️';
+    };
+    rec.onerror = () => {
+      isRecording = false; micBtn.classList.remove('recording'); micBtn.textContent = '🎙️';
+    };
+  } else {
+    micBtn.title = 'Voice recognition not supported in this browser';
+    micBtn.style.opacity = '0.4';
+  }
+
+  /* ── File upload ───────────────────────────────────────────── */
+  document.getElementById('filePicker').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      attachedPhotoDataUrl = ev.target.result;   /* store for payload */
+      attachedPhotoMime    = file.type || 'image/jpeg';
+      addPhoto(ev.target.result, file.name);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  });
+
+  /* ── Enter key sends ───────────────────────────────────────── */
+  document.getElementById('textInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitClaim(); }
+  });
+</script>
+</body>
+</html>

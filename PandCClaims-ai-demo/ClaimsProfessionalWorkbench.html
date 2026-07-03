@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claims Professional Workbench — P&amp;C AI Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #060A12;
+      --panel:     #0F172A;
+      --surface:   #1A2540;
+      --card:      #1E293B;
+      --border:    #2D3F5A;
+      --border-lt: #3D5270;
+      --text:      #F1F5F9;
+      --text-2:    #CBD5E1;
+      --muted:     #94A3B8;
+      --blue:      #3B82F6;
+      --blue-lt:   #60A5FA;
+      --green:     #10B981;
+      --amber:     #F59E0B;
+      --red:       #EF4444;
+      --g-blue:    #4285F4;
+      --g-green:   #34A853;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Google Sans', 'Segoe UI', -apple-system, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2D3F5A; border-radius: 3px; }
+
+    /* ── Header ────────────────────────────────────────────── */
+    .app-header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      display: flex; align-items: stretch;
+      flex-shrink: 0; height: 58px;
+    }
+    .header-brand {
+      display: flex; align-items: center; gap: 14px;
+      padding-right: 20px; border-right: 1px solid var(--border);
+      margin-right: 20px;
+    }
+    .brand-epam {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: #CBD5E1; padding: 5px 10px;
+      border: 1px solid var(--border-lt); border-radius: 4px;
+    }
+    .brand-title { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+    .brand-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+    .header-mid { flex: 1; display: flex; align-items: center; gap: 16px; }
+
+    .mode-group {
+      display: flex; align-items: center; gap: 0;
+      background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+    }
+    .mode-btn {
+      padding: 6px 14px; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      cursor: pointer; border: none; background: transparent;
+      color: var(--muted); transition: all 0.2s;
+    }
+    .mode-btn.active-sim  { background: rgba(59,130,246,0.18); color: #93C5FD; }
+    .mode-btn.active-live { background: rgba(16,185,129,0.15); color: #34D399; }
+
+    .mode-indicator {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; padding: 5px 12px;
+      border-radius: 20px;
+    }
+    .mode-indicator.sim  { background: rgba(59,130,246,0.1); color: #93C5FD; border: 1px solid rgba(59,130,246,0.25); }
+    .mode-indicator.live { background: rgba(16,185,129,0.1); color: #34D399; border: 1px solid rgba(16,185,129,0.25); }
+    .mode-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .mode-dot.sim  { background: #60A5FA; }
+    .mode-dot.live { background: #34D399; animation: livePulse 1.5s infinite; }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
+      50% { box-shadow: 0 0 0 5px rgba(52,211,153,0); }
+    }
+
+    .header-right {
+      display: flex; align-items: center; gap: 10px;
+      margin-left: auto;
+    }
+    .hdr-chip {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 4px 10px; border-radius: 4px;
+    }
+    .hdr-chip-google { background: rgba(66,133,244,0.12); color: #93C5FD; border: 1px solid rgba(66,133,244,0.2); }
+    .hdr-chip-vertex  { background: rgba(52,168,83,0.1);  color: #4ADE80; border: 1px solid rgba(52,168,83,0.2); }
+    .hdr-env { font-size: 11px; color: var(--muted); }
+
+    /* ── API Config panel ──────────────────────────────────── */
+    .api-config-bar {
+      background: rgba(59,130,246,0.04);
+      border-bottom: 1px solid rgba(59,130,246,0.2);
+      padding: 12px 28px;
+      display: none; gap: 16px; align-items: center; flex-wrap: wrap;
+    }
+    .api-config-bar.visible { display: flex; }
+    .config-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+    .config-input {
+      flex: 1; min-width: 200px; max-width: 340px;
+      background: rgba(0,0,0,0.3); border: 1px solid var(--border-lt);
+      border-radius: 6px; padding: 6px 12px;
+      font-size: 12px; font-family: 'Roboto Mono', monospace;
+      color: var(--text-2); outline: none;
+    }
+    .config-input:focus { border-color: var(--blue); }
+    .config-input.key-field { max-width: 200px; }
+    .btn-test {
+      padding: 6px 16px; background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.35); border-radius: 6px;
+      color: var(--blue-lt); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-test:hover { background: rgba(59,130,246,0.25); }
+    .config-note { font-size: 10px; color: var(--muted); flex-basis: 100%; margin-top: 2px; }
+
+    /* ── Config toggle button ──────────────────────────────── */
+    .btn-config {
+      padding: 5px 12px; background: transparent;
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--muted); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-config:hover { border-color: var(--blue-lt); color: var(--blue-lt); }
+
+    /* ── Layout ────────────────────────────────────────────── */
+    .workbench-layout {
+      flex: 1; display: grid;
+      grid-template-columns: 1fr 288px;
+      gap: 0; overflow: hidden;
+    }
+
+    /* ── Main area ─────────────────────────────────────────── */
+    .main-area {
+      overflow-y: auto; padding: 24px 24px 40px 28px;
+      border-right: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted); margin-bottom: 14px;
+    }
+
+    /* ── Queue ─────────────────────────────────────────────── */
+    .queue-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+    .queue-header-row {
+      display: grid; grid-template-columns: 140px 130px 130px 1fr 140px 130px;
+      gap: 12px; padding: 10px 20px;
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted);
+      background: rgba(255,255,255,0.015);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .claim-row { border-bottom: 1px solid var(--border); }
+    .claim-row:last-child { border-bottom: none; }
+
+    .claim-trigger {
+      display: grid; grid-template-columns: 140px 130px 130px 1fr 140px 130px;
+      gap: 12px; padding: 14px 20px;
+      align-items: center; cursor: pointer;
+      transition: background 0.2s; font-size: 12px;
+    }
+    .claim-trigger:hover { background: rgba(59,130,246,0.04); }
+    .claim-trigger.open   { background: rgba(59,130,246,0.07); }
+
+    .claim-id {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px; font-weight: 700; color: var(--blue-lt);
+    }
+
+    .sev-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .sev-low      { color: var(--green); }
+    .sev-moderate { color: var(--amber); }
+    .sev-high     { color: var(--red); }
+
+    .narrative-snippet {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      color: var(--text-2);
+    }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .pill-pending   { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+    .pill-processed { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+    .pill-processing { background: rgba(59,130,246,0.1); color: var(--blue-lt); border: 1px solid rgba(59,130,246,0.2); }
+
+    .lob-tag {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .lob-auto       { background: rgba(66,133,244,0.12); color: #93C5FD; }
+    .lob-home       { background: rgba(16,185,129,0.1);  color: #34D399; }
+    .lob-commercial { background: rgba(245,158,11,0.12); color: #FCD34D; }
+
+    .expand-icon { color: var(--muted); font-size: 16px; transition: transform 0.25s; }
+    .claim-trigger.open .expand-icon { transform: rotate(90deg); }
+
+    /* ── Expanded drawer ───────────────────────────────────── */
+    .claim-drawer {
+      display: none; background: rgba(0,0,0,0.25);
+      border-top: 1px solid var(--border); padding: 24px 24px;
+      animation: slideDown 0.25s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .claim-drawer.open { display: block; }
+
+    /* Drawer grid rows */
+    .d-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .d-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .d-row-1 { margin-bottom: 20px; }
+
+    .d-panel {
+      background: rgba(255,255,255,0.018); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px;
+    }
+    .d-panel-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; margin-bottom: 14px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dt-blue   { color: var(--blue-lt); }
+    .dt-muted  { color: var(--muted); }
+    .dt-green  { color: #4ADE80; }
+    .dt-amber  { color: #FCD34D; }
+
+    /* Meta grid */
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+    .mg-label  { font-size: 11px; color: var(--muted); }
+    .mg-value  { font-size: 11px; font-weight: 600; color: var(--text); text-align: right; }
+    .mg-value.red    { color: #F87171; }
+    .mg-value.green  { color: #4ADE80; }
+    .mg-value.amber  { color: #FCD34D; }
+    .mg-value.mono   { font-family: 'Roboto Mono', monospace; font-size: 10px; }
+
+    /* AI summary */
+    .ai-summary-box {
+      background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(15,23,42,0.2));
+      border: 1px solid rgba(59,130,246,0.18); border-radius: 8px;
+      padding: 14px; font-size: 12px; line-height: 1.6; color: #CBD5E1;
+    }
+    .ai-summary-box.processing { color: var(--muted); font-style: italic; }
+
+    /* Narrative */
+    .narrative-box {
+      background: rgba(255,255,255,0.015); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px;
+      font-size: 12px; line-height: 1.65; color: #CBD5E1;
+      max-height: 120px; overflow-y: auto;
+    }
+
+    /* Photo grid */
+    .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .photo-item { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .photo-item-label { font-size: 9px; color: var(--muted); padding: 4px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .photo-item-frame { height: 72px; background: var(--card); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .photo-item-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-placeholder { font-size: 22px; }
+
+    /* Check list */
+    .check-list { display: flex; flex-direction: column; gap: 8px; }
+    .check-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-2); }
+    .check-pass { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .check-warn { color: var(--amber); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* AI Summary / Insights panel (commercial) */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .insight-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .insight-label {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.9px; color: var(--muted); margin-bottom: 8px;
+    }
+    .insight-value {
+      font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3;
+    }
+    .insight-value.amt      { color: var(--amber); font-size: 17px; }
+    .insight-value.severity-high,
+    .insight-value.severity-significant { color: var(--amber); }
+    .insight-value.severity-critical    { color: var(--red); }
+    .insight-value.risk-low             { color: var(--green); }
+    .insight-value.risk-moderate        { color: var(--amber); }
+    .insight-value.risk-high            { color: var(--red); }
+    .insight-value.priority-tag {
+      font-size: 11px; color: var(--red);
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 4px; padding: 3px 8px; display: inline-block;
+    }
+
+    /* ── E2E Orchestration Pipeline (auto) ─────────────────────── */
+    .orch-steps { display: flex; flex-direction: column; gap: 0; }
+    .orch-step {
+      border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; margin-bottom: 6px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .orch-step.running {
+      border-color: rgba(99,102,241,0.5);
+      box-shadow: 0 0 14px rgba(99,102,241,0.12);
+    }
+    .orch-step.complete { border-color: rgba(16,185,129,0.3); }
+    .orch-step.error    { border-color: rgba(239,68,68,0.3); }
+
+    .orch-step-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 16px; background: rgba(255,255,255,0.02);
+    }
+    .orch-step-num {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 17px; font-weight: 700;
+      color: var(--border-lt); flex-shrink: 0; width: 26px;
+    }
+    .orch-step.running  .orch-step-num { color: #818CF8; }
+    .orch-step.complete .orch-step-num { color: var(--green); }
+    .orch-step.error    .orch-step-num { color: var(--red); }
+
+    .orch-step-info { flex: 1; min-width: 0; }
+    .orch-step-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .orch-step-sub   { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    .orch-badge {
+      font-size: 10px; font-weight: 600; padding: 3px 9px;
+      border-radius: 4px; flex-shrink: 0; white-space: nowrap;
+    }
+    .orch-badge-pending  { background: rgba(148,163,184,0.08); color: var(--muted); border: 1px solid var(--border); }
+    .orch-badge-running  { background: rgba(99,102,241,0.15); color: #A5B4FC;
+                           border: 1px solid rgba(99,102,241,0.3);
+                           animation: orchPulse 1.4s ease-in-out infinite; }
+    .orch-badge-complete { background: rgba(16,185,129,0.1); color: #34D399; border: 1px solid rgba(16,185,129,0.25); }
+    .orch-badge-error    { background: rgba(239,68,68,0.1); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.25); }
+
+    @keyframes orchPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+
+    .orch-step-time {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px; color: var(--muted); flex-shrink: 0; min-width: 46px; text-align: right;
+    }
+
+    .orch-output {
+      padding: 0 16px 12px 54px; display: none;
+    }
+    .orch-step.complete .orch-output,
+    .orch-step.running  .orch-output { display: block; }
+
+    .orch-kv { display: flex; flex-wrap: wrap; gap: 6px; }
+    .orch-kv-item {
+      font-size: 11px; padding: 3px 9px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 4px;
+    }
+    .orch-kv-label { color: var(--muted); }
+    .orch-kv-value { color: var(--text-2); font-weight: 600; margin-left: 4px; }
+    .orch-kv-pass  { color: var(--green); font-weight: 700; }
+    .orch-kv-fail  { color: var(--red); font-weight: 700; }
+    .orch-kv-low   { color: var(--green); font-weight: 700; }
+    .orch-kv-med   { color: var(--amber); font-weight: 700; }
+    .orch-kv-high  { color: var(--red); font-weight: 700; }
+    .orch-kv-amt   { color: var(--amber); font-weight: 700; margin-left: 4px; }
+
+    .orch-run-btn {
+      font-size: 11px; font-weight: 600; padding: 6px 16px;
+      background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 6px; color: #A5B4FC; cursor: pointer; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .orch-run-btn:hover:not(:disabled) { background: rgba(99,102,241,0.28); }
+    .orch-run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Confidence bars */
+    .conf-row { margin-bottom: 11px; }
+    .conf-labels { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+    .conf-name  { color: var(--text-2); }
+    .conf-score { font-weight: 700; }
+    .conf-track { background: rgba(255,255,255,0.06); height: 5px; border-radius: 3px; overflow: hidden; }
+    .conf-fill  { height: 100%; border-radius: 3px; width: 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+    .fill-overall { background: linear-gradient(90deg, #10B981, #34D399); }
+    .fill-policy  { background: var(--blue); }
+    .fill-damage  { background: #8B5CF6; }
+    .fill-fraud   { background: #EC4899; }
+    .fill-coverage { background: #F59E0B; }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 6px; }
+    .tl-node  { display: flex; gap: 14px; align-items: flex-start; font-size: 11px; }
+    .tl-time  { font-family: 'Roboto Mono', monospace; font-size: 10px; color: #60A5FA; min-width: 82px; padding-top: 1px; }
+    .tl-event { color: #CBD5E1; line-height: 1.45; }
+
+    /* API payload toggle */
+    .payload-toggle {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      background: none; border: none; padding: 0; margin-top: 10px;
+      transition: color 0.2s;
+    }
+    .payload-toggle:hover { color: var(--blue-lt); }
+    .payload-panel {
+      display: none; margin-top: 10px;
+      background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px;
+    }
+    .payload-panel.visible { display: block; }
+    .payload-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .payload-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 6px; }
+    .payload-code {
+      font-family: 'Roboto Mono', monospace; font-size: 10px;
+      color: #94A3B8; white-space: pre-wrap; word-break: break-all;
+      line-height: 1.6; max-height: 240px; overflow-y: auto;
+    }
+    .payload-code .json-key    { color: #60A5FA; }
+    .payload-code .json-string { color: #4ADE80; }
+    .payload-code .json-number { color: #FCD34D; }
+    .payload-code .json-bool   { color: #F472B6; }
+
+    /* Processing overlay */
+    .processing-overlay {
+      display: none; align-items: center; gap: 12px;
+      padding: 16px; background: rgba(59,130,246,0.06);
+      border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; margin-bottom: 16px;
+    }
+    .processing-overlay.visible { display: flex; }
+    .spinner {
+      width: 20px; height: 20px; border: 2px solid rgba(59,130,246,0.2);
+      border-top-color: var(--blue); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .proc-text { font-size: 12px; color: var(--blue-lt); }
+
+    /* Empty state */
+    .empty-drawer {
+      padding: 32px 24px; text-align: center; color: var(--muted);
+      font-size: 13px; display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+    }
+    .empty-icon { font-size: 36px; }
+
+    /* ── Right sidebar ─────────────────────────────────────── */
+    .right-sidebar {
+      overflow-y: auto; padding: 20px 18px;
+      background: var(--panel);
+    }
+
+    .sb-section { margin-bottom: 22px; }
+    .sb-heading {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin-bottom: 12px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+
+    /* Scenario cards (sidebar) */
+    .sb-scenario {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 10px; padding: 13px 14px 13px 17px;
+      cursor: pointer; transition: all 0.2s; position: relative;
+      overflow: hidden; margin-bottom: 8px;
+    }
+    .sb-scenario::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+    }
+    .ss-auto::before       { background: var(--g-blue); }
+    .ss-home::before       { background: var(--green); }
+    .ss-commercial::before { background: var(--amber); }
+
+    .sb-scenario:hover { border-color: #4D6A8A; background: rgba(59,130,246,0.06); }
+    .sb-scenario.active { border-color: var(--blue-lt); background: rgba(59,130,246,0.1); }
+    .sb-scenario.active.ss-home { border-color: var(--green); background: rgba(16,185,129,0.08); }
+    .sb-scenario.active.ss-commercial { border-color: var(--amber); background: rgba(245,158,11,0.08); }
+
+    .ss-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .ss-icon { font-size: 18px; }
+    .ss-name { font-size: 12px; font-weight: 700; color: var(--text); }
+    .ss-meta { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .ss-auto .ss-meta       { color: #60A5FA; }
+    .ss-home .ss-meta       { color: #34D399; }
+    .ss-commercial .ss-meta { color: #FCD34D; }
+    .ss-desc { font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 5px; }
+
+    /* Mode toggle */
+    .mode-toggle-group {
+      display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;
+    }
+    .mode-opt {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px; cursor: pointer;
+      border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .mode-opt:hover { border-color: var(--border-lt); }
+    .mode-opt.active-opt { border-color: rgba(59,130,246,0.4); background: rgba(59,130,246,0.08); }
+    .mode-opt.active-live-opt { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.07); }
+    .mode-radio { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border-lt); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .mode-opt.active-opt .mode-radio { border-color: var(--blue); background: var(--blue); }
+    .mode-opt.active-live-opt .mode-radio { border-color: var(--green); background: var(--green); }
+    .mode-radio-inner { width: 5px; height: 5px; border-radius: 50%; background: white; display: none; }
+    .mode-opt.active-opt .mode-radio-inner,
+    .mode-opt.active-live-opt .mode-radio-inner { display: block; }
+    .mode-label { font-size: 12px; font-weight: 600; color: var(--text-2); }
+    .mode-desc  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+    .api-endpoint-row {
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;
+    }
+    .ae-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 3px; }
+    .ae-value {
+      font-family: 'Roboto Mono', monospace; font-size: 9px; color: var(--blue-lt);
+      word-break: break-all; line-height: 1.4;
+    }
+    .api-key-row {
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 10px; margin-bottom: 10px;
+    }
+    .ak-input {
+      background: transparent; border: none; outline: none;
+      font-family: 'Roboto Mono', monospace; font-size: 10px;
+      color: var(--muted); width: 100%; font-family: inherit;
+    }
+    .btn-sb-test {
+      width: 100%; padding: 7px; background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3); border-radius: 6px;
+      color: var(--blue-lt); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-sb-test:hover { background: rgba(59,130,246,0.2); }
+
+    .sync-live-indicator {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 10px; color: var(--muted); margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .sl-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--border-lt);
+    }
+    .sl-dot.active { background: var(--green); animation: livePulse 2s infinite; }
+
+    /* Branding footer */
+    .sidebar-footer {
+      margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border);
+    }
+    .sf-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .sf-chip {
+      font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 8px; border-radius: 4px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────── -->
+<header class="app-header">
+  <div class="header-brand">
+    <div class="brand-epam">EPAM</div>
+    <div>
+      <div class="brand-title">Claims Professional Workbench</div>
+      <div class="brand-sub">P&amp;C Intelligent Modernization · FNOL AI Pipeline</div>
+    </div>
+  </div>
+
+  <div class="header-mid">
+    <div class="mode-indicator sim" id="modeIndicator">
+      <div class="mode-dot sim" id="modeDot"></div>
+      <span id="modeLabel">Simulation Mode</span>
+    </div>
+    <button class="btn-config" id="configToggleBtn" onclick="toggleApiConfig()">⚙ API Config</button>
+    <a href="mobileApp.html" target="_blank" style="font-size:11px;color:var(--muted);text-decoration:none;padding:5px 10px;border:1px solid var(--border);border-radius:6px;transition:color 0.2s;" onmouseover="this.style.color='#93C5FD'" onmouseout="this.style.color=''">
+      ← Mobile App
+    </a>
+  </div>
+
+  <div class="header-right">
+    <div class="hdr-chip hdr-chip-google">Google Cloud</div>
+    <div class="hdr-chip hdr-chip-vertex">Vertex AI · Gemini 2.0</div>
+    <div class="hdr-env">Production Simulation · 2026</div>
+  </div>
+</header>
+
+<!-- ── API Config bar ───────────────────────────────────────── -->
+<div class="api-config-bar" id="apiConfigBar">
+  <div class="config-label">Gemini API Endpoint</div>
+  <input class="config-input" id="cfgUrl" type="text"
+    value="https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+    placeholder="Gemini API endpoint URL">
+
+  <div class="config-label">GCP Project (AI Studio)</div>
+  <input class="config-input" id="cfgProject" type="text" style="max-width:160px"
+    value="gen-lang-client-0936528486" placeholder="GCP project ID">
+
+  <div class="config-label">API Key (AI Studio)</div>
+  <input class="config-input key-field" id="cfgKey" type="password"
+    placeholder="Enter Gemini API key…"
+    value="">
+
+  <button class="btn-test" onclick="testConnection()">Test Connection</button>
+  <div class="config-note">
+    Direct Gemini 2.0 Flash API call via Google AI Studio key — no Cloud Functions proxy needed.
+    Set to Simulation mode below for zero-cost demos.
+  </div>
+</div>
+
+<!-- ── Workbench layout ─────────────────────────────────────── -->
+<div class="workbench-layout">
+
+  <!-- Main area -->
+  <main class="main-area">
+
+    <div class="section-title">Active Claims Queue — FNOL Intake Pipeline</div>
+
+    <div class="queue-card">
+      <!-- Queue header -->
+      <div class="queue-header-row">
+        <div>Claim ID</div>
+        <div>Severity</div>
+        <div>Line of Business</div>
+        <div>Loss Context Summary</div>
+        <div>Pipeline Status</div>
+        <div>Received</div>
+      </div>
+
+      <!-- ── Claim 1: Auto ─────────────────────────────────── -->
+      <div class="claim-row" id="row_auto">
+        <div class="claim-trigger" id="trigger_auto" onclick="toggleDrawer('auto')">
+          <div class="claim-id">CLM-92841-NJ</div>
+          <div class="sev-badge sev-moderate">🟡 Moderate</div>
+          <div><span class="lob-tag lob-auto">Auto</span></div>
+          <div class="narrative-snippet" id="snip_auto">Awaiting FNOL payload from mobile channel…</div>
+          <div class="status-pill pill-pending" id="pill_auto">Pending Sync</div>
+          <div style="font-size:11px;color:var(--muted)" id="ts_auto">—</div>
+        </div>
+        <div class="claim-drawer" id="drawer_auto">
+          <div class="empty-drawer" id="empty_auto">
+            <div class="empty-icon">📋</div>
+            <div>No payload loaded. Select this scenario from the right panel or submit from the Mobile App.</div>
+          </div>
+          <div id="content_auto" style="display:none">
+            <!-- Populated by renderDrawer() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Claim 2: Homeowners ───────────────────────────── -->
+      <div class="claim-row" id="row_home">
+        <div class="claim-trigger" id="trigger_home" onclick="toggleDrawer('home')">
+          <div class="claim-id">CLM-48271-FL</div>
+          <div class="sev-badge sev-low">🟢 Minor</div>
+          <div><span class="lob-tag lob-home">Homeowners</span></div>
+          <div class="narrative-snippet" id="snip_home">Awaiting scenario injection…</div>
+          <div class="status-pill pill-pending" id="pill_home">Pending</div>
+          <div style="font-size:11px;color:var(--muted)" id="ts_home">—</div>
+        </div>
+        <div class="claim-drawer" id="drawer_home">
+          <div class="empty-drawer" id="empty_home">
+            <div class="empty-icon">📋</div>
+            <div>Click this claim row or select the Homeowners scenario from the right panel.</div>
+          </div>
+          <div id="content_home" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- ── Claim 3: Commercial ───────────────────────────── -->
+      <div class="claim-row" id="row_commercial">
+        <div class="claim-trigger" id="trigger_commercial" onclick="toggleDrawer('commercial')">
+          <div class="claim-id">CLM-73019-TX</div>
+          <div class="sev-badge sev-high">🔴 High</div>
+          <div><span class="lob-tag lob-commercial">Commercial</span></div>
+          <div class="narrative-snippet" id="snip_commercial">Awaiting scenario injection…</div>
+          <div class="status-pill pill-pending" id="pill_commercial">Pending</div>
+          <div style="font-size:11px;color:var(--muted)" id="ts_commercial">—</div>
+        </div>
+        <div class="claim-drawer" id="drawer_commercial">
+          <div class="empty-drawer" id="empty_commercial">
+            <div class="empty-icon">📋</div>
+            <div>Click this claim row or select the Commercial scenario from the right panel.</div>
+          </div>
+          <div id="content_commercial" style="display:none"></div>
+        </div>
+      </div>
+
+    </div><!-- end queue-card -->
+  </main>
+
+  <!-- ── Right Sidebar ────────────────────────────────────── -->
+  <aside class="right-sidebar">
+
+    <!-- Demo Scenarios -->
+    <div class="sb-section">
+      <div class="sb-heading">Demo Scenarios — Click to Process</div>
+
+      <div class="sb-scenario ss-auto" id="ss_auto" onclick="injectScenario('auto')">
+        <div class="ss-header">
+          <span class="ss-icon">🚗</span>
+          <div>
+            <div class="ss-name">Auto Collision</div>
+            <div class="ss-meta">Auto · New Jersey</div>
+          </div>
+        </div>
+        <div class="ss-desc">Hydroplaning event on Route 1 during heavy rain. $5,750 estimated damage. Police report on file.</div>
+      </div>
+
+      <div class="sb-scenario ss-home" id="ss_home" onclick="injectScenario('home')">
+        <div class="ss-header">
+          <span class="ss-icon">🏡</span>
+          <div>
+            <div class="ss-name">Wind &amp; Hail Loss</div>
+            <div class="ss-meta">Homeowners · Florida</div>
+          </div>
+        </div>
+        <div class="ss-desc">Severe storm. Roof shingle damage and interior water leak. $12,400 estimated damage.</div>
+      </div>
+
+      <div class="sb-scenario ss-commercial" id="ss_commercial" onclick="injectScenario('commercial')">
+        <div class="ss-header">
+          <span class="ss-icon">🏢</span>
+          <div>
+            <div class="ss-name">Commercial Fire</div>
+            <div class="ss-meta">Commercial · Texas</div>
+          </div>
+        </div>
+        <div class="ss-desc">Electrical fire in retail boutique. Sprinkler suppressed. $87,500 inventory &amp; property damage.</div>
+      </div>
+    </div>
+
+    <!-- API Mode -->
+    <div class="sb-section">
+      <div class="sb-heading">Processing Mode</div>
+      <div class="mode-toggle-group">
+        <div class="mode-opt" id="optSim" onclick="setMode('sim')">
+          <div class="mode-radio"><div class="mode-radio-inner"></div></div>
+          <div>
+            <div class="mode-label">Simulation</div>
+            <div class="mode-desc">Deterministic mock data · Zero cost</div>
+          </div>
+        </div>
+        <div class="mode-opt active-live-opt" id="optLive" onclick="setMode('live')">
+          <div class="mode-radio"><div class="mode-radio-inner"></div></div>
+          <div>
+            <div class="mode-label">Live Gemini API</div>
+            <div class="mode-desc">Gemini 2.0 Flash · AI Studio key</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="api-endpoint-row">
+        <div class="ae-label">Gemini API Endpoint</div>
+        <div class="ae-value" id="sbEndpointDisplay">generativelanguage.googleapis.com/…/gemini-flash-latest</div>
+      </div>
+
+      <div class="api-key-row">
+        <div class="ae-label">API Key (AI Studio)</div>
+        <input class="ak-input" id="sbApiKey" type="password"
+          placeholder="Enter Gemini API key…"
+          value=""
+          onchange="CONFIG.apiKey = this.value">
+      </div>
+
+      <button class="btn-sb-test" onclick="testConnection()">▶ Test API Connection</button>
+
+      <div class="sync-live-indicator">
+        <div class="sl-dot" id="lsyncDot"></div>
+        <span id="lsyncLabel" style="font-size:10px;color:var(--muted);">Listening for mobile submissions…</span>
+      </div>
+    </div>
+
+    <!-- Branding footer -->
+    <div class="sidebar-footer">
+      <div style="font-size:9px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px;">Built on</div>
+      <div class="sf-row">
+        <div class="sf-chip">Google Cloud</div>
+        <div class="sf-chip">Vertex AI</div>
+        <div class="sf-chip">Gemini 2.0 Flash</div>
+        <div class="sf-chip">AI Studio</div>
+        <div class="sf-chip">Cloud Storage</div>
+        <div class="sf-chip">EPAM AI Eng.</div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- AI Factory — load in dependency order -->
+<script src="js/ai-factory/prompts/_schema.js"></script>
+<script src="js/ai-factory/prompts/auto.js"></script>
+<script src="js/ai-factory/prompts/home.js"></script>
+<script src="js/ai-factory/prompts/commercial.js"></script>
+<script src="js/ai-factory/shared/media-processor.js"></script>
+<script src="js/ai-factory/shared/gemini-client.js"></script>
+<script src="js/ai-factory/auto-api.js"></script>
+<script src="js/ai-factory/home-api.js"></script>
+<script src="js/ai-factory/commercial-api.js"></script>
+<script src="js/ai-factory/index.js"></script>
+<script src="js/ai-factory/mock-sor.js"></script>
+<script src="js/ai-factory/auto-orchestration.js"></script>
+<script src="js/ai-factory/mock-home-apis.js"></script>
+<script src="js/ai-factory/home-orchestration.js"></script>
+<script src="js/ai-factory/mock-commercial-apis.js"></script>
+<script src="js/ai-factory/commercial-orchestration.js"></script>
+<script>
+/* ──────────────────────────────────────────────────────────────
+   CONFIG
+────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  mode: 'live',  /* 'sim' | 'live' */
+  /* Google AI Studio Gemini API — direct browser call, no proxy needed */
+  geminiEndpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent',
+  projectId: 'gen-lang-client-0936528486',
+  /* Enter your Google AI Studio key in the sidebar */
+  apiKey: ''
+};
+
+/* ──────────────────────────────────────────────────────────────
+   SCENARIO DATA
+────────────────────────────────────────────────────────────── */
+const SCENARIOS = {
+  auto: {
+    key: 'auto',
+    claimId: 'CLM-92841-NJ',
+    lob: 'Auto',
+    state: 'New Jersey (NJ)',
+    severity: 'Moderate',
+    narrative: `I was driving northbound on Route 1 near Plainsboro, NJ when my 2023 Honda Accord hydroplaned during heavy rainfall and struck a guardrail. The front bumper is cracked and the radiator is actively leaking fluid. NJ State Police arrived on scene (Incident #NJSP-2026-874512) and arranged a tow through Garden State Towing LLC. No personal injuries. Policy number LMIC-7812456.`,
+    photos: [
+      { label: 'Vehicle Damage', src: 'Sample Data/HydropanningEvent/VechileDamage_Front.png' },
+      { label: 'Tow Truck On Scene', src: 'Sample Data/HydropanningEvent/Towing Picture.png' },
+      { label: 'Police Report', src: 'Sample Data/HydropanningEvent/PoliceReport.png' },
+      { label: 'Driver ID / License', src: 'Sample Data/HydropanningEvent/NJ DL.png' },
+      { label: 'Tow Service Receipt', src: null, icon: '🧾' },
+      { label: 'Repair Estimate', src: null, icon: '📊' }
+    ],
+    ai: {
+      overallConfidence: 0.96, policyMatch: 0.99, damageAssessment: 0.95,
+      fraudDetection: 0.98, coverageValidation: 0.97,
+      metadata: {
+        lossType: 'Auto Collision', cause: 'Roadway Hydroplaning',
+        policyTier: 'Liberty Mutual Personal Auto',
+        state: 'New Jersey (NJ)', weather: 'Heavy Rain / Wet Roadway',
+        estimatedDamage: '$5,750', fraudRisk: 'Low Risk Profile',
+        deductible: '$500'
+      },
+      entities: {
+        insured: 'Michael Carter', vehicle: '2023 Honda Accord EX',
+        vin: '1HGCV1F38PA123456', policyNumber: 'LMIC-7812456',
+        policeIncident: 'NJSP-2026-874512', towCompany: 'Garden State Towing LLC',
+        repairEstimate: '$5,750'
+      },
+      aiSummary: `Policy LMIC-7812456 is active with collision and comprehensive coverage. Vehicle damage is consistent with a hydroplaning event during documented heavy rainfall conditions on Route 1, NJ. Police report #NJSP-2026-874512 and towing documentation from Garden State Towing LLC align with the claimant's statement. No prior collision claims on record. Fraud risk is low. Recommend assigning to adjuster and initiating Repair Estimation & Vendor Management workflow.`,
+      fraud: [
+        'Government-issued photo ID validated via OCR match',
+        'Weather conditions corroborated with NOAA meteorological telemetry',
+        'Police incident report — badge registry confirmed',
+        'Tow manifest GPS coordinates cross-referenced',
+        'Bumper/radiator damage geometrically consistent with guardrail impact',
+        'Cross-company risk database: zero suspicious prior claims'
+      ],
+      nextSteps: [
+        'Assign Claim to Auto Adjuster (Standard Complexity Queue)',
+        'Validate Final Policy Deductible & Coverage Limits',
+        'Initiate Repair Network Engagement (Preferred Vendor List)',
+        'Schedule Vehicle Inspection (If Required Based on Damage Severity)',
+        'Notify Customer via SMS / App with Claim Status Update',
+        'Generate Preliminary Settlement Estimate',
+        'Approve Tow & Rental Car Coverage Activation',
+        'Continue Fraud Monitoring During Lifecycle'
+      ],
+      timeline: [
+        'FNOL transmitted via mobile gateway — payload ingested',
+        'Document OCR extraction — police report parsed',
+        'Entity schema extraction complete — 7 fields resolved',
+        'Policy lookup — LMIC-7812456 active, coverage confirmed',
+        'Fraud risk scoring — 98% confidence: Low',
+        'Damage cost estimation — $5,750 variance generated',
+        'AI summary & recommendation generated',
+        'Claim assigned to adjuster queue'
+      ]
+    }
+  },
+
+  home: {
+    key: 'home',
+    claimId: 'CLM-48271-FL',
+    lob: 'Homeowners',
+    state: 'Florida (FL)',
+    severity: 'Minor',
+    narrative: `A severe thunderstorm with sustained winds of 70 mph and large hail struck our neighborhood last night. This morning I found approximately a dozen shingles completely blown off the rear roof pitch of my home at 412 Maple Drive, Gainesville, FL 32601. There is an active water leak forming a visible stain on the master bedroom ceiling. Homeowners policy HO-FL-293847.`,
+    photos: [
+      { label: 'Roof Damage Overview', src: 'Sample Data/Home_Hail/RoofDamage.png' },
+      { label: 'Ceiling Water Stain', src: 'Sample Data/Home_Hail/Ceiling_Water_Damage.png' },
+      { label: 'Hail Evidence', src: 'Sample Data/Home_Hail/Hail_Damage.png' },
+      { label: 'Property Survey', src: 'Sample Data/Home_Hail/Property Survey.png' },
+      { label: 'Weather Report', src: 'Sample Data/Home_Hail/Weather Report.png' },
+      { label: 'Contractor Quote', src: 'Sample Data/Home_Hail/Quote.png' }
+    ],
+    ai: {
+      overallConfidence: 0.93, policyMatch: 0.97, damageAssessment: 0.92,
+      fraudDetection: 0.96, coverageValidation: 0.94,
+      metadata: {
+        lossType: 'Wind & Hail Damage', cause: 'Severe Thunderstorm — 70 mph',
+        policyTier: 'Homeowners HO-3 Standard',
+        state: 'Florida (FL)', weather: 'Severe Thunderstorm / Large Hail',
+        estimatedDamage: '$12,400', fraudRisk: 'Low Risk Profile',
+        deductible: '$1,000 (Hurricane separate)'
+      },
+      entities: {
+        insured: 'Sarah Johnson', property: '412 Maple Drive, Gainesville FL 32601',
+        policyNumber: 'HO-FL-293847', coverageLimit: '$380,000',
+        contractor: 'Pending Assignment', roofAge: '6 Years',
+        repairEstimate: '$12,400'
+      },
+      aiSummary: `Policy HO-FL-293847 is active with Dwelling and Personal Property coverage. NWS weather records confirm a severe thunderstorm with 72 mph peak winds impacted Alachua County on the reported date. Roof shingle loss pattern is consistent with wind-uplift mechanics documented in the claimant's description. Interior water intrusion to master bedroom ceiling constitutes a secondary covered loss requiring emergency mitigation contact. No prior claims under this policy. Recommend dispatching licensed roofing contractor within 24 hours.`,
+      fraud: [
+        'NWS meteorological data confirms severe wind event on loss date',
+        'Property address validated against Alachua County tax records',
+        'Roof age (6 years) consistent with reported shingle damage profile',
+        'No prior water or wind claims under policy HO-FL-293847',
+        'Claimant-reported damage pattern aligns with storm trajectory data',
+        'Third-party databases: no suspicious activity indicators'
+      ],
+      nextSteps: [
+        'Assign Claim to Property Adjuster (Moderate Severity Queue)',
+        'Dispatch Field Adjuster for Roof / Structural Inspection',
+        'Validate Weather Event Match (Hail / Wind Confirmation)',
+        'Approve Emergency Mitigation Vendor (If Applicable)',
+        'Request Contractor Estimates (If Not Provided)',
+        'Notify Customer with Damage Assessment Summary',
+        'Initiate Initial Reserve Calculation',
+        'Assess Additional Living Expense (ALE) Eligibility',
+        'Continue AI Monitoring for Supplemental Damage Claims'
+      ],
+      timeline: [
+        'FNOL transmitted via mobile gateway — payload ingested',
+        'Property address geo-validation — confirmed Alachua County, FL',
+        'NWS weather data pull — severe storm event corroborated',
+        'Policy HO-FL-293847 verified — dwelling coverage active',
+        'Fraud risk scoring — 96% confidence: Low',
+        'Damage estimation — roof + interior: $12,400',
+        'Emergency mitigation flag set — active water intrusion detected',
+        'Assigned to FL-licensed adjuster queue'
+      ]
+    }
+  },
+
+  commercial: {
+    key: 'commercial',
+    claimId: 'CLM-73019-TX',
+    lob: 'Commercial Property',
+    state: 'Texas (TX)',
+    severity: 'High',
+    narrative: `An electrical fire broke out in the back storage area of our retail boutique at 890 Commerce Blvd, Austin, TX 78701 at approximately 6:00 AM today. The building's commercial sprinkler system activated and successfully contained the fire, but the entire rear half of our inventory is now damaged by heavy soot, smoke, and standing water. Austin Fire Department responded (Report #AFD-2026-041879). Commercial policy CP-TX-884721.`,
+    photos: [
+      { label: 'Electrical Fire Damage', src: 'Sample Data/Commercial Fire Claim/Electrical Fire Damage.png' },
+      { label: 'Water Damage (Sprinkler)', src: 'Sample Data/Commercial Fire Claim/WaterDamage.png' },
+      { label: 'Inventory / PO Proof', src: 'Sample Data/Commercial Fire Claim/PO_Proof.png' },
+      { label: 'AFD Incident Report', src: 'Sample Data/Commercial Fire Claim/AFD Report1.png' },
+      { label: 'Building Exterior', src: 'Sample Data/Commercial Fire Claim/Business_External.png' },
+      { label: 'Fire Investigator Notes', src: 'Sample Data/Commercial Fire Claim/Fire investigator.png' }
+    ],
+    ai: {
+      overallConfidence: 0.91, policyMatch: 0.95, damageAssessment: 0.89,
+      fraudDetection: 0.87, coverageValidation: 0.93,
+      metadata: {
+        lossType: 'Commercial Property Fire', cause: 'Electrical Fire — Sprinkler Suppressed',
+        policyTier: 'Commercial Property CP-3',
+        state: 'Texas (TX)', weather: 'Normal Conditions',
+        estimatedDamage: '$87,500', fraudRisk: 'Moderate — Enhanced Review',
+        deductible: '$5,000'
+      },
+      entities: {
+        insured: 'Metro Retail LLC', property: '890 Commerce Blvd, Austin TX 78701',
+        policyNumber: 'CP-TX-884721', fireReportNumber: 'AFD-2026-041879',
+        businessInterruption: 'Coverage Active', inventoryValue: '$62,000',
+        repairEstimate: '$87,500'
+      },
+      aiSummary: `Commercial policy CP-TX-884721 is active with Fire, Water Damage, and Business Interruption coverage. AFD report #AFD-2026-041879 confirms an electrical fire origin in the rear storage room. Sprinkler activation is corroborated by Austin Fire Department dispatch logs. Claimed inventory damage of $62,000 and structural repair estimate of $87,500 triggers enhanced fraud review protocol per commercial P&C guidelines (threshold: $50,000). Fire marshal report required before settlement authorization. Recommend assigning a senior adjuster with commercial loss experience and scheduling on-site inspection within 24 hours.`,
+      fraud: [
+        'AFD report #AFD-2026-041879 confirmed via public record lookup',
+        'Electrical fire origin consistent with circuit breaker panel location',
+        'Sprinkler activation corroborated by water utility surge data',
+        '⚠ Claim amount ($87,500) exceeds commercial enhanced-review threshold',
+        '⚠ Prior business interruption claim filed 18 months ago — under review',
+        'Fire marshal origin investigation report required before settlement'
+      ],
+      nextSteps: [
+        'Initiate Emergency Mitigation Services',
+        'Schedule Structural Engineering Inspection',
+        'Engage Restoration Contractor Network',
+        'Validate Business Interruption Calculations',
+        'Notify Risk Engineering Team',
+        'Assign Commercial Property Adjuster',
+        'Prepare Advance Payment Recommendation',
+        'Begin Settlement Review Workflow'
+      ],
+      timeline: [
+        'FNOL transmitted via mobile gateway — payload ingested',
+        'AFD incident lookup — report #AFD-2026-041879 validated',
+        'Commercial policy CP-TX-884721 verified — CP-3 coverage active',
+        'Business interruption coverage flag raised',
+        'Claim amount triggers enhanced fraud review protocol',
+        'Prior claim cross-reference — 18-month history flag generated',
+        'Senior adjuster queue assignment initiated',
+        'SIU preliminary review notification dispatched'
+      ],
+      insights: {
+        causeOfLoss: 'Electrical Equipment Failure',
+        damageSeverity: 'High',
+        biRisk: 'Significant',
+        estimatedPropertyDamage: '$425,000',
+        estimatedBI: '$180,000',
+        fraudRiskScore: 'Low',
+        priority: 'High Severity Commercial Claim'
+      }
+    }
+  }
+};
+
+/* ──────────────────────────────────────────────────────────────
+   STATE
+────────────────────────────────────────────────────────────── */
+let openDrawer = null;
+const loadedScenarios = {};
+
+/* ──────────────────────────────────────────────────────────────
+   MODE TOGGLE
+────────────────────────────────────────────────────────────── */
+function setMode(mode) {
+  CONFIG.mode = mode;
+
+  document.getElementById('optSim').className  = 'mode-opt' + (mode === 'sim'  ? ' active-opt' : '');
+  document.getElementById('optLive').className = 'mode-opt' + (mode === 'live' ? ' active-live-opt' : '');
+
+  const ind = document.getElementById('modeIndicator');
+  const dot = document.getElementById('modeDot');
+  const lbl = document.getElementById('modeLabel');
+
+  if (mode === 'sim') {
+    ind.className = 'mode-indicator sim';
+    dot.className = 'mode-dot sim';
+    lbl.textContent = 'Simulation Mode';
+  } else {
+    ind.className = 'mode-indicator live';
+    dot.className = 'mode-dot live';
+    lbl.textContent = 'Live Vertex AI';
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   API CONFIG PANEL
+────────────────────────────────────────────────────────────── */
+function toggleApiConfig() {
+  const bar = document.getElementById('apiConfigBar');
+  const btn = document.getElementById('configToggleBtn');
+  const isOpen = bar.classList.contains('visible');
+  bar.classList.toggle('visible', !isOpen);
+  btn.style.color = isOpen ? '' : 'var(--blue-lt)';
+}
+
+async function testConnection() {
+  /* Sync key from config panel inputs if open */
+  const keyInput = document.getElementById('cfgKey');
+  const projInput = document.getElementById('cfgProject');
+  if (keyInput?.value)  { CONFIG.apiKey    = keyInput.value; document.getElementById('sbApiKey').value = keyInput.value; }
+  if (projInput?.value) CONFIG.projectId = projInput.value;
+
+  /* Sync key from sidebar input */
+  const sbKey = document.getElementById('sbApiKey')?.value;
+  if (sbKey) CONFIG.apiKey = sbKey;
+
+  if (CONFIG.mode === 'sim') {
+    showToast('Simulation mode active — no API call made.', 'blue');
+    return;
+  }
+  if (!CONFIG.apiKey) {
+    showToast('⚠ Enter your Gemini API key first.', 'amber');
+    return;
+  }
+
+  showToast('Sending ping to Gemini API…', 'blue');
+  try {
+    const url = `${CONFIG.geminiEndpoint}?key=${CONFIG.apiKey}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: 'Reply with exactly: {"status":"ok"}' }] }],
+        generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 20 }
+      })
+    });
+    const ok = res.status === 200;
+    showToast(ok ? '✓ Gemini API reachable — key valid' : `⚠ API returned ${res.status}`, ok ? 'green' : 'amber');
+  } catch (e) {
+    showToast(`✕ Connection failed: ${e.message}`, 'red');
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   TOAST NOTIFICATION
+────────────────────────────────────────────────────────────── */
+function showToast(msg, color = 'blue') {
+  let t = document.getElementById('_toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = '_toast';
+    Object.assign(t.style, {
+      position: 'fixed', bottom: '28px', left: '50%', transform: 'translateX(-50%)',
+      padding: '10px 22px', borderRadius: '24px', fontSize: '12px', fontWeight: '600',
+      zIndex: '9999', transition: 'opacity 0.3s', fontFamily: 'inherit'
+    });
+    document.body.appendChild(t);
+  }
+  const map = { blue: ['rgba(59,130,246,0.9)','#FFF'], green: ['rgba(16,185,129,0.9)','#FFF'],
+                 amber: ['rgba(245,158,11,0.9)','#000'], red: ['rgba(239,68,68,0.9)','#FFF'] };
+  const [bg, fg] = map[color] || map.blue;
+  t.style.background = bg; t.style.color = fg;
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 3000);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   DRAWER TOGGLE
+────────────────────────────────────────────────────────────── */
+function toggleDrawer(key) {
+  const drawer  = document.getElementById(`drawer_${key}`);
+  const trigger = document.getElementById(`trigger_${key}`);
+
+  if (openDrawer && openDrawer !== key) {
+    document.getElementById(`drawer_${openDrawer}`).classList.remove('open');
+    document.getElementById(`trigger_${openDrawer}`).classList.remove('open');
+  }
+
+  const isOpen = drawer.classList.contains('open');
+  drawer.classList.toggle('open', !isOpen);
+  trigger.classList.toggle('open', !isOpen);
+
+  openDrawer = isOpen ? null : key;
+
+  if (!isOpen && loadedScenarios[key]) {
+    setTimeout(() => animateConfidenceBars(key), 100);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   INJECT SCENARIO (from sidebar)
+────────────────────────────────────────────────────────────── */
+async function injectScenario(key) {
+  const sc = SCENARIOS[key];
+
+  /* Highlight sidebar card */
+  document.querySelectorAll('.sb-scenario').forEach(c => c.classList.remove('active'));
+  document.getElementById(`ss_${key}`).classList.add('active');
+
+  /* Open this drawer, close others */
+  ['auto','home','commercial'].forEach(k => {
+    if (k !== key) {
+      document.getElementById(`drawer_${k}`).classList.remove('open');
+      document.getElementById(`trigger_${k}`).classList.remove('open');
+    }
+  });
+  document.getElementById(`drawer_${key}`).classList.add('open');
+  document.getElementById(`trigger_${key}`).classList.add('open');
+  openDrawer = key;
+
+  /* Update queue row summary */
+  document.getElementById(`snip_${key}`).textContent = sc.narrative.substring(0, 80) + '…';
+  document.getElementById(`pill_${key}`).textContent = 'Processing…';
+  document.getElementById(`pill_${key}`).className = 'status-pill pill-processing';
+  document.getElementById(`ts_${key}`).textContent = new Date().toLocaleTimeString();
+
+  /* Show processing overlay */
+  const contentEl = document.getElementById(`content_${key}`);
+  const emptyEl   = document.getElementById(`empty_${key}`);
+  emptyEl.style.display = 'none';
+
+  /* Build the processing placeholder */
+  contentEl.style.display = 'block';
+  contentEl.innerHTML = `
+    <div class="processing-overlay visible" id="proc_${key}">
+      <div class="spinner"></div>
+      <div class="proc-text">
+        ${CONFIG.mode === 'live' ? 'Calling Vertex AI Gemini 2.0 Flash endpoint…' : 'Running simulation pipeline…'}
+        <span style="color:var(--muted);margin-left:8px;font-size:10px">${CONFIG.mode === 'live' ? CONFIG.geminiEndpoint : 'Deterministic mock · zero cost'}</span>
+      </div>
+    </div>
+  `;
+
+  /* Process */
+  let aiData;
+  if (CONFIG.mode === 'live') {
+    aiData = await callVertexAI(sc);
+  } else {
+    await sleep(1400); /* Simulate processing latency */
+    aiData = sc.ai;
+  }
+
+  loadedScenarios[key]          = aiData;
+  loadedScenarios[key + '_sc']  = sc;   /* Retained for orchestration panel */
+
+  /* Build API payload display */
+  const reqPayload = buildRequestPayload(sc);
+  const resPayload = aiData;
+
+  /* Render the drawer */
+  renderDrawer(key, sc, aiData, reqPayload, resPayload);
+
+  /* Update pill */
+  document.getElementById(`pill_${key}`).textContent = 'AI Processed';
+  document.getElementById(`pill_${key}`).className = 'status-pill pill-processed';
+
+  /* Animate confidence bars */
+  setTimeout(() => animateConfidenceBars(key, aiData), 150);
+
+  /* Scroll to drawer */
+  document.getElementById(`row_${key}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ──────────────────────────────────────────────────────────────
+   GEMINI API — FNOL EXTRACTION (multimodal)
+   Routed through AIFactory (js/ai-factory/index.js).
+   callVertexAI() is the workbench wrapper: handles key, toast,
+   fallback, and passes both narrative + labeled evidence images.
+────────────────────────────────────────────────────────────── */
+
+/* What we send to Gemini — shown in the API payload panel */
+function buildRequestPayload(sc) {
+  const photoCount = (sc.photos || []).filter(p => p.src).length
+    + (sc.mobileAttachment ? 1 : 0);
+  const imageParts = photoCount > 0
+    ? Array.from({ length: photoCount }, (_, i) => ({
+        inlineData: { mimeType: 'image/jpeg', data: `<base64-image-${i + 1}>` }
+      }))
+    : [];
+  return {
+    model: 'gemini-flash-latest',
+    contents: [{
+      role: 'user',
+      parts: [
+        { text: AIFactory.buildPrompt(sc, photoCount) },
+        ...imageParts
+      ]
+    }],
+    generationConfig: {
+      responseMimeType: 'application/json',
+      temperature: 0.1,
+      maxOutputTokens: 3000
+    },
+    _meta: {
+      claimId:        sc.claimId,
+      lob:            sc.lob,
+      jurisdiction:   sc.state,
+      evidenceImages: photoCount,
+      submittedAt:    new Date().toISOString(),
+      channel:        sc.mobileAttachment ? 'mobile_web' : 'workbench',
+      gcpProject:     CONFIG.projectId
+    }
+  };
+}
+
+async function callVertexAI(sc) {
+  if (!CONFIG.apiKey) {
+    showToast('⚠ No API key — enter in sidebar or switch to Simulation mode.', 'amber');
+    return sc.ai;
+  }
+
+  const photoCount = (sc.photos || []).filter(p => p.src).length
+    + (sc.mobileAttachment ? 1 : 0);
+  if (photoCount > 0) {
+    showToast(`⚙ Building multimodal request — ${photoCount} evidence image(s)…`, 'blue');
+  }
+
+  try {
+    const result = await AIFactory.analyze(sc, CONFIG.apiKey, CONFIG.geminiEndpoint);
+    const imgNote = photoCount > 0 ? ` · ${photoCount} image(s) analyzed` : '';
+    showToast(`✓ Gemini 2.0 Flash response received${imgNote}`, 'green');
+    return result;
+  } catch (err) {
+    showToast(`⚠ Gemini API failed — falling back to simulation. (${err.message})`, 'amber');
+    console.error('[Gemini API]', err);
+    return sc.ai;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   RENDER DRAWER CONTENT
+────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────
+   AI PROCESSING MATRIX — dynamic per LOB
+   Returns 12 check-item rows tailored to auto / home / commercial.
+────────────────────────────────────────────────────────────── */
+function buildProcessingMatrix(sc, ai) {
+  const lob = (sc.lob || sc.key || '').toLowerCase();
+  const isAuto       = lob.includes('auto');
+  const isHome       = lob.includes('home') || lob.includes('owner');
+  const isCommercial = lob.includes('commercial');
+
+  const MATRIX = {
+    auto: [
+      'Policy Active & Premium Status Verified',
+      'Named Driver & Vehicle Ownership Confirmed',
+      'Collision & Comprehensive Coverage Eligibility Validated',
+      'Collision Event & Road Conditions Corroborated',
+      'Police Report & Tow Documentation Verified',
+      'Vehicle Damage Severity Assessed',
+      'Repair Estimate Generated',
+      `Fraud Risk Scored — ${ai.metadata?.fraudRisk || 'Assessed'}`,
+      'AI Claim Summary Completed',
+      'Recommended Next Best Action Generated',
+      'Claim Assigned to Auto Adjuster Queue',
+      'Settlement Recommendation Prepared'
+    ],
+    home: [
+      'Policy Active & Premium Status Verified',
+      'Named Insured & Property Ownership Confirmed',
+      'Dwelling & Personal Property Coverage Eligibility Validated',
+      'Weather Event & Storm Damage Corroborated via NWS',
+      'NWS Weather Report & Property Survey Verified',
+      'Structural & Interior Damage Severity Assessed',
+      'Repair & Restoration Estimate Generated',
+      `Fraud Risk Scored — ${ai.metadata?.fraudRisk || 'Assessed'}`,
+      'AI Claim Summary Completed',
+      'Recommended Next Best Action Generated',
+      'Claim Assigned to Homeowners Adjuster Queue',
+      'Settlement Recommendation Prepared'
+    ],
+    commercial: [
+      'Commercial Policy & Coverage Verified',
+      'Named Insured & Covered Location Validated',
+      'Building, Contents & Equipment Coverage Confirmed',
+      'Fire & Smoke Damage Coverage Eligibility Verified',
+      'Fire Department Incident Report Validated',
+      'AI Fire & Structural Damage Assessment Completed',
+      'Smoke, Water & Secondary Damage Identified',
+      'Business Interruption Exposure Evaluated',
+      'Inventory & Equipment Loss Assessment Completed',
+      'Repair & Reconstruction Estimate Generated',
+      `Fraud Risk Assessment: ${ai.metadata?.fraudRisk || 'Assessed'}`,
+      'Vendor, Contractor & Mitigation Invoices Validated',
+      'AI Claim Summary & Recommendation Generated',
+      'Claim Assigned to Commercial Property Adjuster Queue',
+      'Settlement Recommendation Prepared for Review'
+    ]
+  };
+
+  const items = isCommercial ? MATRIX.commercial
+              : isHome       ? MATRIX.home
+              :                MATRIX.auto;
+
+  return items.map(label =>
+    `<div class="check-item"><span class="check-pass">✓</span><span>${label}</span></div>`
+  ).join('');
+}
+
+function getExecSummaryTitle(sc) {
+  const lob = (sc.lob || sc.key || '').toLowerCase();
+  if (lob.includes('commercial')) return 'Executive Commercial Property AI Summary';
+  if (lob.includes('home') || lob.includes('owner')) return 'Executive Homeowners AI Summary';
+  return 'Executive Auto Claims AI Summary';
+}
+
+/* ──────────────────────────────────────────────────────────────
+   AI SUMMARY / INSIGHTS PANEL — commercial only
+   Returns a full-width row HTML, or '' for auto / home.
+────────────────────────────────────────────────────────────── */
+function buildCommercialInsightsPanel(sc, ai) {
+  const lob = (sc.lob || sc.key || '').toLowerCase();
+  if (!lob.includes('commercial')) return '';
+  const ins = (ai && ai.insights) ? ai.insights : null;
+  if (!ins) return '';
+
+  function severityClass(v) {
+    if (!v) return '';
+    const u = v.toLowerCase();
+    if (u === 'critical') return 'severity-critical';
+    if (u === 'high' || u === 'significant' || u === 'severe') return 'severity-high';
+    return '';
+  }
+  function riskClass(v) {
+    if (!v) return '';
+    const u = v.toLowerCase();
+    if (u.startsWith('low'))  return 'risk-low';
+    if (u.startsWith('high')) return 'risk-high';
+    return 'risk-moderate';
+  }
+
+  function card(label, value, extraClass) {
+    return `<div class="insight-card">
+      <div class="insight-label">${label}</div>
+      <div class="insight-value ${extraClass || ''}">${value || '—'}</div>
+    </div>`;
+  }
+
+  return `
+    <!-- Row 5: AI Insights (commercial only) -->
+    <div class="d-row-1">
+      <div class="d-panel" style="border-color:rgba(99,102,241,0.3);background:linear-gradient(135deg,rgba(99,102,241,0.05),transparent)">
+        <div class="d-panel-title" style="color:#A5B4FC;letter-spacing:1px;">AI Summary / Insights</div>
+        <div class="insights-grid">
+          ${card('Cause of Loss',                   ins.causeOfLoss,               '')}
+          ${card('Property Damage Severity',        ins.damageSeverity,            severityClass(ins.damageSeverity))}
+          ${card('Business Interruption Risk',      ins.biRisk,                    severityClass(ins.biRisk))}
+          ${card('Estimated Property Damage',       ins.estimatedPropertyDamage,   'amt')}
+          ${card('Estimated Business Interruption', ins.estimatedBI,               'amt')}
+          ${card('Fraud Risk Score',                ins.fraudRiskScore,            riskClass(ins.fraudRiskScore))}
+          ${card('Recommended Priority',            `<span class="priority-tag">${ins.priority}</span>`, '')}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   E2E ORCHESTRATION PANEL — auto (7 steps), home (10 steps), commercial (12 steps)
+────────────────────────────────────────────────────────────── */
+function buildOrchestrationPanel(sc, ai) {
+  const lob = (sc.lob || sc.key || '').toLowerCase();
+  const isAuto       = lob.includes('auto');
+  const isHome       = lob.includes('home') || lob.includes('owner');
+  const isCommercial = lob.includes('commercial');
+  if (!isAuto && !isHome && !isCommercial) return '';
+
+  const AUTO_STEPS = [
+    { num: '01', title: 'Claim Intake',          sub: 'Multimodal Understanding  ·  gemini-flash-latest' },
+    { num: '02', title: 'Policy Verification',   sub: 'Function Calling + Mock SOR API  ·  gemini-flash-latest' },
+    { num: '03', title: 'Coverage Verification', sub: 'Reasoning Layer  ·  gemini-flash-latest' },
+    { num: '04', title: 'Fraud Scoring',         sub: 'Classification Model  ·  gemini-flash-latest' },
+    { num: '05', title: 'Damage Estimation',     sub: 'Computer Vision  ·  gemini-flash-latest' },
+    { num: '06', title: 'AI Claim Summary',      sub: 'GenAI Narrative  ·  gemini-flash-latest' },
+    { num: '07', title: 'Workflow Orchestration',sub: 'Rule-Based Routing  ·  Pub/Sub → Adjuster Queue' }
+  ];
+
+  const HOME_STEPS = [
+    { num: '01', title: 'FNOL Intake & Channel Detection',  sub: 'Multimodal Understanding  ·  gemini-flash-latest' },
+    { num: '02', title: 'Policy Verification',              sub: 'Function Calling + Mock SOR API  ·  gemini-flash-latest' },
+    { num: '03', title: 'Document & Image Ingestion',       sub: 'Gemini Vision — Roof & Interior Photos  ·  gemini-flash-latest' },
+    { num: '04', title: 'Weather & Property Enrichment',    sub: 'External APIs — NWS · Roof Risk · Contractor Network' },
+    { num: '05', title: 'Gemini Understanding Layer',       sub: 'Peril ID · Entity Extraction · Severity  ·  gemini-flash-latest' },
+    { num: '06', title: 'Fraud & Risk Scoring',             sub: 'ML Cross-Validation  ·  gemini-flash-latest' },
+    { num: '07', title: 'Coverage & ALE Decision',          sub: 'FL Hurricane Deductible Reasoning  ·  gemini-flash-latest' },
+    { num: '08', title: 'Damage & Cost Estimation',         sub: 'Gemini Vision + Cost Model  ·  gemini-flash-latest' },
+    { num: '09', title: 'Claim Decision Engine',            sub: 'Final AI Reasoning + Reserve  ·  gemini-flash-latest' },
+    { num: '10', title: 'System Execution & Routing',       sub: 'Rule-Based  ·  Guidewire ClaimCenter → Adjuster Queue' }
+  ];
+
+  const COMMERCIAL_STEPS = [
+    { num: '01', title: 'FNOL Intake + API Gateway',          sub: 'Multi-Channel Enterprise Entry  ·  Mobile Channel  ·  Payload Normalisation' },
+    { num: '02', title: 'Document AI + Structured Data',      sub: 'Document Processing  ·  Entity Extraction  ·  gemini-flash-latest' },
+    { num: '03', title: 'Multi-Policy Resolution',            sub: 'Function Calling + Enterprise SOR  ·  CP + BI + GL Policy Lookup' },
+    { num: '04', title: 'Loss Classification + Entity Ext.',  sub: 'Gemini Core Reasoning Engine  ·  Property · BI · Liability · Inventory' },
+    { num: '05', title: 'Weather + Catastrophe Enrichment',   sub: 'External APIs — CAT Event · Fire Weather · Region Mapping' },
+    { num: '06', title: 'Asset + Finance / ERP Enrichment',   sub: 'External APIs — Facility RCV · Revenue Baseline · Downtime Cost' },
+    { num: '07', title: 'Business Interruption Model',        sub: 'BI Calculation  ·  Daily Revenue Loss · Policy Cap · Recovery Timeline' },
+    { num: '08', title: 'Fraud & Risk Scoring',               sub: 'ML Cross-Validation + Gemini  ·  SIU Trigger Logic' },
+    { num: '09', title: 'Coverage + Liability Decision',      sub: 'Multi-Policy Gemini Reasoning  ·  Subrogation Assessment' },
+    { num: '10', title: 'Damage & Loss Estimation',           sub: 'Gemini Vision + Cost Model  ·  Structural · Inventory · Cleanup' },
+    { num: '11', title: 'Claim Decision Engine',              sub: 'Final AI Reasoning  ·  Reserve · Routing · Settlement Strategy' },
+    { num: '12', title: 'System Execution + Routing',         sub: 'Rule-Based  ·  Guidewire ClaimCenter  ·  Vendor + Adjuster + SIU Dispatch' }
+  ];
+
+  const STEPS = isAuto ? AUTO_STEPS : (isHome ? HOME_STEPS : COMMERCIAL_STEPS);
+  const key   = sc.key || (isAuto ? 'auto' : (isHome ? 'home' : 'commercial'));
+  const title = isAuto
+    ? 'E2E Auto Claim Orchestration Pipeline'
+    : isHome
+      ? 'E2E Home Claim Orchestration Pipeline'
+      : 'E2E Commercial Claim Orchestration Pipeline';
+
+  const stepsHtml = STEPS.map((s, i) => `
+    <div class="orch-step" id="orchStep_${key}_${i+1}">
+      <div class="orch-step-header">
+        <div class="orch-step-num">${s.num}</div>
+        <div class="orch-step-info">
+          <div class="orch-step-title">${s.title}</div>
+          <div class="orch-step-sub">${s.sub}</div>
+        </div>
+        <span class="orch-badge orch-badge-pending" id="orchBadge_${key}_${i+1}">Pending</span>
+        <span class="orch-step-time" id="orchTime_${key}_${i+1}"></span>
+      </div>
+      <div class="orch-output" id="orchOut_${key}_${i+1}"></div>
+    </div>
+  `).join('');
+
+  return `
+    <!-- Orchestration Pipeline -->
+    <div class="d-row-1">
+      <div class="d-panel" style="border-color:rgba(99,102,241,0.3);background:linear-gradient(135deg,rgba(99,102,241,0.04),transparent)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="d-panel-title" style="color:#A5B4FC;letter-spacing:1px;">${title}</div>
+          <button class="orch-run-btn" id="orchRunBtn_${key}"
+            onclick="runOrchestration('${key}', this)">▶ Run Live Pipeline</button>
+        </div>
+        <div class="orch-steps">${stepsHtml}</div>
+      </div>
+    </div>`;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   ORCHESTRATION — key/value output renderer per step
+   lob: 'auto' | 'home'  stepNum: 1-based index
+────────────────────────────────────────────────────────────── */
+function renderOrchOutput(stepNum, result, lob) {
+  const r = result || {};
+  const isHome = (lob || '').toLowerCase().includes('home') || (lob || '').toLowerCase().includes('owner');
+
+  function kv(label, value, cls) {
+    if (value === null || value === undefined || value === '') return '';
+    const valClass = cls ? ` class="${cls}"` : '';
+    return `<div class="orch-kv-item">` +
+      `<span class="orch-kv-label">${label}:</span>` +
+      `<span${valClass}>${value}</span></div>`;
+  }
+  function fmt(n) { return typeof n === 'number' ? '$' + n.toLocaleString() : (n || '—'); }
+  function riskCls(v) {
+    const u = (v || '').toUpperCase();
+    return u.startsWith('LOW') ? 'orch-kv-low' : u.startsWith('HIGH') ? 'orch-kv-high' : 'orch-kv-med';
+  }
+  function passCls(v) { return (v || '').toUpperCase().startsWith('PASS') ? 'orch-kv-pass' : 'orch-kv-fail'; }
+
+  const isCommercial = (lob || '').toLowerCase().includes('commercial');
+
+  let items = '';
+
+  /* ── AUTO steps 1-7 ─────────────────────────────────────────── */
+  if (!isHome && !isCommercial) {
+    if (stepNum === 1) {
+      items += kv('Incident',       r.incidentType);
+      items += kv('Severity',       r.severity);
+      items += kv('Damage Zones',   (r.damageZones || []).join(' · '));
+      items += kv('Vehicle',        r.entityVehicle);
+      items += kv('Severity Score', r.initialSeverityScore != null ? Math.round(r.initialSeverityScore * 100) + '%' : null);
+    } else if (stepNum === 2) {
+      items += kv('Policy',         r.policyNumber);
+      items += kv('Status',         r.policyStatus);
+      const col = r.collisionCoverage;
+      items += kv('Collision',      col ? fmt(col.limit) + ' / ' + fmt(col.deductible) + ' ded.' : null);
+      const ren = r.rentalReimbursement;
+      items += kv('Rental',         ren ? fmt(ren.dailyLimit) + '/day · ' + ren.maxDays + ' days' : null);
+      items += kv('Prior Claims',   r.priorClaims != null ? String(r.priorClaims) : null);
+      items += kv('SOR API',        r.apiEndpoint);
+    } else if (stepNum === 3) {
+      items += kv('Covered',        r.covered ? '✓ YES' : '✗ NO',  r.covered ? 'orch-kv-pass' : 'orch-kv-fail');
+      items += kv('Peril Match',    r.perilMatch ? '✓ YES' : '✗ NO', r.perilMatch ? 'orch-kv-pass' : 'orch-kv-fail');
+      items += kv('Coverage Type',  r.coverageType);
+      items += kv('Deductible',     r.deductible != null ? fmt(r.deductible) : null, 'orch-kv-amt');
+      items += kv('Eligible Amount',r.eligibleCoverageAmount != null ? fmt(r.eligibleCoverageAmount) : null, 'orch-kv-amt');
+    } else if (stepNum === 4) {
+      items += kv('Risk Level',     r.riskLevel, riskCls(r.riskLevel));
+      items += kv('Risk Score',     r.riskScore != null ? Math.round(r.riskScore * 100) + '%' : null);
+      const sig = r.signals || {};
+      items += kv('Weather',        (sig.weatherMatch || '').split('—')[0].trim(), passCls(sig.weatherMatch));
+      items += kv('Damage',         (sig.damageConsistency || '').split('—')[0].trim(), passCls(sig.damageConsistency));
+      items += kv('Documents',      (sig.documentAuthenticity || '').split('—')[0].trim(), passCls(sig.documentAuthenticity));
+      items += kv('Prior Claims',   (sig.priorClaimsCheck || '').split('—')[0].trim(), passCls(sig.priorClaimsCheck));
+    } else if (stepNum === 5) {
+      items += kv('Severity',       r.severity);
+      items += kv('Labor Hours',    r.laborHours != null ? r.laborHours + ' hrs' : null);
+      items += kv('Estimate Range', (r.estimatedCostMin && r.estimatedCostMax) ? fmt(r.estimatedCostMin) + ' – ' + fmt(r.estimatedCostMax) : null, 'orch-kv-amt');
+      items += kv('Rental Days',    r.rentalDaysEstimate != null ? r.rentalDaysEstimate + ' days' : null);
+      items += kv('Key Parts',      (r.components || []).slice(0, 3).map(c => c.part).join(' · '));
+    } else if (stepNum === 6) {
+      items += kv('Recommendation', r.recommendation);
+      items += kv('Priority',       r.priority);
+      items += kv('Settlement',     r.settlementRange, 'orch-kv-amt');
+      items += kv('Auto-Settle',    r.autoSettleEligible ? 'YES' : 'NO');
+      items += kv('Rental',         r.rentalEligible ? 'Eligible' : 'Not Eligible');
+    } else if (stepNum === 7) {
+      items += kv('Queue',          r.queue);
+      items += kv('Priority',       r.priority);
+      items += kv('Next Action',    r.nextAction);
+      items += kv('Est. Resolution',r.estimatedResolutionDays != null ? r.estimatedResolutionDays + ' days' : null);
+      items += kv('Parallel',       (r.parallelActions || []).join(' · '));
+    }
+
+  /* ── HOME steps 1-10 ────────────────────────────────────────── */
+  } else if (isHome) {
+    if (stepNum === 1) {
+      items += kv('Incident Type',    r.incidentType);
+      items += kv('Severity',         r.severity);
+      items += kv('Damage Areas',     (r.damageAreas || []).join(' · '));
+      items += kv('Property',         r.entityProperty);
+      items += kv('Policy',           r.entityPolicy);
+      items += kv('Channel',          r.channelDetected);
+      items += kv('Severity Score',   r.initialSeverityScore != null ? Math.round(r.initialSeverityScore * 100) + '%' : null);
+    } else if (stepNum === 2) {
+      items += kv('Policy',           r.policyNumber);
+      items += kv('Status',           r.policyStatus || (r.coverageActive ? 'Active' : 'Check Required'));
+      const dw = r.dwellingCoverage;
+      items += kv('Dwelling',         dw ? fmt(dw.limit) + ' / ' + fmt(dw.deductible) + ' ded.' : null, 'orch-kv-amt');
+      const ale = r.aleCoverage;
+      items += kv('ALE',              ale ? fmt(ale.limit) + ' · ' + ale.durationMonths + ' mo' : null);
+      items += kv('Prior Claims',     r.priorClaims != null ? String(r.priorClaims) : null);
+      items += kv('SOR API',          r.apiEndpoint);
+    } else if (stepNum === 3) {
+      items += kv('Roof Damage',      r.roofDamageDetected ? '✓ Detected' : '✗ Not Detected', r.roofDamageDetected ? 'orch-kv-pass' : null);
+      items += kv('Roof Severity',    r.roofDamageSeverity);
+      items += kv('Damage Zones',     (r.roofDamageZones || []).join(' · '));
+      items += kv('Water Intrusion',  r.waterIntrusionDetected ? '✓ Detected' : '✗ None', r.waterIntrusionDetected ? 'orch-kv-high' : 'orch-kv-pass');
+      items += kv('Intrusion Zones',  (r.waterIntrusionZones || []).join(' · '));
+    } else if (stepNum === 4) {
+      const wx = r.weather || {};
+      const pr = r.property || {};
+      const co = r.contractor || {};
+      items += kv('Storm',            wx.stormType);
+      items += kv('Hail Size',        wx.hailSize);
+      items += kv('Wind Gust',        wx.maxWindGust);
+      items += kv('Peril Validation', wx.perilValidation, wx.perilValidation && wx.perilValidation.includes('CONFIRMED') ? 'orch-kv-pass' : 'orch-kv-fail');
+      items += kv('Roof Age',         pr.roofAge != null ? pr.roofAge + ' years' : null);
+      items += kv('Roof Material',    pr.roofMaterial);
+      items += kv('Roof Risk Score',  pr.roofRiskScore != null ? Math.round(pr.roofRiskScore * 100) + '%' : null);
+      items += kv('RCV',              pr.replacementCostValue, 'orch-kv-amt');
+      items += kv('Contractor',       co.vendorName);
+      items += kv('Availability',     co.availability);
+    } else if (stepNum === 5) {
+      items += kv('Peril Confirmed',    r.perilConfirmed);
+      items += kv('Peril Type',         r.perilType);
+      items += kv('Narrative Match',    r.narrativeConsistent ? '✓ Consistent' : '✗ Inconsistency Flagged', r.narrativeConsistent ? 'orch-kv-pass' : 'orch-kv-fail');
+      items += kv('Weather Match Score',r.weatherMatchScore != null ? Math.round(r.weatherMatchScore * 100) + '%' : null);
+      items += kv('Severity Class',     r.severityClassification);
+    } else if (stepNum === 6) {
+      items += kv('Fraud Score',       r.fraudScore, riskCls(r.fraudScore));
+      items += kv('Risk Score',        r.riskScore != null ? Math.round(r.riskScore * 100) + '%' : null);
+      const sig = r.signals || {};
+      items += kv('Weather',           (sig.weatherCorroboration || '').split('—')[0].trim(), passCls(sig.weatherCorroboration));
+      items += kv('Photo Consistency', (sig.damagePhotoConsistency || '').split('—')[0].trim(), passCls(sig.damagePhotoConsistency));
+      items += kv('Claim History',     (sig.claimHistory || '').split('—')[0].trim(), passCls(sig.claimHistory));
+      items += kv('Contractor',        (sig.contractorValidation || '').split('—')[0].trim(), passCls(sig.contractorValidation));
+    } else if (stepNum === 7) {
+      items += kv('Coverage Decision',    r.coverageDecision, r.coverageDecision === 'APPROVED' ? 'orch-kv-pass' : 'orch-kv-fail');
+      items += kv('Deductible Applied',   r.applicableDeductible);
+      items += kv('Hurricane Ded.',       r.hurricaneDeductibleApplied ? '✓ Applied' : '✗ Not Applied — Standard Wind/Hail');
+      if (r.hurricaneNote) items += kv('FL Rule', r.hurricaneNote);
+      items += kv('ALE Eligible',         r.aleEligible ? '✓ YES' : '✗ NO', r.aleEligible ? 'orch-kv-pass' : null);
+      if (r.aleNote) items += kv('ALE Note', r.aleNote);
+      items += kv('Eligible Amount',      r.eligibleCoverageAmount, 'orch-kv-amt');
+    } else if (stepNum === 8) {
+      items += kv('Scope',              r.roofRepairScope);
+      const comps = (r.components || []);
+      comps.forEach(c => { items += kv(c.item, fmt(c.cost), 'orch-kv-amt'); });
+      items += kv('Estimate Min',       r.totalEstimateMin != null ? fmt(r.totalEstimateMin) : null, 'orch-kv-amt');
+      items += kv('Estimate Max',       r.totalEstimateMax != null ? fmt(r.totalEstimateMax) : null, 'orch-kv-amt');
+      items += kv('Mitigation',         r.mitigation);
+    } else if (stepNum === 9) {
+      items += kv('Severity Score',     r.claimSeverityScore != null ? Math.round(r.claimSeverityScore * 100) + '%' : null);
+      items += kv('Severity Class',     r.severity);
+      items += kv('Reserve Estimate',   r.reserveEstimate, 'orch-kv-amt');
+      items += kv('Settlement Range',   r.estimatedSettlementRange, 'orch-kv-amt');
+      items += kv('Routing',            r.routingDecision);
+      items += kv('Settlement Path',    r.settlementPathway);
+    } else if (stepNum === 10) {
+      items += kv('Claim File',         r.claimFileId, 'orch-kv-pass');
+      items += kv('System',             r.claimSystem);
+      items += kv('Reserve Set',        r.reserveSetup, 'orch-kv-amt');
+      items += kv('Adjuster Queue',     r.adjusterQueue);
+      items += kv('Field Inspection',   r.fieldInspectionRequired ? '✓ Required' : '— Not Required');
+      items += kv('Mitigation',         r.mitigationDispatched);
+      items += kv('Customer Notified',  r.customerNotification);
+      items += kv('Est. Resolution',    r.estimatedResolutionDays != null ? r.estimatedResolutionDays + ' days' : null);
+      items += kv('Next Action',        r.nextAction);
+    }
+
+  /* ── COMMERCIAL steps 1-12 ──────────────────────────────────── */
+  } else {
+    function fmt2(n) { return typeof n === 'number' ? '$' + n.toLocaleString() : (n || '—'); }
+    if (stepNum === 1) {
+      items += kv('Incident Type',    r.incidentType);
+      items += kv('Loss Types',       (r.lossTypes || []).join(' · '));
+      items += kv('Severity',         r.severity);
+      items += kv('Entity',           r.entity);
+      items += kv('Location',         r.location);
+      items += kv('Policy Ref',       r.policyRef);
+      items += kv('Fire Report',      r.fireReportNumber);
+      items += kv('Channel',          r.channelDetected);
+      items += kv('Gateway Tag',      r.apiGatewayTag);
+      items += kv('Severity Score',   r.initialSeverityScore != null ? Math.round(r.initialSeverityScore * 100) + '%' : null);
+    } else if (stepNum === 2) {
+      items += kv('Documents',        r.documentsProcessed != null ? r.documentsProcessed + ' processed' : null);
+      const ex = r.extractedData || {};
+      const fi = ex.fireIncidentReport || {};
+      items += kv('Fire Report',      fi.extracted ? '✓ ' + (fi.reportId || '') + ' — ' + (fi.origin || '') : '✗ Not found', fi.extracted ? 'orch-kv-pass' : 'orch-kv-fail');
+      const po = ex.purchaseOrders || {};
+      items += kv('Purchase Orders',  po.extracted ? '✓ Inventory: ' + (po.inventoryValue || '') + ' (' + (po.skuCount || 0) + ' SKUs)' : '— Not provided');
+      const bd = ex.buildingDamageReport || {};
+      items += kv('Damage Report',    bd.extracted ? '✓ ' + (bd.affectedArea || '') : '— Not provided');
+      items += kv('Dataset Confidence', r.structuredDatasetConfidence != null ? Math.round(r.structuredDatasetConfidence * 100) + '%' : null);
+    } else if (stepNum === 3) {
+      items += kv('Insured',          r.insured);
+      items += kv('Policies Found',   r.policyCount != null ? r.policyCount + ' active policies' : null);
+      const policies = r.policies || [];
+      policies.forEach(function(p) {
+        items += kv(p.type, p.status + (p.limit ? ' · ' + fmt2(p.limit) + ' limit' : '') + (p.deductible ? ' / ' + fmt2(p.deductible) + ' ded.' : ''));
+      });
+      items += kv('Prior Claims',     r.priorClaims != null ? String(r.priorClaims) + (r.priorClaimDetail ? ' — ' + r.priorClaimDetail : '') : null);
+      items += kv('SOR API',          r.apiEndpoint);
+    } else if (stepNum === 4) {
+      items += kv('Primary Loss',     r.primaryLoss);
+      items += kv('Loss Types',       (r.lossTypes || []).join(' · '));
+      const ent = r.entities || {};
+      items += kv('Affected Area',    ent.affectedArea);
+      items += kv('Assets at Risk',   (ent.assets || []).join(' · '));
+      const sev = r.severityIntelligence || {};
+      items += kv('Downtime Risk',    sev.operationalDowntimeRisk, riskCls(sev.operationalDowntimeRisk));
+      items += kv('Daily Revenue Loss', sev.revenueDailyLoss, 'orch-kv-amt');
+      items += kv('Safety Status',    sev.safetyRiskLevel);
+      items += kv('Regulatory',       sev.regulatoryExposure);
+    } else if (stepNum === 5) {
+      const wx = r.weather || {};
+      const fm = r.fireMapping || {};
+      items += kv('CAT Event',        wx.catDesignation, wx.catEventId ? 'orch-kv-high' : 'orch-kv-pass');
+      items += kv('Conditions',       wx.conditions);
+      items += kv('Wind Speed',       wx.windSpeed);
+      items += kv('Fire Cause',       fm.causeType);
+      items += kv('Sprinkler',        fm.sprinklerActivation ? '✓ Activated' : '— Not triggered', fm.sprinklerActivation ? 'orch-kv-pass' : null);
+      items += kv('Fire Contained',   fm.fireContained ? '✓ Yes' : '✗ No', fm.fireContained ? 'orch-kv-pass' : 'orch-kv-fail');
+    } else if (stepNum === 6) {
+      const as = r.assets || {};
+      const fi = r.financials || {};
+      items += kv('Building RCV',      fmt2(as.buildingRCV), 'orch-kv-amt');
+      items += kv('Equipment Value',   fmt2(as.equipmentValue), 'orch-kv-amt');
+      items += kv('Inventory at Risk', fmt2(as.inventoryAtRisk), 'orch-kv-amt');
+      items += kv('Total Exposure',    fmt2(as.totalAssetExposure), 'orch-kv-amt');
+      items += kv('Daily Revenue',     fmt2(fi.dailyRevenue), 'orch-kv-amt');
+      items += kv('Downtime Cost/Hr',  fmt2(fi.downtimeCostPerHour), 'orch-kv-amt');
+      items += kv('Prior Claim',       fi.priorClaim ? fi.priorClaim.type + ' · $' + (fi.priorClaim.amount||0).toLocaleString() + ' (' + (fi.priorClaim.date||'') + ')' : 'None');
+    } else if (stepNum === 7) {
+      items += kv('Daily Revenue Loss', fmt2(r.revenueLossDaily), 'orch-kv-amt');
+      items += kv('Downtime Estimate',  r.estimatedDowntimeDays != null ? r.estimatedDowntimeDays + ' days' : null);
+      items += kv('Waiting Period',     r.waitingPeriodDays != null ? r.waitingPeriodDays + ' days' : null);
+      items += kv('Eligible BI Days',   r.eligibleBIDays != null ? r.eligibleBIDays + ' days' : null);
+      items += kv('Gross BI Exposure',  fmt2(r.totalGrossBI), 'orch-kv-amt');
+      items += kv('Net BI Exposure',    fmt2(r.netBIExposure), 'orch-kv-amt');
+      items += kv('Policy BI Limit',    fmt2(r.policyBILimit), 'orch-kv-amt');
+      items += kv('Recovery Timeline',  r.recoveryTimeline);
+    } else if (stepNum === 8) {
+      items += kv('Fraud Score',       r.fraudScore, riskCls(r.fraudScore));
+      items += kv('Risk Score',        r.riskScore != null ? Math.round(r.riskScore * 100) + '%' : null);
+      const sig = r.signals || {};
+      items += kv('Incident Timing',   (sig.incidentTiming || '').split('—')[0].trim(), passCls(sig.incidentTiming));
+      items += kv('Documents',         (sig.documentAuthenticity || '').split('—')[0].trim(), passCls(sig.documentAuthenticity));
+      items += kv('Claim History',     (sig.claimHistory || '').split('—')[0].trim(), passCls(sig.claimHistory));
+      items += kv('Invoices',          (sig.invoiceConsistency || '').split('—')[0].trim(), passCls(sig.invoiceConsistency));
+      (r.anomalies || []).forEach(function(a) { items += kv('⚠ Anomaly', a, 'orch-kv-high'); });
+      items += kv('SIU Triggered',     r.suiuTriggered ? '✓ YES — preliminary review' : '— No', r.suiuTriggered ? 'orch-kv-high' : null);
+    } else if (stepNum === 9) {
+      (r.decisions || []).forEach(function(d) {
+        var cls = d.decision === 'APPROVED' ? 'orch-kv-pass' : d.decision === 'MONITOR' ? 'orch-kv-med' : 'orch-kv-fail';
+        items += kv(d.type, d.decision + (d.coveredAmount ? ' · ' + fmt2(d.coveredAmount) : '') + (d.deductible ? ' ded. ' + fmt2(d.deductible) : ''), cls);
+        if (d.notes) items += kv('  Note', d.notes);
+      });
+      items += kv('Total Covered',     fmt2(r.totalCoveredExposure), 'orch-kv-amt');
+      items += kv('Subrogation',       r.subrogationPotential, riskCls(r.subrogationPotential));
+      items += kv('Reserve Rec.',      fmt2(r.reserveRecommendation), 'orch-kv-amt');
+    } else if (stepNum === 10) {
+      (r.components || []).forEach(function(c) { items += kv(c.item, fmt2(c.cost), 'orch-kv-amt'); });
+      items += kv('Property Loss',     fmt2(r.totalPropertyLoss), 'orch-kv-amt');
+      items += kv('Engineering Rpt',   r.engineeringReportRequired ? '✓ Required' : '— Not required');
+      items += kv('Mitigation',        r.emergencyMitigation);
+    } else if (stepNum === 11) {
+      items += kv('Severity Score',    r.claimSeverityScore != null ? Math.round(r.claimSeverityScore * 100) + '%' : null);
+      items += kv('Severity',          r.severity);
+      const rb = r.reserveBreakdown || {};
+      items += kv('Property Reserve',  fmt2(rb.property), 'orch-kv-amt');
+      items += kv('BI Reserve',        fmt2(rb.bi), 'orch-kv-amt');
+      items += kv('Total Reserve',     fmt2(rb.total), 'orch-kv-amt');
+      items += kv('Routing',           r.routingDecision);
+      items += kv('Settlement Range',  r.estimatedSettlementRange, 'orch-kv-amt');
+      items += kv('Settlement Path',   r.settlementStrategy);
+    } else if (stepNum === 12) {
+      items += kv('Claim File',         r.claimFileId, 'orch-kv-pass');
+      items += kv('System',             r.claimSystem);
+      items += kv('Policies Activated', (r.policiesActivated || []).join(' · '));
+      const res = r.reservesAllocated || {};
+      items += kv('Reserve — Property', fmt2(res.property), 'orch-kv-amt');
+      items += kv('Reserve — BI',       fmt2(res.bi), 'orch-kv-amt');
+      items += kv('Reserve — Total',    fmt2(res.total), 'orch-kv-amt');
+      items += kv('Adjuster Queue',     r.adjusterQueue);
+      items += kv('SIU',                r.suiuTriggered ? '✓ Triggered — ' + (r.suiuNote || '') : '— Not required', r.suiuTriggered ? 'orch-kv-high' : null);
+      items += kv('Vendors',            (r.vendorsDispatched || []).join(' · '));
+      items += kv('Fire Marshal',       r.fireMarshalRequested ? '✓ Report Requested' : '—');
+      items += kv('Customer Notified',  r.customerNotification);
+      items += kv('Est. Resolution',    r.estimatedResolutionDays != null ? r.estimatedResolutionDays + ' days' : null);
+      items += kv('Next Action',        r.nextAction);
+    }
+  }
+
+  return `<div class="orch-kv">${items}</div>`;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   ORCHESTRATION — run pipeline and update the panel
+   Dispatches to _AutoOrchestration (7 steps) or _HomeOrchestration (10 steps)
+────────────────────────────────────────────────────────────── */
+function runOrchestration(key, btn) {
+  const sc = loadedScenarios[key + '_sc'];
+  if (!sc) { console.warn('No scenario loaded for', key); return; }
+
+  const lob          = (sc.lob || sc.key || '').toLowerCase();
+  const isHome       = lob.includes('home') || lob.includes('owner');
+  const isCommercial = lob.includes('commercial');
+  const engine  = isCommercial ? window._CommercialOrchestration
+                : isHome       ? window._HomeOrchestration
+                :                window._AutoOrchestration;
+  const stepCnt = engine ? engine.STEP_COUNT : (isCommercial ? 12 : isHome ? 10 : 7);
+
+  btn.disabled    = true;
+  btn.textContent = 'Running…';
+
+  /* Reset all steps to Pending */
+  for (let i = 1; i <= stepCnt; i++) {
+    const step  = document.getElementById(`orchStep_${key}_${i}`);
+    const badge = document.getElementById(`orchBadge_${key}_${i}`);
+    const time  = document.getElementById(`orchTime_${key}_${i}`);
+    const out   = document.getElementById(`orchOut_${key}_${i}`);
+    if (step)  step.className  = 'orch-step';
+    if (badge) { badge.className = 'orch-badge orch-badge-pending'; badge.textContent = 'Pending'; }
+    if (time)  time.textContent  = '';
+    if (out)   out.innerHTML    = '';
+  }
+
+  engine.run(sc, CONFIG.mode, CONFIG.apiKey, CONFIG.geminiEndpoint, {
+    onStepStart: function (i) {
+      const step  = document.getElementById(`orchStep_${key}_${i+1}`);
+      const badge = document.getElementById(`orchBadge_${key}_${i+1}`);
+      if (step)  step.className    = 'orch-step running';
+      if (badge) { badge.className = 'orch-badge orch-badge-running'; badge.textContent = 'Running…'; }
+      if (step) step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    },
+    onStepComplete: function (i, result, ms) {
+      const step  = document.getElementById(`orchStep_${key}_${i+1}`);
+      const badge = document.getElementById(`orchBadge_${key}_${i+1}`);
+      const time  = document.getElementById(`orchTime_${key}_${i+1}`);
+      const out   = document.getElementById(`orchOut_${key}_${i+1}`);
+      if (step)  step.className    = 'orch-step complete';
+      if (badge) { badge.className = 'orch-badge orch-badge-complete'; badge.textContent = '✓ Done'; }
+      if (time)  time.textContent  = ms + ' ms';
+      if (out)   out.innerHTML     = renderOrchOutput(i + 1, result, lob);
+    },
+    onStepError: function (i, err) {
+      const step  = document.getElementById(`orchStep_${key}_${i+1}`);
+      const badge = document.getElementById(`orchBadge_${key}_${i+1}`);
+      if (step)  step.className    = 'orch-step error';
+      if (badge) { badge.className = 'orch-badge orch-badge-error'; badge.textContent = '✗ Error'; }
+      console.error('Orchestration step ' + (i+1) + ' failed:', err);
+    },
+    onComplete: function () {
+      btn.disabled    = false;
+      btn.textContent = '↺ Re-run Pipeline';
+    },
+    onPipelineError: function () {
+      btn.disabled    = false;
+      btn.textContent = '↺ Retry Pipeline';
+    }
+  });
+}
+
+function renderDrawer(key, sc, ai, req, res) {
+  const el = document.getElementById(`content_${key}`);
+
+  /* Build fraud list HTML */
+  const fraudItems = (ai.fraud || []).map(f => {
+    const isWarn = f.startsWith('⚠');
+    return `<div class="check-item">
+      <span class="${isWarn ? 'check-warn' : 'check-pass'}">${isWarn ? '⚠' : '✓'}</span>
+      <span>${isWarn ? f.replace('⚠ ','') : f}</span>
+    </div>`;
+  }).join('');
+
+  /* Build next steps HTML */
+  const nextItems = (ai.nextSteps || []).map(s =>
+    `<div class="check-item"><span class="check-pass">→</span><span>${s}</span></div>`
+  ).join('');
+
+  /* Build photo grid HTML */
+  const photoItems = (sc.photos || []).map(p => `
+    <div class="photo-item">
+      <div class="photo-item-label" title="${p.label}">${p.label}</div>
+      <div class="photo-item-frame">
+        ${p.src
+          ? `<img src="${p.src}" alt="${p.label}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          : ''}
+        <div class="photo-placeholder" style="${p.src ? 'display:none' : ''}">${p.icon || '📄'}</div>
+      </div>
+    </div>
+  `).join('');
+
+  /* Build timeline HTML */
+  const now = Date.now();
+  const tlItems = (ai.timeline || []).map((ev, i) => {
+    const t = new Date(now - (ai.timeline.length - i) * 1800);
+    return `<div class="tl-node">
+      <div class="tl-time">${t.toLocaleTimeString('en-US', {hour12:true,hour:'numeric',minute:'2-digit',second:'2-digit'})}</div>
+      <div class="tl-event">${ev}</div>
+    </div>`;
+  }).join('');
+
+  /* Build entity grid HTML */
+  const ents = ai.entities || {};
+  const entRows = Object.entries(ents).map(([k,v]) => {
+    const label = k.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+    const isMono = ['vin','policyNumber','policeIncident','fireReportNumber'].includes(k);
+    return `<div class="mg-label">${label}</div>
+            <div class="mg-value ${isMono ? 'mono' : ''}">${v}</div>`;
+  }).join('');
+
+  /* Build API payload HTML */
+  const reqJson = syntaxHighlight(JSON.stringify(req, null, 2));
+  const resJson = syntaxHighlight(JSON.stringify({
+    requestId: `req_${Math.random().toString(36).slice(2,9)}`,
+    processingTimeMs: CONFIG.mode === 'live' ? Math.floor(Math.random()*800+600) : 1381,
+    model: 'gemini-flash-latest',
+    confidenceScores: {
+      overall: ai.overallConfidence,
+      policyMatch: ai.policyMatch,
+      damageAssessment: ai.damageAssessment,
+      fraudDetection: ai.fraudDetection,
+      coverageValidation: ai.coverageValidation
+    },
+    extractedEntities: ai.entities,
+    metadata: ai.metadata,
+    aiSummary: ai.aiSummary,
+    recommendedActions: ai.nextSteps
+  }, null, 2));
+
+  el.innerHTML = `
+    <!-- Row 1: Metadata + AI Summary -->
+    <div class="d-row-2">
+      <div class="d-panel">
+        <div class="d-panel-title dt-muted">Claim Metadata Profile</div>
+        <div class="meta-grid">
+          <div class="mg-label">Loss Type</div><div class="mg-value">${ai.metadata.lossType}</div>
+          <div class="mg-label">Primary Cause</div><div class="mg-value">${ai.metadata.cause}</div>
+          <div class="mg-label">Policy Tier</div><div class="mg-value">${ai.metadata.policyTier}</div>
+          <div class="mg-label">Jurisdiction</div><div class="mg-value">${ai.metadata.state}</div>
+          <div class="mg-label">Weather Conditions</div><div class="mg-value">${ai.metadata.weather}</div>
+          <div class="mg-label">Deductible</div><div class="mg-value">${ai.metadata.deductible || '—'}</div>
+          <div class="mg-label">Est. Loss Amount</div><div class="mg-value red">${ai.metadata.estimatedDamage}</div>
+          <div class="mg-label">Fraud Risk Rating</div>
+          <div class="mg-value ${ai.metadata.fraudRisk.startsWith('Low') ? 'green' : 'amber'}">${ai.metadata.fraudRisk}</div>
+        </div>
+      </div>
+      <div>
+        <div class="d-panel-title dt-blue" style="margin-bottom:10px;">${getExecSummaryTitle(sc)}</div>
+        <div class="ai-summary-box">${ai.aiSummary}</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Narrative + Entity extraction -->
+    <div class="d-row-2">
+      <div>
+        <div class="d-panel-title dt-muted" style="margin-bottom:10px;">Customer Statement — Raw Narrative</div>
+        <div class="narrative-box">${sc.narrative}</div>
+        <div class="d-panel-title dt-muted" style="margin-top:16px;margin-bottom:10px;">Multimodal Asset Grid</div>
+        <div class="photo-grid">${photoItems}</div>
+      </div>
+      <div class="d-panel">
+        <div class="d-panel-title dt-blue">LLM Extracted Schema Entities</div>
+        <div class="meta-grid">${entRows}</div>
+      </div>
+    </div>
+
+    <!-- Row 3: AI results + Confidence -->
+    <div class="d-row-2">
+      <div class="d-panel">
+        <div class="d-panel-title dt-blue">AI Processing Results Matrix</div>
+        <div class="check-list">
+          ${buildProcessingMatrix(sc, ai)}
+        </div>
+      </div>
+      <div class="d-panel">
+        <div class="d-panel-title dt-blue">AI Decision Confidence Scores</div>
+        <div class="conf-row">
+          <div class="conf-labels">
+            <span class="conf-name" style="font-weight:700">Overall Framework Confidence</span>
+            <span class="conf-score" style="color:var(--green)" id="cov_overall_${key}">0%</span>
+          </div>
+          <div class="conf-track"><div class="conf-fill fill-overall" id="cbar_overall_${key}" data-val="${ai.overallConfidence}"></div></div>
+        </div>
+        <div class="conf-row">
+          <div class="conf-labels">
+            <span class="conf-name">Policy Structural Match</span>
+            <span class="conf-score" id="cov_policy_${key}">0%</span>
+          </div>
+          <div class="conf-track"><div class="conf-fill fill-policy" id="cbar_policy_${key}" data-val="${ai.policyMatch}"></div></div>
+        </div>
+        <div class="conf-row">
+          <div class="conf-labels">
+            <span class="conf-name">Damage Computer Vision Assessment</span>
+            <span class="conf-score" id="cov_damage_${key}">0%</span>
+          </div>
+          <div class="conf-track"><div class="conf-fill fill-damage" id="cbar_damage_${key}" data-val="${ai.damageAssessment}"></div></div>
+        </div>
+        <div class="conf-row">
+          <div class="conf-labels">
+            <span class="conf-name">Heuristic Fraud Vector Detection</span>
+            <span class="conf-score" id="cov_fraud_${key}">0%</span>
+          </div>
+          <div class="conf-track"><div class="conf-fill fill-fraud" id="cbar_fraud_${key}" data-val="${ai.fraudDetection}"></div></div>
+        </div>
+        <div class="conf-row">
+          <div class="conf-labels">
+            <span class="conf-name">Coverage Rules Validation</span>
+            <span class="conf-score" id="cov_coverage_${key}">0%</span>
+          </div>
+          <div class="conf-track"><div class="conf-fill fill-coverage" id="cbar_coverage_${key}" data-val="${ai.coverageValidation}"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Fraud + Next steps -->
+    <div class="d-row-2">
+      <div class="d-panel">
+        <div class="d-panel-title dt-amber">Heuristic Fraud Cross-Validation</div>
+        <div class="check-list">${fraudItems}</div>
+      </div>
+      <div class="d-panel" style="border-color:rgba(16,185,129,0.2);background:linear-gradient(135deg,rgba(16,185,129,0.02),transparent)">
+        <div class="d-panel-title dt-green">Recommended Next Strategic Steps</div>
+        <div class="check-list">${nextItems}</div>
+      </div>
+    </div>
+
+    ${buildCommercialInsightsPanel(sc, ai)}
+    ${buildOrchestrationPanel(sc, ai)}
+
+    <!-- Row 6: Timeline -->
+    <div class="d-row-1">
+      <div class="d-panel">
+        <div class="d-panel-title dt-muted">Real-Time Pipeline Execution Timeline</div>
+        <div class="timeline">${tlItems}</div>
+      </div>
+    </div>
+
+    <!-- Row 6: API Payload -->
+    <div class="d-row-1">
+      <button class="payload-toggle" onclick="togglePayload('${key}')">
+        <span id="ptArrow_${key}">▸</span>
+        <span>View Gemini API Request / Response Payload</span>
+      </button>
+      <div class="payload-panel" id="payload_${key}">
+        <div class="payload-cols">
+          <div>
+            <div class="payload-label">→ POST Request to Gemini 2.0 Flash (AI Studio)</div>
+            <div class="payload-code">${reqJson}</div>
+          </div>
+          <div>
+            <div class="payload-label">← Response from Gemini 2.0 Flash</div>
+            <div class="payload-code">${resJson}</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted);line-height:1.6">
+          <strong style="color:var(--text-2)">Direct Gemini API Flow:</strong>
+          The browser sends the FNOL narrative directly to
+          <code style="font-size:9px">generativelanguage.googleapis.com</code> using an AI Studio key.
+          Gemini 2.0 Flash processes the structured P&amp;C insurance extraction prompt and returns a
+          validated JSON response containing entities, confidence scores, fraud indicators, and the
+          AI summary recommendation — no Cloud Functions proxy required.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   CONFIDENCE BAR ANIMATION
+────────────────────────────────────────────────────────────── */
+function animateConfidenceBars(key, aiData) {
+  const ai = aiData || loadedScenarios[key];
+  if (!ai) return;
+  const bars = [
+    { id: `cbar_overall_${key}`,   score: `cov_overall_${key}`,   val: ai.overallConfidence },
+    { id: `cbar_policy_${key}`,    score: `cov_policy_${key}`,    val: ai.policyMatch },
+    { id: `cbar_damage_${key}`,    score: `cov_damage_${key}`,    val: ai.damageAssessment },
+    { id: `cbar_fraud_${key}`,     score: `cov_fraud_${key}`,     val: ai.fraudDetection },
+    { id: `cbar_coverage_${key}`,  score: `cov_coverage_${key}`,  val: ai.coverageValidation }
+  ];
+  bars.forEach(({ id, score, val }, i) => {
+    setTimeout(() => {
+      const bar = document.getElementById(id);
+      const lbl = document.getElementById(score);
+      if (bar) bar.style.width = `${Math.round(val * 100)}%`;
+      if (lbl) lbl.textContent = `${Math.round(val * 100)}%`;
+    }, i * 120);
+  });
+}
+
+/* ──────────────────────────────────────────────────────────────
+   PAYLOAD TOGGLE
+────────────────────────────────────────────────────────────── */
+function togglePayload(key) {
+  const panel = document.getElementById(`payload_${key}`);
+  const arrow = document.getElementById(`ptArrow_${key}`);
+  const isOpen = panel.classList.contains('visible');
+  panel.classList.toggle('visible', !isOpen);
+  if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
+}
+
+/* ──────────────────────────────────────────────────────────────
+   JSON SYNTAX HIGHLIGHT
+────────────────────────────────────────────────────────────── */
+function syntaxHighlight(json) {
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, match => {
+    let cls = 'json-number';
+    if (/^"/.test(match)) {
+      cls = /:$/.test(match) ? 'json-key' : 'json-string';
+    } else if (/true|false/.test(match)) {
+      cls = 'json-bool';
+    }
+    return `<span class="${cls}">${match}</span>`;
+  });
+}
+
+/* ──────────────────────────────────────────────────────────────
+   UTILITY
+────────────────────────────────────────────────────────────── */
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ──────────────────────────────────────────────────────────────
+   localStorage LISTENER (from mobileApp.html)
+   Receives: { claimId, scenarioKey, narrative, lob, state,
+               channel, timestamp, mobileAttachment? }
+   mobileAttachment = { data: base64, mimeType } when user uploaded
+   a photo on the mobile app.
+────────────────────────────────────────────────────────────── */
+window.addEventListener('storage', (e) => {
+  if (e.key !== 'smartclaim_fnol_payload') return;
+  try {
+    const payload = JSON.parse(e.newValue);
+    if (!payload) return;
+
+    /* Update sync indicator */
+    document.getElementById('lsyncDot').classList.add('active');
+    document.getElementById('lsyncLabel').textContent =
+      `Mobile sync — ${new Date(payload.timestamp).toLocaleTimeString()}`;
+    document.getElementById('lsyncLabel').style.color = 'var(--green)';
+
+    const attachNote = payload.mobileAttachment ? ' + photo' : '';
+    showToast(`📱 Mobile FNOL received — ${payload.claimId}${attachNote}`, 'green');
+
+    /* Resolve scenario key — map 'custom' or unknown keys by LOB */
+    let key = payload.scenarioKey;
+    if (!key || !SCENARIOS[key]) {
+      const lob = (payload.lob || '').toLowerCase();
+      if (lob.includes('home') || lob.includes('property') && !lob.includes('commercial')) {
+        key = 'home';
+      } else if (lob.includes('commercial')) {
+        key = 'commercial';
+      } else {
+        key = 'auto';
+      }
+    }
+
+    if (SCENARIOS[key]) {
+      /* Merge mobile narrative + attachment into the scenario before processing */
+      SCENARIOS[key].narrative         = payload.narrative;
+      SCENARIOS[key].mobileAttachment  = payload.mobileAttachment || null;
+      setTimeout(() => injectScenario(key), 500);
+    }
+  } catch (_) {}
+});
+
+/* Check for any existing payload on load */
+(function checkExistingPayload() {
+  try {
+    const raw = localStorage.getItem('smartclaim_fnol_payload');
+    if (!raw) return;
+    const payload = JSON.parse(raw);
+    const age = Date.now() - (payload.timestamp || 0);
+    if (age < 60000) {
+      document.getElementById('lsyncDot').classList.add('active');
+      document.getElementById('lsyncLabel').textContent = `Last sync — ${new Date(payload.timestamp).toLocaleTimeString()}`;
+      document.getElementById('lsyncLabel').style.color = 'var(--green)';
+    }
+  } catch (_) {}
+})();
+</script>
+</body>
+</html>
