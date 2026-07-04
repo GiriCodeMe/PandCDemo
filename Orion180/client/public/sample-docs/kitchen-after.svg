@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="360" viewBox="0 0 500 360">
+  <defs>
+    <linearGradient id="wallDmg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d0c8bc"/>
+      <stop offset="100%" stop-color="#b8aa94"/>
+    </linearGradient>
+    <linearGradient id="waterFloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a5820"/>
+      <stop offset="100%" stop-color="#5a3a10"/>
+    </linearGradient>
+  </defs>
+  <!-- Wall -->
+  <rect width="500" height="360" fill="url(#wallDmg)"/>
+  <!-- Water-damaged floor -->
+  <rect x="0" y="240" width="500" height="120" fill="url(#waterFloor)"/>
+  <!-- Cupped floor boards -->
+  <path d="M0,252 Q25,246 50,252 Q75,258 100,252 Q125,246 150,252 Q175,258 200,252 Q225,246 250,252 Q275,258 300,252 Q325,246 350,252 Q375,258 400,252 Q425,246 450,252 Q475,258 500,252" fill="none" stroke="#6a4820" stroke-width="2.5"/>
+  <path d="M0,265 Q25,259 50,265 Q75,271 100,265 Q125,259 150,265 Q175,271 200,265 Q225,259 250,265 Q275,271 300,265 Q325,259 350,265 Q375,271 400,265 Q425,259 450,265 Q475,271 500,265" fill="none" stroke="#6a4820" stroke-width="2.5"/>
+  <path d="M0,278 Q25,272 50,278 Q75,284 100,278 Q125,272 150,278 Q175,284 200,278 Q225,272 250,278 Q275,284 300,278 Q325,272 350,278 Q375,284 400,278 Q425,272 450,278 Q475,284 500,278" fill="none" stroke="#6a4820" stroke-width="2.5"/>
+  <!-- Standing water -->
+  <ellipse cx="200" cy="295" rx="130" ry="30" fill="rgba(40,100,200,0.35)"/>
+  <ellipse cx="100" cy="320" rx="80" ry="18" fill="rgba(40,100,200,0.25)"/>
+  <ellipse cx="380" cy="310" rx="70" ry="15" fill="rgba(40,100,200,0.2)"/>
+  <!-- Damaged lower cabinets -->
+  <rect x="0" y="145" width="160" height="95" fill="#8a6830" rx="2"/>
+  <rect x="5" y="150" width="72" height="84" fill="#9a7835" rx="2"/>
+  <rect x="83" y="150" width="72" height="84" fill="#7a5820" rx="2"/>
+  <!-- Swelling/warping on cabinet bases -->
+  <path d="M5,230 Q25,222 50,232 Q72,240 77,230" fill="#7a5820" stroke="#5a3a10" stroke-width="1"/>
+  <path d="M83,228 Q110,218 140,230 Q155,238 155,228" fill="#7a5820" stroke="#5a3a10" stroke-width="1"/>
+  <!-- Water stain on cabinets -->
+  <rect x="5" y="195" width="72" height="39" fill="rgba(40,80,180,0.25)"/>
+  <rect x="83" y="195" width="72" height="39" fill="rgba(40,80,180,0.3)"/>
+  <!-- Sink area -->
+  <rect x="160" y="130" width="180" height="110" fill="#9a7830" rx="2"/>
+  <rect x="165" y="135" width="80" height="95" fill="#aa8838" rx="2"/>
+  <rect x="255" y="135" width="80" height="95" fill="#8a6828" rx="2"/>
+  <!-- Sink discolored -->
+  <rect x="172" y="100" width="166" height="35" fill="#b8a878" rx="2"/>
+  <rect x="182" y="90" width="70" height="45" fill="#a0a098" rx="3"/>
+  <rect x="258" y="90" width="70" height="45" fill="#908888" rx="3"/>
+  <!-- Right cabinets damaged -->
+  <rect x="340" y="145" width="160" height="95" fill="#8a6830" rx="2"/>
+  <rect x="345" y="150" width="72" height="84" fill="#9a7835" rx="2"/>
+  <rect x="423" y="150" width="72" height="84" fill="#7a5820" rx="2"/>
+  <rect x="345" y="210" width="72" height="24" fill="rgba(40,80,180,0.3)"/>
+  <rect x="423" y="205" width="72" height="29" fill="rgba(40,80,180,0.35)"/>
+  <!-- Countertop water marks -->
+  <rect x="0" y="138" width="500" height="14" fill="#d8c8a8" rx="1"/>
+  <ellipse cx="120" cy="143" rx="55" ry="5" fill="rgba(40,80,180,0.2)"/>
+  <ellipse cx="380" cy="143" rx="45" ry="4" fill="rgba(40,80,180,0.15)"/>
+  <!-- Upper cabinets (less damaged) -->
+  <rect x="0" y="20" width="160" height="90" fill="#c0a060" rx="2"/>
+  <rect x="5" y="24" width="72" height="82" fill="#d4b070" rx="2"/>
+  <rect x="83" y="24" width="72" height="82" fill="#d4b070" rx="2"/>
+  <!-- Mold spots -->
+  <circle cx="40" cy="215" r="5" fill="rgba(30,80,30,0.6)"/>
+  <circle cx="55" cy="225" r="3" fill="rgba(30,80,30,0.5)"/>
+  <circle cx="100" cy="220" r="4" fill="rgba(30,80,30,0.55)"/>
+  <circle cx="380" cy="218" r="4" fill="rgba(30,80,30,0.5)"/>
+  <circle cx="450" cy="222" r="5" fill="rgba(30,80,30,0.6)"/>
+  <!-- Air mover (restoration equipment) -->
+  <rect x="420" y="245" width="50" height="40" fill="#3a4a5a" rx="4"/>
+  <circle cx="445" cy="265" r="14" fill="#2a3a4a" stroke="#4a5a6a" stroke-width="1.5"/>
+  <line x1="445" y1="255" x2="445" y2="275" stroke="#4a5a6a" stroke-width="1.5"/>
+  <line x1="435" y1="265" x2="455" y2="265" stroke="#4a5a6a" stroke-width="1.5"/>
+  <text x="445" y="295" fill="#aaa" font-family="Arial" font-size="8" text-anchor="middle">AIR MOVER</text>
+  <!-- Label -->
+  <rect x="0" y="0" width="500" height="22" fill="rgba(200,40,40,0.75)"/>
+  <text x="250" y="15" fill="#fff" font-family="Arial" font-size="12" text-anchor="middle" font-weight="bold">POST-LOSS — Severe Water Damage — March 15, 2026 — Standing Water + Cupped Flooring</text>
+</svg>

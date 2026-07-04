@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="360" viewBox="0 0 500 360">
+  <defs>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8e0d4"/>
+      <stop offset="100%" stop-color="#d4c8b8"/>
+    </linearGradient>
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8a060"/>
+      <stop offset="100%" stop-color="#a07840"/>
+    </linearGradient>
+  </defs>
+  <!-- Background / wall -->
+  <rect width="500" height="360" fill="url(#wallGrad)"/>
+  <!-- Floor -->
+  <rect x="0" y="240" width="500" height="120" fill="url(#floorGrad)"/>
+  <!-- Floor boards -->
+  <line x1="0" y1="255" x2="500" y2="255" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="268" x2="500" y2="268" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="281" x2="500" y2="281" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="294" x2="500" y2="294" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="307" x2="500" y2="307" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="320" x2="500" y2="320" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="0" y1="333" x2="500" y2="333" stroke="#8a6230" stroke-width="1.5"/>
+  <line x1="80" y1="240" x2="80" y2="360" stroke="#8a6230" stroke-width="1"/>
+  <line x1="200" y1="240" x2="200" y2="360" stroke="#8a6230" stroke-width="1"/>
+  <line x1="320" y1="240" x2="320" y2="360" stroke="#8a6230" stroke-width="1"/>
+  <line x1="440" y1="240" x2="440" y2="360" stroke="#8a6230" stroke-width="1"/>
+  <!-- Lower cabinets -->
+  <rect x="0" y="145" width="160" height="95" fill="#c0a060" rx="2"/>
+  <rect x="5" y="150" width="72" height="84" fill="#d4b070" rx="2"/>
+  <rect x="83" y="150" width="72" height="84" fill="#d4b070" rx="2"/>
+  <rect x="37" y="188" width="10" height="20" fill="#a08040" rx="3"/>
+  <rect x="119" y="188" width="10" height="20" fill="#a08040" rx="3"/>
+  <!-- Sink cabinet -->
+  <rect x="160" y="130" width="180" height="110" fill="#bba058" rx="2"/>
+  <rect x="165" y="135" width="80" height="95" fill="#cdb068" rx="2"/>
+  <rect x="255" y="135" width="80" height="95" fill="#cdb068" rx="2"/>
+  <!-- Sink -->
+  <rect x="172" y="100" width="166" height="35" fill="#d4c090" rx="2"/>
+  <rect x="182" y="90" width="70" height="45" fill="#c8c8c0" rx="3"/>
+  <rect x="258" y="90" width="70" height="45" fill="#c8c8c0" rx="3"/>
+  <ellipse cx="218" cy="118" rx="28" ry="12" fill="#a0a098"/>
+  <ellipse cx="294" cy="118" rx="28" ry="12" fill="#a0a098"/>
+  <!-- Faucet -->
+  <rect x="235" y="78" width="8" height="22" fill="#c0c0b8" rx="2"/>
+  <rect x="220" y="76" width="38" height="6" fill="#c0c0b8" rx="3"/>
+  <!-- Upper cabinets -->
+  <rect x="0" y="20" width="160" height="90" fill="#c0a060" rx="2"/>
+  <rect x="5" y="24" width="72" height="82" fill="#d4b070" rx="2"/>
+  <rect x="83" y="24" width="72" height="82" fill="#d4b070" rx="2"/>
+  <rect x="37" y="60" width="10" height="16" fill="#a08040" rx="3"/>
+  <rect x="119" y="60" width="10" height="16" fill="#a08040" rx="3"/>
+  <!-- Right cabinets -->
+  <rect x="340" y="145" width="160" height="95" fill="#c0a060" rx="2"/>
+  <rect x="345" y="150" width="72" height="84" fill="#d4b070" rx="2"/>
+  <rect x="423" y="150" width="72" height="84" fill="#d4b070" rx="2"/>
+  <rect x="377" y="188" width="10" height="20" fill="#a08040" rx="3"/>
+  <rect x="455" y="188" width="10" height="20" fill="#a08040" rx="3"/>
+  <!-- Countertop -->
+  <rect x="0" y="138" width="500" height="14" fill="#e8e0d0" rx="1"/>
+  <rect x="0" y="135" width="500" height="5" fill="#f0f0e8"/>
+  <!-- Backsplash tiles -->
+  <rect x="0" y="90" width="160" height="48" fill="#e0d8c8"/>
+  <rect x="340" y="90" width="160" height="48" fill="#e0d8c8"/>
+  <g stroke="#ccc" stroke-width="0.5">
+    <line x1="0" y1="102" x2="160" y2="102"/><line x1="0" y1="114" x2="160" y2="114"/>
+    <line x1="0" y1="126" x2="160" y2="126"/>
+    <line x1="20" y1="90" x2="20" y2="138"/><line x1="40" y1="90" x2="40" y2="138"/>
+    <line x1="60" y1="90" x2="60" y2="138"/><line x1="80" y1="90" x2="80" y2="138"/>
+    <line x1="100" y1="90" x2="100" y2="138"/><line x1="120" y1="90" x2="120" y2="138"/>
+    <line x1="140" y1="90" x2="140" y2="138"/>
+    <line x1="340" y1="102" x2="500" y2="102"/><line x1="340" y1="114" x2="500" y2="114"/>
+    <line x1="340" y1="126" x2="500" y2="126"/>
+    <line x1="360" y1="90" x2="360" y2="138"/><line x1="380" y1="90" x2="380" y2="138"/>
+    <line x1="400" y1="90" x2="400" y2="138"/><line x1="420" y1="90" x2="420" y2="138"/>
+    <line x1="440" y1="90" x2="440" y2="138"/><line x1="460" y1="90" x2="460" y2="138"/>
+    <line x1="480" y1="90" x2="480" y2="138"/>
+  </g>
+  <!-- Label -->
+  <rect x="0" y="0" width="500" height="22" fill="rgba(0,0,0,0.6)"/>
+  <text x="250" y="15" fill="#fff" font-family="Arial" font-size="12" text-anchor="middle" font-weight="bold">PRE-LOSS — Kitchen in Excellent Condition — March 1, 2026</text>
+</svg>

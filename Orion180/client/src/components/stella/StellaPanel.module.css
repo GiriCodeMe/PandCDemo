@@ -1,0 +1,140 @@
+.overlay {
+  position: fixed;
+  top: var(--topnav-height);
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  flex: 1;
+  background: #fff;
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  background: #0a0f2c;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.headerLeft { display: flex; align-items: center; gap: 12px; }
+.stellaAvatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #7c3aed; display: flex; align-items: center;
+  justify-content: center; color: #fff; font-size: 16px;
+}
+.stellaName { font-weight: 700; color: #fff; font-size: 14px; }
+.stellaSub  { font-size: 11px; color: rgba(255,255,255,0.5); }
+.closeBtn {
+  background: rgba(255,255,255,0.1); border: none;
+  color: rgba(255,255,255,0.7); width: 28px; height: 28px;
+  border-radius: 50%; cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.closeBtn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+.contextBadge {
+  background: #f0f9ff; border-bottom: 1px solid #bae6fd;
+  padding: 6px 16px; font-size: 11px; font-weight: 600; color: #0369a1;
+}
+
+.messages {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.message {
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.messageUser { flex-direction: row-reverse; }
+
+.stellaAvatarSmall {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: #7c3aed; display: flex; align-items: center;
+  justify-content: center; color: #fff; font-size: 12px;
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px; line-height: 1.5;
+}
+.messageStella .bubble { background: #f3f4f6; color: var(--color-text); border-top-left-radius: 4px; }
+.messageUser   .bubble { background: #0a0f2c; color: #fff; border-top-right-radius: 4px; }
+
+.text { white-space: pre-wrap; }
+
+.suggestions {
+  margin-top: 10px; border-top: 1px solid #e5e7eb; padding-top: 8px;
+}
+.suggestionsLabel {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--color-text-muted); margin-bottom: 6px;
+}
+.suggestion {
+  display: flex; gap: 8px; align-items: flex-start;
+  padding: 4px 0; font-size: 12px; color: var(--color-text);
+}
+.suggestNum {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: #7c3aed; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+
+.typing { display: flex; gap: 4px; padding: 2px 0; }
+.typing span {
+  width: 7px; height: 7px; border-radius: 50%; background: #9ca3af;
+  animation: bounce 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-4px); }
+}
+
+.quickPrompts {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  padding: 10px 16px; border-top: 1px solid var(--color-border);
+  background: #fafafa;
+}
+.quickBtn {
+  padding: 4px 10px; border-radius: 20px;
+  border: 1px solid #e5e7eb; background: #fff;
+  font-size: 11px; color: var(--color-text-muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.quickBtn:hover { border-color: #7c3aed; color: #7c3aed; background: #f3e8ff; }
+
+.inputRow {
+  display: flex; gap: 8px; padding: 12px 16px;
+  border-top: 1px solid var(--color-border);
+  background: #fff;
+}
+.input {
+  flex: 1; padding: 9px 12px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  font-size: 13px; outline: none;
+  transition: border-color 0.15s;
+}
+.input:focus { border-color: #7c3aed; }
+.sendBtn {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: #7c3aed; color: #fff; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+}
+.sendBtn:hover:not(:disabled) { background: #6d28d9; }
+.sendBtn:disabled { background: #d1d5db; cursor: not-allowed; }

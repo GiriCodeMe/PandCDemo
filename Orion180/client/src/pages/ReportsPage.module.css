@@ -1,0 +1,97 @@
+.page { padding: 0; }
+
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+.title { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: var(--color-text); }
+.subtitle { font-size: 13px; color: var(--color-text-muted); }
+.headerActions { display: flex; gap: 8px; }
+
+/* KPI Row */
+.kpiRow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+
+.kpiCard {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 10px; padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.kpiValue { font-size: 26px; font-weight: 800; color: var(--color-text); margin-bottom: 4px; }
+.kpiLabel { font-size: 11px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.kpiSub { font-size: 11px; font-weight: 600; }
+
+/* Charts Row */
+.chartsRow { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+.chartCard {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 10px; padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.chartTitle { font-size: 14px; font-weight: 700; color: var(--color-text); margin-bottom: 4px; }
+.chartSub { font-size: 11px; color: var(--color-text-muted); margin-bottom: 18px; }
+
+/* Peril chart */
+.perilChart { display: flex; flex-direction: column; gap: 10px; }
+.perilRow { display: grid; grid-template-columns: 160px 1fr 100px; align-items: center; gap: 10px; }
+.perilLabel { font-size: 12px; color: var(--color-text); }
+.perilBarWrap { background: var(--color-border); border-radius: 3px; height: 8px; overflow: hidden; }
+.perilBar { height: 100%; border-radius: 3px; transition: width 0.5s; }
+.perilStats { display: flex; justify-content: flex-end; gap: 10px; }
+.perilCount { font-size: 12px; font-weight: 700; color: var(--color-text); }
+.perilAmount { font-size: 11px; color: var(--color-text-muted); }
+
+/* Fraud chart */
+.fraudChart { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.fraudRow { display: flex; align-items: center; gap: 8px; }
+.fraudDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.fraudLabel { font-size: 12px; color: var(--color-text); width: 90px; }
+.fraudBarWrap { flex: 1; background: var(--color-border); border-radius: 3px; height: 8px; overflow: hidden; }
+.fraudBar { height: 100%; border-radius: 3px; transition: width 0.5s; }
+.fraudStats { display: flex; gap: 6px; align-items: center; }
+.fraudCount { font-size: 13px; font-weight: 700; min-width: 24px; text-align: right; }
+.fraudPct { font-size: 11px; color: var(--color-text-muted); min-width: 28px; }
+.fraudNote { font-size: 11px; color: #92400e; background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 7px 10px; }
+
+/* Settlement trend bars */
+.trendChart { display: flex; align-items: flex-end; gap: 8px; height: 100px; margin-bottom: 8px; }
+.trendCol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; height: 100%; justify-content: flex-end; }
+.trendBarWrap { width: 100%; background: var(--color-border); border-radius: 3px 3px 0 0; flex: 1; display: flex; align-items: flex-end; }
+.trendBar { width: 100%; background: #6366f1; border-radius: 3px 3px 0 0; transition: height 0.5s; }
+.trendDays { font-size: 9px; color: var(--color-text-muted); }
+.trendMonth { font-size: 10px; color: var(--color-text); font-weight: 600; }
+.trendLegend { display: flex; align-items: center; font-size: 11px; color: var(--color-text-muted); }
+.trendLegendBar { display: inline-block; width: 10px; height: 10px; background: #6366f1; border-radius: 2px; margin-right: 5px; }
+
+/* Sections (table + actions) */
+.section { margin-bottom: 24px; background: var(--color-panel); border: 1px solid var(--color-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
+.sectionTitle { font-size: 15px; font-weight: 700; color: var(--color-text); margin-bottom: 14px; }
+
+/* Regional Table */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th {
+  text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; color: var(--color-text-muted);
+  padding: 8px 12px; border-bottom: 1px solid var(--color-border);
+}
+.table td { padding: 10px 12px; color: var(--color-text); border-bottom: 1px solid #f3f4f6; }
+.table tr:last-child td { border-bottom: none; }
+.stateBadge { background: var(--color-bg); padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--color-text-muted); }
+
+/* Action items */
+.actionList { display: flex; flex-direction: column; gap: 8px; }
+.actionItem {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: 8px; padding: 14px 16px; cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.actionItem:hover { background: #eef2ff; border-color: #c7d2fe; }
+.actionLeft { display: flex; align-items: flex-start; gap: 12px; flex: 1; }
+.actionPriority { flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; border: 1px solid; text-transform: uppercase; margin-top: 2px; }
+.actionTitle { font-size: 13px; font-weight: 600; color: var(--color-text); margin-bottom: 3px; }
+.actionPeril { margin-left: 8px; font-size: 10px; background: var(--color-border); padding: 1px 6px; border-radius: 3px; color: var(--color-text-muted); font-weight: 500; }
+.actionDesc { font-size: 12px; color: var(--color-text-muted); }
+.actionRight { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 20px; }
+.actionAdjuster { font-size: 11px; color: var(--color-text-muted); }
+.actionDays { font-size: 11px; color: var(--color-text-muted); }
+.actionArrow { color: var(--color-text-muted); font-size: 14px; }

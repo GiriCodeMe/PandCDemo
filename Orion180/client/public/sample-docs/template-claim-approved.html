@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication Template — Claim Approved</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 40px 20px; color: #333; }
+  .preview-banner { max-width: 680px; margin: 0 auto 20px; background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; padding: 10px 16px; font-size: 12px; color: #2e7d32; display: flex; align-items: center; gap: 8px; }
+  .email { max-width: 680px; margin: 0 auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .email-header { background: #003366; padding: 20px 24px; }
+  .email-header .brand { color: #fff; font-size: 18px; font-weight: 700; }
+  .email-header .brand span { color: #e84040; }
+  .approved-banner { background: linear-gradient(135deg, #1b5e20, #2e7d32); padding: 20px 32px; text-align: center; color: #fff; }
+  .approved-banner h2 { font-size: 22px; margin-bottom: 4px; }
+  .approved-banner p { font-size: 13px; opacity: 0.85; }
+  .email-meta { background: #f8f9fa; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; font-size: 13px; }
+  .email-meta div { margin-bottom: 5px; }
+  .email-meta label { font-weight: 700; color: #555; width: 60px; display: inline-block; }
+  .channel-tag { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-left: 6px; }
+  .email-body { padding: 32px 32px; font-size: 14px; line-height: 1.8; color: #333; }
+  .greeting { font-weight: 700; margin-bottom: 16px; }
+  p { margin-bottom: 16px; }
+  .summary-box { background: #f8fffe; border: 1px solid #b2dfdb; border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
+  .summary-box h4 { color: #00695c; font-size: 14px; margin-bottom: 14px; border-bottom: 1px solid #b2dfdb; padding-bottom: 8px; }
+  .summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .summary-row:last-child { border: none; font-weight: 700; font-size: 15px; color: #00695c; }
+  .next-steps { background: #f5f8ff; border-left: 4px solid #003366; padding: 14px 18px; border-radius: 0 6px 6px 0; font-size: 13px; margin: 20px 0; }
+  .next-steps h4 { color: #003366; margin-bottom: 8px; }
+  .next-steps li { margin-bottom: 6px; }
+  .portal-btn { display: inline-block; background: #2e7d32; color: #fff; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; margin: 16px 0; }
+  .signature { margin-top: 32px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 13px; }
+  .signature .name { font-weight: 700; color: #003366; font-size: 15px; }
+  .footer { background: #f8f9fa; padding: 16px 24px; font-size: 11px; color: #999; text-align: center; border-top: 1px solid #e0e0e0; }
+</style>
+</head>
+<body>
+<div class="preview-banner">
+  <strong>Template Preview</strong> — Claim Approved | Channel: PORTAL + EMAIL | Status: Ready to Send
+</div>
+<div class="email">
+  <div class="email-header">
+    <div class="brand">Carrier<span>180</span> Insurance</div>
+  </div>
+  <div class="approved-banner">
+    <h2>Your Claim Has Been Approved</h2>
+    <p>Claim #2026-093 | Roof Damage — Wind &amp; Hail | 789 Pine Circle, Houston TX</p>
+  </div>
+  <div class="email-meta">
+    <div><label>To:</label> Gopi Reddy &lt;gopi.reddy@example.com&gt;</div>
+    <div><label>From:</label> Jane Doe, Claims Adjuster &lt;jane.doe@carrier180.com&gt;</div>
+    <div><label>Subject:</label> APPROVED: Claim #2026-093 — Payment Authorization Issued <span class="channel-tag">EMAIL + PORTAL</span></div>
+    <div><label>Date:</label> March 15, 2026</div>
+    <div><label>Re:</label> Claim #2026-093 | Wind &amp; Hail | 789 Pine Circle, Houston TX 77001</div>
+  </div>
+  <div class="email-body">
+    <div class="greeting">Dear Mr. Reddy,</div>
+    <p>We're pleased to inform you that your homeowners insurance claim for wind and hail damage has been <strong>approved</strong>. Our team has completed the review of your claim and all submitted documentation.</p>
+
+    <div class="summary-box">
+      <h4>Claim Settlement Summary</h4>
+      <div class="summary-row"><span>Claim Number:</span><span>2026-093</span></div>
+      <div class="summary-row"><span>Date of Loss:</span><span>March 8, 2026</span></div>
+      <div class="summary-row"><span>Approved Repair Cost:</span><span>$13,969.40</span></div>
+      <div class="summary-row"><span>Policy Deductible (Wind):</span><span>– $2,000.00</span></div>
+      <div class="summary-row"><span>Depreciation (Recoverable):</span><span>– $1,519.40</span></div>
+      <div class="summary-row"><span>Actual Cash Value Payment:</span><span>$10,450.00</span></div>
+      <div class="summary-row"><span>Recoverable Depreciation:</span><span>$1,519.40 (upon completion)</span></div>
+      <div class="summary-row"><span>TOTAL AUTHORIZED:</span><span>$11,969.40</span></div>
+    </div>
+
+    <div class="next-steps">
+      <h4>What Happens Next</h4>
+      <ol style="padding-left:18px;">
+        <li>ACV payment of <strong>$10,450.00</strong> will be issued to you within <strong>5 business days</strong> via ACH/direct deposit to your account on file.</li>
+        <li>Authorize Apex Roofing to begin repairs — they have been notified of approval.</li>
+        <li>Upon completion, submit the final invoice. Recoverable depreciation ($1,519.40) will be released within 3 business days of receipt.</li>
+        <li>A 30-day follow-up inspection will be scheduled to confirm repair completion.</li>
+      </ol>
+    </div>
+
+    <p>You can track your payment status and upload your final invoice through your secure Carrier180 claims portal.</p>
+
+    <a class="portal-btn">View Claim Details in Portal →</a>
+
+    <p>It was a pleasure assisting you through this process. Should you have any questions about your settlement, please contact me directly.</p>
+
+    <div class="signature">
+      <div class="name">Jane Doe</div>
+      <div class="title">Senior Claims Adjuster | Carrier180 Insurance</div>
+      <div style="margin-top:4px;color:#555;font-size:12px;">Direct: (407) 555-9100 | jane.doe@carrier180.com | Claim #2026-093</div>
+    </div>
+  </div>
+  <div class="footer">
+    Carrier180 Insurance Group | 1 Insurance Plaza, Orlando FL 32801 | 1-800-CARRIER-180
+  </div>
+</div>
+</body></html>

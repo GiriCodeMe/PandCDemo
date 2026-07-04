@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contractor Estimate — Apex Roofing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f4f8; color: #2a3a4a; padding: 40px 20px; }
+  .doc { max-width: 800px; margin: 0 auto; background: #fff; padding: 48px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1a4a8a; padding-bottom: 24px; margin-bottom: 32px; }
+  .logo { font-size: 26px; font-weight: 900; color: #1a4a8a; }
+  .logo span { color: #e84040; }
+  .est-meta { text-align: right; font-size: 13px; color: #555; }
+  .est-num { font-size: 20px; font-weight: 700; color: #1a4a8a; }
+  .status-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; margin-top: 4px; }
+  .address-block { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 8px; }
+  p { font-size: 13px; line-height: 1.8; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
+  th { background: #1a4a8a; color: #fff; padding: 10px 12px; text-align: left; font-size: 12px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #e8e8e8; }
+  tr:nth-child(even) td { background: #f5f8fc; }
+  .totals table { width: 320px; margin-left: auto; }
+  .totals td { border: none; padding: 6px 12px; }
+  .totals .total-row td { font-weight: 700; font-size: 16px; color: #1a4a8a; border-top: 2px solid #1a4a8a; padding-top: 10px; }
+  .nws-box { background: #e8f0ff; border-left: 4px solid #1a4a8a; padding: 14px 18px; font-size: 12px; color: #333; border-radius: 0 6px 6px 0; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e8e8e8; font-size: 11px; color: #999; text-align: center; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="header">
+    <div>
+      <div class="logo">Apex<span>Roofing</span></div>
+      <p style="font-size:12px;color:#666;margin-top:4px;">Licensed Roofing Contractor — TX Lic: RCR-00012845</p>
+      <p style="font-size:12px;color:#666;">(713) 555-0145 | apexroofing@example.com</p>
+      <p style="font-size:12px;color:#666;">5500 Katy Fwy, Houston, TX 77007</p>
+    </div>
+    <div class="est-meta">
+      <div class="est-num">ESTIMATE #AR-2026-0392</div>
+      <div style="margin-top:6px;">Date: March 8, 2026</div>
+      <div>Valid: 30 days from issue</div>
+      <div class="status-badge">APPROVED — PENDING FINAL INVOICE</div>
+    </div>
+  </div>
+
+  <div class="address-block">
+    <div>
+      <div class="section-title">Property / Insured</div>
+      <p><strong>Gopi Reddy</strong><br>789 Pine Circle, Unit 4<br>Houston, TX 77001<br>gopi.reddy@example.com<br>713-555-0267</p>
+    </div>
+    <div>
+      <div class="section-title">Insurance Information</div>
+      <p><strong>Carrier:</strong> Carrier180 Insurance<br><strong>Claim #:</strong> 2026-093<br><strong>Policy #:</strong> 2024-003<br><strong>Adjuster:</strong> Jane Doe<br><strong>Date of Loss:</strong> March 8, 2026</p>
+    </div>
+  </div>
+
+  <div class="nws-box" style="margin-bottom:24px;">
+    <strong>Storm Verification</strong><br>
+    National Weather Service ASOS station (Houston Hobby Airport, KHOU) confirms: March 8, 2026 — Sustained winds 65 mph, gusts to 78 mph. Hail: 0.9" reported at 14:35 CST. NWS damage survey: wind damage confirmed 4.2 miles from 77001 zip code. Event ID: KHOU-20260308-WNDHL.
+  </div>
+
+  <div class="section-title" style="margin-bottom:8px;">Scope of Work — Wind &amp; Hail Damage Repair</div>
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Description</th><th>Qty</th><th>Rate</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Emergency Tarp</td><td>Install 20×30 ft poly tarp over exposed decking — temporary weather protection</td><td>1</td><td>$380</td><td>$380.00</td></tr>
+      <tr><td>Shingle Removal</td><td>Remove damaged/detached asphalt shingles (full slope, 24 sq)</td><td>24 sq</td><td>$65/sq</td><td>$1,560.00</td></tr>
+      <tr><td>Decking Inspection</td><td>Full decking inspection + replacement of damaged OSB panels (2 sheets)</td><td>2 sheets</td><td>$145</td><td>$290.00</td></tr>
+      <tr><td>Ice &amp; Water Shield</td><td>Install 3-ft ice &amp; water shield at eaves and valleys</td><td>24 sq</td><td>$28/sq</td><td>$672.00</td></tr>
+      <tr><td>Felt Underlayment</td><td>15 lb felt underlayment — full roof</td><td>24 sq</td><td>$18/sq</td><td>$432.00</td></tr>
+      <tr><td>Architectural Shingles</td><td>Owens Corning Duration — Weathered Wood, 30-yr warranty, to match existing</td><td>24 sq</td><td>$195/sq</td><td>$4,680.00</td></tr>
+      <tr><td>Ridge Cap Shingles</td><td>Replace 7 missing ridge cap shingles, Owens Corning ProEdge</td><td>7 pcs</td><td>$28</td><td>$196.00</td></tr>
+      <tr><td>Drip Edge</td><td>Replace damaged aluminum drip edge — 2 sides</td><td>80 LF</td><td>$4.50/LF</td><td>$360.00</td></tr>
+      <tr><td>Gutter Reattachment</td><td>Reattach detached 6" K-style gutter section — east side, 28 LF</td><td>28 LF</td><td>$12/LF</td><td>$336.00</td></tr>
+      <tr><td>Flashing</td><td>Inspect &amp; reseal all penetration flashing; replace chimney step flashing</td><td>1</td><td>$380</td><td>$380.00</td></tr>
+      <tr><td>Labor</td><td>Installation crew (4 laborers, 2 days)</td><td>64 hrs</td><td>$52/hr</td><td>$3,328.00</td></tr>
+      <tr><td>Cleanup &amp; Disposal</td><td>Debris haul-away, dumpster, final sweep with magnet for nails</td><td>1</td><td>$340</td><td>$340.00</td></tr>
+      <tr><td>Final Inspection</td><td>Post-install inspection, photos, 5-yr workmanship warranty certificate</td><td>1</td><td>$120</td><td>$120.00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <table>
+      <tr><td>Subtotal Labor:</td><td>$3,448.00</td></tr>
+      <tr><td>Subtotal Materials:</td><td>$8,606.00</td></tr>
+      <tr><td>Overhead &amp; Profit (10%):</td><td>$1,205.40</td></tr>
+      <tr><td>Sales Tax (TX 8.25% on materials):</td><td>$710.00</td></tr>
+      <tr class="total-row"><td>ESTIMATE TOTAL:</td><td>$13,969.40</td></tr>
+    </table>
+    <p style="font-size:11px;color:#999;margin-top:8px;">* Estimate prepared per Xactimate pricing guide v2026.1 — Houston, TX 77001 region<br>** Supplemental items may be identified during tear-off — adjuster to approve any additions</p>
+  </div>
+
+  <div class="footer">
+    Apex Roofing LLC · TX Lic: RCR-00012845 · 5500 Katy Fwy, Houston TX 77007 · (713) 555-0145<br>
+    Signed: David Park, Project Manager | Carrier180 Approved Vendor | Insurance Direct Pay Accepted
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,60 @@
+.wrap { overflow: hidden; }
+
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--color-border);
+  gap: 12px;
+}
+.searchWrap {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 7px 12px; flex: 1; max-width: 360px;
+}
+.searchIcon { font-size: 13px; color: var(--color-text-muted); }
+.search {
+  border: none; background: none; outline: none;
+  font-size: 13px; width: 100%; color: var(--color-text);
+}
+.filters { display: flex; gap: 8px; }
+.filter {
+  padding: 7px 28px 7px 10px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); font-size: 12px;
+  background: #fff; color: var(--color-text); cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236b7280' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--color-text-muted); padding: 10px 16px; text-align: left;
+  border-bottom: 1px solid var(--color-border); background: #fafafa;
+}
+.table td {
+  padding: 14px 16px; border-bottom: 1px solid #f3f4f6;
+  font-size: 13px; color: var(--color-text);
+}
+.row { cursor: pointer; transition: background 0.12s; }
+.row:hover { background: #f8fafc; }
+.row:hover .claimId { color: var(--color-accent); }
+
+.claimId { font-weight: 600; color: #0a0f2c; }
+.amount { font-weight: 600; }
+.riskCell { display: flex; align-items: center; gap: 6px; }
+
+.footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-top: 1px solid var(--color-border);
+  font-size: 12px; color: var(--color-text-muted);
+}
+.pages { display: flex; gap: 4px; }
+.pageBtn {
+  padding: 4px 10px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); background: #fff;
+  font-size: 12px; cursor: pointer; transition: all 0.12s;
+}
+.pageBtn:hover { border-color: var(--color-navy); color: var(--color-navy); }
+.pageBtnActive { background: var(--color-navy); color: #fff; border-color: var(--color-navy); }
+
+.loading { text-align: center; color: var(--color-text-muted); padding: 32px !important; }

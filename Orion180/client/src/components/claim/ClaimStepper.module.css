@@ -1,0 +1,40 @@
+.stepper {
+  display: flex; align-items: center;
+  padding: 14px 0 18px;
+  margin-bottom: 4px;
+  gap: 0;
+}
+
+.stepGroup { display: flex; align-items: center; flex: 1; }
+.stepGroup:last-child { flex: none; }
+
+.connector {
+  flex: 1; height: 2px; background: var(--color-border);
+  transition: background 0.2s;
+}
+.connectorDone { background: var(--color-accent); }
+
+.step {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  padding: 0 8px; min-width: 90px;
+}
+
+.circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  background: #e5e7eb; color: var(--color-text-muted);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.stepActive .circle  { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+.stepDone   .circle  { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+
+.label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--color-text-muted); white-space: nowrap;
+  transition: color 0.2s;
+}
+.stepActive .label { color: var(--color-accent); }
+.stepDone   .label { color: var(--color-text-muted); }

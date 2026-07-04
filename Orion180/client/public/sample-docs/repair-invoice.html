@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair Invoice — Restoration Pro</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; padding: 40px 20px; }
+  .doc { max-width: 800px; margin: 0 auto; background: #fff; padding: 48px; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #003366; padding-bottom: 24px; margin-bottom: 32px; }
+  .logo { font-size: 26px; font-weight: 800; color: #003366; }
+  .logo span { color: #e84040; }
+  .invoice-meta { text-align: right; font-size: 13px; color: #555; }
+  .invoice-meta .inv-num { font-size: 20px; font-weight: 700; color: #003366; }
+  .invoice-meta .status { display: inline-block; background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; margin-top: 4px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 8px; }
+  .address-block { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .address-block p { font-size: 13px; line-height: 1.8; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
+  th { background: #003366; color: #fff; padding: 10px 12px; text-align: left; font-size: 12px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #e8e8e8; }
+  tr:nth-child(even) td { background: #f9f9f9; }
+  .totals { text-align: right; }
+  .totals table { width: 320px; margin-left: auto; }
+  .totals td { border: none; padding: 6px 12px; }
+  .totals .total-row td { font-weight: 700; font-size: 16px; color: #003366; border-top: 2px solid #003366; padding-top: 10px; }
+  .notes { background: #f0f4ff; border-left: 4px solid #003366; padding: 14px 18px; font-size: 12px; color: #444; margin-top: 24px; border-radius: 0 6px 6px 0; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e8e8e8; font-size: 11px; color: #999; text-align: center; }
+  .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="header">
+    <div>
+      <div class="logo">Restoration<span>Pro</span></div>
+      <p style="font-size:12px;color:#666;margin-top:4px;">Licensed Mitigation & Reconstruction Contractor</p>
+      <p style="font-size:12px;color:#666;">FL Lic: CGC-1525810 | (407) 555-0200</p>
+      <p style="font-size:12px;color:#666;">2800 Commercial Dr, Orlando, FL 32810</p>
+    </div>
+    <div class="invoice-meta">
+      <div class="inv-num">INVOICE #RP-2026-0847</div>
+      <div style="margin-top:6px;">Date: March 15, 2026</div>
+      <div>Due: April 14, 2026 (Net 30)</div>
+      <div class="status">PENDING INSURANCE REVIEW</div>
+    </div>
+  </div>
+
+  <div class="address-block">
+    <div>
+      <div class="section-title">Bill To — Insured</div>
+      <p><strong>John Smith</strong><br>123 Main St, Plot no 1254<br>Orlando, FL 32801<br>john.smith@example.com<br>202-555-0143</p>
+    </div>
+    <div>
+      <div class="section-title">Insurance Claim Reference</div>
+      <p><strong>Carrier:</strong> Carrier180 Insurance<br><strong>Claim #:</strong> 2026-108<br><strong>Policy #:</strong> 2024-001<br><strong>Adjuster:</strong> Jane Doe<br><strong>Date of Loss:</strong> March 15, 2026</p>
+    </div>
+  </div>
+
+  <div class="section-title">Services Rendered — Water Damage Mitigation & Restoration</div>
+  <table>
+    <thead>
+      <tr><th>Description</th><th>Qty / Units</th><th>Rate</th><th>Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Emergency water extraction (industrial pumps, 6 hrs)<br><small style="color:#888">2 crew, Category 2 water loss</small></td><td>6 hrs</td><td>$180/hr</td><td>$1,080.00</td></tr>
+      <tr><td>Structural drying equipment deployment (3 air movers + 2 dehumidifiers)<br><small style="color:#888">72-hour continuous operation</small></td><td>72 hrs</td><td>$45/unit/day × 5</td><td>$4,860.00</td></tr>
+      <tr><td>Hardwood flooring removal — kitchen (320 sq ft)<br><small style="color:#888">Solid ¾" oak, glue-down; full tear-out required</small></td><td>320 sq ft</td><td>$8.50/sq ft</td><td>$2,720.00</td></tr>
+      <tr><td>Subfloor inspection, treatment & moisture barrier<br><small style="color:#888">Anti-microbial treatment + vapor barrier install</small></td><td>320 sq ft</td><td>$4.20/sq ft</td><td>$1,344.00</td></tr>
+      <tr><td>Hardwood flooring replacement — solid oak, stained to match<br><small style="color:#888">Prefinished white oak 5", grade select, nail-down</small></td><td>320 sq ft</td><td>$22.00/sq ft</td><td>$7,040.00</td></tr>
+      <tr><td>Kitchen cabinet base units — water-damaged lower section<br><small style="color:#888">12 linear ft of base cabinets, soft-close hardware</small></td><td>12 lin ft</td><td>$895/lin ft</td><td>$10,740.00</td></tr>
+      <tr><td>Cabinet installation & finish carpentry labor</td><td>16 hrs</td><td>$95/hr</td><td>$1,520.00</td></tr>
+      <tr><td>Countertop removal and reinstallation (quartz)</td><td>1</td><td>$620.00</td><td>$620.00</td></tr>
+      <tr><td>Mold remediation — precautionary treatment</td><td>320 sq ft</td><td>$3.50/sq ft</td><td>$1,120.00</td></tr>
+      <tr><td>Debris disposal & haul-away (2 loads)</td><td>2</td><td>$380.00</td><td>$760.00</td></tr>
+      <tr><td>Final inspection, moisture readings & documentation</td><td>1</td><td>$240.00</td><td>$240.00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <table>
+      <tr><td>Subtotal:</td><td><strong>$32,044.00</strong></td></tr>
+      <tr><td>Materials markup (15%):</td><td>$3,147.30</td></tr>
+      <tr><td>Contractor overhead (8%):</td><td>$2,563.52</td></tr>
+      <tr><td>Sales Tax (FL 6%):</td><td>$1,922.64</td></tr>
+      <tr class="total-row"><td>TOTAL DUE:</td><td>$39,677.46</td></tr>
+    </table>
+    <p style="font-size:11px;color:#999;margin-top:8px;">*Plumbing repair by licensed sub-contractor billed separately</p>
+  </div>
+
+  <div class="notes">
+    <strong>Adjuster Notes:</strong> Final invoice reflects materials replaced per Xactimate pricing guide v2026.1 for Orlando, FL 32801 region. Material selections were approved by insured prior to procurement. All replaced materials match pre-loss quality and grade as required per policy terms. Moisture readings documented at Day 1, Day 3, and Day 5 — final readings confirm return to normal moisture levels (wood MC &lt;12%). Documentation package attached: photos, moisture logs, work orders.
+  </div>
+
+  <div class="footer">
+    Restoration Pro LLC · CGC-1525810 · 2800 Commercial Dr, Orlando FL 32810 · (407) 555-0200 · restorationpro@example.com<br>
+    Payment accepted: Check / ACH / Insurance Direct Pay · Authorized by: Mike Torres, Operations Manager
+  </div>
+</div>
+</body></html>

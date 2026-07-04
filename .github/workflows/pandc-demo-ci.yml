@@ -1,0 +1,50 @@
+name: PandC Demo CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PandCClaims-ai-demo/**'
+      - '.github/workflows/pandc-demo-ci.yml'
+  pull_request:
+    paths:
+      - 'PandCClaims-ai-demo/**'
+      - '.github/workflows/pandc-demo-ci.yml'
+
+jobs:
+  validate:
+    name: JS Syntax & HTML Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check JS syntax (AI factory)
+        run: |
+          echo "Checking JS files..."
+          find PandCClaims-ai-demo/js -name "*.js" | while read f; do
+            node --check "$f" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
+          done
+          echo "All JS files passed syntax check."
+
+      - name: Verify HTML files present
+        run: |
+          echo "HTML assets:"
+          ls -1 PandCClaims-ai-demo/*.html
+          echo "Count: $(ls PandCClaims-ai-demo/*.html | wc -l) HTML file(s) found."
+
+      - name: Verify AI factory module structure
+        run: |
+          required=(
+            "PandCClaims-ai-demo/js/ai-factory/index.js"
+            "PandCClaims-ai-demo/js/ai-factory/shared/gemini-client.js"
+            "PandCClaims-ai-demo/js/ai-factory/home-api.js"
+            "PandCClaims-ai-demo/js/ai-factory/auto-api.js"
+            "PandCClaims-ai-demo/js/ai-factory/commercial-api.js"
+          )
+          for f in "${required[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+          echo "AI factory structure validated."

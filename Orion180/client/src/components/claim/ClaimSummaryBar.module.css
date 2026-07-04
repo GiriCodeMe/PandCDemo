@@ -1,0 +1,11 @@
+.bar {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  background: var(--color-panel); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: 14px 20px;
+  margin-bottom: 20px; box-shadow: var(--shadow-sm);
+}
+.cell { display: flex; flex-direction: column; gap: 2px; }
+.cellLabel { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-text-muted); }
+.cellValue { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.causeTag { color: var(--color-text); }
+.divider { width: 1px; height: 32px; background: var(--color-border); margin: 0 4px; }

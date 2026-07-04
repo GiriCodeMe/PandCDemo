@@ -1,0 +1,99 @@
+name: CarrierDemo CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Orion180/**'
+      - '.github/workflows/carrier-demo-ci.yml'
+  pull_request:
+    paths:
+      - 'Orion180/**'
+      - '.github/workflows/carrier-demo-ci.yml'
+
+jobs:
+  server-unit-tests:
+    name: Server — Unit Tests (Jest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Orion180/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: Orion180/server/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  client-unit-tests:
+    name: Client — Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Orion180/client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: Orion180/client/package-lock.json
+      - run: npm ci
+      - run: npm test -- --run
+
+  client-build:
+    name: Client — Build (Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Orion180/client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: Orion180/client/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: carrier-demo-dist
+          path: Orion180/client/dist/
+          retention-days: 7
+
+  e2e-tests:
+    name: E2E Tests (Playwright — Chromium)
+    runs-on: ubuntu-latest
+    needs: [server-unit-tests, client-unit-tests, client-build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install root deps
+        working-directory: Orion180
+        run: npm ci
+      - name: Install server deps
+        working-directory: Orion180/server
+        run: npm ci
+      - name: Install client deps
+        working-directory: Orion180/client
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: Orion180
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        working-directory: Orion180
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: Orion180/playwright-report/
+          retention-days: 30

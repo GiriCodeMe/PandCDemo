@@ -1,0 +1,27 @@
+# Dependencies
+**/node_modules/
+
+# Environment secrets — NEVER commit
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Build outputs
+**/dist/
+**/build/
+
+# Test artifacts
+Orion180/test-results/
+Orion180/playwright-report/
+
+# Obsidian binary — NEVER commit
+Obsidian/
+Obsidian-1.12.7.exe
+
+# Archives
+*.zip
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp

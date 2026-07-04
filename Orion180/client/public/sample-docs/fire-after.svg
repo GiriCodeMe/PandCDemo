@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="360" viewBox="0 0 500 360">
+  <defs>
+    <radialGradient id="fireGlow" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,100,0,0.3)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <linearGradient id="charWall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1210"/>
+      <stop offset="100%" stop-color="#0d0a08"/>
+    </linearGradient>
+  </defs>
+  <!-- Charred wall -->
+  <rect width="500" height="360" fill="url(#charWall)"/>
+  <!-- Smoke soot -->
+  <rect width="500" height="360" fill="rgba(0,0,0,0.4)"/>
+  <!-- Fire glow -->
+  <rect width="500" height="360" fill="url(#fireGlow)"/>
+  <!-- Charred floor (tiles cracked) -->
+  <rect x="0" y="240" width="500" height="120" fill="#1a1208"/>
+  <!-- Cracked tiles -->
+  <path d="M0,260 Q25,258 50,261 Q100,262 150,259 Q200,256 250,262 Q300,266 350,260 Q400,254 450,261 Q475,263 500,260" fill="none" stroke="#0a0806" stroke-width="1.5"/>
+  <line x1="80" y1="240" x2="78" y2="360" stroke="#0a0806" stroke-width="1.5"/>
+  <line x1="160" y1="240" x2="163" y2="360" stroke="#0a0806" stroke-width="1.5"/>
+  <line x1="240" y1="240" x2="238" y2="360" stroke="#0a0806" stroke-width="1.5"/>
+  <!-- Random crack lines -->
+  <path d="M100,255 L115,275 L108,295" stroke="#050403" stroke-width="1.5" fill="none"/>
+  <path d="M250,260 L262,280" stroke="#050403" stroke-width="1.5" fill="none"/>
+  <path d="M370,258 L358,285 L375,310" stroke="#050403" stroke-width="1.5" fill="none"/>
+  <!-- Destroyed upper cabinets - charred -->
+  <rect x="0" y="15" width="200" height="90" fill="#1a0d08" rx="2"/>
+  <rect x="5" y="19" width="92" height="82" fill="#120900" rx="1"/>
+  <rect x="103" y="19" width="92" height="82" fill="#150b00" rx="1"/>
+  <!-- Char texture lines on upper left cabinets -->
+  <path d="M10,30 Q30,25 60,32 Q90,38 90,28" stroke="#060402" stroke-width="0.8" fill="none"/>
+  <path d="M10,50 Q50,43 90,52" stroke="#060402" stroke-width="0.8" fill="none"/>
+  <rect x="300" y="15" width="200" height="90" fill="#1a0d08" rx="2"/>
+  <rect x="305" y="19" width="92" height="82" fill="#120900" rx="1"/>
+  <rect x="403" y="19" width="92" height="82" fill="#150b00" rx="1"/>
+  <!-- Range hood - melted -->
+  <rect x="205" y="10" width="90" height="55" fill="#1a0e0a" rx="3"/>
+  <!-- Lower cabinets - heavily charred at origin area -->
+  <rect x="0" y="148" width="180" height="92" fill="#1a1008" rx="2"/>
+  <rect x="5" y="152" width="83" height="82" fill="#120a04" rx="1"/>
+  <rect x="93" y="152" width="82" height="82" fill="#0f0804" rx="1"/>
+  <!-- Stove area - origin of fire -->
+  <rect x="180" y="145" width="145" height="95" fill="#0a0500" rx="2"/>
+  <!-- Fire glow at stove -->
+  <ellipse cx="252" cy="192" rx="60" ry="40" fill="rgba(200,80,0,0.2)"/>
+  <!-- Charred stove surface -->
+  <rect x="183" y="151" width="134" height="60" fill="#050300" rx="2"/>
+  <!-- Melted/blackened toaster oven area (ORIGIN) -->
+  <rect x="325" y="148" width="80" height="50" fill="#0a0400" rx="2"/>
+  <ellipse cx="355" cy="170" rx="30" ry="20" fill="rgba(200,60,0,0.15)"/>
+  <!-- Right lower cabinets -->
+  <rect x="320" y="148" width="180" height="92" fill="#180e06" rx="2"/>
+  <rect x="325" y="152" width="82" height="82" fill="#100800" rx="1"/>
+  <rect x="413" y="152" width="82" height="82" fill="#130a00" rx="1"/>
+  <!-- Countertop - burned/cracked -->
+  <rect x="0" y="140" width="500" height="12" fill="#1a1008" rx="1"/>
+  <path d="M120,140 L128,152 L115,140" stroke="#0a0804" stroke-width="0.8" fill="none"/>
+  <path d="M280,140 L285,152 L275,145" stroke="#0a0804" stroke-width="0.8" fill="none"/>
+  <!-- Smoke streaks on walls -->
+  <path d="M200,140 Q195,100 205,60 Q210,30 215,0" stroke="rgba(10,8,5,0.8)" stroke-width="12" fill="none"/>
+  <path d="M280,135 Q275,95 285,55 Q290,25 295,0" stroke="rgba(10,8,5,0.6)" stroke-width="8" fill="none"/>
+  <path d="M380,145 Q390,105 395,65 Q398,35 400,0" stroke="rgba(10,8,5,0.5)" stroke-width="6" fill="none"/>
+  <!-- Partial ceiling collapse indicator -->
+  <path d="M180,0 L220,30 L270,10 L310,35 L340,0" fill="#1a1008" stroke="#0a0806" stroke-width="1"/>
+  <!-- Debris on floor -->
+  <rect x="150" y="250" width="40" height="10" fill="#1a0d06" transform="rotate(-20 170 255)"/>
+  <rect x="300" y="265" width="35" height="8" fill="#1a0d06" transform="rotate(15 317 269)"/>
+  <rect x="60" y="275" width="50" height="7" fill="#1a0d06" transform="rotate(-8 85 278)"/>
+  <!-- Origin marker -->
+  <circle cx="360" cy="170" r="18" fill="none" stroke="rgba(255,80,0,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="360" y="174" fill="rgba(255,120,40,0.9)" font-family="Arial" font-size="9" text-anchor="middle" font-weight="bold">ORIGIN</text>
+  <!-- Label -->
+  <rect x="0" y="0" width="500" height="18" fill="rgba(180,40,0,0.8)"/>
+  <text x="250" y="13" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle" font-weight="bold">POST-FIRE — Severe Damage — March 10, 2026 — Charred Cabinets, Structural Exposure</text>
+</svg>
