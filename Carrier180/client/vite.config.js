@@ -8,6 +8,8 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
+        changeOrigin: true,
+        headers: { connection: 'close' },
         configure: (proxy) => {
           proxy.on('error', (err, req) => {
             console.error(`[proxy] ${req.method} ${req.url} — ${err.code}: ${err.message}`);
