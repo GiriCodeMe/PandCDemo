@@ -4,32 +4,87 @@ An interactive AI-powered Property & Casualty claims management platform built f
 
 ---
 
-## Quick Start
+## Demo Launch
 
 ### Prerequisites
-- Node.js 18+
-- A Google Gemini API key (optional — the app falls back to simulated AI responses without one)
 
-### 1. Start the backend
+- Node.js 18+
+- A Google Gemini API key — get one free at [aistudio.google.com](https://aistudio.google.com)
+
+### Step 1 — One-time setup (first launch only)
+
 ```bash
-cd server
-npm install
-# Create server/.env and add your Gemini key (optional):
-#   GEMINI_API_KEY=your_key_here
-npm run dev
-# API running on http://localhost:3001
+# From the repo root
+cd server && npm install && cd ..
+cd client && npm install && cd ..
 ```
 
-### 2. Start the frontend
+Create `server/.env` with your API key:
+
+```
+GEMINI_API_KEY=your_key_here
+```
+
+> Without the key the app still runs — all AI panels fall back to simulated responses. For a live demo, the key is strongly recommended.
+
+### Step 2 — Start both servers
+
+Open **two terminals** from the `Carrier180/` root:
+
+**Terminal 1 — API server**
+```bash
+cd server
+npm run dev
+# Listening on http://localhost:3001
+```
+
+**Terminal 2 — Frontend**
 ```bash
 cd client
-npm install
 npm run dev
 # App running on http://localhost:5173
 ```
 
-### 3. Open the app
-Navigate to `http://localhost:5173` — you will be redirected to the Dashboard.
+### Step 3 — Open the app
+
+Navigate to **http://localhost:5173** — the Claims Dashboard loads automatically.
+
+---
+
+## Demo Script
+
+Recommended walk-through for a 10–15 minute live demo:
+
+| Step | What to show | Where |
+|---|---|---|
+| 1 | **Dashboard** — portfolio KPIs, active claims queue | `/` |
+| 2 | **Open claim 2026-102** (Mary Johnson, Fire/High Fraud) — most dramatic AI output | Click claim row |
+| 3 | **Step 1 – Submission** — policy summary, reported peril, initial documents | Claim detail, tab 1 |
+| 4 | **Step 2 – Validation** — AI address comparison (CRM vs docs), anomaly flags | Tab 2 |
+| 5 | **Step 3 – AI Insights** — damage photo analysis, fraud vector scoring, IoT data | Tab 3 |
+| 6 | **Ask Stella** — type a question like "What are the top fraud indicators on this claim?" | Stella panel |
+| 7 | **Step 4 – Communications** — draft adjuster letter with one click | Tab 4 |
+| 8 | **Step 5 – Next Steps** — recommended actions, SLA tracker | Tab 5 |
+| 9 | **Service Providers** — filtered contractor/adjuster directory | Side nav |
+| 10 | **Analytics** — portfolio peril breakdown, regional heatmap | Side nav |
+
+> **Pro tip:** Run the AI steps on claim 2026-102 (High fraud) first, then contrast with 2026-093 (Low fraud) to highlight the scoring difference.
+
+---
+
+## Quick Start
+
+See [Demo Launch](#demo-launch) above for the full walkthrough. TL;DR:
+
+```bash
+# Terminal 1 — API server
+cd server && npm install && npm run dev
+
+# Terminal 2 — Frontend
+cd client && npm install && npm run dev
+```
+
+Then open **http://localhost:5173**.
 
 ---
 

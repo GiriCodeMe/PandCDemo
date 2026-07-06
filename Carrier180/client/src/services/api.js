@@ -1,29 +1,59 @@
 const BASE = '/api';
 
+const log = {
+  req:  (method, path, body) => console.log( `[api] --> ${method} ${path}`, body !== undefined ? body : ''),
+  res:  (method, path, status, ms) => console.log( `[api] <-- ${method} ${path} ${status} (${ms}ms)`),
+  err:  (method, path, err)  => console.error(`[api] !!! ${method} ${path}`, err),
+};
+
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`);
-  if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
-  return res.json();
+  const t = Date.now();
+  log.req('GET', path);
+  try {
+    const res = await fetch(`${BASE}${path}`);
+    log.res('GET', path, res.status, Date.now() - t);
+    if (!res.ok) throw new Error(`API GET ${path} → ${res.status}`);
+    return res.json();
+  } catch (err) {
+    log.err('GET', path, err);
+    throw err;
+  }
 }
 
 async function post(path, body) {
-  const res = await fetch(`${BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error(`API POST ${path} → ${res.status}`);
-  return res.json();
+  const t = Date.now();
+  log.req('POST', path, body);
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    log.res('POST', path, res.status, Date.now() - t);
+    if (!res.ok) throw new Error(`API POST ${path} → ${res.status}`);
+    return res.json();
+  } catch (err) {
+    log.err('POST', path, err);
+    throw err;
+  }
 }
 
 async function patch(path, body) {
-  const res = await fetch(`${BASE}${path}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error(`API PATCH ${path} → ${res.status}`);
-  return res.json();
+  const t = Date.now();
+  log.req('PATCH', path, body);
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    log.res('PATCH', path, res.status, Date.now() - t);
+    if (!res.ok) throw new Error(`API PATCH ${path} → ${res.status}`);
+    return res.json();
+  } catch (err) {
+    log.err('PATCH', path, err);
+    throw err;
+  }
 }
 
 export const claimsApi = {

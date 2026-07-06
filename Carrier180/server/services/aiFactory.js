@@ -6,14 +6,37 @@ const CLIENT_PUBLIC = path.join(__dirname, '..', '..', 'client', 'public');
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
-function getModel(visionRequired = false) {
+const LOG = {
+  info:  (...a) => console.log( '[aiFactory]', ...a),
+  warn:  (...a) => console.warn('[aiFactory]', ...a),
+  error: (...a) => console.error('[aiFactory]', ...a),
+};
+
+function getModel() {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return null;
-  const genAI = new GoogleGenerativeAI(apiKey);
-  return genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    generationConfig: { temperature: 0.2, maxOutputTokens: 800 }
-  });
+  if (!apiKey) {
+    LOG.warn('GEMINI_API_KEY not set — falling back to simulation');
+    return null;
+  }
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const requestOptions = {};
+    if (process.env.GEMINI_BASE_URL)     requestOptions.baseUrl    = process.env.GEMINI_BASE_URL;
+    if (process.env.GEMINI_API_VERSION)  requestOptions.apiVersion = process.env.GEMINI_API_VERSION;
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash-lite';
+    LOG.info(`model ready | model=${modelName} baseUrl=${requestOptions.baseUrl || 'default'} apiVersion=${requestOptions.apiVersion || 'default'}`);
+    return genAI.getGenerativeModel(
+      { model: process.env.GEMINI_MODEL || 'gemini-2.0-flash-lite', generationConfig: { temperature: 0.2, maxOutputTokens: 800 } },
+      requestOptions
+    );
+  } catch (err) {
+    LOG.error('getModel failed:', err.message);
+    return null;
+  }
+}
+
+function geminiSignal(timeoutMs = 30000) {
+  return AbortSignal.timeout(timeoutMs);
 }
 
 function claimSummary(claim) {
@@ -118,10 +141,12 @@ const PHOTO_REVIEW_SIMULATED = {
 };
 
 async function photoReview(claim) {
-  const model = getModel(true);
+  LOG.info(`photoReview start | claim=${claim.id}`);
+  const model = getModel();
   const imagePaths = claim.damageImages || [];
 
   if (!model || imagePaths.length === 0) {
+    LOG.info(`photoReview simulated | claim=${claim.id} reason=${!model ? 'no model' : 'no images'}`);
     return PHOTO_REVIEW_SIMULATED[claim.id] || {
       overallConsistency: 'UNCERTAIN',
       consistencyReason: 'No images available for analysis.',
@@ -137,17 +162,21 @@ async function photoReview(claim) {
 
   try {
     const imageParts = await loadImageParts(imagePaths);
-    if (imageParts.length === 0) return PHOTO_REVIEW_SIMULATED[claim.id] || {};
-
-    const result = await model.generateContent([
-      { text: PHOTO_REVIEW_PROMPT(claim) },
-      ...imageParts
-    ]);
-
+    if (imageParts.length === 0) {
+      LOG.warn(`photoReview no images loaded | claim=${claim.id}`);
+      return PHOTO_REVIEW_SIMULATED[claim.id] || {};
+    }
+    LOG.info(`photoReview calling Gemini | claim=${claim.id} images=${imageParts.length}`);
+    const result = await model.generateContent(
+      [{ text: PHOTO_REVIEW_PROMPT(claim) }, ...imageParts],
+      { signal: geminiSignal() }
+    );
+    LOG.info(`photoReview Gemini responded | claim=${claim.id}`);
     const raw = result.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     return JSON.parse(raw);
   } catch (err) {
-    console.error('photoReview Gemini error:', err.message);
+    LOG.error(`photoReview error | claim=${claim.id} | ${err.name}: ${err.message}`);
+    if (err.cause) LOG.error('photoReview cause:', err.cause);
     return PHOTO_REVIEW_SIMULATED[claim.id] || {};
   }
 }
@@ -231,9 +260,11 @@ const ADDRESS_COMPARE_SIMULATED = {
 };
 
 async function addressCompare(claim) {
-  const model = getModel(false);
+  LOG.info(`addressCompare start | claim=${claim.id}`);
+  const model = getModel();
 
   if (!model) {
+    LOG.info(`addressCompare simulated | claim=${claim.id}`);
     return ADDRESS_COMPARE_SIMULATED[claim.id] || {
       overallVerdict: 'ADDRESSES_CONSISTENT',
       riskLevel: 'LOW',
@@ -245,11 +276,17 @@ async function addressCompare(claim) {
   }
 
   try {
-    const result = await model.generateContent([{ text: ADDRESS_COMPARE_PROMPT(claim) }]);
+    LOG.info(`addressCompare calling Gemini | claim=${claim.id}`);
+    const result = await model.generateContent(
+      [{ text: ADDRESS_COMPARE_PROMPT(claim) }],
+      { signal: geminiSignal() }
+    );
+    LOG.info(`addressCompare Gemini responded | claim=${claim.id}`);
     const raw = result.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     return JSON.parse(raw);
   } catch (err) {
-    console.error('addressCompare Gemini error:', err.message);
+    LOG.error(`addressCompare error | claim=${claim.id} | ${err.name}: ${err.message}`);
+    if (err.cause) LOG.error('addressCompare cause:', err.cause);
     return ADDRESS_COMPARE_SIMULATED[claim.id] || {};
   }
 }
@@ -371,10 +408,12 @@ const FRAUD_VECTOR_SIMULATED = {
 };
 
 async function fraudVector(claim) {
-  const model = getModel(true);
+  LOG.info(`fraudVector start | claim=${claim.id}`);
+  const model = getModel();
   const imagePaths = claim.damageImages || [];
 
   if (!model) {
+    LOG.info(`fraudVector simulated | claim=${claim.id}`);
     return FRAUD_VECTOR_SIMULATED[claim.id] || {
       overallFraudRisk: 'MEDIUM',
       confidenceScore: 50,
@@ -390,11 +429,14 @@ async function fraudVector(claim) {
   try {
     const imageParts = await loadImageParts(imagePaths);
     const contents = [{ text: FRAUD_VECTOR_PROMPT(claim) }, ...imageParts];
-    const result = await model.generateContent(contents);
+    LOG.info(`fraudVector calling Gemini | claim=${claim.id} images=${imageParts.length}`);
+    const result = await model.generateContent(contents, { signal: geminiSignal() });
+    LOG.info(`fraudVector Gemini responded | claim=${claim.id}`);
     const raw = result.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     return JSON.parse(raw);
   } catch (err) {
-    console.error('fraudVector Gemini error:', err.message);
+    LOG.error(`fraudVector error | claim=${claim.id} | ${err.name}: ${err.message}`);
+    if (err.cause) LOG.error('fraudVector cause:', err.cause);
     return FRAUD_VECTOR_SIMULATED[claim.id] || {};
   }
 }
