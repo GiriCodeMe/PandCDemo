@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'Orion180/**'
+      - 'Carrier180/**'
       - '.github/workflows/carrier-demo-ci.yml'
   pull_request:
     paths:
-      - 'Orion180/**'
+      - 'Carrier180/**'
       - '.github/workflows/carrier-demo-ci.yml'
 
 jobs:
@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: Orion180/server
+        working-directory: Carrier180/server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
-          cache-dependency-path: Orion180/server/package-lock.json
+          cache-dependency-path: Carrier180/server/package-lock.json
       - run: npm ci
       - run: npm test
 
@@ -33,14 +33,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: Orion180/client
+        working-directory: Carrier180/client
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
-          cache-dependency-path: Orion180/client/package-lock.json
+          cache-dependency-path: Carrier180/client/package-lock.json
       - run: npm ci
       - run: npm test -- --run
 
@@ -49,20 +49,20 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: Orion180/client
+        working-directory: Carrier180/client
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
-          cache-dependency-path: Orion180/client/package-lock.json
+          cache-dependency-path: Carrier180/client/package-lock.json
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v4
         with:
           name: carrier-demo-dist
-          path: Orion180/client/dist/
+          path: Carrier180/client/dist/
           retention-days: 7
 
   e2e-tests:
@@ -75,19 +75,19 @@ jobs:
         with:
           node-version: '20'
       - name: Install root deps
-        working-directory: Orion180
+        working-directory: Carrier180
         run: npm ci
       - name: Install server deps
-        working-directory: Orion180/server
+        working-directory: Carrier180/server
         run: npm ci
       - name: Install client deps
-        working-directory: Orion180/client
+        working-directory: Carrier180/client
         run: npm ci
       - name: Install Playwright Chromium
-        working-directory: Orion180
+        working-directory: Carrier180
         run: npx playwright install --with-deps chromium
       - name: Run E2E tests
-        working-directory: Orion180
+        working-directory: Carrier180
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run test:e2e
@@ -95,5 +95,5 @@ jobs:
         if: failure()
         with:
           name: playwright-report
-          path: Orion180/playwright-report/
+          path: Carrier180/playwright-report/
           retention-days: 30
