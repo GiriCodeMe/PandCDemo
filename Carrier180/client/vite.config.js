@@ -11,8 +11,12 @@ export default defineConfig({
         changeOrigin: true,
         headers: { connection: 'close' },
         configure: (proxy) => {
-          proxy.on('error', (err, req) => {
+          proxy.on('error', (err, req, res) => {
             console.error(`[proxy] ${req.method} ${req.url} — ${err.code}: ${err.message}`);
+            if (res && !res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Backend unavailable', code: err.code }));
+            }
           });
           proxy.on('proxyReq', (_, req) => {
             console.log(`[proxy] --> ${req.method} ${req.url}`);
@@ -20,7 +24,8 @@ export default defineConfig({
           proxy.on('proxyRes', (res, req) => {
             console.log(`[proxy] <-- ${req.method} ${req.url} ${res.statusCode}`);
           });
-        }
+        },
+        proxyTimeout: 35000
       }
     }
   }

@@ -49,8 +49,18 @@ function AiLoader({ label }) {
   );
 }
 
+function AiError({ label }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '16px 0', color: '#dc2626', fontSize: 13 }}>
+      <span>⚠</span>
+      {label || 'Backend unavailable — check that the API server is running on port 3001.'}
+    </div>
+  );
+}
+
 function AddressComparePanel({ result }) {
   if (!result) return <AiLoader label="Gemini AI comparing addresses across documents…" />;
+  if (result._error) return <AiError />;
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -92,6 +102,7 @@ function AddressComparePanel({ result }) {
 
 function PhotoReviewPanel({ result }) {
   if (!result) return <AiLoader label="Gemini Vision analyzing damage photos…" />;
+  if (result._error) return <AiError />;
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -158,8 +169,8 @@ export default function Step2ClaimValidation({ claim }) {
       aiApi.addressCompare(claim.id),
       aiApi.photoReview(claim.id)
     ]).then(([addrRes, photoRes]) => {
-      if (addrRes.status === 'fulfilled') setAddressResult(addrRes.value);
-      if (photoRes.status === 'fulfilled') setPhotoResult(photoRes.value);
+      setAddressResult(addrRes.status === 'fulfilled' ? addrRes.value : { _error: true });
+      setPhotoResult(photoRes.status === 'fulfilled' ? photoRes.value : { _error: true });
       setAiLoaded(true);
     });
   }, [claim.id]);
