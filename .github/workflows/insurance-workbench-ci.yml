@@ -1,0 +1,123 @@
+name: Insurance Workbench CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'insurance-workbench/**'
+      - '.github/workflows/insurance-workbench-ci.yml'
+  pull_request:
+    paths:
+      - 'insurance-workbench/**'
+      - '.github/workflows/insurance-workbench-ci.yml'
+
+jobs:
+  build:
+    name: Install & Vite Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: insurance-workbench
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: insurance-workbench/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (vite build)
+        run: npm run build
+
+      - name: Verify dist output
+        run: |
+          echo "Build output:"
+          ls -lh dist/
+          [ -f dist/index.html ] && echo "  OK: dist/index.html present" || { echo "  FAIL: dist/index.html missing"; exit 1; }
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: insurance-workbench-dist
+          path: insurance-workbench/dist/
+          retention-days: 7
+
+  structure-check:
+    name: Project Structure Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Vite config and entry point
+        run: |
+          files=(
+            "insurance-workbench/vite.config.ts"
+            "insurance-workbench/index.html"
+            "insurance-workbench/tsconfig.json"
+            "insurance-workbench/package.json"
+          )
+          for f in "${files[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify underwriting pages
+        run: |
+          pages=(
+            "insurance-workbench/src/pages/LandingPage.tsx"
+            "insurance-workbench/src/pages/Dashboard.tsx"
+            "insurance-workbench/src/pages/NewSubmissions.tsx"
+            "insurance-workbench/src/pages/SubmissionDetail.tsx"
+            "insurance-workbench/src/pages/Renewals.tsx"
+            "insurance-workbench/src/pages/PolicyReview.tsx"
+            "insurance-workbench/src/pages/TeamPerformance.tsx"
+            "insurance-workbench/src/pages/Login.tsx"
+          )
+          for f in "${pages[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify claims pages
+        run: |
+          pages=(
+            "insurance-workbench/src/claims/pages/ClaimsDashboard.tsx"
+            "insurance-workbench/src/claims/pages/ClaimsWorkQueue.tsx"
+            "insurance-workbench/src/claims/pages/ClaimsDetail.tsx"
+            "insurance-workbench/src/claims/pages/ClaimsTeamPerformance.tsx"
+          )
+          for f in "${pages[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify layout and shared components
+        run: |
+          components=(
+            "insurance-workbench/src/components/layout/MainLayout.tsx"
+            "insurance-workbench/src/claims/components/layout/ClaimsMainLayout.tsx"
+            "insurance-workbench/src/components/DocumentViewer.tsx"
+            "insurance-workbench/src/components/common/Button.tsx"
+            "insurance-workbench/src/components/common/Dialog.tsx"
+            "insurance-workbench/src/components/common/Input.tsx"
+          )
+          for f in "${components[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify mock data
+        run: |
+          data=(
+            "insurance-workbench/src/data/submissions.json"
+            "insurance-workbench/src/claims/data/claimsQueue.json"
+          )
+          for f in "${data[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify no .env committed
+        run: |
+          [ ! -f "insurance-workbench/.env" ] && echo "  OK: .env not committed" || { echo "  FAIL: .env should not be committed"; exit 1; }
