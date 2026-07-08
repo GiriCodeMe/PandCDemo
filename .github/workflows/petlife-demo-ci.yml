@@ -81,7 +81,8 @@ jobs:
           done
 
       - name: Syntax check — entry point
-        run: node --check index.js && echo "  OK: index.js"
+        run: |
+          node --check index.js && echo "  OK: index.js"
 
       - name: Verify required agent files
         run: |
