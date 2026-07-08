@@ -303,7 +303,7 @@ export default function FNOL() {
           <div className="card mb-20">
             <div className="card-header">
               <h2>Document Upload</h2>
-              <span className="badge badge-muted">REQ-1.1 / REQ-1.2 · Max 10 pages</span>
+              <span className="badge badge-muted">Max 10 pages</span>
             </div>
             <div className="card-body">
               {files.length === 0 ? (
@@ -331,7 +331,7 @@ export default function FNOL() {
                     )}
                   </div>
                   <div style={{ fontSize: 12, color: '#6b7280' }}>
-                    {files.length} page{files.length > 1 ? 's' : ''} staged — will be stitched into a single FNOL payload (REQ-1.2)
+                    {files.length} page{files.length > 1 ? 's' : ''} staged — will be stitched into a single FNOL payload
                   </div>
                 </div>
               )}
