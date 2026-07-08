@@ -1,0 +1,1309 @@
+[
+  
+  {
+    "id": "SUB-2025-001",
+    "applicantName": "Johnathan Michael Smith",
+    "policyType": "Term Life - 20 Year",
+    "coverageAmount": "$500,000",
+    "submittedDate": "2025-09-01",
+    "submissionChannel": "Agent Portal",
+    "priority": "High",
+    "status": "New",
+    "occupation": "Software Engineer",
+    "annualIncome": "$120,000",
+    "dateOfBirth": "1985-03-15",
+    "coverageTerm": "20 years",
+    "additionalInfo": "prescribed blood pressure medication",
+    "applicantNotes": "Applicant is healthy and active.",
+    "brokerNotes": "Broker expects quick turnaround.",
+    "documents": [
+      { "type": "Application Form", "documentNumber": "21285", "received": true, "required": true, "date": "2025-09-01", "summary": "Main application form submitted." },
+      { "type": "ID Proof", "documentNumber": "21286", "received": false, "required": true, "date": "N/A", "summary": "Government-issued ID required." },
+      { "type": "Medical Report", "documentNumber": "21287", "received": true, "required": true, "date": "2025-09-08", "summary": "Medical exam report uploaded." }
+    ],
+    "assignedTo": "David Thompson",
+    "assignedDate": "2025-09-02",
+    "team": "Team A",
+    "lastUpdatedBy": "David Thompson",
+    "lastUpdatedDate": "2025-09-02",
+    "ageInDays": 1,
+    "completeness": 70,
+    "agentName": "David Thompson",
+    "agentCode": "AG001",
+    "details": {
+      "requirements": [
+        { "name": "Blood Pressure Reading", "dueDate": "2025-09-15", "status": "Pending", "source": "Primary Care Physician" },
+        { "name": "ID Proof", "dueDate": "2025-09-10", "status": "Received", "source": "Applicant" }
+      ],
+      "medicalConditions": [
+        { "condition": "Hypertension", "diagnosed": "2015", "status": "Controlled" },
+        { "condition": "Asthma", "diagnosed": "2010", "status": "Controlled" }
+      ],
+      "labResults": [
+        { "test": "Blood Pressure", "result": "145/90", "date": "2025-08-20" },
+        { "test": "Cholesterol", "result": "180 mg/dL", "date": "2025-08-20" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$100,000",
+        "liabilities": [
+          { "type": "Mortgage", "amount": "$150,000" },
+          { "type": "Credit Card", "amount": "$5,000" }
+        ],
+        "incomeBreakdown": {
+          "salary": "$150,000",
+          "bonus": "$20,000"
+        },
+        "debtToIncomeRatio": "1.3",
+        "assets": [
+          { "type": "Savings", "amount": "$50,000" },
+          { "type": "Investments", "amount": "$30,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, exercises regularly.",
+      "hobbies": ["Cycling", "Reading"],
+      "travelFrequency": "Occasional",
+      "alcoholUse": "Moderate",
+      "tobaccoUse": "None",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Heart Disease", "ageAtDiagnosis": 60 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n1", "text": "Initial review complete.", "category": "Case" },
+        { "id": "n2", "text": "Medical report uploaded.", "category": "Document" }
+      ]
+    },
+      "aiRiskAnalysis": {
+      "score": 85,
+      "riskFactors": [
+        { "category": "Medical", "impact": "Low", "description": "Well-controlled hypertension with normal current readings" },
+        { "category": "Lifestyle", "impact": "Low", "description": "Regular exercise and healthy lifestyle habits" },
+        { "category": "Family History", "impact": "Medium", "description": "Father's early onset heart disease indicates potential genetic risk" }
+      ],
+      "recommendation": "Standard",
+      "riskClass": "Preferred",
+      "confidence": 85,
+      "keyFactors": ["Well-controlled medical conditions", "Healthy lifestyle with regular exercise", "Normal lab results", "Stable occupation and income"],
+      "additionalRequirements": [
+        "Submit three additional blood pressure readings from different days",
+        "Provide most recent cholesterol lab results",
+        "Upload primary care physician's summary letter"
+      ],
+      "nextBestAction": "Request the applicant to submit three additional blood pressure readings from different days, provide the most recent cholesterol lab results, and upload a summary letter from their primary care physician."
+    },
+    "timelineEvents": [
+      { "id": "1", "type": "document", "title": "Medical Examination Report Uploaded", "description": "New medical examination report received from Quest Diagnostics", "timestamp": "2025-09-08T14:30:00", "author": "System", "source": "Quest Diagnostics", "date": "2025-09-08" },
+      { "id": "2", "type": "note", "title": "Medical Review Note", "description": "Medical records show well-controlled hypertension with normal current readings.", "timestamp": "2025-09-08T10:30:00", "author": "Dr. Sarah Johnson", "category": "Medical", "source": "Dr. Sarah Johnson", "date": "2025-09-08" },
+      { "id": "3", "type": "requirement", "title": "New Requirement Added", "description": "Additional blood pressure readings requested from primary care physician", "timestamp": "2025-09-07T16:45:00", "author": "Mike Chen", "status": "Pending", "source": "Primary Care Physician", "date": "2025-09-07" },
+      { "id": "4", "type": "status", "title": "Case Status Updated", "description": "Case status changed from 'New' to 'Under Review'", "timestamp": "2025-09-07T09:15:00", "author": "System", "source": "System", "date": "2025-09-07" },
+      { "id": "5", "type": "review", "title": "Financial Assessment Completed", "description": "Financial documents indicate stable income and good debt management.", "timestamp": "2025-09-06T11:20:00", "author": "Jane Smith", "source": "Jane Smith", "date": "2025-09-06" }
+    ]
+  },
+  
+  {
+    "id": "SUB-2025-002",
+    "applicantName": "Maria Isabel Gutierrez",
+    "policyType": "Whole Life",
+    "coverageAmount": "$275,000",
+    "submittedDate": "2025-09-12",
+    "submissionChannel": "Agent Portal",
+    "priority": "Low",
+    "status": "In Progress",
+    "occupation": "Financial Analyst",
+    "annualIncome": "$92,000",
+    "dateOfBirth": "1988-05-12",
+    "coverageTerm": "Whole life",
+    "additionalInfo": "Mild seasonal allergies.",
+    "applicantNotes": "Enjoys hiking and yoga. No major health issues.",
+    "brokerNotes": "Applicant is responsive and proactive.",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true, "date": "2025-09-12", "summary": "Application submitted via agent portal." },
+      { "type": "ID Proof", "received": true, "required": true, "date": "2025-09-12", "summary": "Passport uploaded." },
+      { "type": "Medical Report", "received": false, "required": true, "date": "N/A", "summary": "Pending medical exam." }
+    ],
+    "assignedTo": "Jennifer Lee",
+    "assignedDate": "2025-09-13",
+    "team": "Team B",
+    "lastUpdatedBy": "Jennifer Lee",
+    "lastUpdatedDate": "2025-09-13",
+    "ageInDays": 1,
+    "completeness": 65,
+    "agentName": "Jennifer Lee",
+    "agentCode": "AG002",
+    "details": {
+      "requirements": [
+        { "name": "Medical Exam", "dueDate": "2025-09-20", "status": "Pending", "source": "Quest Diagnostics" },
+        { "name": "ID Proof", "dueDate": "2025-09-13", "status": "Received", "source": "Applicant" }
+      ],
+      "medicalConditions": [
+        { "condition": "Allergies", "diagnosed": "2010", "status": "Mild" }
+      ],
+      "labResults": [
+        { "test": "Allergy Test", "result": "Mild", "date": "2025-09-10" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$60,000",
+        "liabilities": [
+          { "type": "Student Loan", "amount": "$8,000" }
+        ],
+        "incomeBreakdown": {
+          "salary": "$90,000",
+          "bonus": "$2,000"
+        },
+        "debtToIncomeRatio": "0.4",
+        "assets": [
+          { "type": "Condo", "amount": "$150,000" },
+          { "type": "Savings", "amount": "$15,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, enjoys yoga and hiking.",
+      "hobbies": ["Hiking", "Yoga"],
+      "travelFrequency": "Occasional",
+      "alcoholUse": "Low",
+      "tobaccoUse": "None",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Allergies", "ageAtDiagnosis": 40 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n1", "text": "ID proof received.", "category": "Document" },
+        { "id": "n2", "text": "Awaiting medical exam.", "category": "Case" }
+      ]
+    },
+    "aiRiskAnalysis": {
+      "score": 80,
+      "riskFactors": [
+        { "category": "Medical", "impact": "Low", "description": "Mild allergies, no other conditions." },
+        { "category": "Family History", "impact": "Low", "description": "Father has allergies." }
+      ],
+      "recommendation": "Standard",
+      "riskClass": "Standard",
+      "confidence": 80,
+      "keyFactors": ["No major medical issues", "Active lifestyle", "Stable financials"],
+      "additionalRequirements": ["Complete medical exam"]
+    },
+    "timelineEvents": [
+      { "id": "1", "type": "document", "title": "ID Proof Uploaded", "description": "Passport uploaded via agent portal.", "timestamp": "2025-09-12T09:00:00", "author": "Applicant", "source": "Applicant", "date": "2025-09-12" },
+      { "id": "2", "type": "requirement", "title": "Medical Exam Scheduled", "description": "Medical exam scheduled with Quest Diagnostics.", "timestamp": "2025-09-13T10:00:00", "author": "System", "status": "Pending", "source": "Quest Diagnostics", "date": "2025-09-13" }
+    ]
+  },
+  
+  {
+    "id": "SUB-2025-003",
+    "applicantName": "Robert Smith",
+    "policyType": "Universal Life",
+    "coverageAmount": "$500,000",
+    "submittedDate": "2025-09-03",
+    "submissionChannel": "Web Form",
+    "priority": "High",
+    "status": "In Progress",
+    "occupation": "Marketing Manager",
+    "annualIncome": "$110,000",
+    "dateOfBirth": "1982-11-15",
+    "coverageTerm": "Universal",
+    "additionalInfo": "Family history of cancer.",
+    "applicantNotes": "Recently quit smoking.",
+    "brokerNotes": "Applicant is motivated to improve health.",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true, "date": "2025-09-03", "summary": "Web form submitted." },
+      { "type": "ID Proof", "received": true, "required": true, "date": "2025-09-03", "summary": "Passport uploaded." },
+      { "type": "Medical Report", "received": true, "required": true, "date": "2025-09-10", "summary": "Medical exam completed." }
+    ],
+    "assignedTo": "Sarah Mitchell",
+    "assignedDate": "2025-09-04",
+    "team": "Team C",
+    "lastUpdatedBy": "Sarah Mitchell",
+    "lastUpdatedDate": "2025-09-04",
+    "ageInDays": 3,
+    "completeness": 80,
+    "agentName": "Sarah Mitchell",
+    "agentCode": "AG003",
+    "details": {
+      "requirements": [
+        { "name": "Cancer Screening", "dueDate": "2025-09-15", "status": "Pending", "source": "Oncologist" },
+        { "name": "Smoking Cessation Proof", "dueDate": "2025-09-10", "status": "Received", "source": "Applicant" }
+      ],
+      "medicalConditions": [
+        { "condition": "Former Smoker", "diagnosed": "2024", "status": "Resolved" }
+      ],
+      "labResults": [
+        { "test": "Cancer Marker", "result": "Negative", "date": "2025-09-10" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$200,000",
+        "liabilities": [
+          { "type": "Mortgage", "amount": "$180,000" }
+        ],
+        "incomeBreakdown": {
+          "salary": "$100,000",
+          "bonus": "$10,000"
+        },
+        "debtToIncomeRatio": "1.7",
+        "assets": [
+          { "type": "401k", "amount": "$60,000" },
+          { "type": "Savings", "amount": "$25,000" }
+        ]
+      },
+      "lifestyle": "Recently quit smoking, moderate alcohol use.",
+      "hobbies": ["Golf", "Travel"],
+      "travelFrequency": "Frequent",
+      "alcoholUse": "Moderate",
+      "tobaccoUse": "None",
+      "familyHistory": [
+        { "relation": "Mother", "condition": "Breast Cancer", "ageAtDiagnosis": 58 },
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n1", "text": "Medical exam completed.", "category": "Document" },
+        { "id": "n2", "text": "Proof of smoking cessation received.", "category": "Case" }
+      ]
+    },
+    "aiRiskAnalysis": {
+      "score": 72,
+      "riskFactors": [
+        { "category": "Medical", "impact": "Medium", "description": "Recent smoking cessation, family history of cancer." }
+      ],
+      "recommendation": "Standard",
+      "riskClass": "Standard",
+      "confidence": 72,
+      "keyFactors": ["Former smoker", "Family history of cancer", "Negative cancer marker"],
+      "additionalRequirements": ["Annual cancer screening"]
+    },
+    "timelineEvents": [
+      { "id": "1", "type": "document", "title": "Medical Exam Completed", "description": "Medical exam completed and report uploaded.", "timestamp": "2025-09-10T11:00:00", "author": "Applicant", "source": "Applicant", "date": "2025-09-10" },
+      { "id": "2", "type": "requirement", "title": "Cancer Screening Scheduled", "description": "Cancer screening scheduled with oncologist.", "timestamp": "2025-09-11T09:00:00", "author": "System", "status": "Pending", "source": "Oncologist", "date": "2025-09-11" }
+    ]
+  },
+  
+  {
+    "id": "SUB-2025-004",
+    "applicantName": "Maria Garcia",
+    "policyType": "Whole Life",
+    "coverageAmount": "$260,000",
+    "submittedDate": "2025-09-02",
+    "submissionChannel": "Mobile App",
+    "priority": "Medium",
+    "status": "Pending Review",
+    "occupation": "Accountant",
+    "annualIncome": "$85,000",
+    "dateOfBirth": "1990-07-23",
+    "coverageTerm": "Whole life",
+    "additionalInfo": "Asthma as a child.",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "Medical Report", "received": false, "required": true }
+    ],
+    "assignedTo": "Jennifer Lee",
+    "assignedDate": "2025-09-03",
+    "team": "Team B",
+    "lastUpdatedBy": "Jennifer Lee",
+    "lastUpdatedDate": "2025-09-03",
+    "ageInDays": 2,
+    "completeness": 60,
+    "agentName": "Jennifer Lee",
+    "agentCode": "AG002",
+    "details": {
+      "medicalConditions": [
+        { "condition": "Asthma", "diagnosed": "2000", "status": "Resolved" }
+      ],
+      "labResults": [
+        { "test": "Pulmonary Function", "result": "Normal", "date": "2025-08-25" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$50,000",
+        "assets": [
+          { "type": "House", "amount": "$200,000" },
+          { "type": "Savings", "amount": "$20,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, vegetarian.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Asthma", "ageAtDiagnosis": 35 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n2", "text": "Waiting for medical report.", "category": "Case" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 72,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 3,
+          "impact": "Medium",
+          "explanation": "History of asthma, resolved."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Vegetarian, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 72,
+        "riskClass": "Standard",
+        "reasoning": [
+          "Resolved medical condition",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual pulmonary checkup"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Asthma Review",
+        "description": "Asthma resolved, no current symptoms.",
+        "timestamp": "2025-09-02T09:00:00",
+        "author": "Dr. Lee"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Pending Review'",
+        "timestamp": "2025-09-02T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-005",
+    "applicantName": "Jonathan Smythe",
+    "policyType": "Universal Life",
+    "coverageAmount": "$275,000",
+    "submittedDate": "2025-09-14",
+    "submissionChannel": "Web Form",
+    "priority": "Medium",
+    "status": "Pending Review",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "ID Proof", "received": true, "required": true }
+    ],
+    "assignedTo": "Michael Brown",
+    "assignedDate": "2025-09-15",
+    "team": "Team C",
+    "lastUpdatedBy": "Michael Brown",
+    "lastUpdatedDate": "2025-09-15",
+    "ageInDays": 1,
+    "completeness": 82,
+    "agentName": "Michael Brown",
+    "agentCode": "AG003",
+    "details": {
+      "medicalConditions": [
+        { "condition": "Pre-diabetes", "diagnosed": "2022", "status": "Monitored" }
+      ],
+      "labResults": [
+        { "test": "HbA1c", "result": "6.1%", "date": "2025-09-12" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$80,000",
+        "assets": [
+          { "type": "Business", "amount": "$130,000" },
+          { "type": "Savings", "amount": "$12,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, regular walker.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Pre-diabetes", "ageAtDiagnosis": 60 },
+        { "relation": "Mother", "condition": "Hypertension", "ageAtDiagnosis": 62 }
+      ],
+      "notes": [
+        { "id": "n3", "text": "Pre-diabetes, regular monitoring advised.", "category": "Case" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 68,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 3,
+          "impact": "Medium",
+          "explanation": "Pre-diabetes, monitored."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Non-smoker, regular walking."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 68,
+        "riskClass": "Standard",
+        "reasoning": [
+          "Pre-diabetes, monitored",
+          "Active lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual HbA1c monitoring"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Pre-diabetes Review",
+        "description": "Pre-diabetes, regular monitoring advised.",
+        "timestamp": "2025-09-14T09:00:00",
+        "author": "Dr. Smith"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Pending Review'",
+        "timestamp": "2025-09-14T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-006",
+    "applicantName": "Emily Davis",
+    "policyType": "Indexed UL",
+    "coverageAmount": "$280,000",
+    "submittedDate": "2025-09-04",
+    "submissionChannel": "Paper",
+    "priority": "High",
+    "status": "Missing Documents",
+    "documents": [
+      { "type": "Application Form", "received": false, "required": true },
+      { "type": "ID Proof", "received": false, "required": true }
+    ],
+    "assignedTo": "Sarah Mitchell",
+    "assignedDate": "2025-09-05",
+    "team": "Team D",
+    "lastUpdatedBy": "Sarah Mitchell",
+    "lastUpdatedDate": "2025-09-05",
+    "ageInDays": 4,
+    "completeness": 40,
+    "agentName": "Sarah Mitchell",
+    "agentCode": "AG004",
+    "details": {
+      "medicalConditions": [
+        { "condition": "None", "diagnosed": "", "status": "" }
+      ],
+      "labResults": [
+        { "test": "CBC", "result": "Normal", "date": "2025-08-28" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Job Income", "amount": "$60,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, yoga enthusiast.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n4", "text": "Missing application form.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 90,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Yoga enthusiast, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 90,
+        "riskClass": "Preferred",
+        "reasoning": [
+          "No medical issues",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual wellness check"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Application Missing",
+        "description": "Application form not received.",
+        "timestamp": "2025-09-04T09:00:00",
+        "author": "Sarah Mitchell"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Missing Documents'",
+        "timestamp": "2025-09-04T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-007",
+    "applicantName": "Michael Brown",
+    "policyType": "Term Life - 30 Year",
+    "coverageAmount": "$290,000",
+    "submittedDate": "2025-09-05",
+    "submissionChannel": "Agent Portal",
+    "priority": "Medium",
+    "status": "Ready for Decision",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "ID Proof", "received": true, "required": true }
+    ],
+    "assignedTo": "John Smith",
+    "assignedDate": "2025-09-06",
+    "team": "Team E",
+    "lastUpdatedBy": "John Smith",
+    "lastUpdatedDate": "2025-09-06",
+    "ageInDays": 5,
+    "completeness": 90,
+    "agentName": "John Smith",
+    "agentCode": "AG005",
+    "details": {
+      "medicalConditions": [
+        { "condition": "High blood pressure", "diagnosed": "2017", "status": "Controlled" }
+      ],
+      "labResults": [
+        { "test": "Blood Pressure", "result": "130/85", "date": "2025-08-30" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$200,000",
+        "assets": [
+          { "type": "Property", "amount": "$400,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, regular checkups.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Hypertension", "ageAtDiagnosis": 62 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n5", "text": "Ready for underwriting decision.", "category": "Case" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 78,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 2,
+          "impact": "Low",
+          "explanation": "Controlled high blood pressure."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Non-smoker, regular checkups."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 78,
+        "riskClass": "Standard",
+        "reasoning": [
+          "Controlled medical condition",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual blood pressure check"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "BP Review",
+        "description": "Blood pressure controlled, regular checkups advised.",
+        "timestamp": "2025-09-05T09:00:00",
+        "author": "John Smith"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Ready for Decision'",
+        "timestamp": "2025-09-05T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-008",
+    "applicantName": "Jessica Miller",
+    "policyType": "Whole Life",
+    "coverageAmount": "$300,000",
+    "submittedDate": "2025-09-06",
+    "submissionChannel": "Mobile App",
+    "priority": "Low",
+    "status": "New",
+    "documents": [
+      { "type": "Application Form", "received": false, "required": true },
+      { "type": "Medical Report", "received": false, "required": true }
+    ],
+    "assignedTo": "Emily Davis",
+    "assignedDate": "2025-09-07",
+    "team": "Team F",
+    "lastUpdatedBy": "Emily Davis",
+    "lastUpdatedDate": "2025-09-07",
+    "ageInDays": 6,
+    "completeness": 50,
+    "agentName": "Emily Davis",
+    "agentCode": "AG006",
+    "details": {
+      "medicalConditions": [
+        { "condition": "Penicillin Allergy", "diagnosed": "2010", "status": "Ongoing" }
+      ],
+      "labResults": [
+        { "test": "Allergy Test", "result": "Positive", "date": "2025-08-29" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Savings", "amount": "$5,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, runner.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "Allergy", "ageAtDiagnosis": 40 }
+      ],
+      "notes": [
+        { "id": "n6", "text": "Waiting for application form.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 88,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses, allergy managed."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Non-smoker, runner."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 88,
+        "riskClass": "Preferred",
+        "reasoning": [
+          "No major medical issues",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual allergy review"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Allergy Review",
+        "description": "Allergy managed, no complications.",
+        "timestamp": "2025-09-06T09:00:00",
+        "author": "Emily Davis"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Waiting for Application'",
+        "timestamp": "2025-09-06T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-009",
+    "applicantName": "David Lee",
+    "policyType": "Universal Life",
+    "coverageAmount": "$310,000",
+    "submittedDate": "2025-09-07",
+    "submissionChannel": "Web Form",
+    "priority": "High",
+    "status": "Pending Review",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "ID Proof", "received": false, "required": true }
+    ],
+    "assignedTo": "Chris Martinez",
+    "assignedDate": "2025-09-08",
+    "team": "Team G",
+    "lastUpdatedBy": "Chris Martinez",
+    "lastUpdatedDate": "2025-09-08",
+    "ageInDays": 7,
+    "completeness": 60,
+    "agentName": "Chris Martinez",
+    "agentCode": "AG007",
+    "details": {
+      "medicalConditions": [
+        { "condition": "None", "diagnosed": "", "status": "" }
+      ],
+      "labResults": [
+        { "test": "CBC", "result": "Normal", "date": "2025-08-31" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Car", "amount": "$15,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, cyclist.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n7", "text": "ID proof pending.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 92,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Cyclist, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 92,
+        "riskClass": "Preferred",
+        "reasoning": [
+          "No medical issues",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual wellness check"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "ID Proof Pending",
+        "description": "ID proof not received yet.",
+        "timestamp": "2025-09-07T09:00:00",
+        "author": "Chris Martinez"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Pending Review'",
+        "timestamp": "2025-09-07T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-010",
+    "applicantName": "Sarah Wilson",
+    "policyType": "Indexed UL",
+    "coverageAmount": "$320,000",
+    "submittedDate": "2025-09-08",
+    "submissionChannel": "Paper",
+    "priority": "Medium",
+    "status": "In Progress",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "Medical Report", "received": true, "required": true }
+    ],
+    "assignedTo": "Ashley Kim",
+    "assignedDate": "2025-09-09",
+    "team": "Team H",
+    "lastUpdatedBy": "Ashley Kim",
+    "lastUpdatedDate": "2025-09-09",
+    "ageInDays": 8,
+    "completeness": 85,
+    "agentName": "Ashley Kim",
+    "agentCode": "AG008",
+    "details": {
+      "medicalConditions": [
+        { "condition": "Surgery (2020)", "diagnosed": "2020", "status": "Recovered" }
+      ],
+      "labResults": [
+        { "test": "Surgical Follow-up", "result": "Normal", "date": "2025-08-27" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$80,000",
+        "assets": [
+          { "type": "Condo", "amount": "$180,000" },
+          { "type": "Savings", "amount": "$8,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, swimmer.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Surgery", "ageAtDiagnosis": 50 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n8", "text": "Medical report received.", "category": "Case" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 80,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 2,
+          "impact": "Low",
+          "explanation": "Recovered from surgery."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Swimmer, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 80,
+        "riskClass": "Standard",
+        "reasoning": [
+          "Recovered from surgery",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual surgical follow-up"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Surgery Review",
+        "description": "Surgery recovered, regular follow-up advised.",
+        "timestamp": "2025-09-08T09:00:00",
+        "author": "Ashley Kim"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'In Progress'",
+        "timestamp": "2025-09-08T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-011",
+    "applicantName": "Chris Martinez",
+    "policyType": "Term Life - 30 Year",
+    "coverageAmount": "$330,000",
+    "submittedDate": "2025-09-09",
+    "submissionChannel": "Agent Portal",
+    "priority": "Low",
+    "status": "Missing Documents",
+    "documents": [
+      { "type": "Application Form", "received": false, "required": true },
+      { "type": "ID Proof", "received": false, "required": true }
+    ],
+    "assignedTo": "Daniel Clark",
+    "assignedDate": "2025-09-10",
+    "team": "Team I",
+    "lastUpdatedBy": "Daniel Clark",
+    "lastUpdatedDate": "2025-09-10",
+    "ageInDays": 9,
+    "completeness": 30,
+    "agentName": "Daniel Clark",
+    "agentCode": "AG009",
+    "details": {
+      "medicalConditions": [
+        { "condition": "None", "diagnosed": "", "status": "" }
+      ],
+      "labResults": [
+        { "test": "CBC", "result": "Normal", "date": "2025-09-01" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "House", "amount": "$120,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, hiker.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n9", "text": "Application form missing.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 60,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 2,
+          "impact": "Medium",
+          "explanation": "Hiker, some debts."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 60,
+        "riskClass": "Standard",
+        "reasoning": [
+          "No major medical issues",
+          "Active lifestyle"
+        ],
+        "additionalRequirements": [
+          "Debt counseling recommended"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Application Missing",
+        "description": "Application form not received yet.",
+        "timestamp": "2025-09-09T09:00:00",
+        "author": "Daniel Clark"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Missing Documents'",
+        "timestamp": "2025-09-09T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-012",
+    "applicantName": "Ashley Kim",
+    "policyType": "Whole Life",
+    "coverageAmount": "$340,000",
+    "submittedDate": "2025-09-10",
+    "submissionChannel": "Mobile App",
+    "priority": "High",
+    "status": "Ready for Decision",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "ID Proof", "received": true, "required": true }
+    ],
+    "assignedTo": "Sophia Lewis",
+    "assignedDate": "2025-09-11",
+    "team": "Team J",
+    "lastUpdatedBy": "Sophia Lewis",
+    "lastUpdatedDate": "2025-09-11",
+    "ageInDays": 10,
+    "completeness": 95,
+    "agentName": "Sophia Lewis",
+    "agentCode": "AG010",
+    "details": {
+      "medicalConditions": [
+        { "condition": "None", "diagnosed": "", "status": "" }
+      ],
+      "labResults": [
+        { "test": "CBC", "result": "Normal", "date": "2025-09-02" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Business", "amount": "$100,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, yoga.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n10", "text": "Ready for final review.", "category": "Case" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 95,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Yoga, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 95,
+        "riskClass": "Preferred",
+        "reasoning": [
+          "No medical issues",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual wellness check"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Final Review",
+        "description": "Ready for final review, all documents received.",
+        "timestamp": "2025-09-10T09:00:00",
+        "author": "Sophia Lewis"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Ready for Decision'",
+        "timestamp": "2025-09-10T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-013",
+    "applicantName": "Daniel Clark",
+    "policyType": "Universal Life",
+    "coverageAmount": "$350,000",
+    "submittedDate": "2025-09-11",
+    "submissionChannel": "Web Form",
+    "priority": "Medium",
+    "status": "New",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "Medical Report", "received": false, "required": true }
+    ],
+    "assignedTo": "Benjamin Wright",
+    "assignedDate": "2025-09-12",
+    "team": "Team K",
+    "lastUpdatedBy": "Benjamin Wright",
+    "lastUpdatedDate": "2025-09-12",
+    "ageInDays": 11,
+    "completeness": 55,
+    "agentName": "Benjamin Wright",
+    "agentCode": "AG011",
+    "details": {
+      "medicalConditions": [
+        { "condition": "Asthma (childhood)", "diagnosed": "2005", "status": "Resolved" }
+      ],
+      "labResults": [
+        { "test": "Pulmonary Function", "result": "Normal", "date": "2025-09-03" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Car", "amount": "$10,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, runner.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "Asthma", "ageAtDiagnosis": 30 },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n11", "text": "Waiting for medical report.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 70,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 2,
+          "impact": "Low",
+          "explanation": "Asthma resolved, no current symptoms."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "Runner, non-smoker."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 70,
+        "riskClass": "Standard",
+        "reasoning": [
+          "Resolved medical condition",
+          "Healthy lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual pulmonary checkup"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "Asthma Review",
+        "description": "Asthma resolved, no complications.",
+        "timestamp": "2025-09-11T09:00:00",
+        "author": "Benjamin Wright"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Waiting for Medical Report'",
+        "timestamp": "2025-09-11T10:00:00",
+        "author": "System"
+      }
+    ]
+  },
+
+  {
+    "id": "SUB-2025-014",
+    "applicantName": "Sophia Lewis",
+    "policyType": "Indexed UL",
+    "coverageAmount": "$360,000",
+    "submittedDate": "2025-09-12",
+    "submissionChannel": "Paper",
+    "priority": "Low",
+    "status": "Pending Review",
+    "documents": [
+      { "type": "Application Form", "received": true, "required": true },
+      { "type": "ID Proof", "received": false, "required": true }
+    ],
+    "assignedTo": "Ava Scott",
+    "assignedDate": "2025-09-13",
+    "team": "Team L",
+    "lastUpdatedBy": "Ava Scott",
+    "lastUpdatedDate": "2025-09-13",
+    "ageInDays": 12,
+    "completeness": 65,
+    "agentName": "Ava Scott",
+    "agentCode": "AG012",
+    "details": {
+      "medicalConditions": [
+        { "condition": "None", "diagnosed": "", "status": "" }
+      ],
+      "labResults": [
+        { "test": "CBC", "result": "Normal", "date": "2025-09-04" }
+      ],
+      "financialOverview": {
+        "existingCoverage": "$0",
+        "assets": [
+          { "type": "Condo", "amount": "$90,000" },
+          { "type": "Savings", "amount": "$5,000" }
+        ]
+      },
+      "lifestyle": "Non-smoker, swimmer.",
+      "familyHistory": [
+        { "relation": "Father", "condition": "None", "ageAtDiagnosis": null },
+        { "relation": "Mother", "condition": "None", "ageAtDiagnosis": null }
+      ],
+      "notes": [
+        { "id": "n12", "text": "ID proof pending.", "category": "Document" }
+      ]
+    },
+    "aiAnalysis": {
+      "riskScore": 68,
+      "riskFactors": [
+        {
+          "category": "Medical",
+          "score": 1,
+          "impact": "Low",
+          "explanation": "No major illnesses."
+        },
+        {
+          "category": "Lifestyle",
+          "score": 2,
+          "impact": "Medium",
+          "explanation": "Swimmer, some savings."
+        }
+      ],
+      "recommendation": {
+        "decision": "Standard",
+        "confidence": 68,
+        "riskClass": "Standard",
+        "reasoning": [
+          "No major medical issues",
+          "Active lifestyle"
+        ],
+        "additionalRequirements": [
+          "Annual wellness check"
+        ]
+      }
+    },
+    "timelineEvents": [
+      {
+        "id": "1",
+        "type": "note",
+        "title": "ID Proof Pending",
+        "description": "ID proof not received yet.",
+        "timestamp": "2025-09-12T09:00:00",
+        "author": "Ava Scott"
+      },
+      {
+        "id": "2",
+        "type": "status",
+        "title": "Case Status Updated",
+        "description": "Case status changed from 'New' to 'Pending Review'",
+        "timestamp": "2025-09-12T10:00:00",
+        "author": "System"
+      }
+    ]
+  }
+]

@@ -1,0 +1,165 @@
+[
+  {
+    "id": "CLM-2025-001",
+    "claimant": "John Doe",
+    "claimantDOB": "1971-04-12",
+    "claimantContact": "john.doe@email.com",
+    "type": "Life",
+    "status": "New",
+    "receivedDate": "2025-09-28",
+    "amount": 250000,
+    "policyNumber": "LIFE-123456",
+    "summary": "Death claim for John Doe, age 54.",
+    "incident": {
+      "date": "2025-09-20",
+      "description": "Sudden cardiac arrest at home.",
+      "location": "123 Main St, Springfield",
+      "reportedBy": "Jane Doe (spouse)",
+      "evidence": [
+        { "type": "Death Certificate", "documentNumber": "DC-2025-001", "externalUrl": "https://external-docs.com/doc/DC-2025-001" },
+        { "type": "Police Report", "documentNumber": "PR-2025-001", "externalUrl": "https://external-docs.com/doc/PR-2025-001" }
+      ]
+    },
+    "medical": {
+      "primaryDiagnosis": "Cardiac arrest",
+      "secondaryConditions": ["Hypertension"],
+      "attendingPhysician": "Dr. Alice Smith",
+      "hospital": "Springfield General Hospital",
+      "records": [
+        { "name": "Hospital Discharge Summary", "externalUrl": "https://external-docs.com/doc/HDS-2025-001" }
+      ],
+      "aiSummary": "The insured, John Doe, suffered a sudden cardiac arrest at home. Medical history includes hypertension. No suspicious circumstances noted. All required medical records received.",
+      "aiRiskScore": 12
+    },
+    "requirements": [
+      { "name": "Death Certificate", "status": "Received" },
+      { "name": "Hospital Records", "status": "Received" },
+      { "name": "Police Report", "status": "Received" },
+      { "name": "Beneficiary Statement", "status": "Pending" }
+    ],
+    "documents": [
+      { "type": "Death Certificate", "received": true, "required": true, "documentNumber": "DC-2025-001", "externalUrl": "https://external-docs.com/doc/DC-2025-001" },
+      { "type": "Hospital Discharge Summary", "received": true, "required": true, "documentNumber": "HDS-2025-001", "externalUrl": "https://external-docs.com/doc/HDS-2025-001" },
+      { "type": "Police Report", "received": true, "required": false, "documentNumber": "PR-2025-001", "externalUrl": "https://external-docs.com/doc/PR-2025-001" },
+      { "type": "Beneficiary Statement", "received": false, "required": true }
+    ],
+    "aiAnalysis": {
+      "score": 12,
+      "riskClass": "Standard",
+      "recommendation": "Approve claim after beneficiary statement is received.",
+      "confidence": 98,
+      "riskFactors": [
+        { "impact": "Low", "description": "No suspicious circumstances" },
+        { "impact": "Low", "description": "All required medical records received" }
+      ],
+      "nextBestAction": "Follow up for beneficiary statement."
+    }
+  },
+  {
+    "id": "CLM-2025-002",
+    "claimant": "Jane Smith",
+    "claimantDOB": "1978-11-03",
+    "claimantContact": "jane.smith@email.com",
+    "type": "Disability",
+    "status": "In Review",
+    "receivedDate": "2025-09-27",
+    "amount": 50000,
+    "policyNumber": "DIS-654321",
+    "summary": "Disability claim for Jane Smith, age 47.",
+    "incident": {
+      "date": "2025-08-15",
+      "description": "Car accident resulting in spinal injury.",
+      "location": "Highway 50, Springfield",
+      "reportedBy": "Jane Smith",
+      "evidence": [
+        { "type": "Accident Report", "documentNumber": "AR-2025-002", "externalUrl": "https://external-docs.com/doc/AR-2025-002" },
+        { "type": "Medical Imaging", "documentNumber": "MI-2025-002", "externalUrl": "https://external-docs.com/doc/MI-2025-002" }
+      ]
+    },
+    "medical": {
+      "primaryDiagnosis": "Spinal cord injury",
+      "secondaryConditions": ["Fractured vertebrae"],
+      "attendingPhysician": "Dr. Bob Lee",
+      "hospital": "Springfield Trauma Center",
+      "records": [
+        { "name": "MRI Report", "externalUrl": "https://external-docs.com/doc/MI-2025-002" }
+      ],
+      "aiSummary": "Jane Smith was involved in a car accident resulting in spinal cord injury and fractured vertebrae. Prognosis is guarded. Awaiting additional rehab records.",
+      "aiRiskScore": 35
+    },
+    "requirements": [
+      { "name": "Accident Report", "status": "Received" },
+      { "name": "MRI Report", "status": "Received" },
+      { "name": "Rehab Records", "status": "Pending" }
+    ],
+    "documents": [
+      { "type": "Accident Report", "received": true, "required": true, "documentNumber": "AR-2025-002", "externalUrl": "https://external-docs.com/doc/AR-2025-002" },
+      { "type": "MRI Report", "received": true, "required": true, "documentNumber": "MI-2025-002", "externalUrl": "https://external-docs.com/doc/MI-2025-002" },
+      { "type": "Rehab Records", "received": false, "required": true }
+    ],
+    "aiAnalysis": {
+      "score": 35,
+      "riskClass": "Standard",
+      "recommendation": "Request rehab records and reassess.",
+      "confidence": 90,
+      "riskFactors": [
+        { "impact": "Medium", "description": "Prognosis is guarded" },
+        { "impact": "Low", "description": "Accident well documented" }
+      ],
+      "nextBestAction": "Follow up for rehab records."
+    }
+  },
+  {
+    "id": "CLM-2025-003",
+    "claimant": "Robert Brown",
+    "claimantDOB": "1963-02-19",
+    "claimantContact": "robert.brown@email.com",
+    "type": "Life",
+    "status": "Pending Docs",
+    "receivedDate": "2025-09-25",
+    "amount": 100000,
+    "policyNumber": "LIFE-789012",
+    "summary": "Death claim for Robert Brown, age 62.",
+    "incident": {
+      "date": "2025-09-10",
+      "description": "Found deceased at home, natural causes suspected.",
+      "location": "456 Oak Ave, Springfield",
+      "reportedBy": "Mary Brown (spouse)",
+      "evidence": [
+        { "type": "Death Certificate", "documentNumber": "DC-2025-003", "externalUrl": "https://external-docs.com/doc/DC-2025-003" }
+      ]
+    },
+    "medical": {
+      "primaryDiagnosis": "Natural causes",
+      "secondaryConditions": ["Type 2 Diabetes"],
+      "attendingPhysician": "Dr. Carol White",
+      "hospital": "Springfield General Hospital",
+      "records": [
+        { "name": "Hospital Discharge Summary", "externalUrl": "https://external-docs.com/doc/HDS-2025-003" }
+      ],
+      "aiSummary": "Robert Brown, age 62, found deceased at home. Medical history includes diabetes. Awaiting police report for confirmation.",
+      "aiRiskScore": 22
+    },
+    "requirements": [
+      { "name": "Death Certificate", "status": "Received" },
+      { "name": "Hospital Records", "status": "Received" },
+      { "name": "Police Report", "status": "Pending" }
+    ],
+    "documents": [
+      { "type": "Death Certificate", "received": true, "required": true, "documentNumber": "DC-2025-003", "externalUrl": "https://external-docs.com/doc/DC-2025-003" },
+      { "type": "Hospital Discharge Summary", "received": true, "required": true, "documentNumber": "HDS-2025-003", "externalUrl": "https://external-docs.com/doc/HDS-2025-003" },
+      { "type": "Police Report", "received": false, "required": true }
+    ],
+    "aiAnalysis": {
+      "score": 22,
+      "riskClass": "Standard",
+      "recommendation": "Await police report before approval.",
+      "confidence": 95,
+      "riskFactors": [
+        { "impact": "Low", "description": "Medical history supports natural causes" },
+        { "impact": "Medium", "description": "Pending police report" }
+      ],
+      "nextBestAction": "Follow up for police report."
+    }
+  }
+]
