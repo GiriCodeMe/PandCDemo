@@ -1,0 +1,144 @@
+name: PetLife AI Demo CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PetLife-ai-demo/**'
+      - '.github/workflows/petlife-demo-ci.yml'
+  pull_request:
+    paths:
+      - 'PetLife-ai-demo/**'
+      - '.github/workflows/petlife-demo-ci.yml'
+
+jobs:
+  build-client:
+    name: Client — Install & Vite Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: PetLife-ai-demo/client
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: PetLife-ai-demo/client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (vite build)
+        run: npm run build
+
+      - name: Verify dist output
+        run: |
+          echo "Build output:"
+          ls -lh dist/
+          [ -f dist/index.html ] && echo "  OK: dist/index.html present" || { echo "  FAIL: dist/index.html missing"; exit 1; }
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: petlife-client-dist
+          path: PetLife-ai-demo/client/dist/
+          retention-days: 7
+
+  validate-server:
+    name: Server — Install & Syntax Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: PetLife-ai-demo/server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: PetLife-ai-demo/server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax check — routes
+        run: |
+          echo "Checking routes..."
+          for f in routes/*.js; do
+            node --check "$f" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
+          done
+
+      - name: Syntax check — AI factory agents
+        run: |
+          echo "Checking AI factory agents..."
+          for f in ai-factory/agents/*.js ai-factory/providers/*.js ai-factory/factory.js; do
+            node --check "$f" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
+          done
+
+      - name: Syntax check — entry point
+        run: node --check index.js && echo "  OK: index.js"
+
+      - name: Verify required agent files
+        run: |
+          required=(
+            "ai-factory/factory.js"
+            "ai-factory/providers/gemini.provider.js"
+            "ai-factory/agents/invoice-parser.js"
+            "ai-factory/agents/claims-adjudicator.js"
+            "ai-factory/agents/quote-generator.js"
+            "ai-factory/agents/underwriter.js"
+            "ai-factory/agents/breed-verifier.js"
+            "ai-factory/agents/pawspect.js"
+            "ai-factory/agents/billing-resolver.js"
+            "routes/billing.js"
+            "routes/claims.js"
+            "routes/underwriting.js"
+          )
+          for f in "${required[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+          echo "All required files present."
+
+  structure-check:
+    name: Project Structure Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify client pages exist
+        run: |
+          pages=(
+            "PetLife-ai-demo/client/src/pages/Dashboard.jsx"
+            "PetLife-ai-demo/client/src/pages/Billing.jsx"
+            "PetLife-ai-demo/client/src/pages/Claims.jsx"
+            "PetLife-ai-demo/client/src/pages/Quote.jsx"
+            "PetLife-ai-demo/client/src/pages/Underwriting.jsx"
+            "PetLife-ai-demo/client/src/pages/FNOL.jsx"
+            "PetLife-ai-demo/client/src/pages/Reports.jsx"
+          )
+          for f in "${pages[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify components exist
+        run: |
+          components=(
+            "PetLife-ai-demo/client/src/components/Layout.jsx"
+            "PetLife-ai-demo/client/src/components/Sidebar.jsx"
+            "PetLife-ai-demo/client/src/components/TopNav.jsx"
+            "PetLife-ai-demo/client/src/components/PawspectChat.jsx"
+          )
+          for f in "${components[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify .env.example (no real .env committed)
+        run: |
+          [ -f "PetLife-ai-demo/server/.env.example" ] && echo "  OK: .env.example present"
+          [ ! -f "PetLife-ai-demo/server/.env" ] && echo "  OK: .env not committed" || { echo "  FAIL: .env should not be committed"; exit 1; }
