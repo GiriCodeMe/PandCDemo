@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-client:
-    name: Client — Install & Vite Build
+    name: Client — Test & Vite Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,6 +34,9 @@ jobs:
       - name: Audit dependencies
         run: npm audit --audit-level=low
 
+      - name: Run component tests (Vitest)
+        run: npm test
+
       - name: Build (vite build)
         run: npm run build
 
@@ -50,8 +53,8 @@ jobs:
           path: PetLife-ai-demo/client/dist/
           retention-days: 7
 
-  validate-server:
-    name: Server — Install & Syntax Check
+  test-server:
+    name: Server — Unit & Regression Tests (Jest)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -72,44 +75,8 @@ jobs:
       - name: Audit dependencies
         run: npm audit --audit-level=low
 
-      - name: Syntax check — routes
-        run: |
-          echo "Checking routes..."
-          for f in routes/*.js; do
-            node --check "$f" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
-          done
-
-      - name: Syntax check — AI factory agents
-        run: |
-          echo "Checking AI factory agents..."
-          for f in ai-factory/agents/*.js ai-factory/providers/*.js ai-factory/factory.js; do
-            node --check "$f" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
-          done
-
-      - name: Syntax check — entry point
-        run: |
-          node --check index.js && echo "  OK: index.js"
-
-      - name: Verify required agent files
-        run: |
-          required=(
-            "ai-factory/factory.js"
-            "ai-factory/providers/gemini.provider.js"
-            "ai-factory/agents/invoice-parser.js"
-            "ai-factory/agents/claims-adjudicator.js"
-            "ai-factory/agents/quote-generator.js"
-            "ai-factory/agents/underwriter.js"
-            "ai-factory/agents/breed-verifier.js"
-            "ai-factory/agents/pawspect.js"
-            "ai-factory/agents/billing-resolver.js"
-            "routes/billing.js"
-            "routes/claims.js"
-            "routes/underwriting.js"
-          )
-          for f in "${required[@]}"; do
-            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
-          done
-          echo "All required files present."
+      - name: Run unit + regression tests (Jest)
+        run: npm test -- --forceExit
 
   structure-check:
     name: Project Structure Check
