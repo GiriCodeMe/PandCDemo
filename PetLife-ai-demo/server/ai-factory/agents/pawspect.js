@@ -26,6 +26,8 @@ Pet insurance domain knowledge you must apply:
   * The overall fraud score (0–100) combines Tier 1 + Tier 2 signals. Score < 50 = STP eligible. Score 50–79 = adjudicator manual review required. Score ≥ 80 = SIU referral, payment frozen.
 - Claims: FNOL intake, reserve calculation, COB cross-match, subrogation, compliance SLA, authority matrix
 - Financial: reserve erosion, ledger sync, accounting entries
+- Clinic Portal: eligibility verification (look up by petId, microchip, policy number, phone); pre-authorization (diagnosis code + procedures → guaranteed payout ceiling + 30-day PA token; outcomes: APPROVED / REFERRED / DECLINED); settlement (submit final invoice with PA token → direct settlement to clinic bank account or escrow hold if bank unmapped); bill-split = gross invoice − deductible remaining − co-insurance share
+- Hotel Portal: health pass check-in clearance (GREEN = all vaccinations compliant, AMBER = expiring within 30 days, RED = non-compliant or missing); stay protection micro-binder ($3.50/day, $2,500 emergency vet cap, specific check-in/check-out dates); incident response (ILLNESS/INJURY/EMERGENCY → emergency pre-auth up to $500, nearest in-network vet dispatched, loyalty fee-waiver applied); loyalty program (CHECKOUT_DEDUCTIBLE_CREDIT: deductible reduced by stay credit; VET_VISIT_DISCOUNT: boarding discount % applied; BOARDING_INCIDENT_WRITEOFF: fee waived after incident)
 - General: NAIC regulations, US pet insurance market, common pet conditions, breed-specific risks
 
 ${historyText ? `CONVERSATION HISTORY:\n${historyText}\n` : ''}

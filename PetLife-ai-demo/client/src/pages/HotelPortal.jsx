@@ -263,7 +263,7 @@ export default function HotelPortal() {
       setSimResult({ success: true, data: res.data });
       await fetchLoyaltyLog();
     } catch (err) {
-      setSimResult({ success: false, message: err?.response?.data?.detail || err.message });
+      setSimResult({ success: false, message: err?.response?.data?.error || err?.response?.data?.detail || err.message });
     } finally {
       setLoading(false);
     }
@@ -288,8 +288,9 @@ export default function HotelPortal() {
     for (const entry of loyaltyLog) {
       const id = entry.petId;
       if (!map[id]) map[id] = { petId: id, credits: 0, discountPct: 0, lastExpiry: null };
-      if (entry.eventType === 'CHECKOUT_DEDUCTIBLE_CREDIT') map[id].credits += entry.rewardValue || 0;
-      if (entry.eventType === 'VET_VISIT_DISCOUNT') map[id].discountPct = Math.max(map[id].discountPct, entry.rewardValue || 0);
+      const numericValue = parseFloat(String(entry.rewardValue || '0').replace(/[^0-9.]/g, '')) || 0;
+      if (entry.eventType === 'CHECKOUT_DEDUCTIBLE_CREDIT') map[id].credits += numericValue;
+      if (entry.eventType === 'VET_VISIT_DISCOUNT') map[id].discountPct = Math.max(map[id].discountPct, numericValue);
       if (entry.expiryDate) {
         if (!map[id].lastExpiry || entry.expiryDate > map[id].lastExpiry) map[id].lastExpiry = entry.expiryDate;
       }
@@ -303,7 +304,7 @@ export default function HotelPortal() {
 
   function renderHealthPass() {
     const r = healthResult;
-    const clearance = r ? healthClearanceBadge(r.clearanceStatus) : null;
+    const clearance = r ? healthClearanceBadge(r.overallStatus) : null;
 
     return (
       <div>
@@ -339,7 +340,7 @@ export default function HotelPortal() {
               gap: 12,
             }}>
               <span style={{ fontSize: 28 }}>
-                {r.clearanceStatus === 'GREEN' ? '✅' : r.clearanceStatus === 'AMBER' ? '⚠️' : '🚫'}
+                {r.overallStatus === 'GREEN' ? '✅' : r.overallStatus === 'AMBER' ? '⚠️' : '🚫'}
               </span>
               <div>
                 <div style={{ fontWeight: 800, fontSize: 16, color: '#fff' }}>{clearance.label}</div>
@@ -352,10 +353,10 @@ export default function HotelPortal() {
               <div style={{ marginBottom: 16 }}>
                 <div className="section-label">Pet &amp; Owner</div>
                 <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-                  <div><span className="text-muted text-sm">Name:</span> <strong>{r.pet?.name}</strong></div>
-                  <div><span className="text-muted text-sm">Species:</span> {r.pet?.species}</div>
-                  <div><span className="text-muted text-sm">Breed:</span> {r.pet?.breed}</div>
-                  <div><span className="text-muted text-sm">Owner:</span> {r.holder?.name}</div>
+                  <div><span className="text-muted text-sm">Name:</span> <strong>{r.petName}</strong></div>
+                  <div><span className="text-muted text-sm">Species:</span> {r.species}</div>
+                  <div><span className="text-muted text-sm">Breed:</span> {r.breed}</div>
+                  <div><span className="text-muted text-sm">Policy:</span> {r.policyNumber}</div>
                 </div>
               </div>
 
@@ -371,9 +372,9 @@ export default function HotelPortal() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(r.vaccinations || []).map((vax, i) => (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 600 }}>{vax.name || vax.vaccine}</td>
+                  {Object.entries(r.vaccinations || {}).map(([vaccineName, vax]) => (
+                    <tr key={vaccineName}>
+                      <td style={{ fontWeight: 600, textTransform: 'capitalize' }}>{vaccineName}</td>
                       <td>
                         <span style={{
                           background: `${VAX_STATUS_COLOR[vax.status] || '#6b7280'}20`,
@@ -386,11 +387,11 @@ export default function HotelPortal() {
                           {vax.status}
                         </span>
                       </td>
-                      <td className="text-sm">{vax.expiryDate || vax.expiry || '—'}</td>
+                      <td className="text-sm">{vax.expiryDate || '—'}</td>
                       <td className="text-sm text-muted">{vax.administeredBy || '—'}</td>
                     </tr>
                   ))}
-                  {(!r.vaccinations || r.vaccinations.length === 0) && (
+                  {Object.keys(r.vaccinations || {}).length === 0 && (
                     <tr><td colSpan={4} className="text-muted text-sm" style={{ textAlign: 'center', padding: 12 }}>No vaccination records</td></tr>
                   )}
                 </tbody>
@@ -400,12 +401,12 @@ export default function HotelPortal() {
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
                 <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 6, padding: '10px 14px' }}>
                   <div className="text-muted text-sm">Insurance Status</div>
-                  <span className={insuranceBadge(r.insuranceStatus)} style={{ marginTop: 4, display: 'inline-block' }}>{r.insuranceStatus || 'NONE'}</span>
+                  <span className={insuranceBadge(r.policyStatus)} style={{ marginTop: 4, display: 'inline-block' }}>{r.policyStatus || 'NONE'}</span>
                 </div>
                 <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 6, padding: '10px 14px' }}>
                   <div className="text-muted text-sm">Stay Protection</div>
-                  <span className={r.stayProtectionActive ? 'badge badge-success' : 'badge badge-muted'} style={{ marginTop: 4, display: 'inline-block' }}>
-                    {r.stayProtectionActive ? 'ACTIVE' : 'Not Active'}
+                  <span className={r.activeStayBinder ? 'badge badge-success' : 'badge badge-muted'} style={{ marginTop: 4, display: 'inline-block' }}>
+                    {r.activeStayBinder ? 'ACTIVE' : 'Not Active'}
                   </span>
                 </div>
               </div>
@@ -728,26 +729,20 @@ export default function HotelPortal() {
             <div className="card" style={{ marginBottom: 12 }}>
               <div className="card-header">Coverage Status</div>
               <div className="card-body">
-                {coverage?.type === 'FULL_POLICY' && (
+                {r.coverageStatus === 'FULL_POLICY' && (
                   <div>
                     <span className="badge badge-success">Full Policy Coverage</span>
-                    <div className="text-sm" style={{ marginTop: 8 }}>
-                      <span className="text-muted">Policy:</span> <span className="font-mono">{coverage.policyNumber}</span>
-                    </div>
-                    {coverage.deductibleRemaining != null && (
-                      <div className="text-sm"><span className="text-muted">Deductible Remaining:</span> ${coverage.deductibleRemaining}</div>
+                    {r.preAuth?.deductibleRemaining != null && (
+                      <div className="text-sm" style={{ marginTop: 8 }}><span className="text-muted">Deductible Remaining:</span> ${r.preAuth.deductibleRemaining}</div>
                     )}
                   </div>
                 )}
-                {coverage?.type === 'STAY_PROTECTION' && (
+                {r.coverageStatus === 'STAY_PROTECTION' && (
                   <div>
                     <span className="badge badge-warning">Stay Protection Coverage</span>
-                    <div className="text-sm" style={{ marginTop: 8 }}>
-                      <span className="text-muted">Micro-Policy:</span> <span className="font-mono">{coverage.microPolicyNumber}</span>
-                    </div>
                   </div>
                 )}
-                {(!coverage || coverage?.type === 'NONE') && (
+                {(!r.coverageStatus || r.coverageStatus === 'NONE') && (
                   <div>
                     <span className="badge badge-muted">No Active Coverage</span>
                     <div className="text-sm text-muted" style={{ marginTop: 6 }}>Direct payment required.</div>
@@ -757,49 +752,49 @@ export default function HotelPortal() {
             </div>
 
             {/* Pre-auth */}
-            {r.preAuthorization && coverage?.type !== 'NONE' && (
+            {r.preAuth && r.coverageStatus !== 'NONE' && (
               <div className="card" style={{ marginBottom: 12 }}>
                 <div className="card-header">Pre-Authorization</div>
                 <div className="card-body">
                   <div className="text-sm">
-                    <div><span className="text-muted">Auth Ref:</span> <span className="font-mono">{r.preAuthorization.authRef}</span></div>
-                    <div><span className="text-muted">Pre-Approved Amount:</span> <strong>${r.preAuthorization.preApprovedAmount ?? 500}</strong></div>
-                    <div><span className="text-muted">Valid For:</span> {r.preAuthorization.validForHours ?? 24} hours</div>
+                    <div><span className="text-muted">Auth Ref:</span> <span className="font-mono">{r.preAuth.preAuthRef}</span></div>
+                    <div><span className="text-muted">Pre-Approved Amount:</span> <strong>${r.preAuth.preApprovedAmount ?? 500}</strong></div>
+                    {r.preAuth.coveredServices && (
+                      <div style={{ marginTop: 4 }}><span className="text-muted">Covers:</span> {r.preAuth.coveredServices.join(', ')}</div>
+                    )}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Assigned vet */}
-            {r.assignedVetFacility && (
+            {/* Nearest vet */}
+            {r.nearestVet && (
               <div className="card" style={{ marginBottom: 12 }}>
-                <div className="card-header">Assigned Vet Facility</div>
+                <div className="card-header">Dispatched Vet Facility</div>
                 <div className="card-body text-sm">
-                  <div style={{ fontWeight: 600, marginBottom: 4 }}>{r.assignedVetFacility.name}</div>
-                  <div className="text-muted">{r.assignedVetFacility.address}</div>
+                  <div style={{ fontWeight: 600, marginBottom: 4 }}>{r.nearestVet.name}</div>
+                  <div className="text-muted">{r.nearestVet.address}</div>
                   <div style={{ marginTop: 4 }}>
-                    <span className="text-muted">Phone:</span> {r.assignedVetFacility.phone}
+                    <span className="text-muted">Phone:</span> {r.nearestVet.phone}
                     &nbsp;·&nbsp;
-                    <span className={`badge ${r.assignedVetFacility.inNetwork ? 'badge-success' : 'badge-muted'}`} style={{ fontSize: 11 }}>
-                      {r.assignedVetFacility.inNetwork ? 'In-Network' : 'Out-of-Network'}
-                    </span>
+                    <span className="badge badge-success" style={{ fontSize: 11 }}>In-Network</span>
                   </div>
-                  {r.assignedVetFacility.estimatedTransportMinutes != null && (
-                    <div className="text-muted" style={{ marginTop: 4 }}>Est. transport: {r.assignedVetFacility.estimatedTransportMinutes} min</div>
+                  {r.nearestVet.estimatedTransportMinutes != null && (
+                    <div className="text-muted" style={{ marginTop: 4 }}>Est. transport: {r.nearestVet.estimatedTransportMinutes} min</div>
                   )}
                 </div>
               </div>
             )}
 
             {/* Owner notification */}
-            {r.ownerNotification && (
+            {r.notification && r.notification.smsStatus === 'DISPATCHED' && (
               <div className="text-sm text-muted" style={{ marginBottom: 12 }}>
-                SMS + Email dispatched to {r.ownerNotification.email || '—'}
+                SMS + Email notifications dispatched to owner.
               </div>
             )}
 
             {/* Loyalty action banner */}
-            {r.loyaltyAction === 'BOARDING_FEE_WAIVED' && (
+            {r.preAuth?.loyaltyAction === 'BOARDING_FEE_WAIVED' && (
               <div className="alert alert-warning">
                 Boarding fee for today waived. Insurance co-pay waiver applied.
               </div>
@@ -865,11 +860,11 @@ export default function HotelPortal() {
                   const displayName = pet ? (pet.petName || pet.name || entry.petId) : entry.petId;
                   return (
                     <tr key={i}>
-                      <td className="text-sm">{entry.date || entry.createdAt || '—'}</td>
+                      <td className="text-sm">{(entry.appliedAt || entry.date || entry.createdAt || '').slice(0, 10) || '—'}</td>
                       <td className="text-sm">{displayName}</td>
                       <td className="text-sm">{EVENT_TYPE_LABELS[entry.eventType] || entry.eventType}</td>
                       <td className="text-sm">
-                        {entry.rewardValue != null ? (typeof entry.rewardValue === 'number' && entry.rewardValue < 1 ? `${(entry.rewardValue * 100).toFixed(0)}%` : `$${entry.rewardValue}`) : '—'}
+                        {entry.rewardValue != null ? String(entry.rewardValue) : '—'}
                       </td>
                       <td>
                         <span className={`badge ${entry.status === 'APPLIED' ? 'badge-success' : entry.status === 'PENDING' ? 'badge-warning' : 'badge-muted'}`} style={{ fontSize: 11 }}>
@@ -947,7 +942,7 @@ export default function HotelPortal() {
       )}
 
       {/* Tab bar */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid var(--color-border)', paddingBottom: 0 }}>
         {TABS.map(tab => (
           <button
             key={tab.id}
@@ -956,7 +951,7 @@ export default function HotelPortal() {
               background: 'none',
               border: 'none',
               borderBottom: activeTab === tab.id ? '2px solid #6366f1' : '2px solid transparent',
-              color: activeTab === tab.id ? '#6366f1' : 'rgba(255,255,255,0.5)',
+              color: activeTab === tab.id ? '#6366f1' : 'var(--color-text-muted)',
               fontWeight: activeTab === tab.id ? 700 : 400,
               cursor: 'pointer',
               padding: '8px 16px',

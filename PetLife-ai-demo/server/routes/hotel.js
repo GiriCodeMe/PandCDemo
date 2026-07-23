@@ -117,8 +117,7 @@ router.get('/stay-protection/quote', (req, res) => {
 
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayDateStr = new Date().toISOString().split('T')[0];
 
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       return res.status(400).json({ error: 'Invalid date format' });
@@ -126,7 +125,7 @@ router.get('/stay-protection/quote', (req, res) => {
     if (end <= start) {
       return res.status(400).json({ error: 'endDate must be after startDate' });
     }
-    if (start < today) {
+    if (startDate < todayDateStr) {
       return res.status(400).json({ error: 'startDate cannot be in the past' });
     }
 
@@ -167,28 +166,32 @@ router.get('/stay-protection/quote', (req, res) => {
 // POST /api/hotel/stay-protection/bind
 router.post('/stay-protection/bind', (req, res) => {
   try {
-    const { bookingContext, reservationId, facilityId, stayDetails, customerData, petData, financials } = req.body;
+    // Accept both the nested schema and the flat payload the frontend sends
+    const {
+      facilityId,
+      checkInDate, checkOutDate,        // flat (frontend)
+      owner = {},                        // flat (frontend)
+      pet = {},                          // flat (frontend)
+      linkedPetId,                       // flat (frontend)
+      stayDetails,                       // nested (legacy)
+      customerData,                      // nested (legacy)
+      petData,                           // nested (legacy)
+    } = req.body;
 
-    if (!reservationId) return res.status(400).json({ error: 'reservationId is required' });
+    const startDate = stayDetails?.startDate || checkInDate;
+    const endDate   = stayDetails?.endDate   || checkOutDate;
+    const email     = customerData?.email    || owner.email;
+    const petName   = petData?.petName       || pet.name;
+    const microchipId = petData?.microchipId || pet.microchipId;
+    const ownerPhone  = customerData?.phone  || owner.phone;
+    const reservationId = req.body.reservationId || ('RES-' + Date.now());
+
     if (!facilityId) return res.status(400).json({ error: 'facilityId is required' });
-    if (!stayDetails || !stayDetails.startDate || !stayDetails.endDate) {
-      return res.status(400).json({ error: 'stayDetails.startDate and stayDetails.endDate are required' });
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: 'checkInDate and checkOutDate are required' });
     }
-    if (!customerData || !customerData.email) {
-      return res.status(400).json({ error: 'customerData.email is required' });
-    }
-    if (!petData || !petData.petName) {
-      return res.status(400).json({ error: 'petData.petName is required' });
-    }
-
-    const expectedPremium = parseFloat((financials.dailyPremium * stayDetails.totalDays).toFixed(2));
-    if (Math.abs(expectedPremium - financials.totalPremiumCharged) > 0.01) {
-      return res.status(422).json({
-        error: 'Premium mismatch',
-        expected: expectedPremium,
-        received: financials.totalPremiumCharged,
-      });
-    }
+    if (!email) return res.status(400).json({ error: 'owner email is required' });
+    if (!petName) return res.status(400).json({ error: 'pet name is required' });
 
     const policyNumber = 'MICRO-STAY-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000 + 10000));
     const boundAt = new Date().toISOString();
@@ -197,12 +200,12 @@ router.post('/stay-protection/bind', (req, res) => {
       policyNumber,
       reservationId,
       facilityId,
-      microchipId: petData.microchipId || null,
-      petName: petData.petName,
-      ownerEmail: customerData.email,
-      ownerPhone: customerData.phone || null,
-      effectiveStart: new Date(stayDetails.startDate).toISOString(),
-      effectiveEnd: new Date(stayDetails.endDate + 'T23:59:59').toISOString(),
+      microchipId: microchipId || null,
+      petName,
+      ownerEmail: email,
+      ownerPhone: ownerPhone || null,
+      effectiveStart: new Date(startDate).toISOString(),
+      effectiveEnd: new Date(endDate + 'T23:59:59').toISOString(),
       coverageCap: 2500,
       status: 'ACTIVE',
       boundAt,
@@ -217,7 +220,7 @@ router.post('/stay-protection/bind', (req, res) => {
       notification: {
         smsStatus: 'DISPATCHED',
         emailStatus: 'DISPATCHED',
-        recipient: customerData.email,
+        recipient: email,
       },
       boundAt,
     });
@@ -229,10 +232,16 @@ router.post('/stay-protection/bind', (req, res) => {
 // POST /api/hotel/incident/report
 router.post('/incident/report', (req, res) => {
   try {
-    const { petId, facilityId, incidentType, symptomsDescription, incidentTimestamp, reportedByStaffId } = req.body;
+    const {
+      petId, facilityId, incidentType, symptomsDescription,
+      incidentTimestamp, incidentDatetime,          // accept both names
+      reportedByStaffId, staffId,                   // accept both names
+    } = req.body;
+    const resolvedTimestamp = incidentTimestamp || incidentDatetime || new Date().toISOString();
+    const resolvedStaffId   = reportedByStaffId  || staffId         || 'HOTEL-STAFF';
 
-    if (!petId || !facilityId || !incidentType || !symptomsDescription || !incidentTimestamp || !reportedByStaffId) {
-      return res.status(400).json({ error: 'petId, facilityId, incidentType, symptomsDescription, incidentTimestamp, and reportedByStaffId are all required' });
+    if (!petId || !incidentType || !symptomsDescription) {
+      return res.status(400).json({ error: 'petId, incidentType, and symptomsDescription are required' });
     }
     if (symptomsDescription.length < 10) {
       return res.status(400).json({ error: 'symptomsDescription must be at least 10 characters' });
@@ -257,8 +266,8 @@ router.post('/incident/report', (req, res) => {
     } else {
       const matchingBinder = MICRO_POLICY_BINDERS.find(b =>
         (b.microchipId === policy.microchipId || b.petName === policy.petName) &&
-        incidentTimestamp >= b.effectiveStart &&
-        incidentTimestamp <= b.effectiveEnd
+        resolvedTimestamp >= b.effectiveStart &&
+        resolvedTimestamp <= b.effectiveEnd
       );
       if (matchingBinder) {
         coverageStatus = 'STAY_PROTECTION';
@@ -295,8 +304,8 @@ router.post('/incident/report', (req, res) => {
       facilityId,
       incidentType,
       symptomsDescription,
-      incidentTimestamp,
-      reportedByStaffId,
+      incidentTimestamp: resolvedTimestamp,
+      reportedByStaffId: resolvedStaffId,
       coverageStatus,
       preAuth,
       nearestVet,

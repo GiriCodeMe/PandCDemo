@@ -38,6 +38,12 @@ function getFallbackAnswer(message, pageContext) {
   if (msg.includes('compliance') || msg.includes('sla')) {
     return '**Compliance SLA targets:**\n\n- **US (NAIC)**: Acknowledgement within **15 calendar days**\n- **UK (FCA)**: Acknowledgement within **5 business days**\n- **Breach threshold**: Day 20 — compliance supervisor webhook fires\n\n**Authority limits:**\n- Tier 1 Adjuster: max $500/claim\n- Tier 2 Adjuster: max $2,500\n- Claims Manager: max $10,000\n- VP/SIU: unlimited (crypto signature for >$50k)';
   }
+  if (page === 'Clinic Portal' || msg.includes('clinic') || msg.includes('eligibility') || msg.includes('preauth') || msg.includes('pre-auth') || msg.includes('settlement')) {
+    return '**Clinic Portal** provides three EIS-integrated workflows:\n\n- **Eligibility**: Look up any active policy by petId, microchip, policy number, or owner phone. Returns coverage limits, remaining deductible, co-insurance %, and waiting period status.\n- **Pre-Authorization**: Submit a diagnosis code and procedure line items. Outcomes: **APPROVED** (PA token issued, 30-day validity) · **REFERRED** (waiting period or fraud review) · **DECLINED** (policy inactive or limit exhausted).\n- **Settlement**: Submit final invoice with PA token → direct bank settlement to clinic. If clinic bank account is unmapped, funds are held in escrow and escalated to the Clinic Onboarding Desk.';
+  }
+  if (page === 'Hotel Portal' || msg.includes('hotel') || msg.includes('health pass') || msg.includes('stay protection') || msg.includes('incident') || msg.includes('loyalty')) {
+    return '**Hotel Portal** connects boarding facilities with PetLife coverage:\n\n- **Health Pass**: Real-time check-in clearance — GREEN (all vaccines compliant) · AMBER (expiring ≤30 days) · RED (non-compliant/missing).\n- **Stay Protection**: Micro-binder at $3.50/day, up to $2,500 emergency vet cap for the stay period.\n- **Incident Response**: File ILLNESS/INJURY/EMERGENCY — issues up to $500 emergency pre-auth, dispatches nearest in-network vet, applies loyalty fee-waiver.\n- **Loyalty Dashboard**: Tracks deductible credits (CHECKOUT_DEDUCTIBLE_CREDIT) and boarding discounts (VET_VISIT_DISCOUNT) earned through the loyalty program.';
+  }
   return `I can help with questions about **${page}** including underwriting, claims processing, fraud analysis, and compliance. Try asking about risk scores, reserve calculations, fraud rules, STP eligibility, or subrogation.`;
 }
 

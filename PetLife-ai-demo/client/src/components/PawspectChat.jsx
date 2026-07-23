@@ -2,14 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const PAGE_LABELS = {
-  '/underwriting': 'Underwriting Workbench',
-  '/claims':       'Claims Adjudicator Workbench',
-  '/quote':        'Quote',
-  '/fnol':         'FNOL Intake',
-  '/fraud':        'Fraud & Breed',
-  '/coding':       'Medical Coding',
-  '/billing':      'Billing',
-  '/policies':     'Policies',
+  '/underwriting':  'Underwriting Workbench',
+  '/claims':        'Claims Adjudicator Workbench',
+  '/quote':         'Quote',
+  '/fnol':          'FNOL Intake',
+  '/fraud':         'Fraud & Breed',
+  '/coding':        'Medical Coding',
+  '/billing':       'Billing',
+  '/policies':      'Policies',
+  '/clinic':        'Clinic Portal',
+  '/hotel-portal':  'Hotel Portal',
 };
 
 const STARTER_QUESTIONS = {
@@ -42,6 +44,18 @@ const STARTER_QUESTIONS = {
     'Explain breed risk loading',
     'What coverage types are available?',
   ],
+  '/clinic': [
+    'How does eligibility verification work?',
+    'What is a pre-authorization token?',
+    'How is the carrier payout calculated at settlement?',
+    'When is a claim referred vs approved at pre-auth?',
+  ],
+  '/hotel-portal': [
+    'What does the health pass clearance status mean?',
+    'How does stay protection coverage work?',
+    'What is covered under an incident response pre-auth?',
+    'How does the loyalty deductible credit program work?',
+  ],
 };
 
 function buildPageContext(pathname) {
@@ -61,6 +75,18 @@ function buildPageContext(pathname) {
     return {
       page: 'Claims Adjudicator Workbench',
       data: `${claimsData}\n\nAI Behavioural Checks (Tier 2 fraud): Three Gemini-powered pattern checks — (1) Invoice Tampering [CRITICAL]: detects digitally altered invoices, triggers SIU referral + payment freeze; (2) Unusual Vet-Owner Pattern [HIGH]: flags anomalous vet-policyholder relationships, triggers payment block + adjudicator warning; (3) Rapid High-Value Submission [MEDIUM]: detects suspicious high-value claims shortly after policy inception, flagged for medical audit. Fraud score <50 = STP eligible, 50-79 = manual review, ≥80 = SIU referral.`,
+    };
+  }
+  if (pathname.startsWith('/clinic')) {
+    return {
+      page: 'Clinic Portal',
+      data: 'The Clinic Portal integrates with the EIS (Enterprise Insurance System) to provide real-time services to in-network vet clinics: (1) Eligibility verification — look up active policy by petId, microchip, policy number, or phone; returns coverage limits, deductible remaining, co-insurance %, and waiting period status. (2) Pre-authorization — submit diagnosis code + procedure line items to get a guaranteed payout ceiling and pre-auth token (valid 30 days). Outcomes: APPROVED, REFERRED (waiting period or fraud review), DECLINED (inactive policy). (3) Settlement — submit the final invoice with a pre-auth token; the server runs triage rules and either direct-settles to the clinic bank account or holds in escrow if the bank account is unmapped.',
+    };
+  }
+  if (pathname.startsWith('/hotel-portal')) {
+    return {
+      page: 'Hotel Portal',
+      data: 'The Hotel Portal connects pet boarding facilities with the PetLife insurance network: (1) Health Pass — real-time check-in clearance showing vaccination compliance (GREEN/AMBER/RED) plus active insurance status. (2) Stay Protection — micro-policy binder for a specific stay ($3.50/day, up to $2,500 emergency vet cap); quote then bind with check-in/check-out dates. (3) Incident Response — staff can file an incident report (ILLNESS/INJURY/EMERGENCY); if an active policy or stay binder exists, the system issues an emergency pre-auth up to $500 and dispatches the nearest in-network vet. (4) Loyalty Dashboard — tracks deductible credits and boarding discounts earned through the PetLife loyalty program.',
     };
   }
   return { page: PAGE_LABELS[pathname] || 'PetLife AI Platform', data: null };
