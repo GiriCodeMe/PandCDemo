@@ -163,6 +163,129 @@ router.get('/stay-protection/quote', (req, res) => {
   }
 });
 
+// GET /api/hotel/stay-protection/policy-pdf
+router.get('/stay-protection/policy-pdf', (req, res) => {
+  const { policyNumber } = req.query;
+  if (!policyNumber) return res.status(400).send('<h1>policyNumber is required</h1>');
+
+  const binder = MICRO_POLICY_BINDERS.find(b => b.policyNumber === policyNumber);
+  if (!binder) return res.status(404).send('<h1>Policy not found</h1>');
+
+  const fmt = s => s ? new Date(s).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+  const issuedDate = fmt(binder.boundAt);
+  const startDate  = fmt(binder.effectiveStart);
+  const endDate    = fmt(binder.effectiveEnd);
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stay Protection Policy — ${policyNumber}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #fff; color: #1a1d2e; padding: 40px 48px; max-width: 800px; margin: 0 auto; }
+  .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 28px; }
+  .brand { font-size: 22px; font-weight: 800; color: #6366f1; letter-spacing: -0.5px; }
+  .brand span { color: #1a1d2e; }
+  .policy-type { font-size: 13px; color: #6b7280; margin-top: 3px; }
+  .badge { background: #6366f1; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+  h2 { font-size: 18px; font-weight: 700; margin-bottom: 18px; color: #1a1d2e; }
+  .policy-num { font-family: 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #6366f1; background: #ede9fe; display: inline-block; padding: 6px 18px; border-radius: 6px; margin-bottom: 24px; letter-spacing: 1px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 24px; }
+  .cell { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+  .cell:nth-last-child(-n+2) { border-bottom: none; }
+  .cell label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-bottom: 3px; letter-spacing: 0.5px; }
+  .cell .val { font-size: 14px; font-weight: 600; color: #1a1d2e; }
+  .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6366f1; letter-spacing: 0.8px; margin: 20px 0 10px; }
+  .coverage-box { border: 1px solid #ddd6fe; background: #faf5ff; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+  .coverage-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ede9fe; font-size: 13px; }
+  .coverage-row:last-child { border-bottom: none; }
+  .coverage-row .k { color: #6b7280; }
+  .coverage-row .v { font-weight: 700; color: #1a1d2e; }
+  .services { list-style: none; padding: 0; margin: 0 0 20px; }
+  .services li { font-size: 13px; padding: 4px 0 4px 18px; position: relative; color: #374151; }
+  .services li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: 700; }
+  .excl { color: #ef4444; }
+  .excl::before { content: '✗'; color: #ef4444; }
+  .footer { border-top: 2px solid #e5e7eb; padding-top: 18px; margin-top: 8px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .footer-note { font-size: 11px; color: #9ca3af; max-width: 420px; line-height: 1.5; }
+  .issued { font-size: 12px; color: #6b7280; text-align: right; }
+  .status-bar { background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #15803d; }
+  @media print {
+    body { padding: 20px; }
+    @page { margin: 1cm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">Pet<span>Life</span> AI</div>
+    <div class="policy-type">Hotel Stay Protection Certificate</div>
+  </div>
+  <span class="badge">ACTIVE POLICY</span>
+</div>
+
+<div class="status-bar">&#10003;&nbsp; Policy Active — Emergency coverage in force for the stay period</div>
+
+<div class="policy-num">${policyNumber}</div>
+
+<div class="section-title">Policy Details</div>
+<div class="grid">
+  <div class="cell"><label>Policy Number</label><div class="val" style="font-family:monospace">${policyNumber}</div></div>
+  <div class="cell"><label>Status</label><div class="val" style="color:#15803d">&#x25CF; ${binder.status}</div></div>
+  <div class="cell"><label>Pet Name</label><div class="val">${binder.petName || '—'}</div></div>
+  <div class="cell"><label>Microchip ID</label><div class="val" style="font-family:monospace">${binder.microchipId || '—'}</div></div>
+  <div class="cell"><label>Owner Email</label><div class="val">${binder.ownerEmail || '—'}</div></div>
+  <div class="cell"><label>Owner Phone</label><div class="val">${binder.ownerPhone || '—'}</div></div>
+  <div class="cell"><label>Coverage Start</label><div class="val">${startDate}</div></div>
+  <div class="cell"><label>Coverage End</label><div class="val">${endDate}</div></div>
+  <div class="cell"><label>Facility ID</label><div class="val" style="font-family:monospace">${binder.facilityId || '—'}</div></div>
+  <div class="cell"><label>Reservation ID</label><div class="val" style="font-family:monospace">${binder.reservationId || '—'}</div></div>
+</div>
+
+<div class="section-title">Coverage Summary</div>
+<div class="coverage-box">
+  <div class="coverage-row"><span class="k">Emergency Vet Cap</span><span class="v">$${(binder.coverageCap || 2500).toLocaleString()}</span></div>
+  <div class="coverage-row"><span class="k">Deductible</span><span class="v">$0</span></div>
+  <div class="coverage-row"><span class="k">Reimbursement Rate</span><span class="v">100%</span></div>
+  <div class="coverage-row"><span class="k">Daily Premium</span><span class="v">$3.50</span></div>
+</div>
+
+<div class="section-title">Covered Services</div>
+<ul class="services">
+  <li>Emergency Exam &amp; Triage</li>
+  <li>Emergency Transport to In-Network Vet</li>
+  <li>Initial Diagnostics (X-ray, bloodwork)</li>
+  <li>Overnight Observation</li>
+</ul>
+
+<div class="section-title">Exclusions</div>
+<ul class="services">
+  <li class="excl">Pre-existing conditions</li>
+  <li class="excl">Routine wellness &amp; preventive care</li>
+  <li class="excl">Elective or cosmetic procedures</li>
+</ul>
+
+<div class="footer">
+  <div class="footer-note">
+    This certificate constitutes proof of active Stay Protection coverage. In an emergency, call the PetLife Hotel Hotline: <strong>1-800-PET-LIFE</strong>. Policy is underwritten by PetLife Insurance Co., regulated by NAIC.
+  </div>
+  <div class="issued">
+    <div>Issued: ${issuedDate}</div>
+    <div style="margin-top:4px;font-size:11px">PetLife AI Platform</div>
+  </div>
+</div>
+
+<script>window.onload = () => window.print();</script>
+</body>
+</html>`;
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
+});
+
 // POST /api/hotel/stay-protection/bind
 router.post('/stay-protection/bind', (req, res) => {
   try {

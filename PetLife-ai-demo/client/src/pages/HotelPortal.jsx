@@ -621,7 +621,13 @@ export default function HotelPortal() {
               )}
 
               <div style={{ marginBottom: 12 }}>
-                <a href="#" target="_blank" className="btn btn-outline" style={{ textDecoration: 'none', display: 'inline-block' }}>
+                <a
+                  href={`/api/hotel/stay-protection/policy-pdf?policyNumber=${b.policyNumber}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-outline"
+                  style={{ textDecoration: 'none', display: 'inline-block' }}
+                >
                   Download Policy PDF
                 </a>
               </div>
