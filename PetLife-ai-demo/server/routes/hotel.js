@@ -165,11 +165,29 @@ router.get('/stay-protection/quote', (req, res) => {
 
 // GET /api/hotel/stay-protection/policy-pdf
 router.get('/stay-protection/policy-pdf', (req, res) => {
-  const { policyNumber } = req.query;
+  const {
+    policyNumber, petName, ownerEmail, ownerPhone, microchipId,
+    facilityId, reservationId, effectiveStart, effectiveEnd,
+    coverageCap, status, boundAt,
+  } = req.query;
+
   if (!policyNumber) return res.status(400).send('<h1>policyNumber is required</h1>');
 
-  const binder = MICRO_POLICY_BINDERS.find(b => b.policyNumber === policyNumber);
-  if (!binder) return res.status(404).send('<h1>Policy not found</h1>');
+  // Build binder from query params (frontend passes all fields so no DB lookup needed)
+  const binder = {
+    policyNumber,
+    petName:      petName      || '—',
+    ownerEmail:   ownerEmail   || '—',
+    ownerPhone:   ownerPhone   || '—',
+    microchipId:  microchipId  || null,
+    facilityId:   facilityId   || '—',
+    reservationId: reservationId || '—',
+    effectiveStart: effectiveStart || null,
+    effectiveEnd:   effectiveEnd   || null,
+    coverageCap:  coverageCap ? Number(coverageCap) : 2500,
+    status:       status      || 'ACTIVE',
+    boundAt:      boundAt     || new Date().toISOString(),
+  };
 
   const fmt = s => s ? new Date(s).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
   const issuedDate = fmt(binder.boundAt);

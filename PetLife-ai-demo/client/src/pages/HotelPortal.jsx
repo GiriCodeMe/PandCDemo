@@ -622,7 +622,20 @@ export default function HotelPortal() {
 
               <div style={{ marginBottom: 12 }}>
                 <a
-                  href={`/api/hotel/stay-protection/policy-pdf?policyNumber=${b.policyNumber}`}
+                  href={`/api/hotel/stay-protection/policy-pdf?${new URLSearchParams({
+                    policyNumber:  b.policyNumber  || '',
+                    petName:       b.binder?.petName      || petName  || '',
+                    ownerEmail:    b.binder?.ownerEmail   || email    || '',
+                    ownerPhone:    b.binder?.ownerPhone   || phone    || '',
+                    microchipId:   b.binder?.microchipId  || microchipId || '',
+                    facilityId:    b.binder?.facilityId   || facilityId  || '',
+                    reservationId: b.binder?.reservationId || '',
+                    effectiveStart: b.binder?.effectiveStart || '',
+                    effectiveEnd:   b.binder?.effectiveEnd   || '',
+                    coverageCap:   b.binder?.coverageCap  || 2500,
+                    status:        b.binder?.status       || 'ACTIVE',
+                    boundAt:       b.boundAt || '',
+                  }).toString()}`}
                   target="_blank"
                   rel="noreferrer"
                   className="btn btn-outline"
