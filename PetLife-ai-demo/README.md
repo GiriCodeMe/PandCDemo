@@ -90,9 +90,20 @@ cd server && npm test
 
 # Client — Vitest + React Testing Library (5 component tests)
 cd client && npm test
+
+# E2E — Playwright (25 tests, auto-starts server + client)
+cd e2e && npm ci && npx playwright install chromium --with-deps
+npx playwright test
 ```
 
-CI runs both test suites plus a Vite production build on every push to `main` via `.github/workflows/petlife-demo-ci.yml`.
+CI runs all three suites plus a Vite production build on every push to `main` via `.github/workflows/petlife-demo-ci.yml`.
+
+### E2E coverage
+
+| Suite | Tests | Portals |
+|-------|-------|---------|
+| Hotel Portal | 13 | Health Pass, Stay Protection, Incident Response, Loyalty Dashboard |
+| Clinic Portal | 12 | Eligibility, Pre-Authorization, Settlement |
 
 ## Sample Documents
 
