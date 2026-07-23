@@ -152,6 +152,8 @@ export default function Claims() {
   const [userRole, setUserRole]           = useState('Claims_Adjuster_Tier1');
   const [emailSent, setEmailSent]         = useState(false);
   const [adjFallback, setAdjFallback]     = useState(false);
+  const [workflowError, setWorkflowError] = useState(null);
+  const [auditTs, setAuditTs] = useState({});
 
   useEffect(() => {
     const localClaims = JSON.parse(localStorage.getItem('claimsQueue') || '[]');
@@ -172,18 +174,21 @@ export default function Claims() {
     setSelectedPolicy(pol || null);
     setExtractResult(null); setAdjResult(null); setResolution(null);
     setCobChecked(false); setRecoveryCreated(false); setEmailSent(false); setAdjFallback(false);
+    setAuditTs({ claimSelected: new Date().toLocaleTimeString() });
     setActiveTab('ingest');
   };
 
   const handleExtract = async () => {
     if (!invoiceFile) return;
     setExtracting(true);
+    setWorkflowError(null);
     try {
       const res = await parseInvoice(invoiceFile);
       setExtractResult(res.data);
+      setAuditTs(t => ({ ...t, extracted: new Date().toLocaleTimeString() }));
       setActiveTab('extract');
     } catch (e) {
-      console.warn('Invoice parse unavailable, using fallback');
+      setWorkflowError('AI extraction failed — server unreachable. Please try again.');
       setActiveTab('extract');
     } finally { setExtracting(false); }
   };
@@ -191,13 +196,16 @@ export default function Claims() {
   const handleAdjudicate = async () => {
     if (!extractResult?.invoice || !selectedPolicy) return;
     setAdjudicating(true);
+    setWorkflowError(null);
     try {
       const res = await adjudicateClaim(extractResult.invoice, selectedPolicy.policy_id);
       setAdjResult(res.data);
       setAdjFallback(res.data.source === 'fallback');
+      setAuditTs(t => ({ ...t, adjudicated: new Date().toLocaleTimeString() }));
       setActiveTab('triage');
     } catch (e) {
-      console.warn('Adjudication unavailable, using fallback');
+      setWorkflowError('AI adjudication failed — server unreachable. Please try again.');
+      setActiveTab('triage');
     } finally { setAdjudicating(false); }
   };
 
@@ -208,6 +216,7 @@ export default function Claims() {
       INFO: `Dear ${selectedPolicy?.holder?.name || 'Policyholder'},\n\nThank you for your claim submission.\n\nWe require additional information to process your claim:\n- Original veterinary invoice\n- Complete SOAP notes\n- Proof of payment\n\nPlease submit within 14 days.\n\nKind regards,\nPetLife AI Claims Team`,
     };
     setResolution(action);
+    setAuditTs(t => ({ ...t, resolved: new Date().toLocaleTimeString() }));
     setEmailText(templates[action] || '');
   };
 
@@ -281,7 +290,7 @@ export default function Claims() {
             const disabled = tab.id !== 'queue' && !selectedClaim;
             const done = tabDone[tab.id] || false;
             return (
-              <button key={tab.id} onClick={() => !disabled && setActiveTab(tab.id)} disabled={disabled}
+              <button key={tab.id} onClick={() => { if (!disabled) { setActiveTab(tab.id); setWorkflowError(null); } }} disabled={disabled}
                 style={{
                   padding: '12px 16px', border: 'none',
                   borderBottom: activeTab === tab.id ? '3px solid #e84040' : '3px solid transparent',
@@ -297,6 +306,10 @@ export default function Claims() {
           })}
         </div>
       </div>
+
+      {workflowError && (
+        <div className="alert alert-danger" style={{ marginBottom: 16 }}>{workflowError}</div>
+      )}
 
       {/* ── TAB: Queue ── */}
       {activeTab === 'queue' && (
@@ -667,7 +680,7 @@ export default function Claims() {
                   <div style={{ fontSize: 13, color: '#374151', marginBottom: 12 }}>
                     System will query the corporate data mesh (Figo · Embrace · Everypaw) for concurrent policies by Microchip_ID and Owner_Last_Name.
                   </div>
-                  <button className="btn btn-primary" onClick={() => setCobChecked(true)}>
+                  <button className="btn btn-primary" onClick={() => { setCobChecked(true); setAuditTs(t => ({ ...t, cobChecked: new Date().toLocaleTimeString() })); }}>
                     Run COB Cross-Match
                   </button>
                 </div>
@@ -1085,12 +1098,12 @@ export default function Claims() {
             <div className="card-body">
               <div className="timeline">
                 {[
-                  { date: new Date().toLocaleTimeString(), event: 'Claim selected for review', user: 'Adjudicator' },
-                  extractResult && { date: new Date().toLocaleTimeString(), event: `Invoice parsed by Gemini AI — $${invoice?.total_due?.toFixed(2)} total`, user: 'Gemini AI' },
-                  cobChecked && { date: new Date().toLocaleTimeString(), event: 'COB cross-match completed — no dual coverage', user: 'System' },
-                  adjData && { date: new Date().toLocaleTimeString(), event: `Adjudication completed — ${adjData.decision}`, user: 'Gemini AI' },
-                  resolution && { date: new Date().toLocaleTimeString(), event: `Adjudicator decision: ${resolution}`, user: 'Adjudicator' },
-                  resolution === 'APPROVE' && ledgerObject && { date: new Date().toLocaleTimeString(), event: 'Ledger broadcast event generated', user: 'System' },
+                  { date: auditTs.claimSelected || '—', event: 'Claim selected for review', user: 'Adjudicator' },
+                  extractResult && { date: auditTs.extracted || '—', event: `Invoice parsed by Gemini AI — $${invoice?.total_due?.toFixed(2)} total`, user: 'Gemini AI' },
+                  cobChecked && { date: auditTs.cobChecked || '—', event: 'COB cross-match completed — no dual coverage', user: 'System' },
+                  adjData && { date: auditTs.adjudicated || '—', event: `Adjudication completed — ${adjData.decision}`, user: 'Gemini AI' },
+                  resolution && { date: auditTs.resolved || '—', event: `Adjudicator decision: ${resolution}`, user: 'Adjudicator' },
+                  resolution === 'APPROVE' && ledgerObject && { date: auditTs.resolved || '—', event: 'Ledger broadcast event generated', user: 'System' },
                 ].filter(Boolean).map((e, i) => (
                   <div key={i} className="timeline-item">
                     <div className={`timeline-dot ${e.user === 'Gemini AI' ? 'chronic' : 'normal'}`} />

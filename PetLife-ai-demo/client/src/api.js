@@ -69,3 +69,32 @@ export const generateQuote = (pet, holder, coverage_type, requested_benefit, hea
 
 // Health check
 export const healthCheck = () => api.get('/health');
+
+// Clinic Portal
+export const clinicEligibility = (q, clinicId) =>
+  api.get('/clinic/eligibility', { params: { q, clinicId } });
+
+export const clinicPreauth = (payload) =>
+  api.post('/clinic/preauth', payload);
+
+export const clinicSettlement = (payload) =>
+  api.post('/clinic/settlement', payload);
+
+// Hotel Portal
+export const hotelHealthPass = (petId) =>
+  api.get('/hotel/health-pass', { params: { petId } });
+
+export const hotelStayProtectionQuote = (startDate, endDate, petId) =>
+  api.get('/hotel/stay-protection/quote', { params: { startDate, endDate, ...(petId && { petId }) } });
+
+export const hotelStayProtectionBind = (payload) =>
+  api.post('/hotel/stay-protection/bind', payload);
+
+export const hotelIncidentReport = (payload) =>
+  api.post('/hotel/incident/report', payload);
+
+export const hotelLoyaltyApplyEvent = (payload) =>
+  api.post('/hotel/loyalty/apply-event', payload);
+
+export const hotelLoyaltyLog = () =>
+  api.get('/hotel/loyalty/log');

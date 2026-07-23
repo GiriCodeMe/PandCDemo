@@ -182,7 +182,7 @@ export default function FNOL() {
   const handleSubmit = async () => {
     const errors = validateStep3();
     setValidationErrors(errors);
-    if (errors.noTotal || errors.noClinic) return;
+    if (errors.policy || errors.noTotal || errors.noClinic) return;
     setSubmitting(true);
     const payload = buildClaimPayload();
     let submitResult;
@@ -212,7 +212,7 @@ export default function FNOL() {
       claim_id: submitResult.claimReference,
       pet: selectedPolicy?.petName || '—',
       holder: selectedPolicy?.holderName || '—',
-      policy_id: selectedPolicy?.policyNumber || null,
+      policy_id: selectedPolicy?.policy_id || null,
       submitted: new Date().toLocaleDateString('en-US'),
       condition: declaration.symptomCategory,
       billed: parseFloat(editFields.grossTotal) || 0,
@@ -224,7 +224,7 @@ export default function FNOL() {
   };
 
   const validErrors = validateStep3();
-  const canSubmit = !validErrors.noTotal && !validErrors.noClinic && !!editFields.dateOfService;
+  const canSubmit = !!selectedPolicy && !validErrors.noTotal && !validErrors.noClinic && !!editFields.dateOfService;
 
   const resetForm = () => {
     setStep(1);
@@ -469,7 +469,7 @@ export default function FNOL() {
 
       {/* ══ STEP 3: Validate & Review ══ */}
       {step === 3 && (() => {
-        const errors = validateStep3();
+        const errors = validErrors;
         const lineTotal = editFields.lineItems.reduce((sum, li) => sum + (parseFloat(li.extractedAmount) || 0), 0);
         const gross = parseFloat(editFields.grossTotal) || 0;
 

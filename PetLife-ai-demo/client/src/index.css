@@ -156,7 +156,7 @@ body {
   color: rgba(255,255,255,0.5);
 }
 
-.sidebar-nav { padding: 4px 8px; flex: 1; }
+.sidebar-nav { padding: 4px 8px; flex: 1; overflow-y: auto; }
 
 .sidebar-item {
   display: flex;

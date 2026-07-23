@@ -8,8 +8,10 @@ const NAV_ITEMS = [
 
   { path: '/underwriting',icon: '🐾', label: 'Underwriting', badge: '2' },
   { path: '/billing',     icon: '🐾', label: 'Billing' },
-  { path: '/fnol',        icon: '🐾', label: 'FNOL Intake' },
-  { path: '/reports',     icon: '🐾', label: 'Reports' },
+  { path: '/fnol',         icon: '🐾', label: 'FNOL Intake' },
+  { path: '/clinic',       icon: '🏥', label: 'Clinic Portal' },
+  { path: '/hotel-portal', icon: '🏨', label: 'Hotel Portal' },
+  { path: '/reports',      icon: '🐾', label: 'Reports' },
 ];
 
 export default function Sidebar() {

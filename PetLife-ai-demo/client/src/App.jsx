@@ -11,6 +11,8 @@ import Underwriting from './pages/Underwriting';
 import Billing from './pages/Billing';
 import FNOL from './pages/FNOL';
 import Reports from './pages/Reports';
+import ClinicPortal from './pages/ClinicPortal';
+import HotelPortal from './pages/HotelPortal';
 
 export default function App() {
   return (
@@ -27,6 +29,8 @@ export default function App() {
           <Route path="underwriting" element={<Underwriting />} />
           <Route path="billing" element={<Billing />} />
           <Route path="fnol" element={<FNOL />} />
+          <Route path="clinic" element={<ClinicPortal />} />
+          <Route path="hotel-portal" element={<HotelPortal />} />
           <Route path="reports" element={<Reports />} />
         </Route>
       </Routes>

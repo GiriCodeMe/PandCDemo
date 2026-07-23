@@ -20,6 +20,8 @@ app.use('/api/history', require('./routes/history'));
 app.use('/api/underwriting', require('./routes/underwriting'));
 app.use('/api/fnol', require('./routes/fnol'));
 app.use('/api/pawspect', require('./routes/pawspect'));
+app.use('/api/clinic', require('./routes/clinic'));
+app.use('/api/hotel', require('./routes/hotel'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', gemini: !!process.env.GEMINI_API_KEY, timestamp: new Date().toISOString() });
