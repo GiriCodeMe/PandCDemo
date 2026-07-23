@@ -18,6 +18,88 @@ function emptyLineItem() {
   return { itemCode: '', description: '', unitCharge: '' };
 }
 
+function addLineItem(setter) {
+  setter(prev => [...prev, emptyLineItem()]);
+}
+
+function removeLineItem(setter, idx) {
+  setter(prev => prev.filter((_, i) => i !== idx));
+}
+
+function updateLineItem(setter, idx, field, value) {
+  setter(prev => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row));
+}
+
+function LineItemsTable({ items, setter }) {
+  return (
+    <div>
+      <table className="data-table" style={{ width: '100%', marginBottom: 8 }}>
+        <thead>
+          <tr>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>Charge ($)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((row, idx) => (
+            <tr key={idx}>
+              <td>
+                <input
+                  className="form-input"
+                  value={row.itemCode}
+                  onChange={e => updateLineItem(setter, idx, 'itemCode', e.target.value)}
+                  placeholder="e.g. PROC-001"
+                  style={{ width: '100%' }}
+                />
+              </td>
+              <td>
+                <input
+                  className="form-input"
+                  value={row.description}
+                  onChange={e => updateLineItem(setter, idx, 'description', e.target.value)}
+                  placeholder="Procedure description"
+                  style={{ width: '100%' }}
+                />
+              </td>
+              <td>
+                <input
+                  className="form-input"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={row.unitCharge}
+                  onChange={e => updateLineItem(setter, idx, 'unitCharge', e.target.value)}
+                  placeholder="0.00"
+                  style={{ width: 90 }}
+                />
+              </td>
+              <td>
+                <button
+                  className="btn btn-outline"
+                  style={{ padding: '2px 8px', fontSize: 12 }}
+                  onClick={() => removeLineItem(setter, idx)}
+                  disabled={items.length === 1}
+                >
+                  ✕
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button
+        className="btn btn-outline"
+        style={{ fontSize: 13 }}
+        onClick={() => addLineItem(setter)}
+      >
+        + Add Procedure Item
+      </button>
+    </div>
+  );
+}
+
 export default function ClinicPortal() {
   const [activeTab, setActiveTab]   = useState('eligibility');
   const [clinicId, setClinicId]     = useState('');
@@ -48,11 +130,14 @@ export default function ClinicPortal() {
   const [currency, setCurrency]                       = useState('USD');
   const [settlementResult, setSettlementResult]       = useState(null);
 
-  // Sync pre-auth policy number from eligibility result when tab switches
+  // Sync pre-auth and settlement policy numbers from eligibility result when tab switches
   useEffect(() => {
     if (eligibilityResult && activeTab === 'preauth') {
       setPreAuthPolicyNumber(eligibilityResult.policy?.policyNumber || '');
       setPolicyValidated(true);
+    }
+    if (eligibilityResult && activeTab === 'settlement') {
+      setSettlePolicyNumber(eligibilityResult.policy?.policyNumber || '');
     }
   }, [activeTab, eligibilityResult]);
 
@@ -88,17 +173,6 @@ export default function ClinicPortal() {
     }
   }
 
-  function addLineItem(setter) {
-    setter(prev => [...prev, emptyLineItem()]);
-  }
-
-  function removeLineItem(setter, idx) {
-    setter(prev => prev.filter((_, i) => i !== idx));
-  }
-
-  function updateLineItem(setter, idx, field, value) {
-    setter(prev => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row));
-  }
 
   async function handlePreAuth() {
     setError(null);
@@ -118,7 +192,7 @@ export default function ClinicPortal() {
       const res = await clinicPreauth(payload);
       setPreAuthResult(res.data);
     } catch (err) {
-      setError(err?.response?.data?.detail || err.message || 'Pre-authorization request failed.');
+      setError(err?.response?.data?.error || err?.response?.data?.detail || err.message || 'Pre-authorization request failed.');
     } finally {
       setLoading(false);
     }
@@ -182,8 +256,10 @@ export default function ClinicPortal() {
   const preAuthCanSubmit =
     clinicId &&
     preAuthPolicyNumber.length > 0 &&
+    diagnosisCode.length > 0 &&
+    diagnosisDesc.length > 0 &&
     lineItems.length > 0 &&
-    lineItems.some(r => r.itemCode) &&
+    lineItems.some(r => (r.description || r.itemCode) && parseFloat(r.unitCharge) > 0) &&
     (preAuthTotal >= 500 || emergencyOverride);
 
   // ---- Settlement submit guard ----
@@ -191,77 +267,6 @@ export default function ClinicPortal() {
     clinicId &&
     settlePolicyNumber.length > 0 &&
     settleLineItems.some(r => r.itemCode);
-
-  // ---- Render helpers ----
-  function LineItemsTable({ items, setter }) {
-    return (
-      <div>
-        <table className="data-table" style={{ width: '100%', marginBottom: 8 }}>
-          <thead>
-            <tr>
-              <th>Item Code</th>
-              <th>Description</th>
-              <th>Charge ($)</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((row, idx) => (
-              <tr key={idx}>
-                <td>
-                  <input
-                    className="form-input"
-                    value={row.itemCode}
-                    onChange={e => updateLineItem(setter, idx, 'itemCode', e.target.value)}
-                    placeholder="e.g. PROC-001"
-                    style={{ width: '100%' }}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="form-input"
-                    value={row.description}
-                    onChange={e => updateLineItem(setter, idx, 'description', e.target.value)}
-                    placeholder="Procedure description"
-                    style={{ width: '100%' }}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="form-input"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={row.unitCharge}
-                    onChange={e => updateLineItem(setter, idx, 'unitCharge', e.target.value)}
-                    placeholder="0.00"
-                    style={{ width: 90 }}
-                  />
-                </td>
-                <td>
-                  <button
-                    className="btn btn-outline"
-                    style={{ padding: '2px 8px', fontSize: 12 }}
-                    onClick={() => removeLineItem(setter, idx)}
-                    disabled={items.length === 1}
-                  >
-                    ✕
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button
-          className="btn btn-outline"
-          style={{ fontSize: 13 }}
-          onClick={() => addLineItem(setter)}
-        >
-          + Add Procedure Item
-        </button>
-      </div>
-    );
-  }
 
   // ============================================================
   // TAB RENDERS
@@ -498,23 +503,23 @@ export default function ClinicPortal() {
                   <table className="data-table" style={{ width: '100%' }}>
                     <thead>
                       <tr>
-                        <th>Item Code</th>
+                        <th>Description</th>
                         <th>Decision</th>
-                        <th>Amount</th>
-                        <th>Note</th>
+                        <th>Charged</th>
+                        <th>Carrier Pays</th>
                       </tr>
                     </thead>
                     <tbody>
                       {r.lineDecisions.map((ld, i) => (
                         <tr key={i}>
-                          <td className="font-mono">{ld.description}</td>
+                          <td>{ld.description}</td>
                           <td>
                             <span className={`badge ${ld.status === 'APPROVED' ? 'badge-success' : ld.status === 'PARTIAL' ? 'badge-warning' : 'badge-danger'}`}>
                               {ld.status}
                             </span>
                           </td>
+                          <td>${(ld.unitCharge ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                           <td>${(ld.approvedAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                          <td className="text-sm text-muted">—</td>
                         </tr>
                       ))}
                     </tbody>
@@ -541,7 +546,7 @@ export default function ClinicPortal() {
 
             <div style={{ marginBottom: 12 }}>
               <label className="section-label">Policy Number</label>
-              <input className="form-input" style={{ width: '100%' }} value={settlePolicyNumber} onChange={e => setSettlePolicyNumber(e.target.value)} placeholder="POL-2024-000123" />
+              <input className="form-input" style={{ width: '100%' }} value={settlePolicyNumber} onChange={e => setSettlePolicyNumber(e.target.value)} placeholder="e.g. PET-2026-774512" />
             </div>
 
             <div style={{ marginBottom: 12 }}>
