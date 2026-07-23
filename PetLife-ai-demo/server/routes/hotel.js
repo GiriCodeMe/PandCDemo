@@ -339,8 +339,8 @@ router.post('/loyalty/apply-event', (req, res) => {
       if (!triggerContext || triggerContext.stayDays < 5) {
         return res.status(422).json({ error: 'CHECKOUT_DEDUCTIBLE_CREDIT requires triggerContext.stayDays >= 5' });
       }
-      if (policy.status !== 'ACTIVE' || (policy.coverageType !== 'COMPREHENSIVE' && policy.coverageType !== 'PREMIUM')) {
-        return res.status(422).json({ error: 'CHECKOUT_DEDUCTIBLE_CREDIT requires an active COMPREHENSIVE or PREMIUM policy' });
+      if (policy.status !== 'ACTIVE') {
+        return res.status(422).json({ error: 'CHECKOUT_DEDUCTIBLE_CREDIT requires an active policy' });
       }
     }
 
