@@ -343,7 +343,7 @@ export default function ClinicPortal() {
                   { label: 'Waiting Period',          value: policy?.inWaitingPeriod ? 'Active — illness claims restricted' : 'Cleared' },
                   { label: 'Exclusions',              value: policy?.exclusionRiders?.length ? policy.exclusionRiders.join(', ') : 'None' },
                 ].map(item => (
-                  <div key={item.label} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 6, padding: '10px 12px' }}>
+                  <div key={item.label} style={{ background: 'var(--color-surface)', borderRadius: 6, padding: '10px 12px' }}>
                     <div className="text-muted text-sm">{item.label}</div>
                     <div style={{ fontWeight: 600, marginTop: 2 }}>{item.value}</div>
                   </div>
@@ -622,7 +622,7 @@ export default function ClinicPortal() {
                         <tr><td className="text-muted text-sm">Non-Covered Items</td><td style={{ textAlign: 'right' }}>${(split.nonCoveredItemsAmount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td></tr>
                         <tr><td className="text-muted text-sm">Applied Deductible</td><td style={{ textAlign: 'right' }}>${(split.appliedDeductible ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td></tr>
                         <tr><td className="text-muted text-sm">Co-Insurance Customer Share</td><td style={{ textAlign: 'right' }}>${(split.appliedCoInsuranceCustomerShare ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td></tr>
-                        <tr style={{ borderTop: '2px solid rgba(255,255,255,0.1)' }}>
+                        <tr style={{ borderTop: '2px solid var(--color-border)' }}>
                           <td style={{ fontWeight: 700, paddingTop: 8 }}>Customer Pays at Desk</td>
                           <td style={{ textAlign: 'right', fontWeight: 700, fontSize: 16, paddingTop: 8 }}>${(split.customerPayAtDesk ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                         </tr>
@@ -636,7 +636,7 @@ export default function ClinicPortal() {
                 )}
 
                 {r.paymentInstruction && (
-                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 8, padding: '12px 14px', marginBottom: 12 }}>
+                  <div style={{ background: 'var(--color-surface)', borderRadius: 8, padding: '12px 14px', marginBottom: 12 }}>
                     <div className="section-label">Payment Instruction</div>
                     <div className="text-sm">
                       <div><span className="text-muted">Method:</span> {r.paymentInstruction.clearingMethod}</div>
@@ -700,7 +700,7 @@ export default function ClinicPortal() {
       )}
 
       {/* Tab bar */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid var(--color-border)', paddingBottom: 0 }}>
         {TABS.map(tab => (
           <button
             key={tab.id}
@@ -709,7 +709,7 @@ export default function ClinicPortal() {
               background: 'none',
               border: 'none',
               borderBottom: activeTab === tab.id ? '2px solid #6366f1' : '2px solid transparent',
-              color: activeTab === tab.id ? '#6366f1' : 'rgba(255,255,255,0.5)',
+              color: activeTab === tab.id ? '#6366f1' : 'var(--color-text-muted)',
               fontWeight: activeTab === tab.id ? 700 : 400,
               cursor: 'pointer',
               padding: '8px 16px',
