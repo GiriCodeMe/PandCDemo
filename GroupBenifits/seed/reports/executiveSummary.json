@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2025-01-15T08:00:00Z",
+  "period": {
+    "label": "Q4 2024 / Open Enrollment",
+    "start": "2024-10-01",
+    "end": "2024-12-31"
+  },
+  "enrollment": {
+    "totalEligible": 847,
+    "totalEnrolled": 724,
+    "enrollmentRate": 85.5,
+    "newEnrollments": 112,
+    "terminations": 28,
+    "lifeEventChanges": 34,
+    "waived": 123,
+    "byPlan": [
+      { "planCode": "MEDICAL-PPO", "planName": "PPO Premier", "enrolled": 312, "pct": 43.1 },
+      { "planCode": "MEDICAL-HDHP", "planName": "HDHP Plus", "enrolled": 198, "pct": 27.3 },
+      { "planCode": "DENTAL-BASIC", "planName": "Dental Basic", "enrolled": 589, "pct": 81.4 },
+      { "planCode": "VISION-CORE", "planName": "Vision Core", "enrolled": 412, "pct": 56.9 },
+      { "planCode": "LIFE-BASIC", "planName": "Basic Life", "enrolled": 701, "pct": 96.8 }
+    ]
+  },
+  "financials": {
+    "totalMonthlyCost": 284750.00,
+    "employerContribution": 213562.50,
+    "employeeContribution": 71187.50,
+    "avgCostPerEmployee": 393.30,
+    "projectedAnnualCost": 3417000.00,
+    "vsLastYear": 4.2
+  },
+  "carriers": {
+    "totalTransactions": 1247,
+    "successRate": 96.7,
+    "failed": 42,
+    "pending": 18,
+    "avgProcessingHours": 3.2
+  },
+  "compliance": {
+    "aCA1095cFiled": 712,
+    "aCA1095cPending": 12,
+    "cobraActive": 2,
+    "cobraElected": 1,
+    "auditEventsThisQuarter": 47,
+    "openExceptions": 3
+  },
+  "topIssues": [
+    { "id": "ISS-001", "category": "Carrier", "description": "23 carrier EDI 834 rejections from BlueCross due to SSN format mismatch", "severity": "High", "status": "In Progress" },
+    { "id": "ISS-002", "category": "Payroll", "description": "5 payroll deduction mismatches for employees who changed tiers mid-year", "severity": "Medium", "status": "Resolved" },
+    { "id": "ISS-003", "category": "COBRA", "description": "1 COBRA participant overdue on payment — lapse risk in 7 days", "severity": "High", "status": "Open" },
+    { "id": "ISS-004", "category": "Enrollment", "description": "12 employees have not yet completed open enrollment (deadline Jan 10)", "severity": "Medium", "status": "Open" }
+  ]
+}

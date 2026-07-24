@@ -21,6 +21,7 @@ import lifeEventsRoutes from './routes/life-events.routes';
 import integrationsRoutes from './routes/integrations.routes';
 import cobraRoutes from './routes/cobra.routes';
 import notificationsRoutes from './routes/notifications.routes';
+import reportsRoutes from './routes/reports.routes';
 
 export function createApp(): express.Application {
   const app = express();
@@ -52,6 +53,7 @@ export function createApp(): express.Application {
   app.use('/api/integrations', integrationsRoutes);
   app.use('/api/cobra', cobraRoutes);
   app.use('/api/notifications', notificationsRoutes);
+  app.use('/api/reports', reportsRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

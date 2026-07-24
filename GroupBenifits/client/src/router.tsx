@@ -14,6 +14,7 @@ import LifeEventsHub from './pages/life-events/LifeEventsHub';
 import IntegrationsHub from './pages/integrations/IntegrationsHub';
 import CobraHub from './pages/cobra/CobraHub';
 import NotificationsHub from './pages/notifications/NotificationsHub';
+import ReportsHub from './pages/reports/ReportsHub';
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div className="flex flex-col items-center justify-center h-64">
@@ -77,6 +78,10 @@ export const router = createBrowserRouter([
   {
     path: '/notifications',
     element: <AppShell><NotificationsHub /></AppShell>,
+  },
+  {
+    path: '/reports',
+    element: <AppShell><ReportsHub /></AppShell>,
   },
   {
     path: '/requirements',

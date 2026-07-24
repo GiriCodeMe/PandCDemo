@@ -1,0 +1,41 @@
+{
+  "reportId": "RPT-ENR-2024Q4",
+  "title": "Open Enrollment Summary Report",
+  "period": "Q4 2024",
+  "generatedAt": "2025-01-15T08:00:00Z",
+  "summary": {
+    "totalEligible": 847,
+    "totalEnrolled": 724,
+    "totalWaived": 123,
+    "enrollmentRate": 85.5,
+    "completionByDeadline": 98.1
+  },
+  "byEmployer": [
+    { "employerId": "EMP-001", "employerName": "Acme Corporation", "eligible": 450, "enrolled": 392, "rate": 87.1 },
+    { "employerId": "EMP-002", "employerName": "TechStart Inc.", "eligible": 245, "enrolled": 208, "rate": 84.9 },
+    { "employerId": "EMP-003", "employerName": "Riverside Medical", "eligible": 152, "enrolled": 124, "rate": 81.6 }
+  ],
+  "byProduct": [
+    { "productCode": "MEDICAL", "productName": "Medical", "enrolled": 510, "eligible": 847, "rate": 60.2, "waived": 337 },
+    { "productCode": "DENTAL", "productName": "Dental", "enrolled": 589, "eligible": 847, "rate": 69.5, "waived": 258 },
+    { "productCode": "VISION", "productName": "Vision", "enrolled": 412, "eligible": 847, "rate": 48.6, "waived": 435 },
+    { "productCode": "LIFE", "productName": "Life Insurance", "enrolled": 701, "eligible": 847, "rate": 82.8, "waived": 146 },
+    { "productCode": "STD", "productName": "Short-Term Disability", "enrolled": 398, "eligible": 847, "rate": 47.0, "waived": 449 }
+  ],
+  "byStatus": {
+    "active": 695,
+    "pendingApproval": 17,
+    "awaitingDocuments": 12,
+    "notStarted": 12,
+    "waived": 111
+  },
+  "timeline": [
+    { "date": "2024-10-01", "label": "Open Enrollment Opens", "enrolled": 0 },
+    { "date": "2024-10-15", "label": "Week 2", "enrolled": 124 },
+    { "date": "2024-11-01", "label": "Week 4 — 50% mark", "enrolled": 362 },
+    { "date": "2024-11-15", "label": "Week 6", "enrolled": 498 },
+    { "date": "2024-12-01", "label": "Final Month", "enrolled": 621 },
+    { "date": "2024-12-20", "label": "Deadline -10 days", "enrolled": 689 },
+    { "date": "2024-12-31", "label": "Deadline", "enrolled": 724 }
+  ]
+}

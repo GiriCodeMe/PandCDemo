@@ -15,6 +15,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/integrations': 'Integrations',
   '/cobra': 'COBRA & Compliance',
   '/notifications': 'Notifications',
+  '/reports': 'Reports & Analytics',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -102,6 +103,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What happens when a notification fails to deliver?',
     'When are open enrollment reminder notifications sent?',
   ],
+  '/reports': [
+    'What does the enrollment rate in the executive summary represent?',
+    'Why might carrier success rate fall below 97%?',
+    'What is a compliance exception and how do I resolve it?',
+    'How is the projected annual cost calculated?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -115,6 +122,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/integrations')) return 'Integrations';
   if (pathname.startsWith('/cobra')) return 'COBRA & Compliance';
   if (pathname.startsWith('/notifications')) return 'Notifications';
+  if (pathname.startsWith('/reports')) return 'Reports & Analytics';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -148,6 +156,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/notifications')) {
     return STARTER_QUESTIONS['/notifications'];
+  }
+  if (pathname.startsWith('/reports')) {
+    return STARTER_QUESTIONS['/reports'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }

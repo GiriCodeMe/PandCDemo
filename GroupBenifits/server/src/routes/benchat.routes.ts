@@ -169,6 +169,26 @@ const KB: Array<{ patterns: string[]; answer: string }> = [
     answer: '**Compliance Audit Trail** records all COBRA-related actions with timestamps, actors, and compliance notes:\n\n**Tracked events include:**\n- `COBRA_NOTICE_GENERATED` — When the qualifying event notice was created\n- `COBRA_NOTICE_SENT` — When the election notice was delivered (DOL requires within 44 days)\n- `COBRA_ELECTION` — When a beneficiary elects or declines coverage\n- `COBRA_PAYMENT_OVERDUE` — When a payment passes the 30-day grace period\n- `COBRA_LAPSED` — When coverage is terminated for non-payment\n- `TERMINATION_PROCESSED` — When an employment termination triggers a COBRA event\n- `ACA_1095C_GENERATED` — When annual ACA forms are produced\n\nThe audit trail is your compliance evidence. In a DOL audit, you must demonstrate that notices were sent within required timeframes.',
   },
   {
+    patterns: ['executive summary', 'executive dashboard', 'what is the executive', 'kpi'],
+    answer: '**Executive Summary Report** provides a high-level view of your Group Benefits platform health:\n\n- **Enrollment Rate** — % of eligible employees enrolled in at least one benefit\n- **Monthly Cost** — Total employer + employee premium spend\n- **Carrier Success Rate** — % of EDI 834 transactions accepted by carriers\n- **Open Exceptions** — Compliance or integration issues requiring HR action\n\nThe Executive Summary also shows a **Plan Mix** breakdown (which plans employees chose), a **Financial Summary** (projected annual cost vs. last year), and **Top Issues** flagged for priority resolution.\n\nThis report is generated quarterly and refreshed during Open Enrollment.',
+  },
+  {
+    patterns: ['projected annual cost', 'how is the projected', 'annual cost calculated', 'vs last year'],
+    answer: '**Projected Annual Cost** = Total Monthly Cost × 12.\n\nThis figure represents the combined employer + employee benefit premium spend if current enrollment and tier selections hold constant for the full year.\n\n**vs Last Year** is the year-over-year growth rate, factoring in:\n- Changes in enrollment headcount\n- Plan design changes and rate renewals\n- Tier mix shifts (employees moving from EE Only to Family coverage)\n\nA 4–6% annual increase is typical for group benefits. A spike above 10% usually signals a large enrollment increase, significant rate increase at renewal, or both.',
+  },
+  {
+    patterns: ['compliance exception', 'what is an exception', 'open exception', 'how to resolve'],
+    answer: '**Compliance Exceptions** are flagged issues that require HR action to maintain regulatory or contractual compliance.\n\n**ACA Exception example:** 12 employees with 1095-C forms not yet distributed — deadline Jan 31. Action: print and mail or distribute electronically before the deadline. Failure triggers IRS penalties.\n\n**COBRA Exception example:** COBRA election window expiring in 14 days. Action: confirm whether the beneficiary has responded; if not, attempt re-contact. After the window closes, COBRA rights are forfeited.\n\n**Documentation Exception example:** Life event enrollments awaiting supporting documents. Action: follow up with the employee to collect and verify the required documents before the event window closes.\n\nExceptions auto-clear when the underlying action is completed and recorded in the audit trail.',
+  },
+  {
+    patterns: ['enrollment report', 'enrollment summary', 'enrollment by employer', 'enrollment by product'],
+    answer: '**Enrollment Report** breaks down the Open Enrollment results across three dimensions:\n\n1. **By Employer** — Each employer\'s enrollment rate vs. their eligible headcount\n2. **By Product** — How many employees enrolled in Medical vs. Dental vs. Vision vs. Life vs. STD\n3. **Timeline** — A week-by-week chart showing enrollment completion rate through the enrollment window\n\nUse this report to identify low-adoption products (e.g., Vision at 48%) or underperforming employer groups that may benefit from additional communication campaigns before the next enrollment period.',
+  },
+  {
+    patterns: ['carrier audit', 'carrier report', 'failure reason', 'carrier breakdown'],
+    answer: '**Carrier Audit Report** analyzes the health of your EDI 834 carrier integrations:\n\n- **By Carrier** — Success rate and failure detail per carrier\n- **Failure Reasons** — The root cause breakdown of rejected transactions\n- **Resolution** — What % of failures have been corrected and resubmitted\n\nTypical targets: ≥97% success rate, avg resolution < 24 hours.\n\n**BlueCross BlueShield (95.2%)** is below target due to 23 SSN format mismatches in EDI 834. The fix is to standardize SSN formatting in the export pipeline to remove dashes before transmission.',
+  },
+  {
     patterns: ['what is this page', 'what can i do', 'help', 'explain this'],
     answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, payroll deductions, employee eligibility, or product benefits.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is the difference between HSA and FSA?"\n- "What does DRAFT plan year mean?"',
   },
