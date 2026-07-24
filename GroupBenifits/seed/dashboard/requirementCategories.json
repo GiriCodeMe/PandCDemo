@@ -1,0 +1,58 @@
+[
+  {
+    "category": "Plan Configuration",
+    "requirementsGenerated": 18,
+    "requirementsValidated": 15,
+    "requirementsPendingReview": 3,
+    "relatedEpic": "EPIC 1"
+  },
+  {
+    "category": "Eligibility",
+    "requirementsGenerated": 16,
+    "requirementsValidated": 13,
+    "requirementsPendingReview": 3,
+    "relatedEpic": "EPIC 2"
+  },
+  {
+    "category": "Enrollment",
+    "requirementsGenerated": 15,
+    "requirementsValidated": 11,
+    "requirementsPendingReview": 4,
+    "relatedEpic": "EPIC 3"
+  },
+  {
+    "category": "Life Events",
+    "requirementsGenerated": 12,
+    "requirementsValidated": 9,
+    "requirementsPendingReview": 3,
+    "relatedEpic": "EPIC 3"
+  },
+  {
+    "category": "Carrier Integration",
+    "requirementsGenerated": 14,
+    "requirementsValidated": 12,
+    "requirementsPendingReview": 2,
+    "relatedEpic": "EPIC 4"
+  },
+  {
+    "category": "Payroll Integration",
+    "requirementsGenerated": 10,
+    "requirementsValidated": 8,
+    "requirementsPendingReview": 2,
+    "relatedEpic": "EPIC 4"
+  },
+  {
+    "category": "Reporting",
+    "requirementsGenerated": 6,
+    "requirementsValidated": 4,
+    "requirementsPendingReview": 2,
+    "relatedEpic": "EPIC 5"
+  },
+  {
+    "category": "Security & Audit",
+    "requirementsGenerated": 5,
+    "requirementsValidated": 2,
+    "requirementsPendingReview": 3,
+    "relatedEpic": "EPIC 5"
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "monitoringId": "MON-2027-1215-001",
+    "integrationId": "CARRIER-MED",
+    "productType": "MEDICAL",
+    "errorCategories": [
+      { "errorCode": "MED-001", "description": "Invalid Plan Code", "count": 5 },
+      { "errorCode": "MED-002", "description": "Invalid Coverage Tier", "count": 3 },
+      { "errorCode": "MED-003", "description": "Missing Dependent Record", "count": 2 },
+      { "errorCode": "MED-004", "description": "Invalid Effective Date", "count": 2 }
+    ],
+    "totalErrors": 12
+  },
+  {
+    "monitoringId": "MON-2027-1215-002",
+    "integrationId": "CARRIER-DEN",
+    "productType": "DENTAL",
+    "errorCategories": [
+      { "errorCode": "DEN-001", "description": "Invalid Coverage Tier", "count": 4 },
+      { "errorCode": "DEN-002", "description": "Dependent Age Exceeded", "count": 2 }
+    ],
+    "totalErrors": 6
+  },
+  {
+    "monitoringId": "MON-2027-1215-003",
+    "integrationId": "CARRIER-VIS",
+    "productType": "VISION",
+    "errorCategories": [
+      { "errorCode": "VIS-001", "description": "Carrier Plan Code Mismatch — VISION-STD-2027 not recognized in VSP portal", "count": 15 },
+      { "errorCode": "VIS-002", "description": "Invalid Coverage Tier", "count": 10 },
+      { "errorCode": "VIS-003", "description": "Duplicate Enrollment Record", "count": 8 },
+      { "errorCode": "VIS-004", "description": "Missing Employee Record in Carrier System", "count": 5 },
+      { "errorCode": "VIS-005", "description": "Carrier API Timeout", "count": 4 }
+    ],
+    "totalErrors": 42,
+    "aiRecommendation": "42 Vision records pending. Root cause: plan code VISION-STD-2027 was not communicated to VSP during the 2027 plan setup. Recommend: (1) submit corrected plan code to VSP carrier administrator, (2) reprocess 42 pending records, (3) review FR-5.4 carrier plan code mapping requirement."
+  },
+  {
+    "monitoringId": "MON-2027-1215-004",
+    "integrationId": "CARRIER-LIFE",
+    "productType": "LIFE",
+    "errorCategories": [
+      { "errorCode": "LIFE-001", "description": "EOI Evidence Not Submitted", "count": 4 },
+      { "errorCode": "LIFE-002", "description": "Salary Data Missing for Benefit Calculation", "count": 2 }
+    ],
+    "totalErrors": 6
+  },
+  {
+    "monitoringId": "MON-2027-1215-005",
+    "integrationId": "CARRIER-DIS",
+    "productType": "DISABILITY",
+    "errorCategories": [
+      { "errorCode": "DIS-001", "description": "EOI Underwriting Review Pending", "count": 8 }
+    ],
+    "totalErrors": 8
+  },
+  {
+    "monitoringId": "MON-2027-1215-006",
+    "integrationId": "PAYROLL-ADP",
+    "productType": "ALL",
+    "errorCategories": [
+      { "errorCode": "PAY-001", "description": "Deduction Amount Mismatch — benefit election does not match payroll deduction on file", "count": 8 },
+      { "errorCode": "PAY-002", "description": "Missing Deduction Record — enrolled employee has no payroll deduction entry", "count": 3 },
+      { "errorCode": "PAY-003", "description": "Invalid Deduction Effective Date", "count": 1 }
+    ],
+    "totalErrors": 12,
+    "aiRecommendation": "8 deduction mismatches detected. Primary case: ACM-E001 (John Smith) MED-PPO-500 EE Only expected $69.23 actual $200.00. Root cause: payroll not updated after 2026-09-01 divorce life event changed tier from EE+Spouse to EE Only. Recommend payroll correction effective 2026-09-01."
+  }
+]

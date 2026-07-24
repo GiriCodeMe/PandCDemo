@@ -1,0 +1,66 @@
+{
+  "dashboardDate": "2026-12-15",
+  "planYear": 2027,
+  "employerId": "ACM-001",
+
+  "employerGroups": {
+    "active": 1
+  },
+
+  "employees": {
+    "total": 5000,
+    "eligible": 4650,
+    "eligibilityRate": 93.0
+  },
+
+  "dependents": {
+    "eligible": 6820
+  },
+
+  "plans": {
+    "productFamilies": 8,
+    "activePlans": 12
+  },
+
+  "enrollment": {
+    "fullyEnrolled": 3850,
+    "partiallyEnrolled": 275,
+    "pending": 275,
+    "notEnrolled": 250,
+    "totalEnrolled": 4125,
+    "enrollmentRate": 88.7
+  },
+
+  "eligibility": {
+    "exceptions": 42,
+    "openedThisWeek": 8
+  },
+
+  "carrier": {
+    "submitted": 4083,
+    "accepted": 4011,
+    "pending": 54,
+    "rejected": 18,
+    "successRate": 98.2
+  },
+
+  "payroll": {
+    "activeDeductions": 4050,
+    "pendingUpdates": 75,
+    "reconciliationExceptions": 12,
+    "successRate": 99.7
+  },
+
+  "aiRequirements": {
+    "documentsUploaded": 5,
+    "pagesProcessed": 68,
+    "requirementsIdentified": 124,
+    "requirementsGenerated": 96,
+    "requirementsValidated": 74,
+    "requirementsPendingReview": 22,
+    "businessRulesIdentified": 47,
+    "conflictsDetected": 8,
+    "traceabilityLinks": 183,
+    "progressPercent": 78
+  }
+}

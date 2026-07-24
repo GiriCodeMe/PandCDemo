@@ -1,0 +1,58 @@
+[
+  {
+    "exceptionType": "Hours Below Eligibility Threshold",
+    "count": 12,
+    "description": "Employee's recorded hours per week fall below the minimum required for the elected plan",
+    "relatedRule": "ER-001",
+    "severity": "High"
+  },
+  {
+    "exceptionType": "Waiting Period Not Complete",
+    "count": 9,
+    "description": "Employee's enrollment effective date precedes the end of the applicable waiting period",
+    "relatedRule": "ER-006-CONFLICT",
+    "severity": "Medium"
+  },
+  {
+    "exceptionType": "Missing Employment Status",
+    "count": 5,
+    "description": "Employee record has no employmentStatus value; eligibility cannot be evaluated",
+    "relatedRule": "ER-001",
+    "severity": "High"
+  },
+  {
+    "exceptionType": "Invalid Job Class",
+    "count": 4,
+    "description": "Employee's jobClass value does not match any configured eligibility rule condition",
+    "relatedRule": null,
+    "severity": "Medium"
+  },
+  {
+    "exceptionType": "Location Rule Conflict",
+    "count": 3,
+    "description": "Employee's work location falls under a state rule that conflicts with the group-level eligibility configuration",
+    "relatedRule": null,
+    "severity": "Medium"
+  },
+  {
+    "exceptionType": "Dependent Age Exception",
+    "count": 4,
+    "description": "Enrolled dependent has reached or exceeded the age-26 cutoff and has not yet been removed from coverage",
+    "relatedRule": "DR-003",
+    "severity": "High"
+  },
+  {
+    "exceptionType": "Duplicate Employee Record",
+    "count": 3,
+    "description": "Two employee records share the same SSN or name/DOB combination",
+    "relatedRule": null,
+    "severity": "High"
+  },
+  {
+    "exceptionType": "Missing Hire Date",
+    "count": 2,
+    "description": "Employee record has no hireDate; waiting period and eligibility date cannot be calculated",
+    "relatedRule": "ER-001",
+    "severity": "High"
+  }
+]

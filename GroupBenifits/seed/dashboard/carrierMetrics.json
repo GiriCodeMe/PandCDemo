@@ -1,0 +1,78 @@
+[
+  {
+    "carrierId": "CAR-001",
+    "carrierName": "Aetna",
+    "productType": "Medical",
+    "transactions": {
+      "submitted": 2050,
+      "accepted": 2035,
+      "pending": 7,
+      "rejected": 8
+    },
+    "successRate": 99.3,
+    "status": "Active",
+    "lastTransmission": "2026-12-14T23:00:00Z",
+    "nextScheduled": "2026-12-21T23:00:00Z"
+  },
+  {
+    "carrierId": "CAR-002",
+    "carrierName": "Delta Dental",
+    "productType": "Dental",
+    "transactions": {
+      "submitted": 825,
+      "accepted": 816,
+      "pending": 5,
+      "rejected": 4
+    },
+    "successRate": 98.9,
+    "status": "Active",
+    "lastTransmission": "2026-12-14T23:00:00Z",
+    "nextScheduled": "2026-12-21T23:00:00Z"
+  },
+  {
+    "carrierId": "CAR-003",
+    "carrierName": "VSP",
+    "productType": "Vision",
+    "transactions": {
+      "submitted": 700,
+      "accepted": 696,
+      "pending": 2,
+      "rejected": 2
+    },
+    "successRate": 99.4,
+    "status": "Active",
+    "lastTransmission": "2026-12-14T23:00:00Z",
+    "nextScheduled": "2026-12-21T23:00:00Z"
+  },
+  {
+    "carrierId": "CAR-004",
+    "carrierName": "MetLife",
+    "productType": "Life",
+    "transactions": {
+      "submitted": 350,
+      "accepted": 344,
+      "pending": 4,
+      "rejected": 2
+    },
+    "successRate": 98.3,
+    "status": "Active",
+    "lastTransmission": "2026-12-14T23:00:00Z",
+    "nextScheduled": "2026-12-21T23:00:00Z"
+  },
+  {
+    "carrierId": "CAR-005",
+    "carrierName": "Unum",
+    "productType": "Disability",
+    "transactions": {
+      "submitted": 158,
+      "accepted": 120,
+      "pending": 36,
+      "rejected": 2
+    },
+    "successRate": 76.0,
+    "status": "Degraded",
+    "alertMessage": "36 STD/LTD transactions pending beyond expected SLA. Unum API response time elevated.",
+    "lastTransmission": "2026-12-13T23:00:00Z",
+    "nextScheduled": "2026-12-15T23:00:00Z"
+  }
+]
