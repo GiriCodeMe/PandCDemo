@@ -1,0 +1,122 @@
+[
+  {
+    "templateId": "TPL-001",
+    "name": "Open Enrollment Reminder",
+    "category": "Enrollment",
+    "channel": "Email",
+    "subject": "Action Required: Complete Your Benefits Enrollment by {{deadline}}",
+    "bodyPreview": "Your open enrollment window closes on {{deadline}}. You have {{daysLeft}} days to review and submit your benefit elections for the {{planYear}} plan year.",
+    "variables": ["deadline", "daysLeft", "planYear", "firstName"],
+    "status": "Active",
+    "lastModified": "2026-06-01",
+    "useCount": 842
+  },
+  {
+    "templateId": "TPL-002",
+    "name": "Enrollment Confirmation",
+    "category": "Enrollment",
+    "channel": "Email",
+    "subject": "Your Benefits Elections Are Confirmed — {{planYear}}",
+    "bodyPreview": "Thank you, {{firstName}}! Your benefit elections for {{planYear}} have been submitted and confirmed. Coverage is effective {{effectiveDate}}.",
+    "variables": ["firstName", "planYear", "effectiveDate", "totalDeduction"],
+    "status": "Active",
+    "lastModified": "2026-06-01",
+    "useCount": 523
+  },
+  {
+    "templateId": "TPL-003",
+    "name": "Life Event Window Opening",
+    "category": "Life Events",
+    "channel": "Email",
+    "subject": "Update Your Benefits Following Your Recent Life Event",
+    "bodyPreview": "A qualifying life event has been recorded for your account ({{eventType}}, {{eventDate}}). You have 30 days (until {{deadline}}) to update your benefit elections.",
+    "variables": ["firstName", "eventType", "eventDate", "deadline"],
+    "status": "Active",
+    "lastModified": "2026-05-15",
+    "useCount": 37
+  },
+  {
+    "templateId": "TPL-004",
+    "name": "Life Event Window Expiring",
+    "category": "Life Events",
+    "channel": "Email",
+    "subject": "Reminder: Your Life Event Enrollment Window Closes in {{daysLeft}} Days",
+    "bodyPreview": "Your enrollment window for your {{eventType}} life event closes on {{deadline}}. After this date, you will not be able to update your benefits until the next open enrollment.",
+    "variables": ["firstName", "eventType", "deadline", "daysLeft"],
+    "status": "Active",
+    "lastModified": "2026-05-15",
+    "useCount": 12
+  },
+  {
+    "templateId": "TPL-005",
+    "name": "COBRA Election Notice",
+    "category": "COBRA",
+    "channel": "Email",
+    "subject": "Important: Your COBRA Continuation Coverage Rights",
+    "bodyPreview": "You have recently experienced a qualifying event that may affect your group health coverage. You have the right to elect COBRA continuation coverage. Your election deadline is {{electionDeadline}}.",
+    "variables": ["firstName", "qualifyingEvent", "coverageLossDate", "electionDeadline", "monthlyPremium"],
+    "status": "Active",
+    "lastModified": "2026-06-15",
+    "useCount": 8
+  },
+  {
+    "templateId": "TPL-006",
+    "name": "Payroll Deduction Change",
+    "category": "Payroll",
+    "channel": "Email",
+    "subject": "Your Benefit Deductions Are Changing Starting {{effectiveDate}}",
+    "bodyPreview": "Due to your recent benefit changes, your payroll deductions will be updated. New total deduction: ${{newAmount}}/paycheck (was ${{oldAmount}}/paycheck), effective {{effectiveDate}}.",
+    "variables": ["firstName", "effectiveDate", "newAmount", "oldAmount", "planYear"],
+    "status": "Active",
+    "lastModified": "2026-06-01",
+    "useCount": 412
+  },
+  {
+    "templateId": "TPL-007",
+    "name": "Document Request",
+    "category": "Documentation",
+    "channel": "Email",
+    "subject": "Action Required: Documents Needed to Complete Your {{eventType}} Life Event",
+    "bodyPreview": "To finalize your benefit changes for your {{eventType}} life event, please submit the following documents by {{deadline}}: {{documentList}}.",
+    "variables": ["firstName", "eventType", "deadline", "documentList"],
+    "status": "Active",
+    "lastModified": "2026-05-15",
+    "useCount": 28
+  },
+  {
+    "templateId": "TPL-008",
+    "name": "Coverage Effective Confirmation",
+    "category": "Enrollment",
+    "channel": "Email",
+    "subject": "Your Coverage Is Now Active — {{planYear}}",
+    "bodyPreview": "Your benefit coverage for {{planYear}} is now effective as of {{effectiveDate}}. Your ID cards will arrive within 10 business days.",
+    "variables": ["firstName", "planYear", "effectiveDate"],
+    "status": "Active",
+    "lastModified": "2026-06-01",
+    "useCount": 489
+  },
+  {
+    "templateId": "TPL-009",
+    "name": "Enrollment Not Started",
+    "category": "Enrollment",
+    "channel": "Email",
+    "subject": "Urgent: Only {{daysLeft}} Days Left to Enroll in Benefits",
+    "bodyPreview": "Our records show you have not yet started your {{planYear}} benefits enrollment. The enrollment window closes {{deadline}}. After this date, you will not have coverage for the plan year.",
+    "variables": ["firstName", "planYear", "deadline", "daysLeft"],
+    "status": "Active",
+    "lastModified": "2026-06-01",
+    "useCount": 156
+  },
+  {
+    "templateId": "TPL-010",
+    "name": "Dependent Age-Out Notice",
+    "category": "Eligibility",
+    "channel": "Email",
+    "subject": "Important: {{dependentName}}'s Coverage Ends on {{endDate}}",
+    "bodyPreview": "{{dependentName}} will age out of your benefit coverage on {{endDate}} (26th birthday). After this date, they will no longer be eligible for coverage under your plan.",
+    "variables": ["firstName", "dependentName", "endDate"],
+    "status": "Active",
+    "lastModified": "2026-05-01",
+    "useCount": 7
+  }
+]
