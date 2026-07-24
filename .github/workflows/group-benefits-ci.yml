@@ -1,0 +1,202 @@
+name: Group Benefits CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'GroupBenifits/**'
+      - '.github/workflows/group-benefits-ci.yml'
+  pull_request:
+    paths:
+      - 'GroupBenifits/**'
+      - '.github/workflows/group-benefits-ci.yml'
+
+jobs:
+  build-client:
+    name: Client — TypeScript & Vite Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: GroupBenifits/client
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: GroupBenifits/client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=low
+
+      - name: Run component tests (Vitest)
+        run: npm test
+
+      - name: Build (tsc + vite build)
+        run: npm run build
+
+      - name: Verify dist output
+        run: |
+          echo "Build output:"
+          ls -lh dist/
+          [ -f dist/index.html ] && echo "  OK: dist/index.html present" || { echo "  FAIL: dist/index.html missing"; exit 1; }
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: group-benefits-client-dist
+          path: GroupBenifits/client/dist/
+          retention-days: 7
+
+  test-server:
+    name: Server — Unit & Regression Tests (Jest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: GroupBenifits/server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: GroupBenifits/server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=low
+
+      - name: Run unit + regression tests (Jest)
+        run: npm test -- --forceExit
+
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [build-client, test-server]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: GroupBenifits/client/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: GroupBenifits/server
+        run: npm ci
+
+      - name: Install client dependencies
+        working-directory: GroupBenifits/client
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: GroupBenifits/client
+        run: npx playwright install chromium --with-deps
+
+      - name: Start API server
+        working-directory: GroupBenifits/server
+        env:
+          NODE_ENV: development
+          PORT: 3001
+          AUTH_MODE: mock
+          SEED_DIR: ../seed
+          FEATURE_AI_REQUIREMENTS: false
+          FEATURE_AI_DOCUMENT_INGESTION: false
+          FEATURE_PLAN_VERSIONING: true
+          FEATURE_LIFE_EVENTS: true
+          FEATURE_CARRIER_INTEGRATION: true
+          FEATURE_PAYROLL_INTEGRATION: true
+          FEATURE_IMPACT_ANALYSIS: false
+        run: |
+          npm run build
+          node dist/index.js &
+          echo "Waiting for API server on port 3001..."
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:3001/api/health && echo "  OK: API server ready" && break
+            sleep 2
+          done
+
+      - name: Run E2E tests
+        working-directory: GroupBenifits/client
+        env:
+          CI: true
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: group-benefits-playwright-report
+          path: GroupBenifits/client/playwright-report/
+          retention-days: 7
+
+  structure-check:
+    name: Project Structure Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify key pages exist
+        run: |
+          pages=(
+            "GroupBenifits/client/src/pages/dashboard/Dashboard.tsx"
+            "GroupBenifits/client/src/pages/employers/EmployerDirectory.tsx"
+            "GroupBenifits/client/src/pages/employees/EmployeeDirectory.tsx"
+            "GroupBenifits/client/src/pages/catalog/ProductCatalog.tsx"
+            "GroupBenifits/client/src/pages/plans/PlansHub.tsx"
+            "GroupBenifits/client/src/pages/enrollment/EnrollmentHub.tsx"
+            "GroupBenifits/client/src/pages/life-events/LifeEventsHub.tsx"
+            "GroupBenifits/client/src/pages/integrations/IntegrationsHub.tsx"
+            "GroupBenifits/client/src/pages/cobra/CobraHub.tsx"
+            "GroupBenifits/client/src/pages/notifications/NotificationsHub.tsx"
+            "GroupBenifits/client/src/pages/reports/ReportsHub.tsx"
+            "GroupBenifits/client/src/pages/requirements/RequirementsStudio.tsx"
+          )
+          for f in "${pages[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify key components exist
+        run: |
+          components=(
+            "GroupBenifits/client/src/components/layout/Sidebar.tsx"
+            "GroupBenifits/client/src/components/layout/AppShell.tsx"
+            "GroupBenifits/client/src/components/help/BenChat.tsx"
+            "GroupBenifits/client/src/components/ui/Card.tsx"
+          )
+          for f in "${components[@]}"; do
+            [ -f "$f" ] && echo "  OK: $f" || { echo "  MISSING: $f"; exit 1; }
+          done
+
+      - name: Verify .env.example (no real .env committed)
+        run: |
+          [ -f "GroupBenifits/.env.example" ] && echo "  OK: .env.example present"
+          [ ! -f "GroupBenifits/.env" ] && echo "  OK: .env not committed" || { echo "  FAIL: .env should not be committed"; exit 1; }
+          [ ! -f "GroupBenifits/server/.env" ] && echo "  OK: server/.env not committed" || { echo "  FAIL: server/.env should not be committed"; exit 1; }
+
+      - name: Verify seed data exists
+        run: |
+          dirs=(
+            "GroupBenifits/seed/employers"
+            "GroupBenifits/seed/employees"
+            "GroupBenifits/seed/products"
+            "GroupBenifits/seed/enrollment"
+            "GroupBenifits/seed/cobra"
+            "GroupBenifits/seed/notifications"
+            "GroupBenifits/seed/reports"
+          )
+          for d in "${dirs[@]}"; do
+            [ -d "$d" ] && echo "  OK: $d" || { echo "  MISSING: $d"; exit 1; }
+          done
