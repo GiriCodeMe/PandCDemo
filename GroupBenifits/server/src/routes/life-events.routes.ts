@@ -48,7 +48,7 @@ router.post('/', requireAuth, (req: Request, res: Response) => {
     return;
   }
   const event = lifeEventsService.submit(employeeId, eventType, eventDate);
-  res.status(201).json({ success: true, data: event, requestId: req.requestId, timestamp: new Date().toISOString() });
+  res.status(201).json({ success: true, data: event, requestId: (res.locals['requestId'] as string) ?? 'unknown', timestamp: new Date().toISOString() });
 });
 
 router.put('/:id/status', requireAuth, (req: Request, res: Response) => {
