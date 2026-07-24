@@ -1,0 +1,165 @@
+[
+  {
+    "requirementId": "REQ-IMPACT-001",
+    "type": "Functional Requirement",
+    "title": "Analyze Impact of New or Modified Requirements on Existing Artifacts",
+    "description": "The system shall analyze the impact of newly created or modified requirements on existing requirements, business rules, plans, integrations, test cases, source documents, and backlog items.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis", "epic5"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-002",
+    "type": "Functional Requirement",
+    "title": "No Full Dataset Injection Into LLM Prompts",
+    "description": "The system shall not inject the complete requirements dataset into every LLM prompt. The AI Impact Analysis engine shall retrieve relevant requirements and context as a bounded set. Full dataset injection is prohibited due to: high token consumption, latency, context-window limits, poor signal-to-noise ratio, and difficult reproducibility.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis", "architecture"],
+    "architectureDecision": {
+      "prohibitedPattern": "Full Requirements Dataset → Every Prompt",
+      "requiredPattern": "Full Dataset → Indexed Repository → Retrieve Relevant Context → LLM Impact Analysis"
+    }
+  },
+  {
+    "requirementId": "REQ-IMPACT-003",
+    "type": "Functional Requirement",
+    "title": "Indexed Repository for Requirements and Related Artifacts",
+    "description": "The system shall maintain an indexed repository of requirements and related artifacts to support impact analysis retrieval. The index shall support metadata filtering, semantic similarity (vector), and graph traversal.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-004",
+    "type": "Functional Requirement",
+    "title": "Hybrid Retrieval: Metadata Filtering, Semantic Search, Graph Traversal, Deterministic Rules",
+    "description": "The system shall retrieve relevant requirements using a combination of four methods: metadata filtering (exact domain/entity matching), semantic similarity (vector RAG), dependency graph traversal, and deterministic business-rule matching. No single retrieval method is sufficient in isolation.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"],
+    "retrievalMethods": [
+      { "method": "Metadata Filtering",   "purpose": "Exact domain/entity/attribute matching" },
+      { "method": "Vector RAG",           "purpose": "Semantic similarity across natural-language requirements" },
+      { "method": "Graph Traversal",      "purpose": "Explicit traceability dependencies" },
+      { "method": "Deterministic Rules",  "purpose": "Known business-rule relationships (e.g., waiting period → coverage effective date)" }
+    ]
+  },
+  {
+    "requirementId": "REQ-IMPACT-005",
+    "type": "Functional Requirement",
+    "title": "Traceability Graph Linking Requirements to All Downstream Artifacts",
+    "description": "The system shall maintain a traceability graph linking requirements to: business rules, plan configurations, enrollment workflow steps, carrier integration points, payroll interface specifications, test cases, source documents, and backlog items.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis", "traceability"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-006",
+    "type": "Functional Requirement",
+    "title": "Traverse Traceability Graph to Identify Directly and Indirectly Affected Artifacts",
+    "description": "The system shall traverse the traceability graph to identify all directly affected and indirectly affected artifacts when a requirement changes. Graph traversal shall include both forward (downstream) and backward (upstream) directions.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-007",
+    "type": "Functional Requirement",
+    "title": "Retrieve Relevant Source Document Excerpts for Impact Analysis",
+    "description": "The system shall retrieve relevant source document excerpts to support impact analysis. Only excerpts relevant to the changed requirement and its identified dependencies shall be included in the LLM context.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-008",
+    "type": "Functional Requirement",
+    "title": "Dynamic Context Package Construction for Each Impact Analysis Request",
+    "description": "The system shall construct a dynamic context package for each AI impact analysis request. The context package shall include: the changed requirement, direct dependencies, related requirements (top-K), related business rules, related plans, integration points, test cases, and source evidence excerpts.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"],
+    "contextPackageStructure": {
+      "change": "Changed requirement with attribute and old/new values",
+      "directDependencies": "Requirements with explicit dependency links",
+      "relatedRequirements": "Top-K semantically and metadata-matched requirements",
+      "relatedBusinessRules": "Matched business rules",
+      "relatedPlans": "Plans that reference the affected attribute",
+      "relatedIntegrations": "Carrier and payroll integration points",
+      "relatedTestCases": "Test cases covering the affected attribute",
+      "sourceEvidence": "Relevant document excerpts"
+    }
+  },
+  {
+    "requirementId": "REQ-IMPACT-009",
+    "type": "Functional Requirement",
+    "title": "Classify Impacts as Direct, Indirect, Dependency, Potential, or No Impact",
+    "description": "The system shall classify each identified impact as: DIRECT (requirement explicitly changes), INDIRECT (downstream effect from changed requirement), DEPENDENCY (explicit traceability link exists), POTENTIAL (semantic similarity but no confirmed dependency), or NO_IMPACT.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-010",
+    "type": "Functional Requirement",
+    "title": "Assign Impact Severity and Confidence Score",
+    "description": "The system shall assign an impact severity (CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL) and confidence score to each identified impact. Severity and confidence together determine prioritization for human review.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"],
+    "impactSeverityLevels": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+    "demoExample": {
+      "change": "REQ-ELIG-001 Waiting Period 30→60 Days",
+      "impacts": [
+        { "artifact": "REQ-ELIG-001", "type": "DIRECT",     "severity": "CRITICAL", "reason": "Business rule changed" },
+        { "artifact": "REQ-ELIG-002", "type": "DIRECT",     "severity": "HIGH",     "reason": "Coverage effective date depends on waiting period" },
+        { "artifact": "REQ-ENR-004",  "type": "INDIRECT",   "severity": "HIGH",     "reason": "New-hire enrollment window may require adjustment" },
+        { "artifact": "REQ-CAR-012",  "type": "INDIRECT",   "severity": "HIGH",     "reason": "Carrier eligibility effective date may change" },
+        { "artifact": "REQ-PAY-007",  "type": "INDIRECT",   "severity": "MEDIUM",   "reason": "Payroll deduction start date may change" },
+        { "artifact": "CT-ELIG-001",  "type": "DIRECT",     "severity": "HIGH",     "reason": "Expected eligibility date in test must be updated" },
+        { "artifact": "Benefits Guide","type": "POTENTIAL",  "severity": "MEDIUM",   "reason": "Employee-facing waiting period language should be reviewed" }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-IMPACT-011",
+    "type": "Functional Requirement",
+    "title": "Evidence and Traceability Reference for Each Identified Impact",
+    "description": "The system shall provide evidence and a traceability reference supporting each identified impact. Evidence shall include the related requirement or artifact ID, relationship type, reason for impact, and source document excerpt where applicable.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis", "traceability"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-012",
+    "type": "Functional Requirement",
+    "title": "Distinguish Semantic Similarity from Business or Technical Dependency",
+    "description": "The system shall distinguish semantic similarity from actual business or technical dependency. A requirement that is semantically similar to the changed requirement but has no explicit dependency or matching attributes shall be classified as POTENTIAL impact, not DIRECT or INDIRECT.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-013",
+    "type": "Functional Requirement",
+    "title": "No Automatic Modification of Requirements Based on AI Impact Analysis",
+    "description": "The system shall not automatically modify existing requirements based solely on AI-generated impact analysis. The AI shall recommend impacts; human authorization is required before any requirement change takes effect.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-014",
+    "type": "Functional Requirement",
+    "title": "Human Review of AI-Generated Impact Assessments",
+    "description": "The system shall allow authorized users to accept, reject, or modify AI-generated impact assessments. Human decisions shall be captured with actor, role, timestamp, and optional comment.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis"]
+  },
+  {
+    "requirementId": "REQ-IMPACT-015",
+    "type": "Functional Requirement",
+    "title": "Audit Trail for Impact Analysis Results and Human Decisions",
+    "description": "The system shall maintain an immutable audit trail of all impact analysis results, AI classifications, human review decisions, and accepted or rejected impact recommendations.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "impact-analysis", "audit"],
+    "mvpArchitectureDecision": {
+      "persistence": "lowdb/JSON with traceability graph built in-memory from persisted relationships",
+      "vectorIndex": "Embedding-based semantic retrieval for requirement similarity",
+      "metadataFilter": "Exact domain/entity matching as primary retrieval layer",
+      "graphTraversal": "Explicit dependency traversal from persisted traceability links",
+      "llm": "Gemini for semantic impact reasoning using bounded context package",
+      "retrievalStrategy": "Top-K retrieval — not full dataset injection",
+      "contextManagement": "Rolling requirement summaries for high-level context",
+      "keyArchitecturePrinciple": "The AI Impact Analysis engine shall use a hybrid Retrieval-Augmented Generation (RAG) approach. The complete requirements corpus shall be indexed but shall not be injected into individual LLM prompts."
+    }
+  }
+]

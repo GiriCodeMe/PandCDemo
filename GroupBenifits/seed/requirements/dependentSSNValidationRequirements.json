@@ -1,0 +1,200 @@
+[
+  {
+    "requirementId": "REQ-DEP-SSN-001",
+    "type": "Functional Requirement",
+    "title": "Dependent SSN Validation During Enrollment",
+    "description": "The system shall validate dependent Social Security Number (SSN) data during dependent creation and enrollment submission. Dependents with failed SSN validation shall be flagged and prevented from progressing to carrier enrollment.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "validation"],
+    "aiRequirementsEngineering": {
+      "sourceDocumentSignal": "Carrier Requirements PDF — Carrier requires dependent SSN for enrollment transactions",
+      "existingSystemGap": "Dependent enrollment exists; SSN field captured; no validation rule defined",
+      "linkedTestCase": "CT-10045",
+      "aiGapAnalysis": {
+        "carrierRequires": "Dependent SSN",
+        "systemCurrentlyHas": "Dependent SSN field",
+        "missing": [
+          "Validation rule",
+          "Invalid SSN handling",
+          "Carrier transaction blocking",
+          "Employee notification",
+          "Admin exception workflow",
+          "Audit requirements"
+        ],
+        "aiGeneratedRequirement": "REQ-DEP-SSN-001: The system shall validate dependent SSNs before allowing dependent enrollment to proceed to carrier submission."
+      },
+      "traceabilityChain": "Carrier Requirement → AI-Generated Requirement → Dependent Validation Rule → Test Case CT-10045 → Validation Failure → Carrier Transaction Blocked → Employee Notification → Admin Resolution → Audit Trail"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-002",
+    "type": "Functional Requirement",
+    "title": "SSN Format and Length Validation",
+    "description": "The system shall validate dependent SSN format and length. Accepted input formats are XXX-XX-XXXX (formatted) and XXXXXXXXX (unformatted). The system shall normalize unformatted input to XXX-XX-XXXX. Validation shall reject: fewer than 9 digits, more than 9 digits, alphabetic characters, invalid formatting, and known invalid patterns.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "validation"],
+    "validationExamples": [
+      { "input": "123-45-6789", "result": "FORMAT_VALID",   "reason": "Correct format" },
+      { "input": "123456789",   "result": "FORMAT_VALID",   "reason": "Valid unformatted — normalized to 123-45-6789" },
+      { "input": "123-45-678",  "result": "INVALID_FORMAT", "reason": "Only 8 digits" },
+      { "input": "ABC-12-3456", "result": "INVALID_FORMAT", "reason": "Alphabetic characters" },
+      { "input": "000-00-0000", "result": "INVALID_VALUE",  "reason": "All-zero segments" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-003",
+    "type": "Functional Requirement",
+    "title": "Reject Known Invalid SSN Patterns",
+    "description": "The system shall reject known invalid SSN patterns beyond format errors, including: all-zero area/group/serial segments, all-same-digit sequences (111-11-1111), test number patterns, and any pattern designated as invalid by applicable policy.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "validation"]
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-004",
+    "type": "Functional Requirement",
+    "title": "Distinguish Format Validation from Identity Verification",
+    "description": "The system shall distinguish between SSN format validation (syntactic check) and identity verification (the SSN belongs to the named dependent). A syntactically valid SSN does not prove it belongs to the dependent. The system shall support three validation levels: FORMAT_VALID (format passes), IDENTITY_VERIFIED (verified against third-party service), VALIDATION_UNAVAILABLE (verification service not available).",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "validation"],
+    "validationStates": ["VALID", "FORMAT_VALID", "IDENTITY_VERIFIED", "INVALID_FORMAT", "INVALID_VALUE", "DUPLICATE", "VALIDATION_UNAVAILABLE", "IDENTITY_MISMATCH"],
+    "demoNote": "The demo simulates identity verification with a mock validation service. Integration with an external identity verification provider is treated as a configurable enhancement."
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-005",
+    "type": "Functional Requirement",
+    "title": "Duplicate SSN Detection Within Employer Group",
+    "description": "The system shall detect potential duplicate SSNs by comparing new or updated dependent SSN values against existing dependent records within the same employer group. A duplicate detection shall create an exception record with status DUPLICATE and shall not automatically overwrite or delete either record.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "duplicate"],
+    "demoExample": {
+      "case": "SSN matches existing record for Mary Brown",
+      "dependentAdded": "Linda White",
+      "existingDependent": "Mary Brown",
+      "matchedDigits": "XXX-XX-1234",
+      "systemAction": "Create DUPLICATE exception — require HR review before proceeding"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-006",
+    "type": "Functional Requirement",
+    "title": "Dependent Validation Exception on SSN Failure",
+    "description": "The system shall create a dependent validation exception record when SSN validation fails. The exception shall capture: dependent ID, employee ID, validation result, failure reason, validation timestamp, exception status, and associated case ID.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "exceptions"],
+    "demoScenario": {
+      "caseId": "CT-10045",
+      "employeeId": "ACM-E001",
+      "dependentId": "DEP-10045",
+      "dependentName": "Linda White",
+      "relationship": "Spouse",
+      "ssnValidation": "FAILED",
+      "failureReason": "Invalid SSN value — DEP-INVALID-SSN",
+      "enrollmentStatus": "BLOCKED",
+      "exceptionStatus": "ACTION_REQUIRED",
+      "employeeNotified": true
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-007",
+    "type": "Functional Requirement",
+    "title": "Block Carrier Enrollment Transactions for Invalid Dependents",
+    "description": "The system shall prevent carrier enrollment transaction submission when a required dependent SSN validation has not passed. The transaction status shall be set to BLOCKED with reasonCode DEPENDENT_INVALID_SSN. The block shall apply only to carriers that require dependent SSN.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "carrier"],
+    "demoTransaction": {
+      "transactionId": "TXN-DEP-10045",
+      "employeeId": "ACM-E001",
+      "dependentId": "DEP-10045",
+      "transactionType": "DEPENDENT_ENROLLMENT",
+      "status": "BLOCKED",
+      "reasonCode": "DEPENDENT_INVALID_SSN"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-008",
+    "type": "Functional Requirement",
+    "title": "Administrator Exception Review and Resolution",
+    "description": "The system shall allow authorized Benefits Administrators to review dependent validation exceptions, view the dependent record, see the validation failure reason, and take corrective action: request employee correction, submit manual override with reason, or close as invalid.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "admin"],
+    "adminActions": ["REVIEW", "REQUEST_CORRECTION", "OVERRIDE_WITH_REASON", "CLOSE_INVALID"]
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-009",
+    "type": "Functional Requirement",
+    "title": "Administrative Override Process with Audit",
+    "description": "The system shall support an authorized administrative override allowing enrollment to proceed for a dependent with a validation exception. Every override shall require a documented reason, override actor identity, and role. Override events shall be written to the immutable audit trail.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "override", "audit"]
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-010",
+    "type": "Functional Requirement",
+    "title": "Audit Trail for SSN Validation Failures, Corrections, and Overrides",
+    "description": "The system shall write audit events for: dependent SSN validation failure, employee correction submission, correction applied, administrative override approved, carrier transaction blocked, and carrier transaction unblocked after resolution. Audit events shall record the validation result but shall never record the full SSN value.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "audit"],
+    "auditEventFields": {
+      "recorded": ["validationResult", "failureReason", "dependentId", "actor", "timestamp", "actionTaken"],
+      "neverRecorded": ["fullSSN"]
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-011",
+    "type": "Functional Requirement",
+    "title": "Employee Notification on Dependent Validation Failure",
+    "description": "The system shall send an ACTION_REQUIRED notification to the employee when dependent SSN validation fails. The notification shall identify the dependent by name, state that information requires correction, provide a link to update the dependent record, and shall not include the full SSN value.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "notifications"],
+    "notificationTemplate": {
+      "subject": "Action Required: Dependent Information Needs Correction",
+      "body": "We were unable to validate the Social Security Number for {{dependent.firstName}} {{dependent.lastName}}. Please review and correct the information before submitting your benefits enrollment.",
+      "status": "Enrollment Incomplete",
+      "actions": ["Update Dependent Information"],
+      "privacyRule": "Do not include full SSN in email or in-app notification body"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-012",
+    "type": "Security Requirement",
+    "title": "SSN Masking in All UI Displays and Notifications",
+    "description": "The system shall never display a full SSN in standard UI displays, notifications, or audit records. Masked format shall be XXX-XX-XXXX (last 4 configurable). Full SSN shall only be accessible to authorized roles in the dependent editing UI with explicit reveal action.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "security", "privacy"],
+    "displayRule": "Masked: XXX-XX-1234",
+    "securityControls": {
+      "store": "Encrypted at rest",
+      "display": "Masked (last 4 only)",
+      "logs": "Never log full SSN",
+      "audit": "Record validation event, not full SSN",
+      "api": "HTTPS / TLS in transit",
+      "access": "Role-based access control"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-013",
+    "type": "Security Requirement",
+    "title": "SSN Encryption at Rest and in Transit",
+    "description": "The system shall encrypt dependent SSN values at rest using field-level encryption. SSN data shall only be transmitted over TLS-encrypted channels. SSN plaintext shall not appear in server logs, application logs, or error messages.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "security", "encryption"]
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-014",
+    "type": "Functional Requirement",
+    "title": "Configurable Dependent Identification Requirements by Plan and Carrier",
+    "description": "The system shall support configurable dependent identification requirements per plan and carrier. Not every carrier or plan requires a dependent SSN. SSN requirement shall be defined in the carrier integration configuration, not universally assumed for all plans.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "configuration"],
+    "configurationNote": "SSN is required for Acme's Medical and Dental carriers per seed data. Configurable per carrier record."
+  },
+  {
+    "requirementId": "REQ-DEP-SSN-015",
+    "type": "Functional Requirement",
+    "title": "Dependent Validation Status and History",
+    "description": "Each dependent record shall maintain a current validation status and a history of validation events. The history shall record each validation attempt, result, and resolution action. Enrollment eligibility decisions referencing dependent validation shall link to the applicable validation history record.",
+    "status": "Approved",
+    "tags": ["dependent", "ssn", "validation"],
+    "validationStatusValues": ["PENDING", "VALID", "FORMAT_VALID", "IDENTITY_VERIFIED", "INVALID_FORMAT", "INVALID_VALUE", "DUPLICATE", "VALIDATION_UNAVAILABLE", "EXCEPTION_OPEN", "EXCEPTION_RESOLVED", "OVERRIDE_APPROVED"]
+  }
+]

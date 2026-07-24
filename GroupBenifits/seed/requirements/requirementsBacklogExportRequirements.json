@@ -1,0 +1,195 @@
+[
+  {
+    "requirementId": "REQ-EXPORT-001",
+    "type": "Functional Requirement",
+    "title": "Canonical Backlog Model Independent of External Platforms",
+    "description": "The system shall maintain a canonical backlog representation of AI-generated requirements that is independent of any external project management platform. External platforms (Jira, Azure DevOps) are downstream execution systems; the AI Requirements platform owns the canonical requirement and traceability model.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export", "epic5"],
+    "architectureDecision": {
+      "canonicalHierarchy": "Epic → Feature → User Story → Acceptance Criteria",
+      "exportAdapters": [
+        { "format": "JSON",        "priority": "P0/MVP", "purpose": "System-to-system / API" },
+        { "format": "CSV",         "priority": "P0/MVP", "purpose": "Business review / spreadsheet" },
+        { "format": "Jira",        "priority": "P1",     "purpose": "Primary enterprise integration" },
+        { "format": "AzureDevOps", "priority": "P2",     "purpose": "Secondary enterprise integration" },
+        { "format": "XML",         "priority": "P2",     "purpose": "Legacy interchange" }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-EXPORT-002",
+    "type": "Functional Requirement",
+    "title": "Epic → Feature → User Story → Acceptance Criteria Hierarchy",
+    "description": "The system shall represent AI-generated requirements using an Epic → Feature → User Story → Acceptance Criteria hierarchy. All four levels shall be maintained in the canonical backlog model.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"],
+    "canonicalDataModel": {
+      "backlogId": "BL-ACME-2027",
+      "project": { "name": "Acme Group Benefits", "key": "ACMEGB" },
+      "version": "1.0",
+      "epics": [
+        {
+          "id": "EPIC-001",
+          "key": "ACMEGB-EPIC-001",
+          "title": "Group Benefits Eligibility",
+          "features": [
+            {
+              "id": "FEAT-001",
+              "title": "Employee Eligibility",
+              "stories": [
+                {
+                  "id": "STORY-001",
+                  "title": "Full-Time Employee Eligibility",
+                  "priority": "HIGH",
+                  "status": "DRAFT",
+                  "acceptanceCriteria": [
+                    "Employee works 30+ hours per week",
+                    "Employee completes 30-day waiting period",
+                    "Coverage begins first day of following month"
+                  ],
+                  "traceability": {
+                    "requirementIds": ["REQ-ELIG-001"],
+                    "sourceDocuments": [{ "document": "Acme_Eligibility_Policy.pdf", "page": 4 }],
+                    "conversationId": "CONV-2027-000125"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-EXPORT-003",
+    "type": "Functional Requirement",
+    "title": "JSON Export of Complete Canonical Backlog",
+    "description": "The system shall support JSON export of the complete canonical backlog. The JSON export shall preserve the full information model including hierarchy, acceptance criteria, requirement IDs, source references, and traceability.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-004",
+    "type": "Functional Requirement",
+    "title": "CSV Export for Business Review",
+    "description": "The system shall support CSV export that flattens the hierarchy for business review and bulk processing. CSV columns: Epic, Feature, Story ID, User Story, Priority, Status, Acceptance Criteria, Requirement IDs, Source.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-005",
+    "type": "Functional Requirement",
+    "title": "Configurable Export Adapters for External Platforms",
+    "description": "The system shall support configurable export adapters for external project management platforms. Adapter configuration shall include field mapping, hierarchy mapping, and custom field definitions.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-006",
+    "type": "Functional Requirement",
+    "title": "Jira-Compatible Backlog Export",
+    "description": "The system shall support Jira-compatible backlog export using a dedicated adapter. Mapping: Canonical Epic → Jira Epic; Canonical Feature → Jira Story or custom issue type; User Story → Jira Story; Acceptance Criteria → Description/AC field; Requirement ID, Source Document, AI Confidence → Jira custom fields.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-007",
+    "type": "Functional Requirement",
+    "title": "Azure DevOps Backlog Export as Configurable Integration",
+    "description": "The system shall support Azure DevOps-compatible backlog export as a configurable integration. Mapping: Canonical Epic → ADO Epic; Feature → ADO Feature; User Story → ADO User Story; Acceptance Criteria → ADO Acceptance Criteria; Requirement ID → ADO tag or custom field.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-008",
+    "type": "Functional Requirement",
+    "title": "Preserve Traceability During Export",
+    "description": "The system shall preserve requirement IDs, source document references, acceptance criteria, and traceability information during all export formats. Traceability shall not be lost in any export adapter.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export", "traceability"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-009",
+    "type": "Functional Requirement",
+    "title": "Maintain External System Identifiers for Exported Items",
+    "description": "The system shall maintain external system identifiers for each exported backlog item. For Jira exports, the Jira issue key shall be stored. For Azure DevOps, the work item ID shall be stored. External IDs shall be linked to the canonical backlog item.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"],
+    "externalIdModel": {
+      "requirementId": "REQ-ELIG-001",
+      "backlogItemId": "STORY-001",
+      "externalSystems": {
+        "jira": { "issueKey": "ACMEGB-123" },
+        "azureDevOps": { "workItemId": "4567" }
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-EXPORT-010",
+    "type": "Functional Requirement",
+    "title": "Prevent Duplicate Issue Creation on Repeated Exports",
+    "description": "The system shall prevent duplicate external issue creation during repeated exports by checking existing external IDs before creating new items. Items with an existing external ID shall be updated, not duplicated.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-011",
+    "type": "Functional Requirement",
+    "title": "Full and Incremental Export Support",
+    "description": "The system shall support full export (all items) and incremental exports. Incremental options: Export New (items created since last export), Export Changed (items modified since last export), Export Approved (items with APPROVED status only).",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-012",
+    "type": "Functional Requirement",
+    "title": "Configurable Export Scope",
+    "description": "The system shall allow users to select export scope: all items, approved items only, newly created items, or changed items. The export UI shall display item counts before export confirmation.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-013",
+    "type": "Functional Requirement",
+    "title": "Backlog Completeness Validation Before Export",
+    "description": "The system shall validate backlog completeness before export, including: all epics present, all stories have acceptance criteria, traceability coverage percentage, and count of items requiring human review. Unresolved high-severity conflicts shall generate a warning before export is allowed.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-014",
+    "type": "Functional Requirement",
+    "title": "Export Success, Failure, and Retry Status",
+    "description": "The system shall report export results: total items attempted, created, updated, failed. Failed items shall include a reason code. Users shall be able to retry failed items or download an error report.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  },
+  {
+    "requirementId": "REQ-EXPORT-015",
+    "type": "Functional Requirement",
+    "title": "Audit Trail for All Backlog Exports and External Integrations",
+    "description": "The system shall maintain an audit trail for all backlog export events, including: export ID, format, items exported, exported-by actor, export timestamp, target system, and status.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export", "audit"],
+    "exportAuditModel": {
+      "exportId": "EXP-2027-00012",
+      "backlogId": "BL-ACME-2027",
+      "format": "JSON",
+      "exportedBy": "U-10025",
+      "exportedAt": "2027-07-23T15:30:00Z",
+      "itemCount": 126,
+      "version": "1.3",
+      "sourceSnapshot": "REQ-SNAPSHOT-2027-07-23",
+      "status": "COMPLETED"
+    }
+  },
+  {
+    "requirementId": "REQ-EXPORT-016",
+    "type": "Functional Requirement",
+    "title": "Retain Export Snapshot and Version",
+    "description": "The system shall retain the requirement snapshot and version used to generate each export. The snapshot shall be accessible after the export to support post-export audit and comparison.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "backlog-export"]
+  }
+]

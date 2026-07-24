@@ -1,0 +1,176 @@
+[
+  {
+    "requirementId": "REQ-CONV-001",
+    "type": "Functional Requirement",
+    "title": "Unique Conversation ID for Each AI Requirements Interview",
+    "description": "The system shall create a unique, persistent conversation ID for each AI Requirements Interview session. The conversation ID shall remain stable across pauses, resumes, and page reloads.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state", "epic5"],
+    "demoExample": {
+      "conversationId": "CONV-2027-000125",
+      "employerGroupId": "ACME",
+      "userId": "U-10025",
+      "interviewType": "ELIGIBILITY_RULES",
+      "status": "IN_PROGRESS"
+    }
+  },
+  {
+    "requirementId": "REQ-CONV-002",
+    "type": "Functional Requirement",
+    "title": "Persist All User and AI Messages Associated with a Conversation",
+    "description": "The system shall persist every user message and AI response associated with a conversation, including sequence number, role, content, and timestamp. Message history shall survive browser refresh and session pause.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "messageModel": {
+      "messageId": "MSG-00045",
+      "conversationId": "CONV-2027-000125",
+      "sequence": 12,
+      "role": "USER",
+      "content": "Full-time employees are eligible after 30 days.",
+      "timestamp": "2027-07-23T10:12:00Z"
+    }
+  },
+  {
+    "requirementId": "REQ-CONV-003",
+    "type": "Functional Requirement",
+    "title": "Conversation Lifecycle State Management",
+    "description": "The system shall maintain conversation status with defined transitions: NEW → IN_PROGRESS → PAUSED → RESUMED → COMPLETED → REVIEWED → ARCHIVED. Additional states: EXPIRED, CANCELLED, ERROR.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "lifecycleStates": ["NEW", "IN_PROGRESS", "PAUSED", "RESUMED", "COMPLETED", "REVIEWED", "ARCHIVED", "EXPIRED", "CANCELLED", "ERROR"]
+  },
+  {
+    "requirementId": "REQ-CONV-004",
+    "type": "Functional Requirement",
+    "title": "Structured Conversation Memory: Facts, Open Questions, Decisions, Requirements",
+    "description": "The system shall maintain structured conversation memory separate from raw message history. Structured memory includes: extracted facts (attribute/value pairs with source), open questions (unresolved items from the interview), decisions (resolved business rules), and generated requirements.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "architectureNote": "The application owns conversation state; the LLM consumes a dynamically assembled context. Do NOT rely on the Gemini model context window alone."
+  },
+  {
+    "requirementId": "REQ-CONV-005",
+    "type": "Functional Requirement",
+    "title": "Conversation Summary for Historical Context",
+    "description": "The system shall maintain a conversation summary that compresses historical messages exceeding the active context window threshold. The summary shall be regenerated automatically when the message count crosses the configured threshold.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"]
+  },
+  {
+    "requirementId": "REQ-CONV-006",
+    "type": "Functional Requirement",
+    "title": "Dynamic AI Context Construction",
+    "description": "The system shall dynamically construct the AI context for each interview turn using: recent messages (last 10–20 turns), conversation summary (compressed history), structured facts, open questions, and relevant source document evidence. Full raw message history shall not be sent to the LLM on every request.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state", "architecture"],
+    "contextLayers": {
+      "systemInstructions": "~2K tokens",
+      "conversationSummary": "~1K tokens",
+      "structuredFacts": "~2K tokens",
+      "openQuestions": "~1K tokens",
+      "relevantSourceEvidence": "~4K tokens",
+      "recentMessages": "~6K tokens",
+      "totalBudget": "~16K tokens (configurable per model)"
+    }
+  },
+  {
+    "requirementId": "REQ-CONV-007",
+    "type": "Functional Requirement",
+    "title": "Configurable Context Window Token Budget",
+    "description": "The system shall enforce a configurable context token budget per AI model. Context layers shall be allocated within the budget. The system shall never blindly append unlimited conversation history to the LLM context.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"]
+  },
+  {
+    "requirementId": "REQ-CONV-008",
+    "type": "Functional Requirement",
+    "title": "Automatic Summarization When Context Threshold Is Reached",
+    "description": "The system shall automatically summarize older conversation history when the configured message count or token threshold is reached. Summarization shall be triggered incrementally as the conversation grows.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"]
+  },
+  {
+    "requirementId": "REQ-CONV-009",
+    "type": "Functional Requirement",
+    "title": "Summarization Preserves Business Decisions and Unresolved Questions",
+    "description": "Conversation summarization shall preserve: decisions, business rules, user-provided facts, generated requirements, exceptions, open questions, contradictions, and source references. Summarization shall not collapse away unresolved business decisions.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"]
+  },
+  {
+    "requirementId": "REQ-CONV-010",
+    "type": "Functional Requirement",
+    "title": "Pause and Resume AI Requirements Interview",
+    "description": "The system shall allow users to pause an AI Requirements Interview and resume at a later time. On resume, the AI shall provide a contextual summary of where the interview left off and continue from the last open question.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "resumeExample": "Welcome back. We were discussing the eligibility waiting period. We established that full-time employees have a 30-day waiting period, but we still need to confirm when coverage becomes effective. Would you like to continue?"
+  },
+  {
+    "requirementId": "REQ-CONV-011",
+    "type": "Functional Requirement",
+    "title": "Requirement-to-Conversation Message Traceability",
+    "description": "The system shall maintain traceability between each generated requirement and the conversation and message IDs that produced it. Every AI-generated requirement shall reference its conversation ID and originating message IDs.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state", "traceability"],
+    "traceabilityExample": {
+      "requirementId": "REQ-ELIG-001",
+      "sourceType": "AI_INTERVIEW",
+      "conversationId": "CONV-2027-000125",
+      "messageReferences": ["MSG-00045", "MSG-00046"],
+      "status": "DRAFT"
+    }
+  },
+  {
+    "requirementId": "REQ-CONV-012",
+    "type": "Functional Requirement",
+    "title": "Detect and Surface Contradictions Within Same Conversation",
+    "description": "The system shall detect when a user provides information that contradicts a previously established fact within the same conversation. Detected contradictions shall be surfaced to the user for resolution before proceeding.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "contradictionExample": {
+      "previousFact": "Waiting Period = 30 Days",
+      "newInput": "Actually it is 60 days",
+      "systemAction": "CONFLICT_DETECTED — prompt user to confirm 60 Days or keep 30 Days"
+    }
+  },
+  {
+    "requirementId": "REQ-CONV-013",
+    "type": "Functional Requirement",
+    "title": "No Silent Overwrite of Established Business Facts on Contradiction",
+    "description": "The system shall not silently overwrite a previously established business fact when contradictory information is detected during the same conversation. The system shall surface the contradiction and require explicit user resolution.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"]
+  },
+  {
+    "requirementId": "REQ-CONV-014",
+    "type": "Functional Requirement",
+    "title": "Audit Trail for Conversation State Changes and Requirement Generation",
+    "description": "The system shall maintain an audit trail of conversation lifecycle events, requirement generation events, human modifications to AI-generated requirements, and conversation completion.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state", "audit"]
+  },
+  {
+    "requirementId": "REQ-CONV-015",
+    "type": "Functional Requirement",
+    "title": "Configurable Conversation Retention and Expiration",
+    "description": "The system shall support configurable conversation retention and expiration policies. Demo defaults: idle timeout 24 hours, conversation retention 90 days, archived conversations read-only, completed requirements retained indefinitely.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conversation-state"],
+    "demoDefaults": {
+      "idleTimeoutHours": 24,
+      "conversationRetentionDays": 90,
+      "archivedAccessMode": "READ_ONLY",
+      "completedRequirementsRetention": "INDEFINITE"
+    },
+    "persistenceArchitectureDecision": {
+      "demoMVP": "lowdb/JSON file store",
+      "productionPath": "PostgreSQL + Redis",
+      "frontendState": "Zustand for active UI/session state",
+      "memoryStrategy": "Recent messages + rolling summary + structured facts + open questions + relevant document evidence",
+      "contextManagement": "Configurable token budget with automatic summarization",
+      "llm": "Gemini for semantic reasoning; application layer is system of record for conversation state",
+      "traceability": "Every generated requirement references Conversation ID and originating Message IDs"
+    }
+  }
+]

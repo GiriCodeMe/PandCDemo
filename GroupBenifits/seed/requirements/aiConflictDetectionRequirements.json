@@ -1,0 +1,167 @@
+[
+  {
+    "requirementId": "REQ-CONFLICT-001",
+    "type": "Functional Requirement",
+    "title": "Identify Conflicts Between Requirements from Multiple Source Documents",
+    "description": "The system shall identify potential conflicts between requirements extracted from multiple source documents. Conflict detection shall compare requirements that share the same domain, subject, and attribute.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection", "epic5"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-002",
+    "type": "Functional Requirement",
+    "title": "Classify Conflicts, Overlaps, Duplicates, Ambiguities, and Non-Conflicting Related Requirements",
+    "description": "The system shall distinguish between: CONFLICT (mutually incompatible conditions for the same scenario), OVERLAP (same capability addressed without contradiction), DUPLICATE (essentially same requirement), AMBIGUITY (single requirement with multiple valid interpretations), and NO_CONFLICT (related but compatible).",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"],
+    "conflictTypes": {
+      "CONFLICT":   "Two or more requirements impose mutually incompatible conditions for the same business scenario",
+      "OVERLAP":    "Requirements address the same capability but do not necessarily contradict each other",
+      "DUPLICATE":  "Two requirements express essentially the same requirement",
+      "AMBIGUITY":  "A single requirement cannot be resolved to a single clear interpretation",
+      "NO_CONFLICT": "Requirements are related but compatible"
+    },
+    "ambiguityExample": {
+      "statement": "Children are covered until age 26",
+      "interpretations": ["26th birthday", "end of birth month", "end of calendar year", "end of plan year"],
+      "linkedRequirement": "REQ-DEP-001"
+    }
+  },
+  {
+    "requirementId": "REQ-CONFLICT-003",
+    "type": "Functional Requirement",
+    "title": "Deterministic Comparison for Structured Attribute Conflicts",
+    "description": "The system shall use structured requirement attributes to perform deterministic value comparisons where requirements can be normalized to domain, subject, attribute, operator, value, and unit. Deterministic comparison produces detection; LLM provides interpretation.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"],
+    "normalizedExample": {
+      "requirementA": { "requirementId": "REQ-001", "source": "Acme_Eligibility_Policy.pdf", "page": 4,  "domain": "ELIGIBILITY", "subject": "FULL_TIME_EMPLOYEE", "attribute": "WAITING_PERIOD", "operator": "EQUALS", "value": 30, "unit": "DAYS" },
+      "requirementB": { "requirementId": "REQ-014", "source": "Acme_Carrier_Requirements.pdf", "page": 7, "domain": "ELIGIBILITY", "subject": "FULL_TIME_EMPLOYEE", "attribute": "WAITING_PERIOD", "operator": "EQUALS", "value": 60, "unit": "DAYS" },
+      "comparisonResult": "30 ≠ 60 → POTENTIAL_CONFLICT"
+    }
+  },
+  {
+    "requirementId": "REQ-CONFLICT-004",
+    "type": "Functional Requirement",
+    "title": "Semantic Analysis for Natural-Language Conflicts",
+    "description": "The system shall use LLM semantic analysis to identify potential conflicts where requirements use different natural language to describe the same business rule, where deterministic comparison alone is insufficient.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-005",
+    "type": "Functional Requirement",
+    "title": "Hybrid Detection: Deterministic Engine for Detection, LLM for Interpretation",
+    "description": "The system shall not rely exclusively on LLM prompt-based comparison for deterministic rule conflicts. The conflict detection architecture shall use: deterministic rule comparison for detection of structured attribute conflicts, and LLM semantic analysis for interpretation, classification, explanation, and recommendation.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection", "architecture"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-006",
+    "type": "Functional Requirement",
+    "title": "Normalize Business Terms Before Conflict Comparison",
+    "description": "The system shall normalize equivalent business terms and phrases into canonical attributes before performing conflict comparisons. Normalization converts phrases such as '30 days after hire' and 'after completing 30 days of employment' to the same canonical attribute.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-007",
+    "type": "Functional Requirement",
+    "title": "Classify Conflicts by Domain and Conflict Type",
+    "description": "The system shall classify each detected conflict by domain and conflict type to support prioritized human review.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"],
+    "conflictTaxonomy": [
+      "TIMING_CONFLICT", "ELIGIBILITY_CONFLICT", "COVERAGE_CONFLICT",
+      "PREMIUM_CONFLICT", "DEPENDENT_CONFLICT", "LIFE_EVENT_CONFLICT",
+      "ENROLLMENT_CONFLICT", "PLAN_CONFIGURATION_CONFLICT", "CARRIER_CONFLICT",
+      "PAYROLL_CONFLICT", "COMPLIANCE_CONFLICT", "DATA_CONFLICT", "PROCESS_CONFLICT"
+    ]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-008",
+    "type": "Functional Requirement",
+    "title": "Assign Confidence Score to Detected Conflicts",
+    "description": "The system shall assign a composite confidence score to each detected conflict based on rule comparison, semantic similarity, entity match, attribute match, and source authority. Score ranges: 0.90–1.00 high-confidence, 0.70–0.89 likely, 0.50–0.69 potential, below 0.50 needs human review.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-009",
+    "type": "Functional Requirement",
+    "title": "Source Document, Page, and Requirement Reference for Each Conflict",
+    "description": "The system shall provide source document name, page number, and requirement ID references as supporting evidence for each detected conflict.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection", "traceability"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-010",
+    "type": "Functional Requirement",
+    "title": "AI Explanation for Detected Conflicts",
+    "description": "The system shall provide a natural-language explanation of why two requirements are considered conflicting. The explanation shall include the conflicting attribute, the values at issue, and a recommended resolution path.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-011",
+    "type": "Functional Requirement",
+    "title": "Configurable Source Authority and Precedence Rules",
+    "description": "The system shall support configurable source authority and precedence for conflict resolution. Default precedence: Legal/Regulatory > Signed Plan Document > Employer Policy > Carrier Contract > Benefits Guide > Process Documentation > System Configuration > AI-Generated Requirement. Precedence shall be configurable per employer group.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-012",
+    "type": "Functional Requirement",
+    "title": "Route Detected Conflicts to Authorized Users for Review",
+    "description": "The system shall route detected conflicts to authorized Benefits Administrators or Requirements Owners for human review. Each conflict shall have a review status: DETECTED, AI_CLASSIFIED, UNDER_REVIEW, RESOLVED, FALSE_POSITIVE.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-013",
+    "type": "Functional Requirement",
+    "title": "Allow Users to Accept, Reject, or Resolve Conflicts",
+    "description": "The system shall allow authorized users to: accept a conflict and select the authoritative rule, reject as a false positive, or resolve by creating a new canonical requirement.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-014",
+    "type": "Functional Requirement",
+    "title": "Create Canonical Requirement on Conflict Resolution",
+    "description": "The system shall create or update a canonical requirement record when a conflict is resolved. The resolution shall record the decision, authoritative value, resolved-by actor, and timestamp.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection"],
+    "resolutionDataModel": {
+      "conflictId": "CONF-2027-001",
+      "type": "ELIGIBILITY_CONFLICT",
+      "severity": "HIGH",
+      "confidence": 0.94,
+      "requirements": ["REQ-001", "REQ-014"],
+      "status": "RESOLVED",
+      "resolution": {
+        "decision": "REQ-001_AUTHORITATIVE",
+        "canonicalValue": "30_DAYS",
+        "resolvedBy": "U-10025",
+        "resolvedAt": "2027-07-23T14:32:00Z"
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-CONFLICT-015",
+    "type": "Functional Requirement",
+    "title": "Audit Trail for Conflict Detection and Resolution",
+    "description": "The system shall maintain an audit trail for all conflict detection events, classification actions, human review decisions, and resolution outcomes.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection", "audit"]
+  },
+  {
+    "requirementId": "REQ-CONFLICT-016",
+    "type": "Functional Requirement",
+    "title": "Traceability Between Source Documents, Requirements, Conflicts, and Canonical Requirements",
+    "description": "The system shall maintain bidirectional traceability from source documents through extracted requirements, detected conflicts, resolution decisions, and canonical requirements. Traceability shall extend to downstream plan configurations.",
+    "status": "Approved",
+    "tags": ["ai-requirements", "conflict-detection", "traceability"]
+  }
+]

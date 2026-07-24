@@ -68,16 +68,22 @@ seed/
   products/      products.json, plans.json, rates.json, planVersions.json
   requirements/  businessRules.json, requirements.json, userStories.json,
                  acceptanceCriteria.json, traceability.json,
-                 premiumCalculationRequirements.json   (REQ-PREM-001–008)
-                 eligibilityCalculationRequirements.json (REQ-ELIG-001–009)
-                 dependentAgeOutRequirements.json       (REQ-DEP-001–010)
-                 lifeEventEnrollmentWindowRequirements.json (REQ-LE-001–012)
-                 planVersioningRequirements.json        (REQ-VER-001–015)
-                 reconciliationMatchingRequirements.json (REQ-REC-001–012)
-                 openEnrollmentRequirements.json        (REQ-OE-001–018)
-                 employmentTerminationRequirements.json (REQ-TERM-001–015)
-                 acaComplianceRequirements.json         (REQ-ACA-001–016)
-                 auditTrailRequirements.json            (REQ-AUD-001–015)
+                 premiumCalculationRequirements.json         (REQ-PREM-001–008)
+                 eligibilityCalculationRequirements.json     (REQ-ELIG-001–009)
+                 dependentAgeOutRequirements.json            (REQ-DEP-001–010)
+                 dependentSSNValidationRequirements.json     (REQ-DEP-SSN-001–015)
+                 lifeEventEnrollmentWindowRequirements.json  (REQ-LE-001–012)
+                 planVersioningRequirements.json             (REQ-VER-001–015)
+                 reconciliationMatchingRequirements.json     (REQ-REC-001–012)
+                 openEnrollmentRequirements.json             (REQ-OE-001–018)
+                 employmentTerminationRequirements.json      (REQ-TERM-001–015)
+                 acaComplianceRequirements.json              (REQ-ACA-001–016)
+                 auditTrailRequirements.json                 (REQ-AUD-001–015)
+                 employeeNotificationRequirements.json       (REQ-NOTIFY-001–017)
+                 aiConflictDetectionRequirements.json        (REQ-CONFLICT-001–016)
+                 aiInterviewConversationStateRequirements.json (REQ-CONV-001–015)
+                 requirementsBacklogExportRequirements.json  (REQ-EXPORT-001–016)
+                 aiImpactAnalysisRequirements.json           (REQ-IMPACT-001–015)
   documents/     documents.json
 samples/
   Acme_2027_Benefits_Guide.pdf
@@ -98,6 +104,7 @@ Requirements seeded in `seed/requirements/` — each file is a self-contained JS
 | Premium Calculation | `premiumCalculationRequirements.json` | REQ-PREM-001–008 | 8 | `ROUND((Monthly × 12) ÷ Pay Periods, 2)`; biweekly ≠ monthly ÷ 2; half-up rounding; final-period true-up |
 | Eligibility Effective Dates | `eligibilityCalculationRequirements.json` | REQ-ELIG-001–009 | 9 | Calendar-day wait; coverage = first of month following completion; no same-day activation on the 1st; rehire credit |
 | Dependent Age-Out | `dependentAgeOutRequirements.json` | REQ-DEP-001–010 | 10 | End of birth month at 26; termination = first of following month; DEPENDENT_AGE_OUT event triggers carrier/payroll cascade |
+| Dependent SSN Validation | `dependentSSNValidationRequirements.json` | REQ-DEP-SSN-001–015 | 15 | Format + length validation; FORMAT_VALID vs IDENTITY_VERIFIED distinction; duplicate SSN detection; carrier transaction BLOCKED on failure; SSN masked in all UI/notifications/logs; field encryption |
 | Life Event Windows | `lifeEventEnrollmentWindowRequirements.json` | REQ-LE-001–012 | 12 | Configurable per event type; Marriage APPROVED; others REQUIRES_CONFIRMATION; no universal default |
 | Plan Versioning | `planVersioningRequirements.json` | REQ-VER-001–015 | 15 | Published = immutable; changes create new draft; in-flight sessions flagged; future-dated elections revalidated |
 | Reconciliation Matching | `reconciliationMatchingRequirements.json` | REQ-REC-001–012 | 12 | Canonical benefitsPersonId; composite key; effective-dated cross-reference mappings |
@@ -105,5 +112,10 @@ Requirements seeded in `seed/requirements/` — each file is a self-contained JS
 | Employment Termination | `employmentTerminationRequirements.json` | REQ-TERM-001–015 | 15 | Coverage end date independent of HR termination; COBRA qualifying event; carrier TERMINATE transactions |
 | ACA Compliance | `acaComplianceRequirements.json` | REQ-ACA-001–016 | 16 | ALE profile; monthly offer tracking; offered ≠ elected ≠ active; 1095-C dataset; exception: FULL_TIME_NO_OFFER |
 | Audit Trail | `auditTrailRequirements.json` | REQ-AUD-001–015 | 15 | Immutable append-only; correlation ID chains; AI-generated requirement versioning; full forward/backward trace |
+| Employee Notifications | `employeeNotificationRequirements.json` | REQ-NOTIFY-001–017 | 17 | Event-driven; Email + In-App + PDF (MVP); configurable templates with merge fields; MANDATORY vs OPTIONAL; delivery status lifecycle; Employee Document Center |
+| AI Conflict Detection | `aiConflictDetectionRequirements.json` | REQ-CONFLICT-001–016 | 16 | Hybrid: deterministic detection + LLM interpretation; 13 conflict types; confidence score; configurable source authority; resolution creates canonical requirement |
+| AI Interview Conversation State | `aiInterviewConversationStateRequirements.json` | REQ-CONV-001–015 | 15 | Unique Conversation ID; structured memory (facts + open questions); three-layer context; token budget; auto-summarization; pause/resume; contradiction detection; message-to-requirement traceability |
+| Requirements Backlog Export | `requirementsBacklogExportRequirements.json` | REQ-EXPORT-001–016 | 16 | Canonical backlog (Epic → Feature → Story → AC); P0: JSON + CSV; P1: Jira adapter; P2: Azure DevOps; incremental export; external ID persistence; no duplicate creation |
+| AI Impact Analysis | `aiImpactAnalysisRequirements.json` | REQ-IMPACT-001–015 | 15 | Hybrid RAG: metadata filter + vector RAG + graph traversal + deterministic rules; bounded context package; DIRECT/INDIRECT/DEPENDENCY/POTENTIAL/NO_IMPACT; severity + confidence; no full dataset injection |
 
-**Total seeded requirements (seed/requirements/):** 130+ across 10 requirement sets.
+**Total seeded requirements (seed/requirements/):** 208+ across 16 requirement sets.

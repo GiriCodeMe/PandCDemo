@@ -1,0 +1,169 @@
+[
+  {
+    "requirementId": "REQ-NOTIFY-001",
+    "type": "Functional Requirement",
+    "title": "Event-Driven Employee Notifications for Benefits Lifecycle Events",
+    "description": "The system shall trigger employee notifications for defined benefits lifecycle events. Each event type shall have a configured notification rule specifying recipient(s), channel(s), template, and delivery timing.",
+    "status": "Approved",
+    "tags": ["notifications", "cross-cutting"],
+    "notificationEventCatalog": {
+      "enrollment": ["OPEN_ENROLLMENT_OPENED", "OPEN_ENROLLMENT_REMINDER", "OPEN_ENROLLMENT_CLOSING", "ENROLLMENT_SUBMITTED", "ENROLLMENT_CONFIRMED", "ENROLLMENT_INCOMPLETE", "ENROLLMENT_EXPIRED"],
+      "lifeEvents": ["LIFE_EVENT_SUBMITTED", "LIFE_EVENT_APPROVED", "LIFE_EVENT_REJECTED", "LIFE_EVENT_DOCUMENT_REQUIRED", "LIFE_EVENT_DOCUMENT_RECEIVED", "COVERAGE_UPDATED"],
+      "eligibility": ["ELIGIBILITY_APPROVED", "ELIGIBILITY_DENIED", "ELIGIBILITY_CHANGED", "ELIGIBILITY_EXCEPTION"],
+      "employment": ["EMPLOYEE_HIRED", "EMPLOYEE_TERMINATED", "REHIRE_PROCESSED"],
+      "cobra": ["COBRA_ELIGIBILITY_CREATED", "COBRA_NOTICE_GENERATED", "COBRA_NOTICE_SENT", "COBRA_ELECTION_PENDING", "COBRA_ELECTION_RECEIVED", "COBRA_COVERAGE_ACTIVATED"],
+      "integration": ["CARRIER_ENROLLMENT_COMPLETED", "CARRIER_TRANSACTION_FAILED", "PAYROLL_DEDUCTION_UPDATED", "BENEFITS_RECONCILIATION_EXCEPTION"]
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-002",
+    "type": "Functional Requirement",
+    "title": "Email and In-App Notification Channels",
+    "description": "The system shall support Email and In-App notification channels. Email is the primary channel for benefits communication. In-App notifications provide real-time alerts within the employee portal. PDF document generation is the third MVP channel for formal benefits events.",
+    "status": "Approved",
+    "tags": ["notifications", "channels"],
+    "mvpChannels": ["EMAIL", "IN_APP", "PDF_DOCUMENT"],
+    "optionalChannels": ["SMS", "PORTAL_INBOX", "ADMIN_DASHBOARD_ALERT"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-003",
+    "type": "Functional Requirement",
+    "title": "Configurable Notification Templates",
+    "description": "The system shall support configurable notification templates managed by Benefits Administrators. Each template is associated with an event type, channel, subject, body, optional attachments, language, and version. Templates must be approved before activation.",
+    "status": "Approved",
+    "tags": ["notifications", "templates"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-004",
+    "type": "Functional Requirement",
+    "title": "Dynamic Merge Fields in Templates",
+    "description": "Notification templates shall support dynamic merge fields for employee, employer, plan, coverage, event, and portal URL data. The system shall substitute merge fields at send time.",
+    "status": "Approved",
+    "tags": ["notifications", "templates"],
+    "mergeFields": [
+      "{{employee.firstName}}", "{{employee.lastName}}", "{{employer.name}}",
+      "{{lifeEvent.type}}", "{{coverage.effectiveDate}}", "{{plan.name}}",
+      "{{enrollment.deadline}}", "{{benefitsPortal.url}}", "{{document.downloadUrl}}"
+    ]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-005",
+    "type": "Functional Requirement",
+    "title": "Life Event Notification Sequence",
+    "description": "The system shall send notifications at each stage of the life event lifecycle: submitted, document required, document received, approved/rejected, coverage updated, coverage effective. Each stage corresponds to a distinct notification event.",
+    "status": "Approved",
+    "tags": ["notifications", "life-events"],
+    "demoScenario": {
+      "employee": "John Smith",
+      "event": "Marriage",
+      "notificationSequence": [
+        "Life Event Received — Upload marriage certificate by deadline",
+        "Life Event Approved — Spouse now eligible",
+        "Enrollment Submitted",
+        "Coverage Confirmed — Spouse added to Medical PPO-500 and Dental effective July 1"
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-006",
+    "type": "Functional Requirement",
+    "title": "Coverage Change Notification",
+    "description": "When a life event results in a benefits coverage change, the system shall notify the employee of the specific change: plans affected, effective date, new coverage tier, and updated premium deduction.",
+    "status": "Approved",
+    "tags": ["notifications", "coverage"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-007",
+    "type": "Functional Requirement",
+    "title": "Open Enrollment Open and Closing Soon Notifications",
+    "description": "The system shall send notifications to eligible employees when Open Enrollment opens and before it closes (configurable advance notice, default: 3 days). The closing notification shall include remaining days and a direct enrollment link.",
+    "status": "Approved",
+    "tags": ["notifications", "open-enrollment"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-008",
+    "type": "Functional Requirement",
+    "title": "Enrollment Submission Confirmation",
+    "description": "The system shall send a confirmation notification when an employee successfully submits an enrollment election. The confirmation shall include a summary of elected plans, coverage tiers, effective date, and employee premium.",
+    "status": "Approved",
+    "tags": ["notifications", "enrollment"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-009",
+    "type": "Functional Requirement",
+    "title": "Notification Delivery Status Tracking",
+    "description": "The system shall track notification delivery lifecycle: CREATED → QUEUED → SENT → DELIVERED → OPENED → ACKNOWLEDGED. Failed notifications shall transition to FAILED and support configurable retry.",
+    "status": "Approved",
+    "tags": ["notifications", "delivery"],
+    "deliveryStatuses": ["CREATED", "QUEUED", "SENT", "DELIVERED", "OPENED", "ACKNOWLEDGED", "FAILED", "RETRY", "FAILED_PERMANENTLY"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-010",
+    "type": "Functional Requirement",
+    "title": "Retry Handling for Failed Notifications",
+    "description": "The system shall support configurable retry logic for failed notifications. After the maximum retry count is reached, the notification status shall be set to FAILED_PERMANENTLY and an administrator alert shall be generated.",
+    "status": "Approved",
+    "tags": ["notifications", "delivery"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-011",
+    "type": "Functional Requirement",
+    "title": "Benefits Confirmation Document Generation",
+    "description": "The system shall generate a benefits confirmation PDF document for applicable coverage change events (enrollment confirmation, life event coverage change, COBRA notice, eligibility determination). The document shall be stored and linked to the notification.",
+    "status": "Approved",
+    "tags": ["notifications", "documents"],
+    "documentTypes": [
+      "Benefits Election Confirmation", "Coverage Change Confirmation",
+      "Life Event Confirmation", "COBRA Notice",
+      "Eligibility Determination", "Enrollment Summary"
+    ]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-012",
+    "type": "Functional Requirement",
+    "title": "Employee Document Center",
+    "description": "The system shall maintain a document center in the employee portal where generated benefits documents are stored. Employees shall be able to view, download, and acknowledge documents. Documents shall be filterable by year, event type, and plan.",
+    "status": "Approved",
+    "tags": ["notifications", "documents"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-013",
+    "type": "Functional Requirement",
+    "title": "Notification History and Audit Records",
+    "description": "The system shall maintain an audit record for every notification: event trigger, template selected, channel, recipient, sent timestamp, delivery status, document ID (if generated), and acknowledgment status. Notification audit integrates with the platform-wide audit trail (REQ-AUD-001).",
+    "status": "Approved",
+    "tags": ["notifications", "audit"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-014",
+    "type": "Functional Requirement",
+    "title": "Mandatory vs. Optional Notification Distinction",
+    "description": "The system shall distinguish MANDATORY communications (legally or plan-required notices) from OPTIONAL notifications (enrollment reminders, plan update notices). Mandatory communications shall be delivered regardless of employee notification preferences.",
+    "status": "Approved",
+    "tags": ["notifications", "compliance"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-015",
+    "type": "Functional Requirement",
+    "title": "Mandatory Communications Cannot Be Suppressed",
+    "description": "Employees shall not be able to disable mandatory legally or plan-required notifications through their communication preferences. The UI shall display mandatory communications as non-configurable.",
+    "status": "Approved",
+    "tags": ["notifications", "compliance"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-016",
+    "type": "Functional Requirement",
+    "title": "Administrator Alerts for Operational Exceptions",
+    "description": "The system shall send administrator-directed alerts for critical carrier, payroll, and reconciliation exceptions: carrier transaction failure, payroll mismatch, integration monitoring failure, and reconciliation exception. Administrator alerts are separate from employee-facing communications.",
+    "status": "Approved",
+    "tags": ["notifications", "admin"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-017",
+    "type": "Functional Requirement",
+    "title": "Configurable Employee Notification Preferences",
+    "description": "Employees shall be able to configure preferences for optional notifications: channel preference (email, in-app, SMS), delivery frequency, and document delivery method (electronic vs. paper). Mandatory communications are exempt from preference-based suppression.",
+    "status": "Approved",
+    "tags": ["notifications", "preferences"]
+  }
+]

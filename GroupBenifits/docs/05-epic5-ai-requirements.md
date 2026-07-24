@@ -58,9 +58,9 @@ AI analyzes uploaded documents and generates structured requirements.
 
 ---
 
-## Feature 5.3 — AI Requirements Interview
+## Feature 5.3 — AI Requirements Interview & Conversation State
 
-AI acts as a Business Analyst Agent, conducting a structured clarification interview.
+AI acts as a Business Analyst Agent, conducting a structured clarification interview. The application owns conversation state — the LLM consumes a dynamically assembled context, not the full raw history.
 
 **Example session:**
 
@@ -75,10 +75,29 @@ AI:   "Does coverage begin exactly 30 days after hire or on
 User: "First day of the following month."
 
 AI generates:
-  Business Rule: New employees become eligible after completing
+  REQ-ELIG-001: New employees become eligible after completing
   30 days of employment, with coverage effective on the first
   day of the following month.
+  (sourceType: AI_INTERVIEW, conversationId: CONV-2027-000125,
+   messageReferences: [MSG-00045, MSG-00046])
 ```
+
+### Conversation State Architecture
+
+| Concern | Approach |
+|---------|----------|
+| Conversation ID | Unique, persistent per interview session (e.g. `CONV-2027-000125`) |
+| Message persistence | Every user + AI turn persisted with sequence number and timestamp |
+| Structured memory | Facts, open questions, decisions, generated requirements — separate from raw messages |
+| Context strategy | Recent 10–20 messages + rolling summary + structured facts + open questions + source excerpts |
+| Token budget | Configurable per model (demo default ~16K: 2K instructions + 1K summary + 2K facts + 1K questions + 4K sources + 6K messages) |
+| Auto-summarization | Triggers when message count exceeds threshold; preserves decisions and unresolved questions |
+| Pause/resume | AI contextual recap on resume; conversation status: NEW → IN_PROGRESS → PAUSED → RESUMED → COMPLETED → ARCHIVED |
+| Contradiction handling | No silent overwrite — contradiction surfaced to user for resolution |
+| Traceability | Every generated requirement references conversation ID + originating message IDs |
+| Demo persistence | lowdb / JSON file store; production path: PostgreSQL + Redis |
+
+**Requirements:** REQ-CONV-001 to REQ-CONV-015 in `seed/requirements/aiInterviewConversationStateRequirements.json`
 
 ---
 
@@ -114,9 +133,11 @@ Acceptance Criteria:
 
 ---
 
-## Feature 5.5 — AI Requirements Validation
+## Feature 5.5 — AI Requirements Validation & Conflict Detection
 
-AI scans requirements for quality issues:
+AI scans requirements for quality issues and detects conflicts between source documents using a hybrid deterministic + LLM approach.
+
+### Validation Checks
 
 - Missing information
 - Conflicts between requirements
@@ -132,6 +153,43 @@ AI scans requirements for quality issues:
 > **AI flags:** Does the 30-day window begin on the hire date, eligibility date, or benefits effective date?
 
 **Demo ambiguity:** The word "promptly" in the notification policy is flagged as `BR-007-AMBIGUOUS` — AI recommends defining it as a specific number of calendar days.
+
+### Conflict & Overlap Detection Architecture
+
+Detection is **hybrid** — not purely prompt-driven:
+
+| Layer | Role |
+|-------|------|
+| Deterministic rule comparison | Detection — structured attribute values compared directly (30 days ≠ 60 days) |
+| LLM semantic analysis | Interpretation, classification, explanation, and resolution recommendation |
+
+### Conflict Types
+
+`CONFLICT` · `OVERLAP` · `DUPLICATE` · `AMBIGUITY` · `NO_CONFLICT`
+
+### Conflict Taxonomy
+
+`TIMING_CONFLICT` · `ELIGIBILITY_CONFLICT` · `COVERAGE_CONFLICT` · `PREMIUM_CONFLICT` · `DEPENDENT_CONFLICT` · `LIFE_EVENT_CONFLICT` · `ENROLLMENT_CONFLICT` · `PLAN_CONFIGURATION_CONFLICT` · `CARRIER_CONFLICT` · `PAYROLL_CONFLICT` · `COMPLIANCE_CONFLICT` · `DATA_CONFLICT` · `PROCESS_CONFLICT`
+
+### Detection Algorithm
+
+1. Extract requirements into normalized attribute/value structures (domain, subject, attribute, operator, value, unit)
+2. Normalize equivalent business language → canonical attributes
+3. Identify candidate pairs by matching domain + subject + attribute
+4. Deterministic comparison for structured values → POTENTIAL_CONFLICT flag
+5. LLM semantic analysis → classify, explain, recommend resolution
+
+### Source Authority (configurable precedence)
+
+Legal/Regulatory → Signed Plan Document → Employer Policy → Carrier Contract → Benefits Guide → Process Documentation → System Configuration → AI-Generated Requirement
+
+### Resolution Workflow
+
+`DETECTED → AI_CLASSIFIED → UNDER_REVIEW → RESOLVED / FALSE_POSITIVE`
+
+On resolution: canonical requirement created; audit event written.
+
+**Requirements:** REQ-CONFLICT-001 to REQ-CONFLICT-016 in `seed/requirements/aiConflictDetectionRequirements.json`
 
 ---
 
@@ -165,7 +223,7 @@ Benefits Guide (DOC-001)
 
 ## Feature 5.7 — AI Requirements Impact Analysis
 
-AI assesses the downstream impact of a proposed change.
+AI assesses the downstream impact of a proposed change using a hybrid RAG + traceability graph + summary strategy. The complete requirements dataset is **never injected wholesale** into a single LLM prompt.
 
 **Example:**
 
@@ -181,15 +239,43 @@ AI assesses the downstream impact of a proposed change.
 - Test cases
 - Existing employee records
 
-**AI summary:**
+### Context Strategy
 
-> "This change impacts 7 requirements, 3 business rules, 5 test cases, and 2 integration workflows."
+```
+New/Changed Requirement
+        ↓
+Entity + Domain + Attribute Extraction
+        ↓
+Impact Candidate Retrieval:
+  Metadata Filtering  ← exact domain/entity matching
+  Vector RAG          ← semantic similarity
+  Graph Traversal     ← explicit traceability dependencies
+  Deterministic Rules ← known business-rule relationships
+        ↓
+Bounded Context Package → Gemini
+        ↓
+Impact Assessment → Human Review
+```
+
+### Impact Classifications
+
+`DIRECT` · `INDIRECT` · `DEPENDENCY` · `POTENTIAL` · `NO_IMPACT`
+
+### Impact Severity
+
+`CRITICAL` · `HIGH` · `MEDIUM` · `LOW` · `INFORMATIONAL`
+
+Each impact carries a confidence score and evidence reference. Semantic similarity alone is **not** sufficient to classify an impact as DIRECT or INDIRECT.
+
+**Key principle:** AI recommends impacts; human authorization is required before any requirement change takes effect.
+
+**Requirements:** REQ-IMPACT-001 to REQ-IMPACT-015 in `seed/requirements/aiImpactAnalysisRequirements.json`
 
 ---
 
-## Feature 5.8 — AI Requirements-to-Backlog
+## Feature 5.8 — Requirements Backlog Export & Integration
 
-AI generates a hierarchical product backlog.
+AI generates a hierarchical product backlog and exports it to external work-management platforms. The AI Requirements platform owns the canonical requirement model — Jira and Azure DevOps are downstream execution systems.
 
 ```
 Epic → Feature → User Story → Acceptance Criteria
@@ -210,6 +296,29 @@ Acceptance Criteria:
   - System handles retroactive changes
   - System displays eligibility explanation
 ```
+
+### Export Strategy
+
+| Format | Priority | Purpose |
+|--------|----------|---------|
+| JSON | P0/MVP | System-to-system / API; preserves full traceability |
+| CSV | P0/MVP | Business review / spreadsheet; flattened hierarchy |
+| Jira adapter | P1 | Primary enterprise integration |
+| Azure DevOps adapter | P2 | Secondary enterprise integration |
+
+### Incremental Export
+
+Full export, or incremental scope: **New** / **Changed** / **Approved** / **All**. External IDs stored per item to prevent duplicate Jira/ADO issue creation.
+
+### Backlog Item Lifecycle
+
+`DRAFT → AI_GENERATED → HUMAN_REVIEW → APPROVED → EXPORTED → IMPORTED` (e.g., `JIRA KEY: ACMEGB-123`)
+
+### Traceability Preserved Through Export
+
+Source PDF → Requirement → Epic → Feature → Story → Jira Issue — full forward trace maintained in canonical backlog.
+
+**Requirements:** REQ-EXPORT-001 to REQ-EXPORT-016 in `seed/requirements/requirementsBacklogExportRequirements.json`
 
 ---
 
