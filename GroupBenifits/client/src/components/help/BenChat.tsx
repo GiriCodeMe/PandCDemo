@@ -9,6 +9,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/employees': 'Employee Directory',
   '/products': 'Product Catalog',
   '/requirements': 'AI Requirements Studio',
+  '/plans': 'Plan Configuration',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -60,6 +61,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'How are conflicts detected?',
     'What is a business rule vs a user story?',
   ],
+  '/plans': [
+    'What does a PUBLISHED plan year mean?',
+    'What is a waiting period?',
+    'What is the difference between PPO and HDHP?',
+    'What are eligibility rules?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -67,6 +74,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/employers/') && pathname.length > '/employers/'.length) return 'Employer Detail';
   if (pathname.startsWith('/employees/') && pathname.length > '/employees/'.length) return 'Employee 360';
   if (pathname.startsWith('/requirements')) return 'AI Requirements Studio';
+  if (pathname.startsWith('/plans')) return 'Plan Configuration';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -82,6 +90,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/requirements')) {
     return STARTER_QUESTIONS['/requirements'];
+  }
+  if (pathname.startsWith('/plans')) {
+    return STARTER_QUESTIONS['/plans'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }

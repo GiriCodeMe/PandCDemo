@@ -203,6 +203,74 @@ export interface GenerateResult {
   processingTimeMs: number;
 }
 
+export interface EligibilityCondition {
+  field: string;
+  operator: string;
+  value: unknown;
+}
+
+export interface EligibilityRule {
+  ruleId: string;
+  employerId: string;
+  productId?: string | null;
+  name: string;
+  description: string;
+  conditions: EligibilityCondition[];
+  waitingPeriodType: string;
+  waitingPeriodDays: number;
+  status: string;
+  sourceDocumentRef?: string;
+  conflictsWith?: string;
+  conflictDescription?: string;
+  ambiguityFlag?: boolean;
+  ambiguityNote?: string;
+  createdAt: string;
+}
+
+export interface DependentRule {
+  ruleId: string;
+  ruleType: string;
+  description: string;
+  ageLimit?: number | null;
+  ageLimitType?: string | null;
+  documentationRequired: string[];
+  status: string;
+}
+
+export interface PlanConfigSummary {
+  employerId: string;
+  planYear: number;
+  configurationStatus: string;
+  productsCount: number;
+  plansCount: number;
+  rateVersionsCurrent: boolean;
+  eligibilityRulesCount: number;
+  openEnrollmentStatus: string;
+  lastPublishedAt?: string | null;
+  publishedBy?: string | null;
+  configChecklist: Array<{ item: string; status: 'complete' | 'incomplete' | 'warning' }>;
+}
+
+export interface OpenEnrollmentPeriod {
+  openEnrollmentId: string;
+  employerGroupId: string;
+  planYear: number;
+  enrollmentName: string;
+  status: string;
+  startDateTime: string;
+  endDateTime: string;
+  eligiblePopulation: Record<string, unknown>;
+  eligiblePlans: string[];
+  progress: {
+    eligibleEmployees: number;
+    notStarted: number;
+    inProgress: number;
+    submitted: number;
+    completed: number;
+    exceptions: number;
+  };
+}
+
 export interface SearchResult {
   id: string;
   type: 'employer' | 'employee' | 'plan' | 'product' | 'carrier';
