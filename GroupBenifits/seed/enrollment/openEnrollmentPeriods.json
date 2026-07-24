@@ -1,0 +1,52 @@
+[
+  {
+    "openEnrollmentId": "OE-ACME-2027",
+    "employerGroupId": "ACM-001",
+    "planYear": 2027,
+    "version": "1.0",
+    "enrollmentName": "Acme Corp 2027 Open Enrollment",
+    "status": "OPEN",
+    "lifecycle": ["DRAFT", "CONFIGURED", "PUBLISHED", "OPEN", "CLOSING_SOON", "CLOSED", "ARCHIVED"],
+    "timeZone": "America/New_York",
+    "startDateTime": "2026-10-01T00:00:00",
+    "endDateTime": "2026-10-15T23:59:59",
+    "closingSoonThresholdDays": 3,
+    "eligiblePopulation": {
+      "employmentStatuses": ["FULL_TIME", "PART_TIME"],
+      "minimumHoursPerWeek": 20
+    },
+    "eligiblePlans": [
+      "MED-PPO-500",
+      "MED-PPO-1000",
+      "MED-HDHP-3000",
+      "DENTAL-001",
+      "VISION-001",
+      "LIFE-BASIC-001",
+      "LIFE-VOL-001"
+    ],
+    "autoReenrollmentRules": {
+      "Medical":  "MAINTAIN_CURRENT_ELECTION",
+      "Dental":   "MAINTAIN_CURRENT_ELECTION",
+      "Vision":   "MAINTAIN_CURRENT_ELECTION",
+      "FSA":      "NO_AUTO_REENROLL",
+      "HSA":      "RECALCULATE_BASED_ON_MEDICAL"
+    },
+    "requiresActiveConfirmation": true,
+    "gracePeriodDays": 0,
+    "lateSubmissionPolicy": "HR_EXCEPTION_REQUIRED",
+    "publishedAt": "2026-09-15T14:00:00Z",
+    "publishedBy": "BENEFITS-ADMIN-001",
+    "progress": {
+      "snapshotDate": "2026-10-10",
+      "eligibleEmployees": 5000,
+      "notStarted": 350,
+      "inProgress": 450,
+      "submitted": 4200,
+      "completed": 0,
+      "exceptions": 25,
+      "planVersionChanges": 12,
+      "pendingHRReview": 18
+    },
+    "_notes": "Demo seed. Enrollment opened Oct 1 2026. Snapshot captured Oct 10. 84% submitted, 9% in progress, 7% not started."
+  }
+]

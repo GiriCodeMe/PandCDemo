@@ -54,13 +54,30 @@ Product Manager → Business Analyst → Benefits Administrator → Employee / H
 ```
 seed/
   auth/          personas.json (8 demo personas)
-  eligibility/   eligibilityRules.json, dependentRules.json
-  enrollment/    enrollments.json, lifeEvents.json
-  integrations/  carrierTransactions.json, payrollTransactions.json
-  products/      planVersions.json
-  requirements/  businessRules.json, requirements.json,
-                 userStories.json, acceptanceCriteria.json,
-                 traceability.json
+  dashboard/     dashboardSnapshot.json, eligibilityExceptions.json,
+                 carrierMetrics.json, requirementCategories.json
+  eligibility/   eligibilityRules.json (incl. ER-DEP-AGE-001), dependentRules.json,
+                 edgeCaseScenarios.json (10 date edge cases)
+  employees/     employees.json (30), dependents.json (22, incl. DEP-022 Sarah Smith age-out)
+  employers/     payrollConfig.json
+  enrollment/    enrollments.json, lifeEvents.json, openEnrollmentPeriods.json
+  integrations/  carriers.json, carrierTransactions.json, payrollTransactions.json,
+                 integrationMonitoringAggregates.json (6 windows), integrationMonitoringErrors.json,
+                 personIdentityMappings.json (3 demo: MATCHED / MISSING / MISMATCH)
+  lifeEvents/    lifeEventRuleCatalog.json (9 event types, configurable windows)
+  products/      products.json, plans.json, rates.json, planVersions.json
+  requirements/  businessRules.json, requirements.json, userStories.json,
+                 acceptanceCriteria.json, traceability.json,
+                 premiumCalculationRequirements.json   (REQ-PREM-001–008)
+                 eligibilityCalculationRequirements.json (REQ-ELIG-001–009)
+                 dependentAgeOutRequirements.json       (REQ-DEP-001–010)
+                 lifeEventEnrollmentWindowRequirements.json (REQ-LE-001–012)
+                 planVersioningRequirements.json        (REQ-VER-001–015)
+                 reconciliationMatchingRequirements.json (REQ-REC-001–012)
+                 openEnrollmentRequirements.json        (REQ-OE-001–018)
+                 employmentTerminationRequirements.json (REQ-TERM-001–015)
+                 acaComplianceRequirements.json         (REQ-ACA-001–016)
+                 auditTrailRequirements.json            (REQ-AUD-001–015)
   documents/     documents.json
 samples/
   Acme_2027_Benefits_Guide.pdf
@@ -69,3 +86,24 @@ samples/
   Acme_2027_Payroll_Spec.pdf
   Acme_2027_Enrollment_Process.pdf
 ```
+
+---
+
+## P0 Business Rule Requirements Index
+
+Requirements seeded in `seed/requirements/` — each file is a self-contained JSON array of requirement objects with `requirementId`, `type`, `title`, `description`, `status`, and `tags`.
+
+| Requirement Set | File | IDs | Count | Key Business Rules |
+|----------------|------|-----|-------|--------------------|
+| Premium Calculation | `premiumCalculationRequirements.json` | REQ-PREM-001–008 | 8 | `ROUND((Monthly × 12) ÷ Pay Periods, 2)`; biweekly ≠ monthly ÷ 2; half-up rounding; final-period true-up |
+| Eligibility Effective Dates | `eligibilityCalculationRequirements.json` | REQ-ELIG-001–009 | 9 | Calendar-day wait; coverage = first of month following completion; no same-day activation on the 1st; rehire credit |
+| Dependent Age-Out | `dependentAgeOutRequirements.json` | REQ-DEP-001–010 | 10 | End of birth month at 26; termination = first of following month; DEPENDENT_AGE_OUT event triggers carrier/payroll cascade |
+| Life Event Windows | `lifeEventEnrollmentWindowRequirements.json` | REQ-LE-001–012 | 12 | Configurable per event type; Marriage APPROVED; others REQUIRES_CONFIRMATION; no universal default |
+| Plan Versioning | `planVersioningRequirements.json` | REQ-VER-001–015 | 15 | Published = immutable; changes create new draft; in-flight sessions flagged; future-dated elections revalidated |
+| Reconciliation Matching | `reconciliationMatchingRequirements.json` | REQ-REC-001–012 | 12 | Canonical benefitsPersonId; composite key; effective-dated cross-reference mappings |
+| Open Enrollment | `openEnrollmentRequirements.json` | REQ-OE-001–018 | 18 | Configurable window + time zone; OE ≠ Life Event window; auto-reenrollment per plan; saved ≠ submitted |
+| Employment Termination | `employmentTerminationRequirements.json` | REQ-TERM-001–015 | 15 | Coverage end date independent of HR termination; COBRA qualifying event; carrier TERMINATE transactions |
+| ACA Compliance | `acaComplianceRequirements.json` | REQ-ACA-001–016 | 16 | ALE profile; monthly offer tracking; offered ≠ elected ≠ active; 1095-C dataset; exception: FULL_TIME_NO_OFFER |
+| Audit Trail | `auditTrailRequirements.json` | REQ-AUD-001–015 | 15 | Immutable append-only; correlation ID chains; AI-generated requirement versioning; full forward/backward trace |
+
+**Total seeded requirements (seed/requirements/):** 130+ across 10 requirement sets.

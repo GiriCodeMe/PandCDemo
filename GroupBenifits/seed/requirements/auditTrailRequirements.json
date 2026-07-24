@@ -1,0 +1,145 @@
+[
+  {
+    "requirementId": "REQ-AUD-001",
+    "type": "Functional Requirement",
+    "title": "Immutable Audit Trail for All Material Changes",
+    "description": "The system shall maintain an immutable audit trail for all material business and configuration changes across plan management, eligibility, enrollment, carrier, payroll, reconciliation, and AI requirements.",
+    "status": "Approved",
+    "tags": ["audit", "cross-cutting"]
+  },
+  {
+    "requirementId": "REQ-AUD-002",
+    "type": "Functional Requirement",
+    "title": "Timestamp Required on Every Audit Event",
+    "description": "Each audit event shall record the ISO 8601 date and time of the action, including time zone offset. Timestamps shall be server-generated and not editable.",
+    "status": "Approved",
+    "tags": ["audit"]
+  },
+  {
+    "requirementId": "REQ-AUD-003",
+    "type": "Functional Requirement",
+    "title": "Actor Identity Required on Every Audit Event",
+    "description": "Each audit event shall identify the user, system process, or AI agent that performed the action. Actor identity includes user ID, display name, and actor type (USER, SYSTEM, AI_AGENT).",
+    "status": "Approved",
+    "tags": ["audit", "identity"]
+  },
+  {
+    "requirementId": "REQ-AUD-004",
+    "type": "Functional Requirement",
+    "title": "Actor Role Recorded on Audit Event",
+    "description": "Each audit event shall record the actor's role or service identity at the time of the action.",
+    "status": "Approved",
+    "tags": ["audit", "identity"]
+  },
+  {
+    "requirementId": "REQ-AUD-005",
+    "type": "Functional Requirement",
+    "title": "Affected Entity and Version Recorded",
+    "description": "Each audit event shall identify the affected entity type (PLAN, ELIGIBILITY_RULE, ENROLLMENT, etc.), entity ID, and version ID where applicable.",
+    "status": "Approved",
+    "tags": ["audit"],
+    "auditableEntities": [
+      "PLAN", "PLAN_VERSION", "ELIGIBILITY_RULE", "BUSINESS_RULE",
+      "ENROLLMENT", "ENROLLMENT_SESSION", "LIFE_EVENT", "EMPLOYEE",
+      "DEPENDENT", "CARRIER_TRANSACTION", "PAYROLL_TRANSACTION",
+      "RECONCILIATION", "OPEN_ENROLLMENT", "COBRA_EVENT", "ACA_RECORD",
+      "REQUIREMENT", "AI_GENERATED_REQUIREMENT", "AI_RECOMMENDATION"
+    ]
+  },
+  {
+    "requirementId": "REQ-AUD-006",
+    "type": "Functional Requirement",
+    "title": "Previous and New Values Recorded for Updates",
+    "description": "For update operations, the system shall record the previous value and new value of each changed field. Multiple field changes in a single action shall be captured in a single audit event as an array of field-level changes.",
+    "status": "Approved",
+    "tags": ["audit"],
+    "demoExample": {
+      "auditId": "AUD-2027-000125",
+      "action": "UPDATE",
+      "entityType": "PLAN_VERSION",
+      "entityId": "MED-PPO-500",
+      "versionId": "MED-PPO-500-V2",
+      "changes": [
+        { "field": "deductible",           "oldValue": "$500",  "newValue": "$750"  },
+        { "field": "monthlyPremium",       "oldValue": "$150",  "newValue": "$175"  },
+        { "field": "employerContribution", "oldValue": "$100",  "newValue": "$110"  }
+      ],
+      "reason": "2027 Plan Renewal"
+    }
+  },
+  {
+    "requirementId": "REQ-AUD-007",
+    "type": "Functional Requirement",
+    "title": "Reason Code or Change Request Reference on Material Changes",
+    "description": "The system shall record a reason code or change request identifier associated with material configuration changes when provided. Reason codes shall be configurable per entity type.",
+    "status": "Approved",
+    "tags": ["audit"]
+  },
+  {
+    "requirementId": "REQ-AUD-008",
+    "type": "Functional Requirement",
+    "title": "Plan Version Lifecycle Audit",
+    "description": "The system shall maintain audit records for all plan version lifecycle events: creation, modification, submission for review, approval, scheduling, publication, supersession, and retirement.",
+    "status": "Approved",
+    "tags": ["audit", "plan-versioning"]
+  },
+  {
+    "requirementId": "REQ-AUD-009",
+    "type": "Functional Requirement",
+    "title": "Cross-Domain Audit Coverage",
+    "description": "The system shall maintain audit records for enrollment, eligibility, carrier transactions, payroll transactions, reconciliation exceptions, open enrollment changes, continuation coverage events, ACA record changes, and life event processing.",
+    "status": "Approved",
+    "tags": ["audit", "cross-cutting"]
+  },
+  {
+    "requirementId": "REQ-AUD-010",
+    "type": "Functional Requirement",
+    "title": "AI-Generated Requirement Audit",
+    "description": "The system shall maintain audit records for AI-generated requirements, including the source document, extraction context, AI agent identity, generation timestamp, and subsequent human review actions (reviewed by, review status, review timestamp).",
+    "status": "Approved",
+    "tags": ["audit", "ai-requirements"]
+  },
+  {
+    "requirementId": "REQ-AUD-011",
+    "type": "Functional Requirement",
+    "title": "Original AI-Generated Requirement Preserved After Human Edit",
+    "description": "When a human edits an AI-generated requirement, the system shall preserve the original AI-generated text as a prior version. The audit trail shall clearly show: AI Generated → Human Modified → Human Approved, with each version's content accessible.",
+    "status": "Approved",
+    "tags": ["audit", "ai-requirements"]
+  },
+  {
+    "requirementId": "REQ-AUD-012",
+    "type": "Functional Requirement",
+    "title": "Audit History Search and Filtering",
+    "description": "The system shall support audit history search and filtering by: user, entity type, entity ID, action type, date range, plan ID, plan version, employer group, reason, and correlation ID.",
+    "status": "Approved",
+    "tags": ["audit", "search"]
+  },
+  {
+    "requirementId": "REQ-AUD-013",
+    "type": "Functional Requirement",
+    "title": "Audit Records Append-Only",
+    "description": "Audit records shall be append-only and shall not be modifiable or deletable by standard application users. If a correction to an audit record is needed, a new corrective audit event shall be appended. The original event is preserved.",
+    "status": "Approved",
+    "tags": ["audit", "immutability"]
+  },
+  {
+    "requirementId": "REQ-AUD-014",
+    "type": "Functional Requirement",
+    "title": "Correlation ID Links Related Transactions",
+    "description": "The system shall associate related business operations using a common correlation ID. A single change request (e.g., plan deductible increase) shall propagate its correlation ID through audit events, enrollment impact assessments, payroll updates, carrier transactions, and reconciliation records.",
+    "status": "Approved",
+    "tags": ["audit", "traceability"],
+    "demoTraceabilityChain": "Change Request CR-2027-001 → Plan Version MED-PPO-500-V2 → Audit AUD-2027-000125 → Enrollment Impact IMP-2027-004 → Payroll Update PAY-2027-008 → Carrier Transaction TXN-2027-009 → Reconciliation REC-2027-002"
+  },
+  {
+    "requirementId": "REQ-AUD-015",
+    "type": "Functional Requirement",
+    "title": "Full Forward and Backward Traceability from Any Audit Event",
+    "description": "The system shall allow authorized users to trace any business change forward (what downstream effects were triggered) and backward (what originating request or event caused it). For the demo: from a payroll deduction change, the user should be able to trace back to the plan configuration change and forward to the carrier transaction and reconciliation result.",
+    "status": "Approved",
+    "tags": ["audit", "traceability"],
+    "demoQuestion": "Show me everything that happened when the PPO-500 deductible changed from $500 to $750.",
+    "demoAnswer": "User Change → Audit Event → Plan Version → Approval → AI Impact Analysis → Affected Requirements → Enrollment Impact → Payroll Update → Carrier Transaction → Reconciliation"
+  }
+]

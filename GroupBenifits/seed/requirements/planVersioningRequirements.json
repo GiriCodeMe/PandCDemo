@@ -1,0 +1,168 @@
+[
+  {
+    "requirementId": "REQ-VER-001",
+    "type": "Functional Requirement",
+    "title": "Immutable Plan Version Identifier",
+    "description": "The system shall assign a unique, immutable version identifier to every plan version upon creation. Once assigned, a version ID shall never change, even after the version is superseded or retired.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "immutability"],
+    "example": { "planId": "MED-PPO-500", "versionId": "MED-PPO-500-V2", "versionNumber": "2.0" }
+  },
+  {
+    "requirementId": "REQ-VER-002",
+    "type": "Functional Requirement",
+    "title": "Major and Minor Version Support",
+    "description": "The system shall support both major and minor plan versions. Major versions are created for material changes (premium rates, deductibles, eligibility rules, carrier, network, coverage tiers, OOP limits). Minor versions are created for non-material changes (description updates, contact information, administrative metadata).",
+    "status": "Approved",
+    "tags": ["plan-versioning"],
+    "majorChangeTriggers": ["Premium rates", "Employer contribution", "Eligibility rules", "Coverage tiers", "Deductibles", "Out-of-pocket limits", "Carrier", "Network", "Plan availability"],
+    "minorChangeTriggers": ["Description updates", "Administrative instructions", "Contact information", "Non-functional metadata"]
+  },
+  {
+    "requirementId": "REQ-VER-003",
+    "type": "Functional Requirement",
+    "title": "Published Plan Versions Are Immutable",
+    "description": "Once a plan version status is PUBLISHED, its configuration shall be read-only. No edits to rates, eligibility rules, coverage tiers, or plan design shall be permitted on a published version. Any change must create a new draft version.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "immutability"]
+  },
+  {
+    "requirementId": "REQ-VER-004",
+    "type": "Functional Requirement",
+    "title": "Changes to Published Plans Create New Versions",
+    "description": "Any change to a published plan configuration shall create a new plan version in DRAFT status. The system shall not allow in-place editing of a PUBLISHED version.",
+    "status": "Approved",
+    "tags": ["plan-versioning"]
+  },
+  {
+    "requirementId": "REQ-VER-005",
+    "type": "Functional Requirement",
+    "title": "Effective Start and End Dates Per Version",
+    "description": "Each plan version shall have a mandatory effective start date and an optional effective end date. The system shall derive the end date when a newer version becomes active for the same effective period.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "effective-dates"],
+    "example": {
+      "v1_0": { "effectiveStart": "2027-01-01", "effectiveEnd": "2027-06-30", "status": "SUPERSEDED" },
+      "v2_0": { "effectiveStart": "2027-07-01", "effectiveEnd": null, "status": "PUBLISHED" }
+    }
+  },
+  {
+    "requirementId": "REQ-VER-006",
+    "type": "Functional Requirement",
+    "title": "Prevent Overlapping Effective Periods",
+    "description": "The system shall prevent two active versions of the same plan from having overlapping effective date periods. Publishing a version with an effective period that overlaps an existing active version shall trigger a validation error requiring resolution.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "validation"]
+  },
+  {
+    "requirementId": "REQ-VER-007",
+    "type": "Functional Requirement",
+    "title": "Publishing Supersedes Prior Version Without Modifying History",
+    "description": "When a new plan version is published, the system shall update the prior version's status to SUPERSEDED and set its effectiveEnd date. The prior version's configuration, enrollment data, and transaction history shall remain intact and accessible for audit.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "immutability"]
+  },
+  {
+    "requirementId": "REQ-VER-008",
+    "type": "Functional Requirement",
+    "title": "Enrollment Elections Locked to Submission-Time Plan Version",
+    "description": "Each completed enrollment election shall be permanently associated with the plan version that was active when the election was submitted. This association shall not change when new versions are published.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "enrollment"],
+    "example": {
+      "sessionId": "ENR-2027-00125",
+      "employeeId": "ACM-E001",
+      "planId": "MED-PPO-500",
+      "planVersionId": "MED-PPO-500-V1",
+      "submittedAt": "2027-06-20T10:30:00Z"
+    }
+  },
+  {
+    "requirementId": "REQ-VER-009",
+    "type": "Functional Requirement",
+    "title": "In-Flight Enrollment Sessions Flagged on Version Change",
+    "description": "When a plan version changes while an employee's enrollment session is in progress, the system shall detect the version change, set the session status to PLAN_VERSION_CHANGED, and require the employee to explicitly review and reconfirm their election under the new version.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "enrollment"]
+  },
+  {
+    "requirementId": "REQ-VER-010",
+    "type": "Functional Requirement",
+    "title": "Future-Dated Enrollments Revalidated on Version Change",
+    "description": "If a completed election has a future coverage effective date and the plan version changes before that date, the system shall set the enrollment status to REQUIRES_REVALIDATION. The enrollment shall not be transmitted to the carrier until revalidated.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "enrollment"],
+    "example": {
+      "enrollmentCompletedDate": "2027-06-20",
+      "coverageEffectiveDate": "2027-07-01",
+      "planVersionOnCompletion": "MED-PPO-500-V1",
+      "newVersionEffective": "2027-07-01",
+      "resultingStatus": "REQUIRES_REVALIDATION"
+    }
+  },
+  {
+    "requirementId": "REQ-VER-011",
+    "type": "Functional Requirement",
+    "title": "Active Enrollments Not Silently Migrated",
+    "description": "Active, completed enrollments shall not be silently migrated to a new plan version. Any change to an active enrollment's plan version requires an explicit enrollment change event, HR approval, or employee election update.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "enrollment"]
+  },
+  {
+    "requirementId": "REQ-VER-012",
+    "type": "Functional Requirement",
+    "title": "Plan Version Change Triggers Cross-Domain Impact Analysis",
+    "description": "Publishing a new plan version shall trigger automated impact analysis across enrollment, eligibility, payroll, carrier, and requirements. The system shall produce an impact summary identifying affected enrollments, open sessions, payroll periods, carrier transactions, and requirements.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "impact-analysis"],
+    "demoScenario": {
+      "planId": "MED-PPO-500",
+      "changeType": "MAJOR",
+      "v1_0": { "monthlyPremium": 150, "deductible": 500, "effectiveDate": "2027-01-01" },
+      "v2_0": { "monthlyPremium": 175, "deductible": 750, "effectiveDate": "2027-07-01" },
+      "impactSummary": {
+        "activeEnrollments": 4125,
+        "openEnrollmentSessions": 275,
+        "payrollPeriodsAffected": 13,
+        "requirementsImpacted": 8,
+        "testCasesImpacted": 14
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-VER-013",
+    "type": "Functional Requirement",
+    "title": "Plan Version Audit Trail",
+    "description": "The system shall maintain an immutable audit trail for all plan version lifecycle events: creation, submission for review, approval, scheduling, publication, supersession, and retirement. Each event shall record the action, actor, timestamp, and version identifier.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "audit"],
+    "versionLifecycle": ["DRAFT", "IN_REVIEW", "SCHEDULED", "PUBLISHED", "SUPERSEDED", "RETIRED"]
+  },
+  {
+    "requirementId": "REQ-VER-014",
+    "type": "Functional Requirement",
+    "title": "Plan Version Comparison Feature",
+    "description": "The system shall support side-by-side comparison of any two plan versions, showing changed fields, unchanged fields, and an AI-generated change summary with downstream impact assessment.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "ui"],
+    "demoVersionComparison": {
+      "planId": "MED-PPO-500",
+      "fields": [
+        { "field": "Monthly Employee Premium", "v1_0": "$150", "v2_0": "$175", "changed": true },
+        { "field": "Deductible",               "v1_0": "$500", "v2_0": "$750", "changed": true },
+        { "field": "Employer Contribution",    "v1_0": "$100", "v2_0": "$110", "changed": true },
+        { "field": "Eligibility Waiting Period","v1_0": "30 days", "v2_0": "30 days", "changed": false },
+        { "field": "Carrier",                  "v1_0": "Aetna", "v2_0": "Aetna", "changed": false }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-VER-015",
+    "type": "Functional Requirement",
+    "title": "Requirements Traceability Across Plan Versions",
+    "description": "The system shall maintain traceability between plan versions, source requirements, business rules, test cases, and integration mappings. Every transaction shall reference the plan version and requirement version under which it was processed.",
+    "status": "Approved",
+    "tags": ["plan-versioning", "traceability"],
+    "traceabilityChain": "Benefits Guide PDF → Requirements v1 → Plan v1.0 → Enrollment → Carrier → Payroll → [Change Request] → AI Impact Analysis → Plan v2.0"
+  }
+]

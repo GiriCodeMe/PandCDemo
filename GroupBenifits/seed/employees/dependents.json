@@ -1,0 +1,149 @@
+[
+  {
+    "dependentId": "DEP-001", "employeeId": "ACM-E001",
+    "firstName": "Jennifer", "lastName": "Smith",
+    "dob": "1987-03-20", "ssn": "XXX-XX-4322",
+    "relationship": "Spouse", "status": "Active",
+    "_notes": "Was covered as Spouse until divorce completed May 20 2026. Now removed from coverage."
+  },
+  {
+    "dependentId": "DEP-002", "employeeId": "ACM-E001",
+    "firstName": "Tyler", "lastName": "Smith",
+    "dob": "2015-08-10", "ssn": "XXX-XX-4323",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Son. Will age out Aug 10 2041 (end of birth month at age 26)."
+  },
+  {
+    "dependentId": "DEP-003", "employeeId": "ACM-E001",
+    "firstName": "Emma", "lastName": "Smith",
+    "dob": "2018-11-25", "ssn": "XXX-XX-4324",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Daughter. Carrier rejected transaction due to SSN validation issue. Demo: CT-10045 rejection scenario."
+  },
+  {
+    "dependentId": "DEP-004", "employeeId": "ACM-E002",
+    "firstName": "Liam", "lastName": "Johnson",
+    "dob": "2026-07-01", "ssn": null,
+    "relationship": "Child", "status": "Active",
+    "_notes": "Newborn. Added via life event LE-002 (Birth Jul 1 2026). SSN not yet issued — demo: newborn SSN timing rule."
+  },
+  {
+    "dependentId": "DEP-005", "employeeId": "ACM-E006",
+    "firstName": "Sophia", "lastName": "Miller",
+    "dob": "2020-05-15", "ssn": "XXX-XX-9015",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Adopted child. Added via life event LE-005 (Adoption Aug 10 2026)."
+  },
+  {
+    "dependentId": "DEP-006", "employeeId": "ACM-E007",
+    "firstName": "Elizabeth", "lastName": "Moore",
+    "dob": "1977-04-18", "ssn": "XXX-XX-0126",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-007", "employeeId": "ACM-E007",
+    "firstName": "Connor", "lastName": "Moore",
+    "dob": "2005-09-12", "ssn": "XXX-XX-0127",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Age 21 — eligible until end of month Sep 2031 (age 26)."
+  },
+  {
+    "dependentId": "DEP-008", "employeeId": "ACM-E007",
+    "firstName": "Megan", "lastName": "Moore",
+    "dob": "2001-03-05", "ssn": "XXX-XX-0128",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Age 25 — ages out Mar 31 2027. Demo: dependent approaching age-26 cutoff."
+  },
+  {
+    "dependentId": "DEP-009", "employeeId": "ACM-E008",
+    "firstName": "Richard", "lastName": "Taylor",
+    "dob": "1984-06-22", "ssn": "XXX-XX-1237",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-010", "employeeId": "ACM-E010",
+    "firstName": "Gerald", "lastName": "Thomas",
+    "dob": "1965-10-30", "ssn": "XXX-XX-3459",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-011", "employeeId": "ACM-E014",
+    "firstName": "Kevin", "lastName": "Martin",
+    "dob": "1977-08-14", "ssn": "XXX-XX-7893",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-012", "employeeId": "ACM-E014",
+    "firstName": "Chloe", "lastName": "Martin",
+    "dob": "2010-02-28", "ssn": "XXX-XX-7894",
+    "relationship": "Child", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-013", "employeeId": "ACM-E015",
+    "firstName": "Patricia", "lastName": "Thompson",
+    "dob": "1974-05-11", "ssn": "XXX-XX-8904",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-014", "employeeId": "ACM-E015",
+    "firstName": "Andrew", "lastName": "Thompson",
+    "dob": "2004-12-03", "ssn": "XXX-XX-8905",
+    "relationship": "Child", "status": "Active",
+    "_notes": "Age 22. Enrolled as student dependent."
+  },
+  {
+    "dependentId": "DEP-015", "employeeId": "ACM-E019",
+    "firstName": "Maria", "lastName": "Clark",
+    "dob": "1992-11-17", "ssn": "XXX-XX-2348",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-016", "employeeId": "ACM-E020",
+    "firstName": "Carlos", "lastName": "Rodriguez",
+    "dob": "1986-04-08", "ssn": "XXX-XX-3460",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-017", "employeeId": "ACM-E023",
+    "firstName": "Anne", "lastName": "Walker",
+    "dob": "1986-09-01", "ssn": "XXX-XX-6782",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-018", "employeeId": "ACM-E024",
+    "firstName": "Brian", "lastName": "Hall",
+    "dob": "1977-02-15", "ssn": "XXX-XX-7895",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-019", "employeeId": "ACM-E024",
+    "firstName": "Olivia", "lastName": "Hall",
+    "dob": "2012-06-20", "ssn": "XXX-XX-7896",
+    "relationship": "Child", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-020", "employeeId": "ACM-E025",
+    "firstName": "Michelle", "lastName": "Allen",
+    "dob": "1989-01-30", "ssn": "XXX-XX-8906",
+    "relationship": "Spouse", "status": "Active"
+  },
+  {
+    "dependentId": "DEP-021", "employeeId": "ACM-E030",
+    "firstName": "Marco", "lastName": "Lopez",
+    "dob": "1982-07-04", "ssn": "XXX-XX-3461",
+    "relationship": "Spouse", "status": "Pending",
+    "_notes": "Spouse added via marriage life event LE-001. Enrollment window open. Documentation pending."
+  },
+  {
+    "dependentId": "DEP-022", "employeeId": "ACM-E002",
+    "firstName": "Sarah", "lastName": "Smith",
+    "dob": "2001-03-15", "ssn": "XXX-XX-5522",
+    "relationship": "Child", "status": "Active",
+    "eligibilityRuleId": "ER-DEP-AGE-001",
+    "eligibilityStatus": "AGING_OUT",
+    "birthday26": "2027-03-15",
+    "lastCoveredDate": "2027-03-31",
+    "coverageTerminationDate": "2027-04-01",
+    "_notes": "Demo age-out scenario. Turns 26 on March 15 2027. Last covered date March 31 2027. Coverage terminates April 1 2027. Traceability: Benefits Guide PDF → 'eligible until age 26' → AI flags ambiguity → REQ-DEP-002 → ER-DEP-AGE-001 → DEPENDENT_AGE_OUT life event → Carrier TERMINATE → payroll recalculation."
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "requirementId": "REQ-OE-001",
+    "type": "Functional Requirement",
+    "title": "Configurable Open Enrollment Period Per Employer Group and Plan Year",
+    "description": "The system shall allow Benefits Administrators to create and configure open enrollment periods by employer group and plan year. Multiple enrollment periods per plan year shall be supported (e.g., regular open enrollment plus a separate new-hire enrollment window).",
+    "status": "Approved",
+    "tags": ["open-enrollment", "configuration"]
+  },
+  {
+    "requirementId": "REQ-OE-002",
+    "type": "Functional Requirement",
+    "title": "Configurable Start and End Dates with Times",
+    "description": "The system shall support configurable start date/time and end date/time for each open enrollment period. Both date and time shall be required fields. Time shall be specified in the employer group's configured time zone.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "configuration"],
+    "example": {
+      "startDateTime": "2026-10-01T00:00:00",
+      "endDateTime": "2026-10-15T23:59:59",
+      "timeZone": "America/New_York"
+    }
+  },
+  {
+    "requirementId": "REQ-OE-003",
+    "type": "Functional Requirement",
+    "title": "Time Zone–Aware Enrollment Deadline Evaluation",
+    "description": "The system shall evaluate enrollment availability and deadlines using the employer group's configured time zone, not UTC or server time. This ensures consistent deadline enforcement for employees across multiple time zones.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "time-zone"]
+  },
+  {
+    "requirementId": "REQ-OE-004",
+    "type": "Functional Requirement",
+    "title": "Dynamic Employee Enrollment State Calculation",
+    "description": "The system shall dynamically calculate each employee's enrollment state based on the current date/time, open enrollment configuration, and employee eligibility. State is not stored — it is derived from these inputs on every evaluation.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "enrollment-state"],
+    "enrollmentStates": ["NOT_ELIGIBLE", "NOT_STARTED", "IN_PROGRESS", "SUBMITTED", "COMPLETED", "EXPIRED", "LOCKED"],
+    "evaluationRule": "IF currentDateTime >= startDateTime AND currentDateTime <= endDateTime AND employee is eligible THEN enrollment = OPEN ELSE enrollment = CLOSED"
+  },
+  {
+    "requirementId": "REQ-OE-005",
+    "type": "Functional Requirement",
+    "title": "Open Enrollment and Life Event Windows Are Independent",
+    "description": "The system shall treat Open Enrollment and Qualifying Life Event enrollment windows as distinct and independent. An employee shall be permitted to initiate a qualifying life event enrollment even when annual Open Enrollment is closed.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "life-events"]
+  },
+  {
+    "requirementId": "REQ-OE-006",
+    "type": "Functional Requirement",
+    "title": "Ineligible Employees Cannot Submit Open Enrollment Elections",
+    "description": "The system shall prevent employees who do not meet eligibility criteria from initiating or submitting Open Enrollment elections. Eligibility is evaluated against the employer's configured eligibility rules at the time of enrollment.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "eligibility"]
+  },
+  {
+    "requirementId": "REQ-OE-007",
+    "type": "Functional Requirement",
+    "title": "Enrollment Deadline Enforcement",
+    "description": "The system shall prevent submission of new Open Enrollment elections after the configured enrollment deadline. Employees with in-progress (saved but not submitted) elections shall not have them automatically submitted — their status shall be set to EXPIRED.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "deadline"]
+  },
+  {
+    "requirementId": "REQ-OE-008",
+    "type": "Functional Requirement",
+    "title": "Saved vs. Submitted Elections Distinction",
+    "description": "The system shall distinguish between elections that have been saved (IN_PROGRESS) and elections that have been explicitly submitted (SUBMITTED / COMPLETED). Only submitted elections shall be treated as final and transmitted to payroll and carrier systems.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "enrollment-state"]
+  },
+  {
+    "requirementId": "REQ-OE-009",
+    "type": "Functional Requirement",
+    "title": "Configurable Auto-Reenrollment Behavior Per Plan",
+    "description": "The system shall support configurable auto-reenrollment behavior per plan type. Auto-reenrollment rules shall be defined explicitly per plan — the system shall not assume a universal behavior. FSA elections shall require active annual re-election by default.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "auto-reenrollment"],
+    "defaultRules": {
+      "Medical": "Maintain current election",
+      "Dental": "Maintain current election",
+      "Vision": "Maintain current election",
+      "FSA": "Do NOT auto-reenroll — active election required",
+      "HSA": "Recalculate based on medical election"
+    }
+  },
+  {
+    "requirementId": "REQ-OE-010",
+    "type": "Functional Requirement",
+    "title": "Configurable Grace Period",
+    "description": "The system shall support a configurable grace period (in days) after the enrollment deadline during which elections may still be submitted. For Acme 2027, the grace period is 0 days (no grace period).",
+    "status": "Approved",
+    "tags": ["open-enrollment", "grace-period"]
+  },
+  {
+    "requirementId": "REQ-OE-011",
+    "type": "Functional Requirement",
+    "title": "Administrator Actions: Extend, Reopen, and Close Enrollment",
+    "description": "The system shall allow authorized Benefits Administrators to extend an enrollment period end date, reopen a closed enrollment, or manually close an open enrollment. All such actions shall require a reason code and HR/admin confirmation, and shall be fully audited.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "admin-actions"]
+  },
+  {
+    "requirementId": "REQ-OE-012",
+    "type": "Functional Requirement",
+    "title": "Open Enrollment Period Audit Trail",
+    "description": "The system shall maintain an immutable audit trail for all changes to the open enrollment period configuration: creation, publication, start, extension, closure, reopening. Each event shall record action, actor, timestamp, old value, new value, and reason.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "audit"]
+  },
+  {
+    "requirementId": "REQ-OE-013",
+    "type": "Functional Requirement",
+    "title": "Employee Notifications for Enrollment Open and Closing Soon",
+    "description": "The system shall notify eligible employees when the enrollment period opens and again when it is approaching its end (configurable advance notice, default: 3 days before close). Notification channel shall be configurable per employer.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "notifications"]
+  },
+  {
+    "requirementId": "REQ-OE-014",
+    "type": "Functional Requirement",
+    "title": "Administrator Enrollment Progress Dashboard",
+    "description": "The system shall provide a real-time dashboard displaying Open Enrollment progress: total eligible employees, count/percent by state (Not Started, In Progress, Submitted, Completed, Expired), exceptions, plan version changes, and pending HR reviews.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "dashboard"],
+    "demoSeed": {
+      "openEnrollmentId": "OE-ACME-2027",
+      "eligibleEmployees": 5000,
+      "notStarted": 350,
+      "inProgress": 450,
+      "submitted": 4200,
+      "exceptions": 25,
+      "planVersionChanges": 12,
+      "pendingHRReview": 18
+    }
+  },
+  {
+    "requirementId": "REQ-OE-015",
+    "type": "Functional Requirement",
+    "title": "Detect Plan Version Changes Affecting In-Progress Sessions",
+    "description": "The system shall detect when a plan version changes while an employee's Open Enrollment session is in progress. Affected sessions shall be flagged with status PLAN_VERSION_CHANGED and the employee notified to review the updated plan before submitting.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "plan-versioning"]
+  },
+  {
+    "requirementId": "REQ-OE-016",
+    "type": "Functional Requirement",
+    "title": "Require Election Review After Plan Version Change",
+    "description": "When a plan version changes during an open enrollment session, the employee shall be required to explicitly review and re-confirm their election under the new plan version before submission. Auto-advancing through the change is not permitted.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "plan-versioning"]
+  },
+  {
+    "requirementId": "REQ-OE-017",
+    "type": "Functional Requirement",
+    "title": "Administrator-Approved Individual Enrollment Exceptions",
+    "description": "The system shall allow Benefits Administrators to grant individual enrollment exceptions for specific employees after the enrollment period closes. Each exception shall require a reason, authorization, and time limit. Approved exceptions shall reopen the enrollment window for the affected employee only.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "exceptions", "admin-actions"]
+  },
+  {
+    "requirementId": "REQ-OE-018",
+    "type": "Functional Requirement",
+    "title": "Traceability: Enrollment Period → Plan Versions → Employee Elections",
+    "description": "The system shall maintain traceability between the Open Enrollment configuration, plan versions available during enrollment, employee election sessions, submitted elections, and final coverage records. This chain must be navigable for audit and AI requirements traceability purposes.",
+    "status": "Approved",
+    "tags": ["open-enrollment", "traceability"],
+    "aiInsight": "AI Requirements Agent should detect references to annual Open Enrollment in source documents and flag the absence of specific enrollment window rules, submission deadlines, auto-reenrollment behavior, and late submission policy.",
+    "aiFlag": "OPEN_ENROLLMENT_WINDOW_NOT_DEFINED_IN_SOURCE_DOCUMENT"
+  }
+]

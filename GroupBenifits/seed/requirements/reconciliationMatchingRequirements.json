@@ -1,0 +1,149 @@
+[
+  {
+    "requirementId": "REQ-REC-001",
+    "type": "Functional Requirement",
+    "title": "Canonical Benefits Person ID",
+    "description": "The system shall maintain a canonical Benefits Person ID (benefitsPersonId) for each employee and dependent as the primary enterprise identifier for reconciliation. This ID is internal and does not equal the HR employee ID, carrier member ID, or payroll employee ID.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity"],
+    "idHierarchy": {
+      "benefitsPersonId": "Canonical internal identity (e.g., BP-000001)",
+      "employeeId": "HRIS employee identity (e.g., ACM-E001)",
+      "memberId": "Carrier-assigned coverage identity (e.g., MED-987654)",
+      "payrollEmployeeId": "Payroll system identity (e.g., PAY-001234)"
+    }
+  },
+  {
+    "requirementId": "REQ-REC-002",
+    "type": "Functional Requirement",
+    "title": "Cross-Reference Identity Mappings",
+    "description": "The system shall maintain persistent cross-reference mappings between Benefits Person ID, HR employee ID, carrier member IDs (one per carrier/product), and payroll employee ID. These mappings shall be effective-dated to support carrier transitions.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity", "data-model"]
+  },
+  {
+    "requirementId": "REQ-REC-003",
+    "type": "Functional Requirement",
+    "title": "Cross-System IDs Must Not Be Assumed Equal",
+    "description": "The system shall not assume that employee IDs are identical across HR, carrier, and payroll systems. The reconciliation engine shall always resolve identities through the cross-reference mapping, never by direct ID comparison across systems.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity"]
+  },
+  {
+    "requirementId": "REQ-REC-004",
+    "type": "Functional Requirement",
+    "title": "Multiple Carrier Member IDs Per Employee",
+    "description": "The system shall support multiple carrier member IDs for a single employee — one per benefit product or carrier. An employee enrolled in Medical (Aetna), Dental (Delta Dental), and Vision (VSP) shall have three separate carrier member ID mappings.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity"],
+    "demoSeed": {
+      "employeeId": "ACM-E001",
+      "benefitsPersonId": "BP-000001",
+      "carrierMappings": [
+        { "carrierId": "CARRIER-MED",    "memberId": "MED-987654" },
+        { "carrierId": "CARRIER-DENTAL", "memberId": "DEN-123456" },
+        { "carrierId": "CARRIER-VISION", "memberId": "VIS-555111" }
+      ],
+      "payrollId": "PAY-001234"
+    }
+  },
+  {
+    "requirementId": "REQ-REC-005",
+    "type": "Functional Requirement",
+    "title": "Dependent Identity Reconciliation",
+    "description": "The system shall support separate identity reconciliation for dependents. Each dependent shall have a Benefits Dependent ID (benefitsDependentId) and carrier-specific member ID mappings. Reconciliation shall be performed at both employee and dependent level.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity", "dependent"]
+  },
+  {
+    "requirementId": "REQ-REC-006",
+    "type": "Functional Requirement",
+    "title": "Composite Reconciliation Key",
+    "description": "The system shall use a composite reconciliation key for three-way matching: benefitsPersonId + planId + planVersionId + coverageTier + coverageEffectiveDate. This prevents false-positive matches when an employee has multiple plans, coverage changes, or mid-year transitions.",
+    "status": "Approved",
+    "tags": ["reconciliation", "matching"],
+    "compositeKey": "benefitsPersonId + planId + planVersionId + coverageTier + coverageEffectiveDate"
+  },
+  {
+    "requirementId": "REQ-REC-007",
+    "type": "Functional Requirement",
+    "title": "Effective-Dated Identity Mapping Resolution",
+    "description": "The system shall resolve external identifiers (carrier member ID, payroll ID) using effective-dated mappings that reflect carrier transitions. A reconciliation record shall always use the mapping that was active on the coverage effective date, not the current mapping.",
+    "status": "Approved",
+    "tags": ["reconciliation", "identity", "effective-dates"]
+  },
+  {
+    "requirementId": "REQ-REC-008",
+    "type": "Functional Requirement",
+    "title": "Field-Level Three-Way Comparison",
+    "description": "The system shall compare benefits, carrier, and payroll records at both identity and field levels. Field comparison shall include: plan, plan version, coverage tier, coverage effective date, coverage termination date, employee premium, employer contribution, and payroll deduction.",
+    "status": "Approved",
+    "tags": ["reconciliation", "matching"],
+    "fieldMatrix": {
+      "employeeIdentity": ["Benefits", "Carrier", "Payroll"],
+      "plan": ["Benefits", "Carrier"],
+      "planVersion": ["Benefits", "Carrier"],
+      "coverageTier": ["Benefits", "Carrier"],
+      "coverageEffectiveDate": ["Benefits", "Carrier"],
+      "employeePremium": ["Benefits", "Payroll"],
+      "payrollDeduction": ["Expected from Benefits", "Actual from Payroll"],
+      "employerContribution": ["Benefits", "Carrier"]
+    }
+  },
+  {
+    "requirementId": "REQ-REC-009",
+    "type": "Functional Requirement",
+    "title": "Identity Mapping Missing — Reconciliation Exception",
+    "description": "The system shall identify missing identity mappings as reconciliation exceptions with status IDENTITY_MAPPING_MISSING. The UI shall display the affected employee, missing mapping type, and resolution actions (create mapping, search carrier record, resolve duplicate).",
+    "status": "Approved",
+    "tags": ["reconciliation", "exceptions"],
+    "demoSeed": {
+      "employeeId": "ACM-E002",
+      "benefitsPersonId": "BP-000002",
+      "issue": "Dental Member ID missing",
+      "reconciliationStatus": "IDENTITY_MAPPING_MISSING"
+    }
+  },
+  {
+    "requirementId": "REQ-REC-010",
+    "type": "Functional Requirement",
+    "title": "Duplicate and Conflicting Identity Mapping Detection",
+    "description": "The system shall detect duplicate or conflicting identity mappings (e.g., two Benefits Person IDs mapped to the same carrier member ID, or two carrier member IDs mapped to the same employee for the same plan). These shall be raised as reconciliation exceptions.",
+    "status": "Approved",
+    "tags": ["reconciliation", "exceptions"]
+  },
+  {
+    "requirementId": "REQ-REC-011",
+    "type": "Functional Requirement",
+    "title": "Source Identifiers Retained for Audit",
+    "description": "The system shall retain the original source identifiers from each external system (carrier file, payroll export) on every reconciliation record. These shall not be overwritten by the canonical identity resolution process.",
+    "status": "Approved",
+    "tags": ["reconciliation", "audit"]
+  },
+  {
+    "requirementId": "REQ-REC-012",
+    "type": "Functional Requirement",
+    "title": "Reconciliation Audit Trail",
+    "description": "The system shall maintain an audit trail for each reconciliation run showing: composite key used, identity mappings resolved, fields compared, comparison results, reconciliation status, exceptions raised, and resolution actions taken.",
+    "status": "Approved",
+    "tags": ["reconciliation", "audit"],
+    "reconciliationStatuses": [
+      "MATCHED",
+      "MISSING_FROM_CARRIER",
+      "MISSING_FROM_PAYROLL",
+      "MISSING_FROM_BENEFITS",
+      "PLAN_MISMATCH",
+      "COVERAGE_TIER_MISMATCH",
+      "EFFECTIVE_DATE_MISMATCH",
+      "TERMINATION_DATE_MISMATCH",
+      "PREMIUM_MISMATCH",
+      "IDENTITY_MAPPING_MISSING",
+      "DUPLICATE_IDENTITY"
+    ],
+    "demoSeed": {
+      "ACM_E001": "MATCHED — all identities and fields reconcile",
+      "ACM_E002": "IDENTITY_MAPPING_MISSING — Dental member ID absent",
+      "ACM_E003": "PLAN_MISMATCH — carrier has PPO-1000, benefits has PPO-500"
+    }
+  }
+]

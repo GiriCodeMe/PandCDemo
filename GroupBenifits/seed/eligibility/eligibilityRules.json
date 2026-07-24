@@ -1,0 +1,142 @@
+[
+  {
+    "ruleId": "ER-001",
+    "employerId": "ACM-001",
+    "productId": "PROD-001",
+    "name": "Medical Eligibility — Full-Time 30+ Hours",
+    "description": "Full-time employees regularly scheduled to work at least 30 hours per week are eligible for medical benefits after completing the waiting period.",
+    "conditions": [
+      { "field": "employmentStatus", "operator": "equals", "value": "Active" },
+      { "field": "employmentType",   "operator": "equals", "value": "Full-time" },
+      { "field": "hoursPerWeek",     "operator": "greater_than_or_equal", "value": 30 }
+    ],
+    "waitingPeriodType": "FirstOfMonthFollowing30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "sourceDocumentRef": "Acme_2027_Benefits_Guide.pdf#Section2",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-002",
+    "employerId": "ACM-001",
+    "productId": "PROD-002",
+    "name": "Dental Eligibility — 20+ Hours",
+    "description": "Employees regularly scheduled to work at least 20 hours per week are eligible for dental benefits after completing the waiting period.",
+    "conditions": [
+      { "field": "employmentStatus", "operator": "equals", "value": "Active" },
+      { "field": "hoursPerWeek",     "operator": "greater_than_or_equal", "value": 20 }
+    ],
+    "waitingPeriodType": "FirstOfMonthFollowing30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "sourceDocumentRef": "Acme_2027_Benefits_Guide.pdf#Section2",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-003",
+    "employerId": "ACM-001",
+    "productId": "PROD-003",
+    "name": "Vision Eligibility — 20+ Hours",
+    "description": "Employees regularly scheduled to work at least 20 hours per week are eligible for vision benefits after completing the waiting period.",
+    "conditions": [
+      { "field": "employmentStatus", "operator": "equals", "value": "Active" },
+      { "field": "hoursPerWeek",     "operator": "greater_than_or_equal", "value": 20 }
+    ],
+    "waitingPeriodType": "FirstOfMonthFollowing30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "sourceDocumentRef": "Acme_2027_Benefits_Guide.pdf#Section2",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-004",
+    "employerId": "ACM-001",
+    "productId": "PROD-004",
+    "name": "Basic Life Eligibility — Full-Time 30+ Hours",
+    "description": "Full-time employees scheduled 30+ hours per week are automatically enrolled in Basic Life Insurance.",
+    "conditions": [
+      { "field": "employmentStatus", "operator": "equals", "value": "Active" },
+      { "field": "employmentType",   "operator": "equals", "value": "Full-time" },
+      { "field": "hoursPerWeek",     "operator": "greater_than_or_equal", "value": 30 }
+    ],
+    "waitingPeriodType": "FirstOfMonthFollowing30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-005",
+    "employerId": "ACM-001",
+    "productId": "PROD-008",
+    "name": "HSA Eligibility — Must Be Enrolled in HDHP 3000",
+    "description": "HSA eligibility requires enrollment in the HDHP 3000 medical plan. Employees enrolled in PPO 500, PPO 1000, or any other plan are not HSA-eligible.",
+    "conditions": [
+      { "field": "activeMedicalPlanCode", "operator": "equals", "value": "MED-HDHP-3000" }
+    ],
+    "waitingPeriodType": "Immediate",
+    "waitingPeriodDays": 0,
+    "status": "Active",
+    "sourceDocumentRef": "Acme_2027_Benefits_Guide.pdf#HSASection",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-006-CONFLICT",
+    "employerId": "ACM-001",
+    "productId": null,
+    "name": "AMBIGUOUS: Waiting Period Rule A — 30 Days",
+    "description": "[INTENTIONAL CONFLICT FOR AI DEMO] Rule A states: Coverage begins after 30 days of employment. This implies day 31 from hire date.",
+    "conditions": [
+      { "field": "tenureDays", "operator": "greater_than_or_equal", "value": 30 }
+    ],
+    "waitingPeriodType": "Days30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "conflictsWith": "ER-007-CONFLICT",
+    "conflictDescription": "ER-006 says coverage after 30 days (Day 31). ER-007 says first of month following 30 days (could be Day 31 to Day 61). AI should detect this conflict.",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-007-CONFLICT",
+    "employerId": "ACM-001",
+    "productId": null,
+    "name": "AMBIGUOUS: Waiting Period Rule B — First of Month Following 30 Days",
+    "description": "[INTENTIONAL CONFLICT FOR AI DEMO] Rule B states: Coverage begins on the first day of the month following completion of the 30-day waiting period.",
+    "conditions": [
+      { "field": "tenureDays", "operator": "greater_than_or_equal", "value": 30 },
+      { "field": "currentDate", "operator": "equals", "value": "FIRST_OF_FOLLOWING_MONTH" }
+    ],
+    "waitingPeriodType": "FirstOfMonthFollowing30",
+    "waitingPeriodDays": 30,
+    "status": "Active",
+    "conflictsWith": "ER-006-CONFLICT",
+    "conflictDescription": "Conflicts with ER-006. Employee hired on Dec 1 satisfies Day 30 on Dec 31. First of following month = Jan 1. These rules agree. But an employee hired on Nov 5 satisfies Day 30 on Dec 5. First of following month = Jan 1 — adding 27 extra days beyond the stated 30-day rule.",
+    "createdAt": "2026-10-01T00:00:00Z"
+  },
+  {
+    "ruleId": "ER-DEP-AGE-001",
+    "employerId": "ACM-001",
+    "productId": null,
+    "name": "Dependent Child Age-Out — Coverage Through End of Birth Month at Age 26",
+    "description": "Dependent children remain eligible through the last day of the calendar month in which they turn age 26. Coverage terminates on the first day of the following month. Authoritative Acme 2027 rule.",
+    "conditions": [
+      { "field": "relationship", "operator": "in", "value": ["Child", "Step-Child", "Adopted Child"] },
+      { "field": "dependentAge", "operator": "less_than_or_equal", "value": 26 },
+      { "field": "currentDate", "operator": "less_than_or_equal", "value": "LAST_DAY_OF_BIRTH_MONTH_AT_AGE_26" }
+    ],
+    "terminationRule": "LAST_DAY_OF_MONTH(DATE_ADD(dependentDOB, 26, YEARS))",
+    "coverageTerminationDate": "FIRST_DAY_OF_MONTH_AFTER(LAST_DAY_OF_BIRTH_MONTH_AT_AGE_26)",
+    "ambiguityFlag": true,
+    "ambiguityNote": "Source document states 'eligible until age 26' without specifying exact termination date. This rule interprets end-of-birth-month. Must be confirmed by Acme benefits/legal. See REQ-DEP-010 aiAmbiguityInsight.",
+    "status": "Active",
+    "sourceDocumentRef": "Acme_2027_Benefits_Guide.pdf#DependentEligibility",
+    "createdAt": "2026-10-01T00:00:00Z",
+    "demoScenario": {
+      "dependentId": "DEP-022",
+      "dependentName": "Sarah Smith",
+      "dateOfBirth": "2001-03-15",
+      "birthday26": "2027-03-15",
+      "lastCoveredDate": "2027-03-31",
+      "coverageTerminationDate": "2027-04-01"
+    }
+  }
+]

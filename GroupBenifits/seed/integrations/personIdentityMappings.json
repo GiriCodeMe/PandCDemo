@@ -1,0 +1,71 @@
+[
+  {
+    "benefitsPersonId": "BP-000001",
+    "personType": "EMPLOYEE",
+    "employeeId": "ACM-E001",
+    "status": "ACTIVE",
+    "effectiveFrom": "2027-01-01",
+    "effectiveTo": null,
+    "carrierMappings": [
+      { "carrierId": "CARRIER-MED",    "productId": "PROD-001", "memberId": "MED-987654", "effectiveFrom": "2027-01-01", "effectiveTo": null },
+      { "carrierId": "CARRIER-DENTAL", "productId": "PROD-002", "memberId": "DEN-123456", "effectiveFrom": "2027-01-01", "effectiveTo": null },
+      { "carrierId": "CARRIER-VISION", "productId": "PROD-003", "memberId": "VIS-555111", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "payrollMappings": [
+      { "payrollSystemId": "PAYROLL-001", "payrollEmployeeId": "PAY-001234", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "reconciliationStatus": "MATCHED",
+    "_notes": "Demo scenario 1: Fully mapped employee — three-way reconciliation succeeds."
+  },
+  {
+    "benefitsPersonId": "BP-000002",
+    "personType": "EMPLOYEE",
+    "employeeId": "ACM-E002",
+    "status": "ACTIVE",
+    "effectiveFrom": "2027-01-01",
+    "effectiveTo": null,
+    "carrierMappings": [
+      { "carrierId": "CARRIER-MED", "productId": "PROD-001", "memberId": "MED-987655", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "payrollMappings": [
+      { "payrollSystemId": "PAYROLL-001", "payrollEmployeeId": "PAY-001235", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "reconciliationStatus": "IDENTITY_MAPPING_MISSING",
+    "reconciliationExceptions": [
+      {
+        "exceptionType": "IDENTITY_MAPPING_MISSING",
+        "product": "Dental",
+        "carrierId": "CARRIER-DENTAL",
+        "description": "ACM-E002 is enrolled in dental coverage but no carrier member ID mapping exists for Delta Dental.",
+        "resolution": "PENDING"
+      }
+    ],
+    "_notes": "Demo scenario 2: Missing Dental carrier member ID mapping. Reconciliation exception on Dental product."
+  },
+  {
+    "benefitsPersonId": "BP-000003",
+    "personType": "EMPLOYEE",
+    "employeeId": "ACM-E003",
+    "status": "ACTIVE",
+    "effectiveFrom": "2027-01-01",
+    "effectiveTo": null,
+    "carrierMappings": [
+      { "carrierId": "CARRIER-MED", "productId": "PROD-001", "memberId": "MED-987656", "carrierPlanCode": "PPO-1000", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "payrollMappings": [
+      { "payrollSystemId": "PAYROLL-001", "payrollEmployeeId": "PAY-001236", "effectiveFrom": "2027-01-01", "effectiveTo": null }
+    ],
+    "reconciliationStatus": "PLAN_MISMATCH",
+    "reconciliationExceptions": [
+      {
+        "exceptionType": "PLAN_MISMATCH",
+        "product": "Medical",
+        "benefitsPlanCode": "PPO-500",
+        "carrierPlanCode": "PPO-1000",
+        "description": "Benefits administration shows enrollment in PPO-500 but carrier file shows enrollment in PPO-1000 for the same member ID.",
+        "resolution": "PENDING"
+      }
+    ],
+    "_notes": "Demo scenario 3: Plan mismatch. Benefits has PPO-500, carrier file has PPO-1000. Requires investigation and correction."
+  }
+]

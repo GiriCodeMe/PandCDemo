@@ -1,0 +1,153 @@
+[
+  {
+    "requirementId": "REQ-DEP-001",
+    "type": "Functional Requirement",
+    "title": "Dependent DOB Required for Age Eligibility",
+    "description": "The system shall require date of birth for all dependents. Dependent eligibility cannot be evaluated without a valid DOB.",
+    "status": "Approved",
+    "tags": ["dependent", "eligibility", "age-out"]
+  },
+  {
+    "requirementId": "REQ-DEP-002",
+    "type": "Functional Requirement",
+    "title": "Child Coverage Through End of 26th Birthday Month",
+    "description": "A dependent child shall remain eligible for coverage through the last day of the calendar month in which the dependent turns age 26. This is the authoritative Acme 2027 rule. Coverage does NOT terminate on the birthday — it continues through month-end.",
+    "status": "Approved",
+    "tags": ["dependent", "eligibility", "age-out"],
+    "authoritative": true,
+    "example": {
+      "dependentDOB": "2001-03-15",
+      "26thBirthday": "2027-03-15",
+      "lastCoveredDate": "2027-03-31",
+      "coverageTerminationDate": "2027-04-01"
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-003",
+    "type": "Functional Requirement",
+    "title": "Coverage Termination Date Calculation",
+    "description": "The dependent's coverage termination date (the first ineligible day) shall be the first day of the month following the dependent's 26th birthday month. Formula: Coverage Termination Date = First day of (month after 26th birthday month).",
+    "status": "Approved",
+    "tags": ["dependent", "age-out"],
+    "ageOutScenarios": [
+      { "scenario": "Birthday mid-month",    "dob": "2001-03-15", "birthday26": "2027-03-15", "lastCoveredDate": "2027-03-31", "terminationDate": "2027-04-01" },
+      { "scenario": "Birthday on the 1st",   "dob": "2001-04-01", "birthday26": "2027-04-01", "lastCoveredDate": "2027-04-30", "terminationDate": "2027-05-01" },
+      { "scenario": "Birthday on last day",  "dob": "2001-04-30", "birthday26": "2027-04-30", "lastCoveredDate": "2027-04-30", "terminationDate": "2027-05-01" },
+      { "scenario": "Birthday Feb 28",       "dob": "2001-02-28", "birthday26": "2027-02-28", "lastCoveredDate": "2027-02-28", "terminationDate": "2027-03-01" },
+      { "scenario": "Leap-year birthday",    "dob": "2000-02-29", "birthday26": "2026-02-28", "lastCoveredDate": "2026-02-28", "terminationDate": "2026-03-01", "note": "Feb 29 DOB in non-leap year resolves to Feb 28" },
+      { "scenario": "Plan-year boundary",    "dob": "2001-12-15", "birthday26": "2027-12-15", "lastCoveredDate": "2027-12-31", "terminationDate": "2028-01-01" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEP-004",
+    "type": "Functional Requirement",
+    "title": "Proactive Age-Out Identification",
+    "description": "The system shall automatically identify dependents approaching the age-out threshold within the current plan year. A configurable advance notice period (default: 90 days before termination date) shall trigger notifications to the employee and HR administrator.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "notifications"]
+  },
+  {
+    "requirementId": "REQ-DEP-005",
+    "type": "Functional Requirement",
+    "title": "Automatic Age-Out Life Event",
+    "description": "The system shall automatically generate a DEPENDENT_AGE_OUT life event when a dependent reaches the plan-defined age limit. This event triggers the downstream workflow: eligibility update → employee notification → carrier termination transaction → coverage tier recalculation → payroll deduction recalculation.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "life-events"],
+    "workflow": [
+      "Dependent reaches age 26",
+      "Eligibility engine detects age-out",
+      "dependent.eligibilityStatus = INELIGIBLE",
+      "coverageTerminationDate calculated",
+      "Employee and HR notified",
+      "Carrier TERMINATE_DEPENDENT transaction generated",
+      "Coverage tier recalculated based on remaining eligible dependents",
+      "Employee premium recalculated",
+      "Payroll deduction recalculated and updated",
+      "Audit record created"
+    ]
+  },
+  {
+    "requirementId": "REQ-DEP-006",
+    "type": "Functional Requirement",
+    "title": "Carrier Termination Transaction for Aged-Out Dependent",
+    "description": "The system shall generate a carrier termination transaction (transactionType: TERMINATE) for the aged-out dependent with the coverage termination date as the effective date. The transaction must be transmitted before the termination effective date.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "carrier"]
+  },
+  {
+    "requirementId": "REQ-DEP-007",
+    "type": "Functional Requirement",
+    "title": "Coverage Tier Recalculation After Age-Out",
+    "description": "The system shall recalculate the employee's coverage tier based on remaining eligible dependents after a dependent ages out. The coverage tier is determined by counting remaining eligible dependents, not by automatically downgrading. Removal of one child does not necessarily change the tier if other eligible dependents remain.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "coverage-tier"],
+    "example": {
+      "scenario": "One child ages out, other children remain",
+      "before": "Employee + Children",
+      "dependentsRemaining": 2,
+      "after": "Employee + Children — tier unchanged",
+      "note": "Tier only changes to Employee Only or EE + Child when dependent count drops to trigger a tier boundary."
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-008",
+    "type": "Functional Requirement",
+    "title": "Premium Recalculation After Dependent Age-Out",
+    "description": "The system shall recalculate employee and employer premium contributions after a dependent age-out event changes the coverage tier.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "premium"],
+    "example": {
+      "before": { "tier": "EE + Child", "monthlyPremium": 240, "biweeklyDeduction": 27.69 },
+      "after": { "tier": "EE Only", "monthlyPremium": 150, "biweeklyDeduction": 69.23 },
+      "note": "Deduction decreases effective the day coverage tier changes."
+    }
+  },
+  {
+    "requirementId": "REQ-DEP-009",
+    "type": "Functional Requirement",
+    "title": "Payroll Deduction Recalculation After Dependent Age-Out",
+    "description": "The system shall recalculate and update payroll deductions following a dependent age-out event, applying the standard pay-period deduction formula (REQ-PREM-002) based on the new coverage tier and remaining coverage period for the plan year.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "payroll"]
+  },
+  {
+    "requirementId": "REQ-DEP-010",
+    "type": "Functional Requirement",
+    "title": "Dependent Age-Out Audit Record",
+    "description": "The system shall retain the dependent's DOB, 26th birthday, last covered date, termination date, coverage tier before/after, premium change, applicable eligibility rule, and triggering event for audit and traceability purposes.",
+    "status": "Approved",
+    "tags": ["dependent", "age-out", "audit"],
+    "dataModel": {
+      "employeeId": "string",
+      "dependentId": "string",
+      "dependentName": "string",
+      "relationship": "CHILD",
+      "dateOfBirth": "date",
+      "ageLimit": 26,
+      "birthday26": "date",
+      "lastCoveredDate": "date",
+      "coverageTerminationDate": "date",
+      "eligibilityStatus": "AGING_OUT | INELIGIBLE",
+      "eligibilityRuleId": "ER-DEP-AGE-001",
+      "planYear": "integer"
+    },
+    "demoSeedScenario": {
+      "employeeId": "ACM-E002",
+      "dependentId": "DEP-022",
+      "dependentName": "Sarah Smith",
+      "dateOfBirth": "2001-03-15",
+      "birthday26": "2027-03-15",
+      "lastCoveredDate": "2027-03-31",
+      "coverageTerminationDate": "2027-04-01",
+      "traceabilityChain": "Eligibility Policy PDF → 'eligible until age 26' → AI flags ambiguity → REQ-DEP-002 → ER-DEP-AGE-001 → DEP-022 age-out event → Carrier TERMINATE → Coverage tier change → Payroll recalculated"
+    },
+    "aiAmbiguityInsight": {
+      "flag": "Ambiguous Dependent Eligibility Requirement",
+      "source": "Acme 2027 Benefits Guide, Dependent Eligibility Section",
+      "rule": "Dependent children are eligible until age 26.",
+      "unresolvedDecision": "When exactly does coverage terminate? On the 26th birthday, end of birthday month, end of plan year, or end of calendar year?",
+      "recommendedInterpretation": "Coverage terminates on the last day of the calendar month in which the dependent turns 26.",
+      "requiresBusinessOwnerConfirmation": true
+    }
+  }
+]

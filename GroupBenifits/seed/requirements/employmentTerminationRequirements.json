@@ -1,0 +1,146 @@
+[
+  {
+    "requirementId": "REQ-TERM-001",
+    "type": "Functional Requirement",
+    "title": "Receive and Record Employee Termination Events",
+    "description": "The system shall receive and record employee termination events from HRIS or HR administrator input. Each event shall capture employeeId, terminationType, terminationDate, terminationReason, and the recorder's identity and timestamp.",
+    "status": "Approved",
+    "tags": ["termination", "lifecycle"]
+  },
+  {
+    "requirementId": "REQ-TERM-002",
+    "type": "Functional Requirement",
+    "title": "Configurable Termination Reason Codes",
+    "description": "The system shall support a configurable set of termination reason codes. Reason codes affect downstream workflow routing. The demo supports: VOLUNTARY, INVOLUNTARY, RETIREMENT, REDUCTION_IN_FORCE, DEATH, LEAVE_OF_ABSENCE, TRANSFER, REHIRE.",
+    "status": "Approved",
+    "tags": ["termination"],
+    "terminationTypes": ["VOLUNTARY", "INVOLUNTARY", "RETIREMENT", "REDUCTION_IN_FORCE", "DEATH", "LEAVE_OF_ABSENCE", "TRANSFER", "REHIRE"]
+  },
+  {
+    "requirementId": "REQ-TERM-003",
+    "type": "Functional Requirement",
+    "title": "Benefits Coverage Termination Date Calculated Independently",
+    "description": "The system shall calculate the benefits coverage termination date independently from the employment termination date. The coverage end date is governed by the plan's coverage termination rule, not the HR termination date directly.",
+    "status": "Approved",
+    "tags": ["termination", "effective-dates"],
+    "acmeDefaultRule": "Coverage remains active through the end of the month in which employment terminates. Coverage termination effective date = first day of following month.",
+    "example": {
+      "terminationDate": "2027-06-15",
+      "lastActiveCoverageDate": "2027-06-30",
+      "coverageTerminationEffectiveDate": "2027-07-01"
+    },
+    "note": "The month-end rule is the Acme demo policy. Actual rule must be confirmed by Acme benefits/legal."
+  },
+  {
+    "requirementId": "REQ-TERM-004",
+    "type": "Functional Requirement",
+    "title": "Identify All Active Benefit Plans for Terminated Employee",
+    "description": "The system shall identify all active benefit plan enrollments associated with a terminated employee across all products (Medical, Dental, Vision, Life, STD, LTD, HSA, FSA) and generate termination actions for each.",
+    "status": "Approved",
+    "tags": ["termination", "enrollment"]
+  },
+  {
+    "requirementId": "REQ-TERM-005",
+    "type": "Functional Requirement",
+    "title": "Identify Covered Dependents",
+    "description": "The system shall identify all dependents covered under the terminated employee's benefit plans. Dependent coverage termination shall follow the same coverage termination rule as the employee, unless the dependent qualifies for separate continuation coverage.",
+    "status": "Approved",
+    "tags": ["termination", "dependent"]
+  },
+  {
+    "requirementId": "REQ-TERM-006",
+    "type": "Functional Requirement",
+    "title": "Continuation Coverage Eligibility Evaluation",
+    "description": "The system shall evaluate continuation coverage eligibility for the terminated employee and covered dependents based on applicable plan and qualifying event rules. Eligibility evaluation results shall be recorded for audit. Coverage plans eligible for continuation shall be identified separately.",
+    "status": "Approved",
+    "tags": ["termination", "cobra", "continuation"],
+    "note": "COBRA administration rules are highly plan- and jurisdiction-specific. The demo models continuation coverage as configurable policy rules, not hard-coded legal requirements. All demo rules require Acme benefits/legal validation."
+  },
+  {
+    "requirementId": "REQ-TERM-007",
+    "type": "Functional Requirement",
+    "title": "Create Continuation Coverage Event for Eligible Employees",
+    "description": "The system shall create a continuation coverage event (COBRA_QUALIFYING_EVENT) for eligible employees and dependents. The event shall identify qualified beneficiaries, coverage eligible for continuation, the qualifying event type, and the effective date.",
+    "status": "Approved",
+    "tags": ["termination", "cobra"],
+    "demoScenario": {
+      "employeeId": "ACM-E001",
+      "terminationDate": "2027-06-15",
+      "coverageEndDate": "2027-06-30",
+      "qualifyingEvent": "EMPLOYMENT_TERMINATION",
+      "qualifiedBeneficiaries": ["BP-000001", "BD-000001"],
+      "cobraStatus": "ELIGIBILITY_REVIEW"
+    }
+  },
+  {
+    "requirementId": "REQ-TERM-008",
+    "type": "Functional Requirement",
+    "title": "Track Continuation Coverage Notice and Election Status",
+    "description": "The system shall track the full continuation coverage lifecycle: notice pending → notice generated → notice sent → notice delivered → election pending → elected / waived / expired.",
+    "status": "Approved",
+    "tags": ["termination", "cobra"],
+    "statusLifecycle": ["NOTICE_PENDING", "NOTICE_GENERATED", "NOTICE_SENT", "NOTICE_DELIVERED", "ELECTION_PENDING", "ELECTED", "WAIVED", "EXPIRED", "TERMINATED"]
+  },
+  {
+    "requirementId": "REQ-TERM-009",
+    "type": "Functional Requirement",
+    "title": "Generate Carrier Termination Transactions",
+    "description": "The system shall generate carrier termination transactions (transactionType: TERMINATE_COVERAGE) for all active coverages when employment terminates. Termination effective date shall be derived from the coverage termination date, not the HR termination date.",
+    "status": "Approved",
+    "tags": ["termination", "carrier"],
+    "demoCarrierTransactions": [
+      { "transactionId": "TXN-TERM-001", "carrierId": "CARRIER-MED",    "planId": "MED-PPO-500",  "type": "TERMINATE_COVERAGE", "effectiveDate": "2027-07-01" },
+      { "transactionId": "TXN-TERM-002", "carrierId": "CARRIER-DENTAL", "planId": "DENTAL-001",   "type": "TERMINATE_COVERAGE", "effectiveDate": "2027-07-01" },
+      { "transactionId": "TXN-TERM-003", "carrierId": "CARRIER-VISION", "planId": "VISION-001",   "type": "TERMINATE_COVERAGE", "effectiveDate": "2027-07-01" }
+    ]
+  },
+  {
+    "requirementId": "REQ-TERM-010",
+    "type": "Functional Requirement",
+    "title": "Stop or Adjust Payroll Benefit Deductions on Termination",
+    "description": "The system shall stop active employee payroll benefit deductions following termination. The final payroll deduction period and any outstanding premium calculations shall be determined and recorded. COBRA premiums, if elected, are handled separately from active employee payroll deductions.",
+    "status": "Approved",
+    "tags": ["termination", "payroll"]
+  },
+  {
+    "requirementId": "REQ-TERM-011",
+    "type": "Functional Requirement",
+    "title": "Complete Termination Audit Trail",
+    "description": "The system shall maintain an immutable audit trail covering: termination event received, coverage termination date calculation, qualified beneficiary identification, continuation coverage eligibility evaluation, carrier termination transactions, payroll deduction termination, and all status transitions.",
+    "status": "Approved",
+    "tags": ["termination", "audit"]
+  },
+  {
+    "requirementId": "REQ-TERM-012",
+    "type": "Functional Requirement",
+    "title": "Prevent New Enrollment After Termination",
+    "description": "The system shall prevent new active employee Open Enrollment and life event elections for employees who have an effective termination date. In-progress enrollment sessions shall be cancelled when a termination event is received with an effective date on or before the session expiry.",
+    "status": "Approved",
+    "tags": ["termination", "enrollment"]
+  },
+  {
+    "requirementId": "REQ-TERM-013",
+    "type": "Functional Requirement",
+    "title": "Rehire Eligibility Rules",
+    "description": "The system shall support employee rehire scenarios with configurable rehire eligibility rules. If rehired within the configured break-in-service threshold (default: 30 days), original waiting period credit shall be preserved. If rehired after the threshold, the waiting period shall restart.",
+    "status": "Approved",
+    "tags": ["termination", "rehire"],
+    "rehireRule": "Break ≤ 30 days: preserve waiting period credit. Break > 30 days: restart waiting period. See REQ-ELIG-007."
+  },
+  {
+    "requirementId": "REQ-TERM-014",
+    "type": "Functional Requirement",
+    "title": "Employee Death as Distinct Qualifying Event",
+    "description": "The system shall treat employee death as a distinct qualifying event with a separate workflow from ordinary termination. Dependent continuation coverage eligibility shall be evaluated separately. Carrier death benefit transactions shall be generated where applicable. The workflow shall differ from VOLUNTARY or INVOLUNTARY termination.",
+    "status": "Approved",
+    "tags": ["termination", "death", "cobra"]
+  },
+  {
+    "requirementId": "REQ-TERM-015",
+    "type": "Functional Requirement",
+    "title": "Flag Termination-Related Reconciliation Failures",
+    "description": "The system shall identify and flag carrier and payroll reconciliation exceptions arising from termination events, including: carrier transaction not accepted, payroll deduction not stopped, continuation coverage not confirmed by carrier.",
+    "status": "Approved",
+    "tags": ["termination", "reconciliation"]
+  }
+]

@@ -1,0 +1,131 @@
+[
+  {
+    "requirementId": "REQ-ELIG-001",
+    "type": "Functional Requirement",
+    "title": "Calendar-Day Waiting Period",
+    "description": "The system shall calculate the waiting period using calendar days, not business days. Weekends, holidays, and company shutdown days are included in the count. 30 calendar days means exactly 30 days from hire date regardless of day of week.",
+    "status": "Approved",
+    "tags": ["eligibility", "waiting-period", "calendar"]
+  },
+  {
+    "requirementId": "REQ-ELIG-002",
+    "type": "Functional Requirement",
+    "title": "Waiting Period Completion Date Calculation",
+    "description": "The system shall calculate the waiting-period completion date as: Waiting Period Completion Date = Hire Date + 30 Calendar Days.",
+    "status": "Approved",
+    "tags": ["eligibility", "waiting-period"],
+    "example": { "hireDate": "2027-01-01", "waitingPeriodDays": 30, "completionDate": "2027-01-31" }
+  },
+  {
+    "requirementId": "REQ-ELIG-003",
+    "type": "Functional Requirement",
+    "title": "Coverage Effective Date — First of Following Month",
+    "description": "The system shall calculate the coverage effective date as the first day of the calendar month following the waiting-period completion date. Coverage Effective Date = First day of (month after waiting-period completion month).",
+    "status": "Approved",
+    "tags": ["eligibility", "effective-date"],
+    "example": { "waitingPeriodCompletionDate": "2027-01-31", "coverageEffectiveDate": "2027-02-01" }
+  },
+  {
+    "requirementId": "REQ-ELIG-004",
+    "type": "Functional Requirement",
+    "title": "No Same-Day Activation When Completion Lands on the 1st",
+    "description": "The system shall NOT activate coverage on the waiting-period completion date, even when the completion date is the first day of a month. Coverage still begins on the first day of the following month unless an explicit plan override is configured. This is the authoritative rule for Acme 2027.",
+    "status": "Approved",
+    "ambiguityFlag": true,
+    "ambiguityNote": "If the 30-day completion date falls on the 1st of a month, coverage does NOT begin that day — it begins the 1st of the NEXT month. This must be confirmed by the business owner. An alternative interpretation (coverage begins immediately when completion = 1st) exists and should be presented to Acme for sign-off.",
+    "tags": ["eligibility", "effective-date", "edge-case"],
+    "example": {
+      "hireDate": "2027-01-02",
+      "completionDate": "2027-02-01",
+      "coverageEffectiveDateUnderThisRule": "2027-03-01",
+      "coverageEffectiveDateUnderAlternativeRule": "2027-02-01",
+      "requiresBusinessOwnerConfirmation": true
+    }
+  },
+  {
+    "requirementId": "REQ-ELIG-005",
+    "type": "Functional Requirement",
+    "title": "Hire Date Edge Cases — First, Last, and Mid-Month",
+    "description": "The system shall correctly calculate waiting period and coverage dates for employees hired on the first, last, and any intermediate day of a month, including month-end boundary dates.",
+    "status": "Approved",
+    "tags": ["eligibility", "edge-case"],
+    "testScenarios": [
+      { "scenario": "Hire on 1st", "hireDate": "2027-01-01", "completionDate": "2027-01-31", "effectiveDate": "2027-02-01" },
+      { "scenario": "Hire on 2nd", "hireDate": "2027-01-02", "completionDate": "2027-02-01", "effectiveDate": "2027-03-01" },
+      { "scenario": "Hire mid-month", "hireDate": "2027-01-15", "completionDate": "2027-02-14", "effectiveDate": "2027-03-01" },
+      { "scenario": "Hire on 30th", "hireDate": "2027-01-30", "completionDate": "2027-03-01", "effectiveDate": "2027-04-01" },
+      { "scenario": "Hire on 31st", "hireDate": "2027-01-31", "completionDate": "2027-03-02", "effectiveDate": "2027-04-01" },
+      { "scenario": "Hire on Feb 28", "hireDate": "2027-02-28", "completionDate": "2027-03-30", "effectiveDate": "2027-04-01" }
+    ]
+  },
+  {
+    "requirementId": "REQ-ELIG-006",
+    "type": "Functional Requirement",
+    "title": "Leap Year Support",
+    "description": "The system shall correctly handle leap year dates, including February 29 hire dates and waiting periods that cross February 28/29 boundaries.",
+    "status": "Approved",
+    "tags": ["eligibility", "edge-case", "leap-year"],
+    "testScenarios": [
+      { "scenario": "Hire on Feb 29 (leap year)", "hireDate": "2028-02-29", "completionDate": "2028-03-30", "effectiveDate": "2028-04-01" },
+      { "scenario": "Waiting period crosses Feb 28 (non-leap)", "hireDate": "2027-01-31", "completionDate": "2027-03-02", "effectiveDate": "2027-04-01" }
+    ]
+  },
+  {
+    "requirementId": "REQ-ELIG-007",
+    "type": "Functional Requirement",
+    "title": "Eligibility Re-evaluation on Status or Hours Change",
+    "description": "The system shall recalculate eligibility when an employee's employment status or scheduled hours change. Each change scenario must be handled explicitly.",
+    "status": "Approved",
+    "tags": ["eligibility", "status-change"],
+    "statusChangeScenarios": [
+      { "transition": "Full-time → Part-time", "action": "Re-evaluate eligibility against part-time rules" },
+      { "transition": "Part-time → Full-time", "action": "Re-evaluate against full-time rules; apply new waiting period if applicable" },
+      { "transition": "Active → Leave", "action": "Apply leave policy; coverage may continue or suspend depending on plan" },
+      { "transition": "Active → Terminated", "action": "Set coverage termination date; trigger COBRA notice" },
+      { "transition": "Rehire after ≤30 days", "action": "Preserve original waiting-period credit" },
+      { "transition": "Rehire after >30 days", "action": "Restart 30-day waiting period" },
+      { "transition": "Temporary → Full-time", "action": "Recalculate waiting period from reclassification date" },
+      { "transition": "Location change", "action": "Re-evaluate location-based eligibility rules" }
+    ]
+  },
+  {
+    "requirementId": "REQ-ELIG-008",
+    "type": "Functional Requirement",
+    "title": "Eligibility Calculation Audit Record",
+    "description": "The system shall persist the full eligibility calculation for each employee, not just the final eligibility status. This supports audit traceability from source document to coverage effective date.",
+    "status": "Approved",
+    "tags": ["eligibility", "audit", "traceability"],
+    "dataModel": {
+      "employeeId": "string",
+      "hireDate": "date",
+      "employmentStatus": "enum",
+      "scheduledHours": "number",
+      "waitingPeriodDays": "integer",
+      "waitingPeriodType": "CALENDAR_DAYS | BUSINESS_DAYS",
+      "waitingPeriodCompletionDate": "date",
+      "coverageEffectiveDate": "date",
+      "eligibilityStatus": "ELIGIBLE | INELIGIBLE | PENDING | EXCEPTION",
+      "eligibilityRuleId": "string FK → eligibility_rules",
+      "calculationVersion": "string"
+    },
+    "traceabilityChain": "Benefits Guide PDF → '30-day waiting period' → AI Extracted → REQ-ELIG-002 → Business Rule ER-003 → Eligibility Calculation → Employee ACM-E001 → Coverage Effective Date 2027-03-01"
+  },
+  {
+    "requirementId": "REQ-ELIG-009",
+    "type": "Functional Requirement",
+    "title": "AI Ambiguity Flag — Conflicting Eligibility Rules",
+    "description": "The system shall flag conflicting or ambiguous eligibility rules discovered in source documents for human review. The AI Requirements Agent must surface these as decisions requiring business owner confirmation, not silently resolve them.",
+    "status": "Approved",
+    "tags": ["eligibility", "ai-requirements", "ambiguity"],
+    "demoAIInsight": {
+      "flag": "Ambiguous Eligibility Rule Detected",
+      "source": "Acme 2027 Benefits Guide, Eligibility Section",
+      "rule": "Coverage begins on the first day of the month following completion of the 30-day waiting period.",
+      "unresolvedEdgeCase": "If the 30-day waiting period completes on the first day of a month, does coverage begin immediately or on the first day of the following month?",
+      "recommendedInterpretation": "Coverage begins on the first day of the following month.",
+      "alternativeInterpretation": "Coverage begins immediately when completion date = 1st of month.",
+      "requiresBusinessOwnerConfirmation": true,
+      "relatedRequirements": ["REQ-ELIG-003", "REQ-ELIG-004"]
+    }
+  }
+]

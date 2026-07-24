@@ -1,0 +1,195 @@
+[
+  {
+    "lifeEventCode": "MARRIAGE",
+    "eventName": "Marriage",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_EVENT_DATE",
+    "effectiveDateRule": "EVENT_DATE_OR_FIRST_OF_FOLLOWING_MONTH",
+    "effectiveDateNote": "Exact rule requires Acme confirmation: event date (May 15) or first of following month (June 1)?",
+    "documentationRequired": true,
+    "documentationTypes": ["Marriage Certificate"],
+    "allowedElectionChanges": [
+      "ADD_SPOUSE",
+      "CHANGE_MEDICAL",
+      "CHANGE_DENTAL",
+      "CHANGE_VISION",
+      "ADD_VOLUNTARY_LIFE"
+    ],
+    "requiresHRApproval": false,
+    "sourceRuleId": "LE-MARRIAGE-001",
+    "status": "APPROVED",
+    "aiFlag": null
+  },
+  {
+    "lifeEventCode": "BIRTH",
+    "eventName": "Birth",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_EVENT_DATE",
+    "effectiveDateRule": "EVENT_DATE",
+    "effectiveDateNote": "Newborn coverage typically effective date of birth. Needs confirmation from Acme plan documents.",
+    "documentationRequired": true,
+    "documentationTypes": ["Birth Certificate", "Social Security Number (may be delayed for newborns)"],
+    "allowedElectionChanges": [
+      "ADD_CHILD",
+      "CHANGE_COVERAGE_TIER",
+      "ADD_DENTAL_CHILD",
+      "ADD_VISION_CHILD"
+    ],
+    "requiresHRApproval": false,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "SOURCE_DOCUMENT_DOES_NOT_SPECIFY_NOTIFICATION_WINDOW",
+    "aiInsight": "Source document does not define a notification window for Birth events. 30 days is the provisional demo default based on the marriage rule. Acme benefits/legal must confirm."
+  },
+  {
+    "lifeEventCode": "ADOPTION",
+    "eventName": "Adoption",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_PLACEMENT_DATE",
+    "effectiveDateRule": "PLACEMENT_DATE",
+    "effectiveDateNote": "System must capture both placement date and legal adoption date separately. Effective date may differ between plans. Requires Acme legal confirmation.",
+    "documentationRequired": true,
+    "documentationTypes": ["Placement Agreement", "Adoption Decree", "Court Order"],
+    "allowedElectionChanges": [
+      "ADD_CHILD",
+      "CHANGE_COVERAGE_TIER"
+    ],
+    "requiresHRApproval": false,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "EFFECTIVE_DATE_AMBIGUOUS_PLACEMENT_VS_LEGAL_ADOPTION",
+    "aiInsight": "Adoption events require clarification: is coverage effective from placement date or final legal adoption date? These can be months apart. Acme plan documents must specify which date governs."
+  },
+  {
+    "lifeEventCode": "DIVORCE",
+    "eventName": "Divorce",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_DIVORCE_EFFECTIVE_DATE",
+    "effectiveDateRule": "DIVORCE_EFFECTIVE_DATE",
+    "effectiveDateNote": "Coverage termination driven by divorce effective date, not employee notification date. Spouse cannot be removed prospectively based on employee's anticipated divorce date.",
+    "documentationRequired": true,
+    "documentationTypes": ["Divorce Decree", "Legal Separation Agreement"],
+    "allowedElectionChanges": [
+      "REMOVE_SPOUSE",
+      "CHANGE_COVERAGE_TIER",
+      "CHANGE_MEDICAL",
+      "CHANGE_DENTAL",
+      "CHANGE_VISION",
+      "REMOVE_VOLUNTARY_LIFE_SPOUSE"
+    ],
+    "requiresHRApproval": true,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "SOURCE_DOCUMENT_DOES_NOT_SPECIFY_NOTIFICATION_WINDOW",
+    "aiInsight": "Source document does not define a notification window for Divorce. Coverage termination should be the divorce effective date, not employee notification date. System must not retroactively remove coverage prior to the legal divorce date."
+  },
+  {
+    "lifeEventCode": "LOSS_OF_OTHER_COVERAGE",
+    "eventName": "Loss of Other Coverage",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_LOSS_DATE",
+    "effectiveDateRule": "DAY_AFTER_LOSS_DATE",
+    "effectiveDateNote": "Coverage effective the day after the other coverage ends. Requires documentation of involuntary loss.",
+    "documentationRequired": true,
+    "documentationTypes": ["Certificate of Creditable Coverage", "Loss of Coverage Notice from Prior Carrier"],
+    "additionalAttributes": [
+      "otherCoverageProvider",
+      "lossOfCoverageDate",
+      "reasonForLoss",
+      "priorCoverageType"
+    ],
+    "allowedElectionChanges": [
+      "ENROLL_EMPLOYEE",
+      "ENROLL_DEPENDENTS",
+      "CHANGE_MEDICAL",
+      "CHANGE_DENTAL",
+      "CHANGE_VISION"
+    ],
+    "requiresHRApproval": false,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "SOURCE_DOCUMENT_DOES_NOT_SPECIFY_NOTIFICATION_WINDOW",
+    "aiInsight": "This event enables employee-initiated enrollment outside Open Enrollment. The 30-day window is a provisional default. Acme plan documents must specify the exact window and whether voluntary loss of coverage qualifies."
+  },
+  {
+    "lifeEventCode": "DEATH_OF_DEPENDENT",
+    "eventName": "Death of Dependent",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_DATE_OF_DEATH",
+    "effectiveDateRule": "DATE_OF_DEATH",
+    "effectiveDateNote": "Dependent removed effective date of death. All coverages affected (medical, dental, vision, life where applicable).",
+    "documentationRequired": true,
+    "documentationTypes": ["Death Certificate"],
+    "coverageToRemove": ["MEDICAL", "DENTAL", "VISION", "DEPENDENT_LIFE"],
+    "allowedElectionChanges": [
+      "REMOVE_DEPENDENT",
+      "CHANGE_COVERAGE_TIER"
+    ],
+    "requiresHRApproval": true,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "SOURCE_DOCUMENT_DOES_NOT_SPECIFY_NOTIFICATION_WINDOW",
+    "aiInsight": "Coverage termination date is driven by date of death, not HR notification. System must ensure all dependent coverages (medical, dental, vision, dependent life) are terminated. Effective date rule needs Acme confirmation."
+  },
+  {
+    "lifeEventCode": "DEPENDENT_AGE_OUT",
+    "eventName": "Dependent Age-Out",
+    "notificationWindowDays": null,
+    "windowType": "AUTOMATIC",
+    "windowStartDay": "SYSTEM_GENERATED",
+    "effectiveDateRule": "FIRST_DAY_OF_MONTH_AFTER_26TH_BIRTHDAY_MONTH",
+    "effectiveDateNote": "Automatic event. System identifies dependents approaching age 26 and generates the termination event. No employee notification window applies — the event date is deterministic.",
+    "documentationRequired": false,
+    "allowedElectionChanges": [
+      "REMOVE_DEPENDENT",
+      "RECALCULATE_COVERAGE_TIER",
+      "RECALCULATE_PREMIUM"
+    ],
+    "requiresHRApproval": false,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "EFFECTIVE_DATE_AMBIGUOUS_IN_SOURCE_DOCUMENT",
+    "aiInsight": "Source document states 'eligible until age 26' without specifying the exact termination date. Authoritative Acme rule: last day of calendar month in which dependent turns 26. Requires business owner sign-off. See ER-DEP-AGE-001.",
+    "linkedEligibilityRule": "ER-DEP-AGE-001",
+    "advanceNotificationDays": 90
+  },
+  {
+    "lifeEventCode": "GAIN_OF_OTHER_COVERAGE",
+    "eventName": "Gain of Other Coverage",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_NEW_COVERAGE_DATE",
+    "effectiveDateRule": "NEW_COVERAGE_START_DATE",
+    "effectiveDateNote": "Employee may waive or reduce existing coverage when gaining other coverage. Optional event — not all plans require notification.",
+    "documentationRequired": false,
+    "allowedElectionChanges": [
+      "WAIVE_MEDICAL",
+      "WAIVE_DENTAL",
+      "WAIVE_VISION",
+      "CHANGE_COVERAGE_TIER"
+    ],
+    "requiresHRApproval": false,
+    "status": "OPTIONAL",
+    "aiFlag": null
+  },
+  {
+    "lifeEventCode": "EMPLOYMENT_STATUS_CHANGE",
+    "eventName": "Employment Status Change",
+    "notificationWindowDays": 30,
+    "windowType": "CALENDAR_DAYS",
+    "windowStartDay": "DAY_0_STATUS_EFFECTIVE_DATE",
+    "effectiveDateRule": "STATUS_CHANGE_DATE_OR_FIRST_OF_FOLLOWING_MONTH",
+    "effectiveDateNote": "Eligibility re-evaluated from status effective date. Coverage may continue, change, or terminate depending on new classification.",
+    "documentationRequired": false,
+    "allowedElectionChanges": [
+      "RE_EVALUATE_ELIGIBILITY",
+      "CHANGE_COVERAGE_TIER",
+      "ENROLL_IF_NOW_ELIGIBLE",
+      "TERMINATE_IF_NO_LONGER_ELIGIBLE"
+    ],
+    "requiresHRApproval": false,
+    "status": "REQUIRES_CONFIRMATION",
+    "aiFlag": "ELIGIBILITY_TRANSITION_RULE_NOT_DEFINED",
+    "aiInsight": "When status changes (e.g., part-time to full-time), the system must define which eligibility rule version applies and whether a new waiting period restarts. See REQ-ELIG-007."
+  }
+]

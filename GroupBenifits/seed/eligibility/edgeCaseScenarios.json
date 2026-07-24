@@ -1,0 +1,113 @@
+[
+  {
+    "scenarioId": "ELIG-EDGE-001",
+    "scenario": "Hire on 1st of month",
+    "hireDate": "2027-01-01",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-01-31",
+    "coverageEffectiveDate": "2027-02-01",
+    "notes": "Straightforward. Completion on Jan 31, coverage begins Feb 1.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-002",
+    "scenario": "Hire on 2nd — completion lands on 1st of next month",
+    "hireDate": "2027-01-02",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-02-01",
+    "coverageEffectiveDate": "2027-03-01",
+    "notes": "CRITICAL EDGE CASE. Completion is Feb 1 — the first of a month. Under the authoritative rule, coverage still begins March 1, not February 1. Requires business owner confirmation.",
+    "ambiguityFlag": true,
+    "expectedBehavior": "ELIGIBLE",
+    "alternativeEffectiveDate": "2027-02-01",
+    "requiresBusinessOwnerConfirmation": true
+  },
+  {
+    "scenarioId": "ELIG-EDGE-003",
+    "scenario": "Hire mid-month",
+    "hireDate": "2027-01-15",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-02-14",
+    "coverageEffectiveDate": "2027-03-01",
+    "notes": "Standard case. Coverage begins first of month following Feb 14.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-004",
+    "scenario": "Hire on 30th — waiting period crosses month boundary",
+    "hireDate": "2027-01-30",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-03-01",
+    "coverageEffectiveDate": "2027-04-01",
+    "notes": "CRITICAL EDGE CASE. Jan 30 + 30 days = March 1. Same ambiguity as ELIG-EDGE-002.",
+    "ambiguityFlag": true,
+    "expectedBehavior": "ELIGIBLE",
+    "requiresBusinessOwnerConfirmation": true
+  },
+  {
+    "scenarioId": "ELIG-EDGE-005",
+    "scenario": "Hire on 31st",
+    "hireDate": "2027-01-31",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-03-02",
+    "coverageEffectiveDate": "2027-04-01",
+    "notes": "Jan 31 + 30 days = March 2. Coverage begins April 1.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-006",
+    "scenario": "Hire on Feb 28 (non-leap year)",
+    "hireDate": "2027-02-28",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-03-30",
+    "coverageEffectiveDate": "2027-04-01",
+    "notes": "Feb 28 + 30 days = March 30. Coverage begins April 1.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-007",
+    "scenario": "Hire on Feb 29 (leap year 2028)",
+    "hireDate": "2028-02-29",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2028-03-30",
+    "coverageEffectiveDate": "2028-04-01",
+    "notes": "Feb 29 + 30 days = March 30. Coverage begins April 1.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-008",
+    "scenario": "Employee hired on last day of February crosses into March",
+    "hireDate": "2027-01-31",
+    "waitingPeriodDays": 30,
+    "waitingPeriodCompletionDate": "2027-03-02",
+    "coverageEffectiveDate": "2027-04-01",
+    "notes": "Completion in early March → first eligible date April 1.",
+    "expectedBehavior": "ELIGIBLE"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-009",
+    "scenario": "Rehire within 30-day break",
+    "originalHireDate": "2027-01-01",
+    "terminationDate": "2027-02-01",
+    "rehireDate": "2027-02-15",
+    "breakInServiceDays": 14,
+    "waitingPeriodCreditPreserved": true,
+    "coverageEffectiveDate": "2027-02-01",
+    "notes": "Break ≤ 30 days. Original waiting-period credit preserved. Coverage effective date from original hire calculation applies.",
+    "requiresBusinessOwnerConfirmation": true,
+    "relatedRequirement": "REQ-ELIG-007"
+  },
+  {
+    "scenarioId": "ELIG-EDGE-010",
+    "scenario": "Rehire after 31-day break",
+    "originalHireDate": "2027-01-01",
+    "terminationDate": "2027-02-01",
+    "rehireDate": "2027-03-15",
+    "breakInServiceDays": 42,
+    "waitingPeriodCreditPreserved": false,
+    "waitingPeriodCompletionDate": "2027-04-14",
+    "coverageEffectiveDate": "2027-05-01",
+    "notes": "Break > 30 days. Waiting period restarts from rehire date.",
+    "relatedRequirement": "REQ-ELIG-007"
+  }
+]

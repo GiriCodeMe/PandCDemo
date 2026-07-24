@@ -1,0 +1,163 @@
+[
+  {
+    "requirementId": "REQ-ACA-001",
+    "type": "Functional Requirement",
+    "title": "Employer ACA Compliance Profile",
+    "description": "The system shall maintain an ACA compliance profile for each employer group, including ALE determination, employee count, measurement method, measurement/administrative/stability period configuration, and plan year.",
+    "status": "Approved",
+    "tags": ["aca", "compliance"],
+    "demoSeed": {
+      "employerGroupId": "ACM-001",
+      "acaApplicableLargeEmployer": true,
+      "employeeCount": 5000,
+      "acaMeasurementMethod": "LOOK_BACK",
+      "measurementPeriodMonths": 12,
+      "administrativePeriodMonths": 2,
+      "stabilityPeriodMonths": 12,
+      "planYear": 2027
+    }
+  },
+  {
+    "requirementId": "REQ-ACA-002",
+    "type": "Functional Requirement",
+    "title": "Applicable Large Employer Determination",
+    "description": "The system shall support designation of an employer as an Applicable Large Employer (ALE) based on configured employer-level employee count data, not a hard-coded threshold rule. The ALE determination shall be auditable.",
+    "status": "Approved",
+    "tags": ["aca", "compliance"],
+    "note": "5,000 employees triggers ACA employer mandate. The demo stores the ALE determination as a configured fact, not as a derived rule."
+  },
+  {
+    "requirementId": "REQ-ACA-003",
+    "type": "Functional Requirement",
+    "title": "ACA Measurement Periods Per Employee",
+    "description": "The system shall maintain ACA measurement periods for applicable employees, capturing measurement period start/end, administrative period, stability period, and the resulting full-time determination.",
+    "status": "Approved",
+    "tags": ["aca", "measurement"]
+  },
+  {
+    "requirementId": "REQ-ACA-004",
+    "type": "Functional Requirement",
+    "title": "Configurable ACA Measurement Methodology",
+    "description": "The system shall support at least the Look-Back Measurement Method as a configurable option. The measurement method, period lengths, and applicable employee categories shall be defined in the employer ACA profile, not hard-coded.",
+    "status": "Approved",
+    "tags": ["aca", "measurement"]
+  },
+  {
+    "requirementId": "REQ-ACA-005",
+    "type": "Functional Requirement",
+    "title": "Track Employee Hours or Service for ACA Determination",
+    "description": "The system shall track employee scheduled hours or applicable service data used to determine ACA full-time status during the measurement period.",
+    "status": "Approved",
+    "tags": ["aca", "measurement"]
+  },
+  {
+    "requirementId": "REQ-ACA-006",
+    "type": "Functional Requirement",
+    "title": "Effective-Dated ACA Full-Time Determination",
+    "description": "The system shall maintain an effective-dated ACA full-time or non-full-time determination for each employee. Status changes shall be versioned and auditable.",
+    "status": "Approved",
+    "tags": ["aca", "classification"],
+    "acaStatuses": ["FULL_TIME", "PART_TIME", "VARIABLE_HOUR", "SEASONAL", "INELIGIBLE", "MEASUREMENT_PENDING", "MEASUREMENT_COMPLETE"]
+  },
+  {
+    "requirementId": "REQ-ACA-007",
+    "type": "Functional Requirement",
+    "title": "Monthly Coverage Offer Tracking",
+    "description": "The system shall track monthly coverage offer status for ACA-applicable employees. The system shall record, for each month, whether affordable minimum-value coverage was offered to the employee.",
+    "status": "Approved",
+    "tags": ["aca", "offer-tracking"]
+  },
+  {
+    "requirementId": "REQ-ACA-008",
+    "type": "Functional Requirement",
+    "title": "Distinguish Coverage Offered, Elected, and Active",
+    "description": "The system shall maintain separate status for coverage offered (offer made to employee), coverage elected (employee accepted), and coverage active (coverage in effect). These three states shall not be collapsed.",
+    "status": "Approved",
+    "tags": ["aca", "offer-tracking"]
+  },
+  {
+    "requirementId": "REQ-ACA-009",
+    "type": "Functional Requirement",
+    "title": "Monthly ACA Records for Reporting Year",
+    "description": "The system shall maintain a monthly ACA coverage and offer record for each applicable employee across all 12 months of the reporting year. Records shall be retained for terminated employees for reporting purposes.",
+    "status": "Approved",
+    "tags": ["aca", "reporting"],
+    "demoSeedExample": {
+      "employeeId": "ACM-E001",
+      "reportingYear": 2027,
+      "month_01": { "acaFullTime": true, "coverageOffered": true, "coverageEnrolled": true, "offerCode": "1E", "safeHarborCode": "2C" },
+      "month_03": { "acaFullTime": true, "coverageOffered": false, "exceptionType": "FULL_TIME_NO_OFFER" }
+    }
+  },
+  {
+    "requirementId": "REQ-ACA-010",
+    "type": "Functional Requirement",
+    "title": "Identify ACA Compliance Exceptions",
+    "description": "The system shall identify potential ACA compliance exceptions including: full-time employee with no offer, offer not affordable, no minimum value, late offer, missing monthly data, missing SSN, missing address, invalid plan mapping, and termination date mismatch.",
+    "status": "Approved",
+    "tags": ["aca", "exceptions"],
+    "exceptionTypes": [
+      "FULL_TIME_NO_OFFER", "OFFER_NOT_AFFORDABLE", "NO_MINIMUM_VALUE",
+      "OFFER_AFTER_REQUIRED_DATE", "MISSING_MONTHLY_DATA", "MISSING_SSN",
+      "MISSING_ADDRESS", "INVALID_PLAN_MAPPING", "TERMINATION_DATE_MISMATCH"
+    ],
+    "demoScenario": {
+      "employeeId": "ACM-E025",
+      "acaStatus": "FULL_TIME",
+      "marchCoverageOffered": false,
+      "exceptionType": "FULL_TIME_NO_OFFER",
+      "month": "2027-03",
+      "aiInsight": "ACM-E025 is ACA full-time based on measurement period but no medical offer is recorded for March 2027. Potential ACA compliance exception."
+    }
+  },
+  {
+    "requirementId": "REQ-ACA-011",
+    "type": "Functional Requirement",
+    "title": "Generate 1095-C Reporting Dataset",
+    "description": "The system shall generate a 1095-C reporting dataset based on employee, monthly coverage, and offer data. The output shall be a structured data record suitable for review and downstream filing, not a hard-coded IRS form. The demo generates mock 1095-C records as a reporting dataset.",
+    "status": "Approved",
+    "tags": ["aca", "1095c"],
+    "note": "The demo produces a reporting dataset. Exact 1095-C codes, affordability calculations, filing deadlines, and IRS submission requirements must be validated against current IRS guidance and Acme's tax/legal policies."
+  },
+  {
+    "requirementId": "REQ-ACA-012",
+    "type": "Functional Requirement",
+    "title": "Validate 1095-C Data Before Output",
+    "description": "The system shall validate 1095-C data completeness and consistency before generating the reporting output, including employee data validation, monthly coverage completeness, and offer code applicability.",
+    "status": "Approved",
+    "tags": ["aca", "1095c", "validation"]
+  },
+  {
+    "requirementId": "REQ-ACA-013",
+    "type": "Functional Requirement",
+    "title": "ACA Status Change Audit Trail",
+    "description": "The system shall maintain an immutable audit trail of all ACA status changes and any reporting corrections, including who made the change, when, and what was changed.",
+    "status": "Approved",
+    "tags": ["aca", "audit"]
+  },
+  {
+    "requirementId": "REQ-ACA-014",
+    "type": "Functional Requirement",
+    "title": "Retain ACA Records for Terminated Employees",
+    "description": "The system shall retain historical ACA monthly records for terminated employees through the applicable reporting period. Termination of employment shall not delete or archive ACA monthly data needed for 1095-C reporting.",
+    "status": "Approved",
+    "tags": ["aca", "termination"]
+  },
+  {
+    "requirementId": "REQ-ACA-015",
+    "type": "Functional Requirement",
+    "title": "ACA Integration with Eligibility, Enrollment, Carrier, Payroll, and Termination",
+    "description": "ACA tracking shall be integrated with the employee benefits lifecycle: hire → eligibility → coverage offer → enrollment → monthly tracking → life event → termination → 1095-C. Changes in eligibility, enrollment, or coverage shall update the monthly ACA record.",
+    "status": "Approved",
+    "tags": ["aca", "integration"]
+  },
+  {
+    "requirementId": "REQ-ACA-016",
+    "type": "Functional Requirement",
+    "title": "Configurable ACA Reporting Workflow and Status",
+    "description": "The system shall support a configurable ACA reporting workflow with tracked status: DATA_COLLECTION → VALIDATION → EXCEPTIONS → READY_FOR_REVIEW → APPROVED → GENERATED → DISTRIBUTED → FILED → ARCHIVED.",
+    "status": "Approved",
+    "tags": ["aca", "reporting-workflow"],
+    "reportingWorkflow": ["NOT_STARTED", "DATA_COLLECTION", "VALIDATION", "EXCEPTIONS", "READY_FOR_REVIEW", "APPROVED", "GENERATED", "DISTRIBUTED", "FILED", "ARCHIVED"]
+  }
+]

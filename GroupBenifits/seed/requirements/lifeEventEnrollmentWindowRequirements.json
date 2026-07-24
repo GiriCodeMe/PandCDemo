@@ -1,0 +1,128 @@
+[
+  {
+    "requirementId": "REQ-LE-001",
+    "type": "Functional Requirement",
+    "title": "Configurable Enrollment Window Per Life Event Type",
+    "description": "The system shall maintain a configurable enrollment window for each qualifying life event type. A single hardcoded 30-day window must not be applied uniformly across all event types.",
+    "status": "Approved",
+    "tags": ["life-events", "enrollment-window"]
+  },
+  {
+    "requirementId": "REQ-LE-002",
+    "type": "Functional Requirement",
+    "title": "Support Calendar-Day and Business-Day Windows",
+    "description": "The system shall support both calendar-day and business-day enrollment windows, configurable per event type.",
+    "status": "Approved",
+    "tags": ["life-events", "enrollment-window"]
+  },
+  {
+    "requirementId": "REQ-LE-003",
+    "type": "Functional Requirement",
+    "title": "Submission Deadline Calculation",
+    "description": "The system shall calculate the submission deadline as: Event Date (Day 0) + Configured Window Days. The employee has through 11:59 PM on the final day to submit the election change. Example: Marriage May 15 + 30 days = deadline June 14.",
+    "status": "Approved",
+    "tags": ["life-events", "enrollment-window"],
+    "dayZeroRule": "Event date is Day 0. Employee has through 11:59 PM on the 30th calendar day following the event to submit."
+  },
+  {
+    "requirementId": "REQ-LE-004",
+    "type": "Functional Requirement",
+    "title": "Late Submission Handling",
+    "description": "The system shall prevent automatic coverage changes for late submissions. Late submissions (submitted after the window closes) shall be routed to HR exception review. The system shall not automatically update coverage from a late submission.",
+    "status": "Approved",
+    "tags": ["life-events", "late-submission"],
+    "lateSubmissionStatuses": ["LATE_SUBMISSION_PENDING_HR_REVIEW", "LATE_SUBMISSION_APPROVED", "LATE_SUBMISSION_REJECTED"],
+    "demoScenario": {
+      "employee": "Carol Lopez",
+      "event": "Divorce",
+      "eventDate": "2027-07-05",
+      "deadline": "2027-08-04",
+      "submissionDate": "2027-08-10",
+      "status": "LATE_SUBMISSION"
+    }
+  },
+  {
+    "requirementId": "REQ-LE-005",
+    "type": "Functional Requirement",
+    "title": "Event-Specific Coverage Effective-Date Rules",
+    "description": "The system shall apply event-specific effective-date rules. Coverage effective dates differ by event type: Birth = birth date; Marriage = event date or first of following month (needs confirmation); Loss of Coverage = day after loss. The system shall not apply a single universal effective-date rule.",
+    "status": "Approved",
+    "tags": ["life-events", "effective-date"]
+  },
+  {
+    "requirementId": "REQ-LE-006",
+    "type": "Functional Requirement",
+    "title": "Permitted Election Changes Per Event Type",
+    "description": "The system shall restrict permitted enrollment changes to those defined for each event type. A Birth event permits adding a child but does not permit adding a spouse. A Marriage event permits adding a spouse. The system shall enforce these restrictions.",
+    "status": "Approved",
+    "tags": ["life-events", "election-changes"]
+  },
+  {
+    "requirementId": "REQ-LE-007",
+    "type": "Functional Requirement",
+    "title": "Independent Date Tracking: Event, Submission, Deadline, Effective",
+    "description": "The system shall track event date, submission date, submission deadline, and coverage effective date independently as separate fields. These four dates may differ and must not be collapsed into a single field.",
+    "status": "Approved",
+    "tags": ["life-events", "data-model"],
+    "dataModel": {
+      "eventDate": "date — when the qualifying life event occurred",
+      "submissionDeadline": "date — last permitted submission date",
+      "submissionDate": "date | null — when the employee submitted the election",
+      "coverageEffectiveDate": "date — when coverage change takes effect"
+    }
+  },
+  {
+    "requirementId": "REQ-LE-008",
+    "type": "Functional Requirement",
+    "title": "Documentation Requirements Per Event Type",
+    "description": "The system shall track and enforce documentation requirements per life event type. Marriage requires marriage certificate; Birth requires birth certificate; Adoption requires placement agreement and adoption decree; Divorce requires divorce decree. Documentation status shall gate final approval.",
+    "status": "Approved",
+    "tags": ["life-events", "documentation"]
+  },
+  {
+    "requirementId": "REQ-LE-009",
+    "type": "Functional Requirement",
+    "title": "HR Approval for Exceptions and Late Submissions",
+    "description": "The system shall route late submissions and flagged life events to HR for exception review and approval. HR approval shall be tracked with timestamp and approver ID. Approved exceptions shall proceed to coverage update; rejected exceptions shall close the event.",
+    "status": "Approved",
+    "tags": ["life-events", "hr-approval"]
+  },
+  {
+    "requirementId": "REQ-LE-010",
+    "type": "Functional Requirement",
+    "title": "Life Event Audit Trail",
+    "description": "The system shall maintain an immutable audit trail for all life event changes, including event type, event date, submission date, election changes made, coverage effective date, documentation received, approvals, and final status.",
+    "status": "Approved",
+    "tags": ["life-events", "audit"]
+  },
+  {
+    "requirementId": "REQ-LE-011",
+    "type": "Functional Requirement",
+    "title": "AI Flag: Missing Enrollment Window Rule",
+    "description": "The system shall flag life event types that do not have a defined enrollment window or effective-date rule. The AI Requirements Agent shall surface these as open decisions requiring business owner confirmation, not silently apply a default.",
+    "status": "Approved",
+    "tags": ["life-events", "ai-requirements", "ambiguity"],
+    "demoAIInsight": {
+      "flag": "Incomplete Life Event Requirements Detected",
+      "existingRule": "Marriage — 30-day window (defined in source document)",
+      "missingRules": [
+        { "event": "Birth",                   "window": "Not specified", "effectiveDate": "Not specified" },
+        { "event": "Adoption",                "window": "Not specified", "effectiveDate": "Placement or adoption date — ambiguous" },
+        { "event": "Divorce",                 "window": "Not specified", "effectiveDate": "Not specified" },
+        { "event": "Loss of Other Coverage",  "window": "Not specified", "effectiveDate": "Not specified" },
+        { "event": "Death of Dependent",      "window": "Not specified", "effectiveDate": "Not specified" },
+        { "event": "Dependent Age-Out",       "window": "N/A (automatic)", "effectiveDate": "Ambiguous — see ER-DEP-AGE-001" }
+      ],
+      "recommendation": "Create event-specific enrollment rules rather than applying the marriage 30-day window universally. Requires Benefits/Legal confirmation.",
+      "requiresBusinessOwnerConfirmation": true
+    }
+  },
+  {
+    "requirementId": "REQ-LE-012",
+    "type": "Functional Requirement",
+    "title": "No Universal Default Enrollment Window",
+    "description": "The system shall not assume that all qualifying life events share the same enrollment window. Event rules marked REQUIRES_CONFIRMATION shall display a provisional label in the UI ('Provisional — Requires Benefits/Legal Confirmation') until approved.",
+    "status": "Approved",
+    "tags": ["life-events", "enrollment-window"]
+  }
+]
