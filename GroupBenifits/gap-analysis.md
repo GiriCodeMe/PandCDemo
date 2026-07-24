@@ -116,6 +116,53 @@ The requirements document covers 5 EPICs, ~35 features, and a clear demo story. 
 
 ---
 
+## 10. Phase 2 — Platform Architecture Gaps
+
+_Identified in Phase 2 gap review. All 14 new requirement sets created under `seed/requirements/`._
+
+| # | Gap Category | Priority | Status | Requirement Set |
+|---|-------------|----------|--------|----------------|
+| 1 | **Security & Privacy** | P0 | ✅ **RESOLVED** | 15 requirements REQ-SEC-001–015 in `securityPrivacyRequirements.json`. PII classification; SSN encrypted at rest, masked XXX-XX-1234 in all UI/API/notifications/logs; TLS 1.2+; demo mock JWT (AUTH_MODE=mock); file upload magic-bytes validation; CORS whitelist = FRONTEND_URL only; security headers via helmet; PII access events audited without recording the PII value itself. |
+| 2 | **Role-Based Access Control** | P0 | ✅ **RESOLVED** | 15 requirements REQ-RBAC-001–015 in `rbacRequirements.json`. 10 personas defined with full permission matrix covering VIEW/CREATE/EDIT/DELETE/APPROVE/PUBLISH/TRANSMIT/EXPORT per feature area. UI hides/disables unauthorized actions (UX layer); API enforces independently (security layer). Persona quick-switch in global navigation header. Bearer token with personaId + role. |
+| 3 | **Audit & Traceability (extended)** | P0 | ✅ **RESOLVED** | Extended by REQ-AIGOV-015 (provenance chain navigable: Document → Extraction Run → Requirement → Review → Approval → Configuration) and REQ-AUD-001–015 (existing). Full forward and backward traceability through `aiDocumentIntelligenceRequirements.json` (REQ-AI-KNOW-011). |
+| 4 | **AI Governance & Human-in-the-Loop** | P0 | ✅ **RESOLVED** | 15 requirements REQ-AIGOV-001–015 in `aiGovernanceRequirements.json`. Provenance schema; confidence bands ≥90%/70–89%/<70%; no auto-commit without human approval (architectural principle); status badges [AI]/[HR]/[✓]/[✗]/[?]; bulk action confirmation dialogs; no silent AI failures; AI output targets only named config fields; governance dashboard KPIs; reviewer assignment workflow. |
+| 5 | **Data Lifecycle & Retention** | P1 | ✅ **RESOLVED** | 12 requirements REQ-DL-001–012 in `dataLifecycleRequirements.json`. Soft delete pattern (isActive flag / ARCHIVED/RETIRED status); terminated employees retained in ARCHIVED state; audit log immutable and non-deletable; plan versions never hard-deleted; archived data queryable via include_archived=true; hard deletes only during POST /api/demo/reset. |
+| 6 | **Workflow & Approval State Machines** | P0 | ✅ **RESOLVED** | 15 requirements REQ-WF-001–015 in `workflowStateRequirements.json`. Explicit state machines defined for: Plan lifecycle (6 states), AI Requirement lifecycle (7 states), Enrollment lifecycle (9 states), Eligibility Rule lifecycle (5 states), Carrier Transmission lifecycle (9 states), Life Event lifecycle (8 states). All transitions create immutable audit events. HTTP 422 BUSINESS_RULE_VIOLATION on invalid transitions. |
+| 7 | **Operational Resilience** | P1 | ✅ **RESOLVED** | 12 requirements REQ-OPS-001–012 in `operationalResilienceRequirements.json`. Idempotency keys on all mutating APIs (24h dedup window; duplicate → 200 + Idempotent-Replayed: true); partial batch processing; dead-letter queue (FAILED_PERMANENT after 3 retries); X-Correlation-Id propagated end-to-end; graceful degradation (non-critical failures don't block enrollment or carrier transmission); health check endpoints for all external dependencies. |
+| 8 | **Demo Experience & Observability** | P0 | ✅ **RESOLVED** | 12 requirements REQ-DEMO-001–012 in `demoControlCenterRequirements.json`. SYSTEM_ADMIN-only Demo Control Center: reset ≤ 3s; 3 scenario presets (HAPPY_PATH/EXCEPTIONS/FAILURES); carrier simulation one-click controls; AI mode toggle (Live Gemini / Demo Fallback with banner); specific error simulation (CT-10045, DED-10001, rate limit, invalid SSN); date override; Pre-Warm AI (24h cache); snapshot save/restore (max 3 snapshots). |
+| 9 | **Accessibility** | P1 | ✅ **RESOLVED** | 12 requirements REQ-A11Y-001–012 in `accessibilityRequirements.json`. WCAG 2.1 AA target; keyboard navigation (no traps; Escape dismisses all modals); visible focus indicators (3:1+ contrast); 4.5:1 text color contrast; status badges always include text label (never color-only); aria-live regions for AI streaming responses; skip navigation link; descriptive page titles updated on SPA navigation. |
+| 10 | **Performance & Scalability** | P1 | ✅ **RESOLVED** | 12 requirements REQ-PERF-001–012 in `performanceRequirements.json`. Non-AI API p95 ≤ 500ms; initial page load ≤ 3s; AI first token ≤ 3s; enrollment submission ≤ 5s; eligibility rule engine ≤ 200ms; dashboard ≤ 1s from seed snapshot; 5,000-employee dataset at all targets; carrier simulation 100 records ≤ 10s; demo reset ≤ 3s. |
+| 11 | **Versioning & Effective Dating (Cross-Entity)** | P0 | ✅ **RESOLVED** | 12 requirements REQ-VER-X-001–012 in `crossEntityVersioningRequirements.json`. Versioning extended beyond plans to: eligibilityRules, aiRequirements, rateTable, employerContribution, carrierMapping, payrollMapping. Future effective date support. Historical enrollments evaluated against config version at enrollment date. Carrier ID mappings versioned with effective dates. Version History panel on all versioned entities with diff view. |
+| 12 | **Configuration vs. Hardcoding (Architecture Principle)** | P0 | ✅ **RESOLVED** | 12 requirements REQ-CFG-001–012 in `configurationArchitectureRequirements.json`. Core principle: eligibility rules stored as JSON AST not if/else code. AI targets named typed config fields (INTEGER/DATE/DECIMAL/BOOLEAN) — never source code. FEATURE_* env vars for feature flags. CARRIER_SIMULATION_MODE env var. Age-out policy and ACA measurement period in employer config. All config changes create audit trail entries. |
+| 13 | **AI Copilot (Eligibility, Enrollment, Life Events, Operations)** | P0 | ✅ **RESOLVED** | 15 requirements REQ-AI-COP-001–015 in `aiCopilotRequirements.json`. Eligibility Copilot (why ineligible? + path-to-eligibility + 30-day predictive query); Enrollment Assistant (conversational, advisory only — never auto-elects); Life Event Assistant (natural language → event type + window + required docs); Exception Copilot (root cause + fix recommendation → human approves → retry); Reconciliation Assistant; Benefits Decision Support. All AI responses labeled and include disclaimer. |
+| 14 | **AI Simulation, Test Generation, and Agentic Orchestration** | P0 | ✅ **RESOLVED** | 12 requirements REQ-AI-SIM-001–012 in `aiSimulationRequirements.json`. What-If Simulation (read-only; 3 pre-configured demo scenarios); impact dependency chain visualization (PDF→REQ→RULE→PLAN→ENROLLMENT→CARRIER→TEST); AI Test Case Generation (Given/When/Then + happy/boundary/negative/edge per requirement); AI Backlog Prioritization (5 scoring criteria); AI Compliance Assistant (ACA/COBRA/ERISA flags + disclaimer); Agentic Orchestration concept demo (Requirements Agent → Impact Agent → Test Generation Agent → Compliance Agent → human review package). |
+
+### Platform Layer Architecture
+
+The 14 new requirement sets implement the horizontal platform layer that cuts across all 5 Epics:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  EPIC 1           EPIC 2          EPIC 3        EPIC 4         EPIC 5       │
+│  Plan Config      Eligibility     Enrollment    Integration    AI Req Studio│
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Security & PII Protection (REQ-SEC-001–015)                                │
+│  Role-Based Access Control (REQ-RBAC-001–015)                               │
+│  Audit & Traceability (REQ-AUD-001–015 + REQ-AI-KNOW-011)                  │
+│  Workflow State Machines (REQ-WF-001–015)                                   │
+│  Notifications (REQ-NOTIFY-001–017)                                         │
+│  AI Governance & Human-in-the-Loop (REQ-AIGOV-001–015)                     │
+│  Configuration Architecture (REQ-CFG-001–012)                              │
+│  Cross-Entity Versioning (REQ-VER-X-001–012)                               │
+│  Data Lifecycle & Retention (REQ-DL-001–012)                               │
+│  Operational Resilience (REQ-OPS-001–012)                                  │
+│  Performance Targets (REQ-PERF-001–012)                                    │
+│  Accessibility (REQ-A11Y-001–012)                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Gaps vs. PetLife AI Factory Pattern
 
 The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload). 

@@ -1,0 +1,168 @@
+[
+  {
+    "requirementId": "REQ-DEMO-001",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Control Center Accessible Under Admin Navigation",
+    "description": "The Demo Control Center shall be accessible from the Admin section of the primary navigation. It shall be visible only to the SYSTEM_ADMIN persona. The control center provides all demo management actions in one workspace to avoid manual data manipulation during presentations.",
+    "status": "Approved",
+    "tags": ["demo", "admin"],
+    "authorizedPersonas": ["SYSTEM_ADMIN"],
+    "navigationLocation": "Admin → Demo Control Center"
+  },
+  {
+    "requirementId": "REQ-DEMO-002",
+    "type": "Non-Functional Requirement",
+    "title": "Reset Demo Action Restores All Seed Data to Known Good State",
+    "description": "The [Reset Demo] action (UI button + POST /api/demo/reset endpoint) shall restore all JSON seed files to their original state, clear any in-progress enrollments, reset AI extraction cache, and return the application to the pre-demo ready state. Reset shall complete within 3 seconds.",
+    "status": "Approved",
+    "tags": ["demo", "reset"],
+    "endpoint": "POST /api/demo/reset",
+    "resetScope": ["seed data", "enrollment drafts", "AI job queue", "uploaded documents", "conversation state"],
+    "resetDurationTarget": "≤ 3 seconds",
+    "confirmationRequired": true,
+    "linkedRequirements": ["REQ-DEPLOY-010"]
+  },
+  {
+    "requirementId": "REQ-DEMO-003",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Scenario Presets: Happy Path / Exceptions / Failures",
+    "description": "The Demo Control Center shall offer three pre-configured scenario presets. Each preset configures the carrier simulation mode, AI extraction state, and seed data configuration for a specific demo narrative.",
+    "status": "Approved",
+    "tags": ["demo", "scenarios"],
+    "scenarios": [
+      {
+        "id": "HAPPY_PATH",
+        "label": "Happy Path",
+        "description": "All carrier transmissions succeed; AI extracts with high confidence; Linda White enrollment processes cleanly",
+        "carrierSimulation": "ACCEPT_ALL",
+        "aiMode": "LIVE",
+        "demoBadge": "🟢 Happy Path"
+      },
+      {
+        "id": "EXCEPTIONS",
+        "label": "Exception Handling",
+        "description": "CT-10045 carrier rejection active; DEP-022 age-out approaching; eligibility conflict BR-001/BR-002 visible; LE-001 marriage pending docs",
+        "carrierSimulation": "PARTIAL_FAILURE",
+        "aiMode": "LIVE",
+        "demoBadge": "🟡 Exceptions"
+      },
+      {
+        "id": "FAILURES",
+        "label": "Failure & Recovery",
+        "description": "All carrier transmissions fail; AI rate-limit fallback active; payroll mismatch DED-10001 visible",
+        "carrierSimulation": "REJECT_ALL",
+        "aiMode": "FALLBACK",
+        "demoBadge": "🔴 Failures"
+      }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEMO-004",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier Simulation Controls — Accept All / Partial Failure / Reject All",
+    "description": "The Demo Control Center shall provide one-click buttons to switch the carrier simulation mode during a live demo without requiring a full reset. Mode changes take effect on the next transmission or polling refresh.",
+    "status": "Approved",
+    "tags": ["demo", "carrier-simulation"],
+    "controls": [
+      { "label": "[✓ Accept All]",      "mode": "ACCEPT_ALL",      "outcome": "All transmissions COMPLETED" },
+      { "label": "[⚠ Partial Failure]", "mode": "PARTIAL_FAILURE", "outcome": "PARTIAL_SUCCESS with seeded CT-10045 error" },
+      { "label": "[✕ Reject All]",      "mode": "REJECT_ALL",      "outcome": "All transmissions FAILED" }
+    ],
+    "linkedRequirements": ["REQ-CARRIER-SIM-011", "REQ-INT-MON-014"]
+  },
+  {
+    "requirementId": "REQ-DEMO-005",
+    "type": "Non-Functional Requirement",
+    "title": "AI Mode Controls — Live Gemini / Demo Fallback Data",
+    "description": "The Demo Control Center shall allow switching between Live AI (real Gemini calls) and Demo Fallback (pre-cached extraction results). Fallback mode displays a clearly labeled banner in the AI Requirements section: 'Demo Fallback Data — Pre-cached results shown'.",
+    "status": "Approved",
+    "tags": ["demo", "ai"],
+    "modes": [
+      { "label": "[🤖 Live AI]",           "mode": "LIVE",     "description": "Real Gemini API calls; requires API key" },
+      { "label": "[📋 Demo Fallback Data]", "mode": "FALLBACK", "description": "Pre-cached extraction results; works offline" }
+    ],
+    "fallbackBanner": "Demo Fallback Data — Pre-cached results shown",
+    "linkedRequirements": ["REQ-AI-RELIABILITY-013"]
+  },
+  {
+    "requirementId": "REQ-DEMO-006",
+    "type": "Non-Functional Requirement",
+    "title": "Simulate Specific Errors On Demand",
+    "description": "The Demo Control Center shall provide buttons to activate specific pre-seeded error scenarios: Carrier Rejection (CT-10045), Payroll Mismatch (DED-10001), AI Rate Limit simulation, and Dependent SSN Invalid (CT-10045 DEP-INVALID-ID).",
+    "status": "Approved",
+    "tags": ["demo", "error-simulation"],
+    "simulatableErrors": [
+      { "label": "[Carrier Rejection CT-10045]",   "action": "Set CT-10045 status to REJECTED" },
+      { "label": "[Payroll Mismatch DED-10001]",   "action": "Activate DED-10001 mismatch scenario" },
+      { "label": "[AI Rate Limit]",                "action": "Return RATE_LIMITED on next AI call" },
+      { "label": "[Dependent SSN Invalid]",        "action": "Set DEP-022 SSN validation to INVALID" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEMO-007",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Time Controls — Advance to Specific Date for Date-Sensitive Scenarios",
+    "description": "The Demo Control Center shall provide a demo date override. When set, date-sensitive calculations (waiting period completions, age-out dates, enrollment window expiry) evaluate against the demo date rather than the system clock. Supports demonstrating DEP-022 age-out (2027-04-01) or enrollment deadline expiry.",
+    "status": "Approved",
+    "tags": ["demo", "date-override"],
+    "demoDateScenarios": [
+      { "date": "2027-01-15", "label": "Plan Year Start", "reveals": "Dashboard KPIs for 2027 plan year" },
+      { "date": "2027-03-31", "label": "Age-Out Day", "reveals": "DEP-022 Sarah Smith coverage about to terminate" },
+      { "date": "2027-04-01", "label": "Age-Out Effective", "reveals": "DEP-022 coverage terminated, cascade events" },
+      { "date": "2027-10-01", "label": "Open Enrollment", "reveals": "OE-ACME-2027 enrollment window open" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEMO-008",
+    "type": "Non-Functional Requirement",
+    "title": "Quick Persona Switch Accessible from Demo Control Center",
+    "description": "The Demo Control Center shall include a persona quick-switch panel showing all 8 demo personas. Clicking a persona immediately switches the active session to that persona without navigating away from the control center.",
+    "status": "Approved",
+    "tags": ["demo", "persona-switching"],
+    "linkedRequirements": ["REQ-RBAC-004"]
+  },
+  {
+    "requirementId": "REQ-DEMO-009",
+    "type": "Non-Functional Requirement",
+    "title": "Pre-Warm AI Extraction Cache Before Live Demo",
+    "description": "The Demo Control Center shall include a [Pre-Warm AI] action that submits all 5 Acme documents for AI extraction and caches the results. This ensures the AI extraction 'wow moment' is fast during the live demo even with Gemini latency. Pre-warm status shows: Not Cached / Warming / Cached / Expired.",
+    "status": "Approved",
+    "tags": ["demo", "ai", "performance"],
+    "preWarmStatus": ["NOT_CACHED", "WARMING", "CACHED", "EXPIRED"],
+    "cacheValidityHours": 24,
+    "linkedRequirements": ["REQ-AI-RELIABILITY-010"]
+  },
+  {
+    "requirementId": "REQ-DEMO-010",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Snapshot Save and Restore for In-Session Recovery",
+    "description": "The Demo Control Center shall allow saving the current data state as a named snapshot and restoring from a saved snapshot. This is critical for mid-demo recovery if a presenter accidentally modifies data. Max 3 saved snapshots.",
+    "status": "Approved",
+    "tags": ["demo", "snapshot"],
+    "snapshotActions": ["[Save Snapshot]", "[Restore Snapshot]", "[Delete Snapshot]"],
+    "maxSnapshots": 3,
+    "snapshotScope": "All JSON seed files in the seed/ directory"
+  },
+  {
+    "requirementId": "REQ-DEMO-011",
+    "type": "Non-Functional Requirement",
+    "title": "npm run reset-demo CLI Command Equivalent to UI Reset",
+    "description": "The npm run reset-demo script shall perform the same data reset as the UI Reset Demo action. This allows pre-demo setup without opening the application. Script shall output a confirmation list of reset steps and complete in ≤ 5 seconds.",
+    "status": "Approved",
+    "tags": ["demo", "cli"],
+    "script": "npm run reset-demo",
+    "outputExample": "✓ Seed data restored | ✓ Enrollment drafts cleared | ✓ AI cache cleared | ✓ Demo ready",
+    "linkedRequirements": ["REQ-DEPLOY-010"]
+  },
+  {
+    "requirementId": "REQ-DEMO-012",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Environment Indicator Always Visible in Application Shell",
+    "description": "The application shell shall display a persistent demo environment indicator (e.g., a colored banner or badge labeled 'DEMO') that is always visible. This prevents confusion during customer presentations and makes it clear this is a demonstration environment.",
+    "status": "Approved",
+    "tags": ["demo", "ux"],
+    "indicatorLocations": ["Global header badge", "Page title prefix in browser tab"],
+    "indicatorLabel": "DEMO ●",
+    "linkedRequirements": ["REQ-DEPLOY-009"]
+  }
+]

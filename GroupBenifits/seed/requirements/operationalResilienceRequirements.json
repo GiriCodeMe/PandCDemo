@@ -1,0 +1,131 @@
+[
+  {
+    "requirementId": "REQ-OPS-001",
+    "type": "Non-Functional Requirement",
+    "title": "Idempotency Key Required for All Carrier Transmission Requests",
+    "description": "Every carrier transmission request shall include an idempotency key. Submitting the same transmission twice with the same key shall return the original result without creating a duplicate transmission. This prevents double-enrollment on network retries.",
+    "status": "Approved",
+    "tags": ["resilience", "idempotency", "carrier"],
+    "idempotencyKeyFormat": "SHA-256(employerId + employeeId + planId + coverageTier + effectiveDate + transactionVersion)",
+    "behavior": "Second request with same key → returns original result immediately; no duplicate carrier transaction created",
+    "linkedRequirements": ["REQ-AI-RELIABILITY-009"]
+  },
+  {
+    "requirementId": "REQ-OPS-002",
+    "type": "Non-Functional Requirement",
+    "title": "Idempotency Key Applied to All Mutating API Operations",
+    "description": "Idempotency keys shall be supported on all mutating API operations that could be retried: enrollment submission, carrier transmission, payroll export, requirement approval. The client generates the key; the server deduplicates based on it. Key uniqueness window: 24 hours.",
+    "status": "Approved",
+    "tags": ["resilience", "idempotency", "api"],
+    "idempotencyHeader": "Idempotency-Key: <client-generated-uuid>",
+    "keyExpiryHours": 24,
+    "affectedEndpoints": ["POST /api/enrollments", "POST /api/integrations/transmit", "POST /api/requirements/approve"]
+  },
+  {
+    "requirementId": "REQ-OPS-003",
+    "type": "Non-Functional Requirement",
+    "title": "Duplicate Transaction Detection — Same Idempotency Key Returns Original Result",
+    "description": "When a duplicate request is detected via idempotency key matching, the API shall return HTTP 200 with the original response body and a Idempotent-Replayed: true header. The operation is NOT re-executed. This is transparent to the client — it receives the same success response as the original.",
+    "status": "Approved",
+    "tags": ["resilience", "idempotency"],
+    "responseHeader": "Idempotent-Replayed: true",
+    "httpStatus": 200
+  },
+  {
+    "requirementId": "REQ-OPS-004",
+    "type": "Non-Functional Requirement",
+    "title": "API Timeout Handling — Carrier 30s, Payroll 30s, AI 120s",
+    "description": "All external API calls shall enforce timeouts: carrier simulation 30 seconds, payroll integration 30 seconds, Gemini AI 120 seconds. On timeout, the system returns a TIMEOUT error code with retryable=true. The transaction or operation is preserved in PENDING state for retry.",
+    "status": "Approved",
+    "tags": ["resilience", "timeout"],
+    "timeouts": {
+      "carrier": 30000,
+      "payroll": 30000,
+      "gemini": 120000,
+      "internalAPI": 10000
+    },
+    "linkedRequirements": ["REQ-AI-RELIABILITY-006", "API-ERR-002"]
+  },
+  {
+    "requirementId": "REQ-OPS-005",
+    "type": "Non-Functional Requirement",
+    "title": "Partial Processing — One Failed Record Does Not Fail the Entire Batch",
+    "description": "Carrier and payroll batch transmissions shall support partial processing. If record N fails in a batch of M, records 1 to N-1 and N+1 to M shall continue processing. The batch result shall be PARTIAL_SUCCESS with a count of successful and failed records. The failed record is available for individual retry.",
+    "status": "Approved",
+    "tags": ["resilience", "batch-processing"],
+    "linkedRequirements": ["REQ-AI-RELIABILITY-008", "REQ-TRANSMISSION-010"]
+  },
+  {
+    "requirementId": "REQ-OPS-006",
+    "type": "Non-Functional Requirement",
+    "title": "Dead-Letter Storage for Persistently Failed Carrier Transactions",
+    "description": "Carrier transactions that fail after the maximum retry count (3 retries) shall be moved to dead-letter status (FAILED_PERMANENT). Dead-letter transactions are visible in the Errors & Exceptions workspace and require explicit Integration Admin action to resolve and requeue.",
+    "status": "Approved",
+    "tags": ["resilience", "dead-letter", "carrier"],
+    "maxRetries": 3,
+    "deadLetterStatus": "FAILED_PERMANENT",
+    "linkedRequirements": ["REQ-AI-RELIABILITY-004"]
+  },
+  {
+    "requirementId": "REQ-OPS-007",
+    "type": "Non-Functional Requirement",
+    "title": "Request Correlation ID Propagated End-to-End Through All Service Calls",
+    "description": "A unique correlation ID (X-Correlation-Id header) generated at the frontend shall be propagated through all downstream service calls: Node.js API → carrier simulation → payroll integration → Gemini API proxy. All log entries for a single user action share the same correlation ID.",
+    "status": "Approved",
+    "tags": ["resilience", "observability", "correlation"],
+    "correlationIdHeader": "X-Correlation-Id",
+    "logFields": ["correlationId", "requestId", "timestamp", "service", "operation"],
+    "linkedRequirements": ["API-ERR-005"]
+  },
+  {
+    "requirementId": "REQ-OPS-008",
+    "type": "Non-Functional Requirement",
+    "title": "Graceful Degradation — Non-Critical Service Failures Do Not Block Core Enrollment",
+    "description": "Failures in non-critical services (notification delivery, dashboard refresh, audit log write delay) shall not block enrollment submission or carrier transmission. Core enrollment and transmission paths must remain available even when auxiliary services are degraded.",
+    "status": "Approved",
+    "tags": ["resilience", "graceful-degradation"],
+    "criticalPath": ["enrollment submission", "carrier transmission", "eligibility evaluation"],
+    "nonCriticalPath": ["notification delivery", "dashboard analytics", "audit log async write", "AI copilot"]
+  },
+  {
+    "requirementId": "REQ-OPS-009",
+    "type": "Non-Functional Requirement",
+    "title": "Health Check Endpoints for All External Service Dependencies",
+    "description": "GET /health shall return overall system health. GET /health/dependencies shall return individual health status for each external dependency: Gemini API, carrier simulation, payroll simulation. A degraded dependency is reported with its last-known-good timestamp.",
+    "status": "Approved",
+    "tags": ["resilience", "health-check", "observability"],
+    "healthEndpoints": {
+      "GET /health": "{ status: 'healthy' | 'degraded' | 'unhealthy', version: '1.0.0', uptime: N }",
+      "GET /health/dependencies": "{ gemini: { status, latencyMs, lastChecked }, carrier: { ... }, payroll: { ... } }"
+    },
+    "linkedRequirements": ["REQ-DEPLOY-014"]
+  },
+  {
+    "requirementId": "REQ-OPS-010",
+    "type": "Non-Functional Requirement",
+    "title": "Rate Limit Detection Handled Transparently — No Raw 429 Exposed to User",
+    "description": "Rate limit errors from Gemini or any external service shall be handled by the retry/backoff layer before surfacing to the user. If all retries are exhausted, the user sees a friendly message and a retry option — never the raw HTTP 429 or vendor-specific error message.",
+    "status": "Approved",
+    "tags": ["resilience", "rate-limiting"],
+    "linkedRequirements": ["REQ-AI-RELIABILITY-001", "API-ERR-008"]
+  },
+  {
+    "requirementId": "REQ-OPS-011",
+    "type": "Non-Functional Requirement",
+    "title": "Reconciliation Detects Double-Sends — Carrier vs. Benefits Record Cross-Check",
+    "description": "The reconciliation process shall detect duplicate carrier submissions by comparing transmission records against carrier-confirmed enrollment records. If the same enrollment appears in two transmission records both showing ACCEPTED, the duplicate is flagged as a DUPLICATE_TRANSACTION reconciliation exception.",
+    "status": "Approved",
+    "tags": ["resilience", "reconciliation"],
+    "linkedRequirements": ["REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-OPS-012",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Resilience — Fallback to Pre-Cached Seed Data if Gemini Unavailable",
+    "description": "If the Gemini API is unavailable during a live demo, the system shall transparently serve pre-cached extraction results labeled 'Demo Fallback Data'. This ensures the demo narrative is not interrupted by AI service outages. The fallback banner is clearly displayed.",
+    "status": "Approved",
+    "tags": ["resilience", "demo"],
+    "fallbackBanner": "Demo Fallback Data — Pre-cached extraction results displayed",
+    "linkedRequirements": ["REQ-DEMO-005", "REQ-AI-RELIABILITY-013"]
+  }
+]

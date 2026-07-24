@@ -1,0 +1,170 @@
+[
+  {
+    "requirementId": "REQ-AI-KNOW-001",
+    "type": "Functional Requirement",
+    "title": "AI Benefits Knowledge Base — Multi-Document Intelligence Across All 5 Acme Documents",
+    "description": "The AI Requirements Studio shall maintain a unified knowledge base indexed from all uploaded Acme documents. The AI shall reason across all five documents simultaneously, not just the most recently uploaded. The knowledge base enables cross-document queries that reveal relationships, conflicts, and gaps a single-document analysis would miss.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "rag"],
+    "documentsInCorpus": [
+      "Acme_2027_Benefits_Guide.pdf",
+      "Acme_Eligibility_Policy.pdf",
+      "Acme_Enrollment_Process.pdf",
+      "Acme_Carrier_Requirements.pdf",
+      "Acme_Payroll_Interface_Spec.pdf"
+    ],
+    "architectureNote": "Hybrid RAG: PDF text → chunk + embed → vector index + metadata filter; same pattern as REQ-IMPACT-001"
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-002",
+    "type": "Functional Requirement",
+    "title": "Benefits Knowledge Assistant — Natural Language Queries Across All Documents",
+    "description": "The AI Requirements Studio shall include a Benefits Knowledge Assistant chat interface that answers natural language questions sourced from the document corpus. Every answer shall cite the specific document, page, and section it was derived from.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "chat"],
+    "exampleQueries": [
+      "What is the waiting period for full-time employees?",
+      "Which plans allow Employee + Spouse coverage?",
+      "What happens if an employee loses coverage mid-year?",
+      "Are part-time employees eligible for dental coverage?"
+    ],
+    "answerFormat": "Answer | Source: [Document Name, Page N, Section X.X] | Confidence: N%",
+    "linkedRequirements": ["REQ-CONV-001"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-003",
+    "type": "Functional Requirement",
+    "title": "Cross-Document Requirement Aggregation — 'Show All Requirements About Eligibility'",
+    "description": "The AI shall support cross-document queries that aggregate requirements by topic across all documents. A query like 'Find all requirements related to eligibility' shall return matching requirements from every document, ranked by relevance and annotated with their source.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "requirements"],
+    "queryExamples": [
+      "Find all requirements about eligibility",
+      "Show all carrier integration requirements",
+      "What enrollment deadlines are defined across all documents?"
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-004",
+    "type": "Functional Requirement",
+    "title": "AI Answers Include Source Citation with Document, Page, and Section",
+    "description": "Every AI response from the Benefits Knowledge Assistant shall include a source citation linking to the specific document, page number, and section heading from which the answer was derived. If an answer synthesizes information from multiple sources, all sources are listed.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "traceability"],
+    "citationFormat": {
+      "documentName": "Acme_Eligibility_Policy.pdf",
+      "page": 4,
+      "section": "3.1 — Employee Eligibility",
+      "textSnippet": "Full-time employees working 30 or more hours per week are eligible..."
+    },
+    "linkedRequirements": ["REQ-AIGOV-004"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-005",
+    "type": "Functional Requirement",
+    "title": "AI Flags Incomplete or Contradictory Information in Answers",
+    "description": "When the AI cannot answer a query with high confidence, or when documents provide contradictory information on the queried topic, the AI shall explicitly state this rather than fabricating a confident answer. The AI shall surface the contradiction as a conflict for human review.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "hallucination-control"],
+    "incompleteAnswerExample": "The Benefits Guide and Eligibility Policy provide different waiting periods for this scenario. This is flagged as CONFLICT-003 for your review.",
+    "linkedRequirements": ["REQ-AIGOV-004", "REQ-AIGOV-009"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-006",
+    "type": "Functional Requirement",
+    "title": "Document Library View — All Uploaded Documents with Extraction Status and Coverage Summary",
+    "description": "The AI Requirements Studio shall include a Document Library view listing all uploaded documents with: document name, upload date, extraction status, requirements extracted, conflicts detected, and last query timestamp. Documents are the entry point for both extraction and Knowledge Assistant queries.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "ux"],
+    "documentCardFields": ["documentName", "uploadDate", "extractionStatus", "requirementsExtracted", "conflictsDetected", "lastQuery"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-007",
+    "type": "Functional Requirement",
+    "title": "AI Identifies Missing Requirements — Policy References Process That Doesn't Exist",
+    "description": "The AI shall detect when a document references a process, verification step, or rule that is not defined anywhere in the document corpus. Missing definitions shall be flagged as MISSING_INFORMATION conflicts. This catches gaps a human reviewer may miss when reading documents sequentially.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "conflict-detection"],
+    "missingRequirementExample": "The Benefits Guide references 'Dependent Verification Procedures' but no verification process is defined in any uploaded document. Flagged as: MISSING-REQ-001.",
+    "linkedRequirements": ["REQ-AIGOV-009"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-008",
+    "type": "Functional Requirement",
+    "title": "AI Document Summary for Each Uploaded Document",
+    "description": "The AI shall generate a structured summary for each uploaded document: document type, primary topic areas, requirement count by category, key policy decisions identified, and notable ambiguities. Summary is generated during extraction and displayed in the Document Library.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence"],
+    "summaryFields": ["documentType", "topicAreas", "requirementsByCategory", "keyPolicyDecisions", "notableAmbiguities"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-009",
+    "type": "Functional Requirement",
+    "title": "AI Distinguishes Explicit Language from Inferred Requirements",
+    "description": "The AI shall explicitly indicate whether a requirement is based on explicit language in the document ('Full-time employees working 30+ hours...') or inferred from context ('Given the 30-day waiting period language and the ACA full-time threshold of 30 hours, the following rule is implied...'). Inferred requirements require additional human scrutiny.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "confidence"],
+    "extractionTypes": [
+      { "type": "EXPLICIT",   "badge": "[EX]", "description": "Direct quote from source document" },
+      { "type": "INFERRED",   "badge": "[INF]","description": "Logically derived from document context" },
+      { "type": "CALCULATED", "badge": "[CAL]","description": "Derived from formula or mathematical relationship stated in document" }
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-010",
+    "type": "Functional Requirement",
+    "title": "Benefits Knowledge Assistant Accessible in AI Interview Context Window",
+    "description": "During an AI Interview session, the Benefits Knowledge Assistant knowledge base shall be available as a retrieval source. The AI Interviewer can query the document corpus to provide grounded answers and ask targeted clarifying questions.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "interview"],
+    "linkedRequirements": ["REQ-CONV-001"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-011",
+    "type": "Functional Requirement",
+    "title": "End-to-End Traceability: Source PDF Page → Knowledge Base → Requirement → Configuration",
+    "description": "The full provenance chain from a PDF page through the knowledge base extraction to an approved requirement to the configuration it affects shall be navigable in the Audit & Traceability workspace. Both forward (document → configuration) and backward (configuration → document) navigation shall be supported.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "traceability"],
+    "linkedRequirements": ["REQ-AIGOV-015", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-012",
+    "type": "Functional Requirement",
+    "title": "Knowledge Base Supports Incremental Re-Extraction When Documents Are Updated",
+    "description": "When an updated version of a document is uploaded, the AI shall re-extract only the changed sections (detected via SHA-256 diff) rather than re-processing the entire document. Previously extracted requirements that are unaffected by the change retain their existing review and approval status.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "performance"],
+    "linkedRequirements": ["REQ-AI-RELIABILITY-010"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-013",
+    "type": "Functional Requirement",
+    "title": "Employee-Facing Benefits Assistant — Limited Scope Query on Own Benefits",
+    "description": "The Employee persona shall have access to a simplified Benefits Assistant that answers questions about their own plan options and enrollment. This assistant queries only the published plan data and the employee's own enrollment record — never the policy documents or other employees' data.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "employee"],
+    "accessScope": ["published plans", "employee's own enrollment", "published benefit summaries"],
+    "prohibitedScope": ["raw policy documents", "other employees' data", "draft configurations"],
+    "linkedRequirements": ["REQ-RBAC-007", "REQ-AI-COP-005"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-014",
+    "type": "Functional Requirement",
+    "title": "AI Conflict Detection Upgraded to 5-Category Classification Including MISSING_INFORMATION",
+    "description": "The existing AI conflict detection (REQ-CONFLICT-001) is upgraded to support all five conflict classifications: CONTRADICTION, OVERLAP, AMBIGUITY, MISSING_INFORMATION, and DUPLICATE. Each classification has distinct detection logic, severity defaults, and resolution workflow paths.",
+    "status": "Approved",
+    "tags": ["ai", "conflict-detection"],
+    "linkedRequirements": ["REQ-AIGOV-009", "REQ-CONFLICT-001"]
+  },
+  {
+    "requirementId": "REQ-AI-KNOW-015",
+    "type": "Functional Requirement",
+    "title": "Document Intelligence Pre-Population of AI Interview Context",
+    "description": "When an AI Interview session is initiated after document extraction, the interview context shall be pre-populated with the high-confidence facts extracted from all documents. The AI Interviewer starts with existing knowledge and focuses the interview on gaps and ambiguities, not re-asking questions already answered by the documents.",
+    "status": "Approved",
+    "tags": ["ai", "document-intelligence", "interview"],
+    "prePopulatedContext": "Structured facts extracted with ≥0.90 confidence from all documents; open questions list derived from AMBIGUITY and MISSING_INFORMATION conflicts",
+    "linkedRequirements": ["REQ-CONV-006"]
+  }
+]

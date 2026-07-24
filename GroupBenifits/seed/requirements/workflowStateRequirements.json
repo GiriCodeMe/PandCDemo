@@ -1,0 +1,202 @@
+[
+  {
+    "requirementId": "REQ-WF-001",
+    "type": "Functional Requirement",
+    "title": "Plan Lifecycle State Machine: DRAFT → UNDER_REVIEW → APPROVED → PUBLISHED → ACTIVE → RETIRED",
+    "description": "Benefit plans shall follow a defined lifecycle. Only a published plan can be used for enrollment. Active plans have enrolled members. Retired plans are historical only — no new enrollments permitted.",
+    "status": "Approved",
+    "tags": ["workflow", "plan-config"],
+    "states": ["DRAFT", "UNDER_REVIEW", "APPROVED", "PUBLISHED", "ACTIVE", "RETIRED"],
+    "transitions": [
+      { "from": "DRAFT",        "to": "UNDER_REVIEW", "requiredRole": "BENEFITS_ADMIN",     "trigger": "Submit for Review" },
+      { "from": "UNDER_REVIEW", "to": "APPROVED",     "requiredRole": "BENEFITS_ADMIN",     "trigger": "Approve" },
+      { "from": "UNDER_REVIEW", "to": "DRAFT",        "requiredRole": "BENEFITS_ADMIN",     "trigger": "Return to Draft" },
+      { "from": "APPROVED",     "to": "PUBLISHED",    "requiredRole": "BENEFITS_ADMIN",     "trigger": "Publish" },
+      { "from": "APPROVED",     "to": "DRAFT",        "requiredRole": "BENEFITS_ADMIN",     "trigger": "Revert to Draft" },
+      { "from": "PUBLISHED",    "to": "ACTIVE",       "requiredRole": "SYSTEM",             "trigger": "Plan year effective date reached" },
+      { "from": "ACTIVE",       "to": "RETIRED",      "requiredRole": "BENEFITS_ADMIN",     "trigger": "Plan year ends or plan discontinued" }
+    ],
+    "linkedRequirements": ["REQ-VER-001"]
+  },
+  {
+    "requirementId": "REQ-WF-002",
+    "type": "Functional Requirement",
+    "title": "AI Requirement Lifecycle: EXTRACTED → AI_REVIEWED → HUMAN_REVIEW → APPROVED → IMPLEMENTED",
+    "description": "AI-generated requirements shall follow a defined governance lifecycle. Requirements cannot be used for configuration until they reach APPROVED state. IMPLEMENTED marks requirements that have been applied to a plan or rule.",
+    "status": "Approved",
+    "tags": ["workflow", "ai-requirements"],
+    "states": ["EXTRACTED", "AI_REVIEWED", "HUMAN_REVIEW", "APPROVED", "NEEDS_CLARIFICATION", "REJECTED", "IMPLEMENTED"],
+    "transitions": [
+      { "from": "EXTRACTED",          "to": "AI_REVIEWED",      "requiredRole": "SYSTEM",                "trigger": "AI internal quality check passes" },
+      { "from": "AI_REVIEWED",        "to": "HUMAN_REVIEW",     "requiredRole": "SYSTEM",                "trigger": "Ready for human review queue" },
+      { "from": "HUMAN_REVIEW",       "to": "APPROVED",          "requiredRole": "REQUIREMENTS_ANALYST",  "trigger": "Reviewer approves" },
+      { "from": "HUMAN_REVIEW",       "to": "NEEDS_CLARIFICATION","requiredRole": "REQUIREMENTS_ANALYST", "trigger": "Referred to AI Interview" },
+      { "from": "HUMAN_REVIEW",       "to": "REJECTED",          "requiredRole": "REQUIREMENTS_ANALYST",  "trigger": "Reviewer rejects" },
+      { "from": "NEEDS_CLARIFICATION","to": "HUMAN_REVIEW",      "requiredRole": "SYSTEM",                "trigger": "AI Interview provides clarification" },
+      { "from": "APPROVED",           "to": "IMPLEMENTED",       "requiredRole": "BENEFITS_ADMIN",        "trigger": "[Create Rule] or [Apply to Plan] executed" }
+    ],
+    "linkedRequirements": ["REQ-AIGOV-003", "REQ-AIGOV-005"]
+  },
+  {
+    "requirementId": "REQ-WF-003",
+    "type": "Functional Requirement",
+    "title": "Enrollment Lifecycle: DRAFT → SUBMITTED → VALIDATED → CONFIRMED → TRANSMITTED → ACCEPTED",
+    "description": "Employee enrollment records shall follow a defined lifecycle. Enrollment is not active until the carrier accepts the transmission. DRAFT and SUBMITTED states allow employee modification. CONFIRMED and beyond are locked.",
+    "status": "Approved",
+    "tags": ["workflow", "enrollment"],
+    "states": ["DRAFT", "SUBMITTED", "VALIDATED", "CONFIRMED", "TRANSMITTED", "ACCEPTED", "REJECTED", "ACTIVE"],
+    "transitions": [
+      { "from": "DRAFT",       "to": "SUBMITTED",   "requiredRole": "EMPLOYEE | HR_ADMIN",  "trigger": "Employee submits enrollment" },
+      { "from": "SUBMITTED",   "to": "VALIDATED",   "requiredRole": "SYSTEM",               "trigger": "Business rules validation passes" },
+      { "from": "SUBMITTED",   "to": "DRAFT",       "requiredRole": "SYSTEM",               "trigger": "Validation failures returned to employee" },
+      { "from": "VALIDATED",   "to": "CONFIRMED",   "requiredRole": "BENEFITS_ADMIN",       "trigger": "Benefits Admin confirms" },
+      { "from": "CONFIRMED",   "to": "TRANSMITTED", "requiredRole": "INTEGRATION_ADMIN",    "trigger": "Carrier transmission initiated" },
+      { "from": "TRANSMITTED", "to": "ACCEPTED",    "requiredRole": "SYSTEM",               "trigger": "Carrier returns ACCEPTED" },
+      { "from": "TRANSMITTED", "to": "REJECTED",    "requiredRole": "SYSTEM",               "trigger": "Carrier returns REJECTED" },
+      { "from": "ACCEPTED",    "to": "ACTIVE",      "requiredRole": "SYSTEM",               "trigger": "Coverage effective date reached" }
+    ],
+    "linkedRequirements": ["REQ-ENROLL-UX-001", "REQ-CARRIER-SIM-001"]
+  },
+  {
+    "requirementId": "REQ-WF-004",
+    "type": "Functional Requirement",
+    "title": "Eligibility Rule Lifecycle: DRAFT → IN_REVIEW → APPROVED → PUBLISHED → RETIRED",
+    "description": "Eligibility rules shall follow a lifecycle matching the plan lifecycle. Only PUBLISHED rules shall be evaluated by the eligibility engine. An in-progress enrollment session that references a newly published rule update shall be flagged for revalidation.",
+    "status": "Approved",
+    "tags": ["workflow", "eligibility"],
+    "states": ["DRAFT", "IN_REVIEW", "APPROVED", "PUBLISHED", "RETIRED"],
+    "activeStates": ["PUBLISHED"],
+    "transitions": [
+      { "from": "DRAFT",     "to": "IN_REVIEW", "requiredRole": "BENEFITS_ADMIN", "trigger": "Submit for Review" },
+      { "from": "IN_REVIEW", "to": "APPROVED",  "requiredRole": "BENEFITS_ADMIN", "trigger": "Approve" },
+      { "from": "IN_REVIEW", "to": "DRAFT",     "requiredRole": "BENEFITS_ADMIN", "trigger": "Return to Draft" },
+      { "from": "APPROVED",  "to": "PUBLISHED", "requiredRole": "BENEFITS_ADMIN", "trigger": "Publish" },
+      { "from": "PUBLISHED", "to": "RETIRED",   "requiredRole": "BENEFITS_ADMIN", "trigger": "Rule superseded or discontinued" }
+    ],
+    "linkedRequirements": ["REQ-RULE-UI-013"]
+  },
+  {
+    "requirementId": "REQ-WF-005",
+    "type": "Functional Requirement",
+    "title": "State Transitions Create Audit Trail Events with Actor, Role, Timestamp, and Reason",
+    "description": "Every workflow state transition shall automatically create an audit trail event capturing: actor ID, actor role, entity type, entity ID, from-state, to-state, timestamp, and optional reason/note. State transition audit events are immutable.",
+    "status": "Approved",
+    "tags": ["workflow", "audit"],
+    "auditEventFields": ["actorId", "actorRole", "entityType", "entityId", "fromState", "toState", "timestamp", "reason"],
+    "linkedRequirements": ["REQ-AUD-001", "REQ-AUD-005"]
+  },
+  {
+    "requirementId": "REQ-WF-006",
+    "type": "Functional Requirement",
+    "title": "Invalid State Transitions Rejected with Descriptive Error",
+    "description": "Attempting an invalid state transition (e.g., PUBLISHED → DRAFT for a plan with active enrollments) shall return HTTP 422 with error code BUSINESS_RULE_VIOLATION and a message explaining why the transition is not permitted.",
+    "status": "Approved",
+    "tags": ["workflow", "error-handling"],
+    "example": "{ code: 'BUSINESS_RULE_VIOLATION', message: 'Cannot revert PPO-500 to DRAFT — 4,892 employees have active enrollments against this plan version.' }",
+    "linkedRequirements": ["API-ERR-002"]
+  },
+  {
+    "requirementId": "REQ-WF-007",
+    "type": "Functional Requirement",
+    "title": "Workflow Status Badges Visible in All List Views",
+    "description": "Workflow state shall be displayed as a color-coded status badge in all list views (plans list, requirements list, rules list, enrollments list). Status badge must meet WCAG 2.1 AA contrast requirements and not rely on color alone for distinction.",
+    "status": "Approved",
+    "tags": ["workflow", "ux"],
+    "statusBadgeColors": {
+      "DRAFT": "gray",
+      "IN_REVIEW": "blue",
+      "UNDER_REVIEW": "blue",
+      "APPROVED": "yellow",
+      "PUBLISHED": "green",
+      "ACTIVE": "green",
+      "RETIRED": "gray",
+      "REJECTED": "red",
+      "NEEDS_CLARIFICATION": "orange"
+    },
+    "accessibilityNote": "Color paired with text label always — never color alone"
+  },
+  {
+    "requirementId": "REQ-WF-008",
+    "type": "Functional Requirement",
+    "title": "Pending Approval Items Surfaced on Dashboard as Action Items",
+    "description": "The Dashboard shall display an 'Actions Required' section listing entities pending the current persona's action in their workflow queue. Example: Requirements Analyst sees '3 AI requirements awaiting your review.' Clicking navigates to the relevant workspace filtered to pending items.",
+    "status": "Approved",
+    "tags": ["workflow", "dashboard", "ux"],
+    "dashboardActionItems": [
+      { "persona": "REQUIREMENTS_ANALYST", "item": "N AI requirements pending review" },
+      { "persona": "BENEFITS_ADMIN",        "item": "N plans pending publish; N requirements pending approval" },
+      { "persona": "INTEGRATION_ADMIN",     "item": "N failed carrier transactions need attention" },
+      { "persona": "HR_ADMIN",              "item": "N life event enrollments pending confirmation" }
+    ]
+  },
+  {
+    "requirementId": "REQ-WF-009",
+    "type": "Functional Requirement",
+    "title": "Cannot Skip Workflow States — All Intermediate States Must Be Traversed",
+    "description": "The workflow engine shall not allow skipping states. A requirement cannot go directly from EXTRACTED to APPROVED. A plan cannot go from DRAFT to PUBLISHED. Every intermediate state must be explicitly entered and exited via an authorized action.",
+    "status": "Approved",
+    "tags": ["workflow", "governance"],
+    "rationale": "Skipping review states would undermine the AI governance model and audit trail completeness"
+  },
+  {
+    "requirementId": "REQ-WF-010",
+    "type": "Functional Requirement",
+    "title": "Carrier Transmission Lifecycle: PENDING → QUEUED → TRANSMITTING → COMPLETED/FAILED/PARTIAL",
+    "description": "Carrier transmission jobs shall follow a defined lifecycle displayed in the Integration Monitoring workspace. COMPLETED_WITH_ERRORS is an alias for PARTIAL_SUCCESS — use PARTIAL_SUCCESS consistently.",
+    "status": "Approved",
+    "tags": ["workflow", "integration"],
+    "states": ["PENDING", "QUEUED", "TRANSMITTING", "COMPLETED", "PARTIAL_SUCCESS", "FAILED", "RETRYING", "CANCELLED"],
+    "linkedRequirements": ["REQ-TRANSMISSION-001", "REQ-INT-MON-007"]
+  },
+  {
+    "requirementId": "REQ-WF-011",
+    "type": "Functional Requirement",
+    "title": "Life Event Enrollment Lifecycle: INITIATED → PENDING_DOCS → VERIFIED → ENROLLED → ACTIVE",
+    "description": "Life event enrollments shall follow a separate lifecycle from open enrollment. The PENDING_DOCS state holds an enrollment when documentation is required but not yet submitted. Benefits Admin or HR Admin can transition from VERIFIED to ENROLLED after confirming documentation.",
+    "status": "Approved",
+    "tags": ["workflow", "life-events"],
+    "states": ["INITIATED", "PENDING_DOCS", "DOCS_RECEIVED", "VERIFIED", "ENROLLED", "ACTIVE", "EXPIRED", "REJECTED"],
+    "linkedRequirements": ["REQ-LE-001"]
+  },
+  {
+    "requirementId": "REQ-WF-012",
+    "type": "Functional Requirement",
+    "title": "Notification Triggered on Workflow State Transition to Next Responsible Party",
+    "description": "When a workflow state transition puts an entity in a state requiring action by another role, an in-app notification shall be generated for all users in that role. Example: Requirement reaches HUMAN_REVIEW → notify all REQUIREMENTS_ANALYST users.",
+    "status": "Approved",
+    "tags": ["workflow", "notifications"],
+    "linkedRequirements": ["REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-WF-013",
+    "type": "Functional Requirement",
+    "title": "Plan Rollback: PUBLISHED Plan Can Be Withdrawn Back to APPROVED for Edits",
+    "description": "A PUBLISHED plan that has not yet reached its effective date can be withdrawn back to APPROVED state for further editing. This creates a new draft version while the previous published version remains the reference. If any enrollment references the published version, a warning is displayed.",
+    "status": "Approved",
+    "tags": ["workflow", "plan-config"],
+    "withdrawalCondition": "Allowed only if plan effective date has not been reached and no ACTIVE enrollments reference this version"
+  },
+  {
+    "requirementId": "REQ-WF-014",
+    "type": "Functional Requirement",
+    "title": "Bulk Approval Action with Per-Item Review Summary",
+    "description": "The Requirements Studio shall support bulk selection and approval of multiple requirements. Before confirming, the user sees a summary list of items being approved. Bulk approval creates individual audit events for each requirement (not one event for the batch).",
+    "status": "Approved",
+    "tags": ["workflow", "ai-requirements", "ux"],
+    "linkedRequirements": ["REQ-AIGOV-010"]
+  },
+  {
+    "requirementId": "REQ-WF-015",
+    "type": "Functional Requirement",
+    "title": "Workflow State Persisted in Entity Record and Queryable via API Filter",
+    "description": "The current workflow state of every entity (plan, requirement, rule, enrollment, transmission) shall be persisted on the entity record and filterable via API query parameters. Example: GET /api/requirements?status=HUMAN_REVIEW returns all requirements awaiting review.",
+    "status": "Approved",
+    "tags": ["workflow", "api"],
+    "apiFilterExamples": [
+      "GET /api/requirements?status=HUMAN_REVIEW",
+      "GET /api/plans?status=PUBLISHED",
+      "GET /api/enrollments?status=VALIDATED",
+      "GET /api/integrations/transmissions?status=FAILED"
+    ]
+  }
+]

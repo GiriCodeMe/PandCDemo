@@ -1,0 +1,124 @@
+[
+  {
+    "requirementId": "REQ-VER-X-001",
+    "type": "Non-Functional Requirement",
+    "title": "Versioning and Effective Dating Applied Cross-Entity — Plans, Rules, Requirements, and Rates",
+    "description": "The versioning and effective dating principle that applies to plans (REQ-VER-001–015) shall be consistently applied across all five major entity types: plans, eligibility rules, AI requirements, premium rate tables, and employer contribution configurations. A change to any of these creates a new version, never overwrites the current record.",
+    "status": "Approved",
+    "tags": ["versioning", "effective-dating", "cross-cutting"],
+    "versionedEntities": ["plans", "eligibilityRules", "aiRequirements", "rateTable", "employerContribution", "carrierMapping", "payrollMapping"],
+    "linkedRequirements": ["REQ-VER-001"]
+  },
+  {
+    "requirementId": "REQ-VER-X-002",
+    "type": "Non-Functional Requirement",
+    "title": "Eligibility Rule Versions: Changes Create New Draft — Published Rules Are Immutable",
+    "description": "Published eligibility rules are immutable. Any change to a published rule (threshold, condition, effective date) creates a new DRAFT version. The published version remains active until the new version is approved and published. In-flight enrollment sessions referencing the old rule are flagged.",
+    "status": "Approved",
+    "tags": ["versioning", "eligibility"],
+    "versionIdFormat": "RULE-{ruleCode}-v{major}.{minor}",
+    "linkedRequirements": ["REQ-VER-007", "REQ-RULE-UI-012"]
+  },
+  {
+    "requirementId": "REQ-VER-X-003",
+    "type": "Non-Functional Requirement",
+    "title": "AI Requirements Versioned: Original AI Text Preserved When Human Edits",
+    "description": "When a human reviewer edits an AI-generated requirement text, the original AI-generated text is preserved in the version history. The current version shows the human-edited text. The audit trail records both versions and the reviewer's identity.",
+    "status": "Approved",
+    "tags": ["versioning", "ai-requirements"],
+    "versionRecord": {
+      "versionId": "REQ-001-v1",
+      "text": "Original AI-generated text...",
+      "author": "AI (gemini-1.5-pro)",
+      "createdAt": "2027-01-15T10:32:14Z"
+    },
+    "linkedRequirements": ["REQ-AUD-011"]
+  },
+  {
+    "requirementId": "REQ-VER-X-004",
+    "type": "Non-Functional Requirement",
+    "title": "Effective Dating: Every Configuration Change Has a Future Effective Date",
+    "description": "Configuration changes (rate table updates, rule threshold changes, contribution % changes) shall support a future effective date. The system evaluates the version in effect at any given point in time based on the effective date, not the record creation date.",
+    "status": "Approved",
+    "tags": ["versioning", "effective-dating"],
+    "effectiveDateScenario": "PPO-500 rate change effective July 1, 2027 → two versions: v1 (Jan 1–Jun 30) and v2 (Jul 1+). Enrollments on June 15 use v1 rates; enrollments on July 5 use v2 rates."
+  },
+  {
+    "requirementId": "REQ-VER-X-005",
+    "type": "Non-Functional Requirement",
+    "title": "Historical Enrollment Always Evaluated Against Configuration Version at Enrollment Date",
+    "description": "When calculating premiums, eligibility, or contribution for a historical enrollment, the system shall use the configuration version that was in effect at the enrollment date — not the current version. This ensures retroactive accuracy for audit and payroll reconciliation.",
+    "status": "Approved",
+    "tags": ["versioning", "effective-dating", "enrollment"],
+    "linkedRequirements": ["REQ-VER-008"]
+  },
+  {
+    "requirementId": "REQ-VER-X-006",
+    "type": "Non-Functional Requirement",
+    "title": "Premium Rate Table Versioned Per Plan Year — Mid-Year Rates Supported",
+    "description": "Premium rate tables are versioned per plan year and support mid-year rate changes. The demo uses plan year 2027 with a single rate version. The data model shall support multiple rate versions within a plan year (e.g., v1 Jan–Jun, v2 Jul–Dec).",
+    "status": "Approved",
+    "tags": ["versioning", "premiums"],
+    "linkedRequirements": ["REQ-VER-001", "REQ-PREM-001"]
+  },
+  {
+    "requirementId": "REQ-VER-X-007",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier Mapping Versioned — Carrier ID Changes Do Not Break Historical Records",
+    "description": "Carrier member ID mappings (benefitsPersonId → carrierId) are versioned with effective dates. If a carrier changes the member ID format or the mapping is corrected, a new version is created. Historical transactions reference the mapping version in effect at the transaction date.",
+    "status": "Approved",
+    "tags": ["versioning", "carrier"],
+    "linkedRequirements": ["REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-VER-X-008",
+    "type": "Non-Functional Requirement",
+    "title": "Version History Accessible on All Versioned Entities via Version History Panel",
+    "description": "Every versioned entity shall have a Version History panel accessible from the detail view. The panel shows: version number, status, effective date, changed by, change summary, and a diff view comparing with the previous version.",
+    "status": "Approved",
+    "tags": ["versioning", "ux"],
+    "panelColumns": ["Version", "Status", "Effective Date", "Changed By", "Change Summary", "[View Diff]"]
+  },
+  {
+    "requirementId": "REQ-VER-X-009",
+    "type": "Non-Functional Requirement",
+    "title": "Retired Entities Retained for Historical Traceability — No Hard Delete",
+    "description": "Retired plans, superseded eligibility rules, deprecated AI requirements, and outdated rate tables shall never be hard-deleted. They are archived with RETIRED/SUPERSEDED/DEPRECATED status. Historical enrollments, audit records, and carrier transactions that reference these versions continue to resolve correctly.",
+    "status": "Approved",
+    "tags": ["versioning", "data-lifecycle"],
+    "linkedRequirements": ["REQ-DL-005"]
+  },
+  {
+    "requirementId": "REQ-VER-X-010",
+    "type": "Non-Functional Requirement",
+    "title": "Version Diff View Shows Field-Level Before/After for Configuration Changes",
+    "description": "The version diff view shall show field-level before/after values for configuration changes: which fields changed, old value, new value, and (for AI-driven changes) the requirement source that drove the change.",
+    "status": "Approved",
+    "tags": ["versioning", "ux", "audit"],
+    "diffExample": {
+      "field": "minimumHoursPerWeek",
+      "before": 30,
+      "after": 20,
+      "changeSource": "REQ-ELIG-005 (approved 2027-01-15 by Sarah Johnson)",
+      "sourceDocument": "Acme_Eligibility_Policy.pdf, Page 4"
+    }
+  },
+  {
+    "requirementId": "REQ-VER-X-011",
+    "type": "Non-Functional Requirement",
+    "title": "Employer Contribution Rules Versioned Per Plan and Per Effective Period",
+    "description": "Employer contribution percentages (or flat amounts) shall be versioned per plan and per effective period. The premium calculation engine reads the contribution version effective at the enrollment date.",
+    "status": "Approved",
+    "tags": ["versioning", "employer-contribution"],
+    "linkedRequirements": ["REQ-PREM-007"]
+  },
+  {
+    "requirementId": "REQ-VER-X-012",
+    "type": "Non-Functional Requirement",
+    "title": "Payroll Mapping Configuration Versioned — Deduction Code Changes Traceable",
+    "description": "Payroll deduction codes, pay frequencies, and plan-to-deduction-code mappings shall be versioned with effective dates. If a payroll system changes its deduction code for a plan, the new mapping is created as a new version; historical transactions reference the correct prior version.",
+    "status": "Approved",
+    "tags": ["versioning", "payroll"],
+    "linkedRequirements": ["REQ-PREM-001", "REQ-REC-006"]
+  }
+]

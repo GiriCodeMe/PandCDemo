@@ -1,0 +1,136 @@
+[
+  {
+    "requirementId": "REQ-CFG-001",
+    "type": "Non-Functional Requirement",
+    "title": "All Eligibility Rules Stored as Configuration — No Hardcoded Business Logic in Application Code",
+    "description": "Eligibility rules shall be stored as configurable JSON in the data layer, not as if/else logic in application code. The rule engine evaluates rule records; it never contains hardcoded thresholds like 'if hours >= 30'. This is the core architectural principle enabling AI Requirements → Rule Config.",
+    "status": "Approved",
+    "tags": ["configuration", "architecture", "eligibility"],
+    "prohibited": [
+      "if (employee.hoursPerWeek >= 30) { eligible = true; }",
+      "const WAITING_PERIOD = 30; // hardcoded"
+    ],
+    "required": [
+      "Rule engine reads eligibilityRules.json to get threshold value",
+      "AI generates a requirement; human approves; rule record updated; engine evaluates updated record"
+    ],
+    "architecturalPrinciple": "AI generates configuration, not code. The system executes configuration, not arbitrary AI-authored logic."
+  },
+  {
+    "requirementId": "REQ-CFG-002",
+    "type": "Non-Functional Requirement",
+    "title": "AI Requirements Target Named Configuration Fields — Not Free-Form Code",
+    "description": "When AI maps a requirement to a plan or rule, the mapping targets named, typed configuration fields defined in the system schema. AI output can update eligibilityThresholdHours, waitingPeriodDays, employerContributionPercent, etc. AI output cannot generate or modify JavaScript/Node.js code.",
+    "status": "Approved",
+    "tags": ["configuration", "architecture", "ai-governance"],
+    "allowedAITargets": [
+      "eligibilityRule.minimumHoursPerWeek",
+      "eligibilityRule.waitingPeriodDays",
+      "plan.employerContributionPercent",
+      "plan.deductibleAmount",
+      "lifeEventWindow.durationDays"
+    ],
+    "prohibitedAITargets": ["application source code files", "arbitrary JSON keys not in schema", "environment variables"],
+    "linkedRequirements": ["REQ-CFG-001", "REQ-AIGOV-012"]
+  },
+  {
+    "requirementId": "REQ-CFG-003",
+    "type": "Non-Functional Requirement",
+    "title": "Premium Calculation Parameters Externalized in Rate Tables — Not Hardcoded",
+    "description": "Premium amounts, employer contribution percentages, and pay-period divisors shall be read from seed/products/rates.json at runtime. The premium calculation formula (REQ-PREM-001) applies configurable values from the rate table; the formula itself is deterministic code.",
+    "status": "Approved",
+    "tags": ["configuration", "architecture", "premium"],
+    "linkedRequirements": ["REQ-PREM-001", "REQ-PREM-006"]
+  },
+  {
+    "requirementId": "REQ-CFG-004",
+    "type": "Non-Functional Requirement",
+    "title": "Enrollment Window Durations Configurable per Life Event Type",
+    "description": "Life event enrollment window durations (e.g., 30 days for Marriage, varies for other events) shall be read from the lifeEventRuleCatalog seed file. The application code reads the configuration; it does not contain hardcoded event-specific durations.",
+    "status": "Approved",
+    "tags": ["configuration", "architecture", "life-events"],
+    "linkedRequirements": ["REQ-LE-003"]
+  },
+  {
+    "requirementId": "REQ-CFG-005",
+    "type": "Non-Functional Requirement",
+    "title": "ACA Measurement Period Configurable in Employer Configuration",
+    "description": "ACA measurement period start and end dates, and the ACA full-time threshold (30 hours), shall be stored in the employer configuration record. The ACA compliance engine reads these values; they are not hardcoded constants.",
+    "status": "Approved",
+    "tags": ["configuration", "architecture", "aca"],
+    "linkedRequirements": ["REQ-ACA-001"]
+  },
+  {
+    "requirementId": "REQ-CFG-006",
+    "type": "Non-Functional Requirement",
+    "title": "Notification Templates Configurable with Named Merge Fields",
+    "description": "Employee notification message templates shall be stored as configurable records with named merge fields ({{employeeName}}, {{planName}}, {{effectiveDate}}). Template content changes shall not require code deployment.",
+    "status": "Approved",
+    "tags": ["configuration", "notifications"],
+    "linkedRequirements": ["REQ-NOTIFY-009"]
+  },
+  {
+    "requirementId": "REQ-CFG-007",
+    "type": "Non-Functional Requirement",
+    "title": "Feature Flags Control Experimental Features via Environment Variables",
+    "description": "Experimental or optional features shall be controlled by FEATURE_* environment variables defined in .env.example. Disabling a feature flag suppresses the UI element and disables the API endpoint — no code deletion required.",
+    "status": "Approved",
+    "tags": ["configuration", "feature-flags"],
+    "featureFlags": [
+      "FEATURE_AI_ELIGIBILITY_COPILOT=false",
+      "FEATURE_AI_WHAT_IF=false",
+      "FEATURE_AI_BENEFITS_KNOWLEDGE=false",
+      "FEATURE_DEMO_CONTROL_CENTER=true",
+      "FEATURE_ACCESSIBILITY_MODE=true"
+    ],
+    "linkedRequirements": ["REQ-DEPLOY-003"]
+  },
+  {
+    "requirementId": "REQ-CFG-008",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier Simulation Mode Configurable (DETERMINISTIC vs CHAOS)",
+    "description": "The carrier simulation behavior shall be controlled by the CARRIER_SIMULATION_MODE environment variable. DETERMINISTIC returns seeded scenario outcomes; CHAOS introduces randomized failures for monitoring stress-testing. The default for demo is DETERMINISTIC.",
+    "status": "Approved",
+    "tags": ["configuration", "carrier", "demo"],
+    "modes": ["DETERMINISTIC", "CHAOS"],
+    "defaultMode": "DETERMINISTIC",
+    "linkedRequirements": ["REQ-CARRIER-SIM-011"]
+  },
+  {
+    "requirementId": "REQ-CFG-009",
+    "type": "Non-Functional Requirement",
+    "title": "Dependent Age-Out Policy Configurable (Age, Cutoff Rule, Event Cascade)",
+    "description": "The dependent age-out age (26), cutoff rule (end of birth month), and downstream cascade behavior (carrier TERMINATE, payroll stop) shall be configurable in the employer benefits configuration, not hardcoded. This supports future plan year policy updates without code changes.",
+    "status": "Approved",
+    "tags": ["configuration", "dependent-eligibility"],
+    "linkedRequirements": ["REQ-DEP-001"]
+  },
+  {
+    "requirementId": "REQ-CFG-010",
+    "type": "Non-Functional Requirement",
+    "title": "Configuration Changes Create Audit Trail Entries",
+    "description": "Any change to a configuration value (rate table update, rule threshold change, template text change, feature flag toggle) shall create an audit trail entry: who changed it, what the before/after values were, and when it was changed.",
+    "status": "Approved",
+    "tags": ["configuration", "audit"],
+    "linkedRequirements": ["REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-CFG-011",
+    "type": "Non-Functional Requirement",
+    "title": "Eligibility Threshold Fields in Rule Engine Are Typed — Not Arbitrary Strings",
+    "description": "Configurable eligibility fields shall have explicit types (INTEGER for hours threshold, DATE for effective dates, DECIMAL for contribution percentages, BOOLEAN for true/false conditions). The rule engine validates field types before evaluating. AI output targeting a typed field is validated against the field's type before being applied.",
+    "status": "Approved",
+    "tags": ["configuration", "validation", "eligibility"],
+    "linkedRequirements": ["REQ-RULE-UI-007"]
+  },
+  {
+    "requirementId": "REQ-CFG-012",
+    "type": "Non-Functional Requirement",
+    "title": "AI-Driven Configuration Change Requires Diff Preview Before Apply",
+    "description": "When an approved AI requirement triggers a proposed configuration change ([Apply to Plan] or [Create Rule]), the system shall display a diff preview showing: current configuration values, proposed new values, and affected downstream entities. The user explicitly confirms before any change is persisted to a draft.",
+    "status": "Approved",
+    "tags": ["configuration", "ai-governance", "ux"],
+    "diffDisplay": "Side-by-side: Current Value | Proposed Value | Change Source (REQ-ID, confidence, source document)",
+    "linkedRequirements": ["REQ-REQPLAN-006"]
+  }
+]

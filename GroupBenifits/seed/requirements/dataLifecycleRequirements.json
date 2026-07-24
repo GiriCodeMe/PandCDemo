@@ -1,0 +1,120 @@
+[
+  {
+    "requirementId": "REQ-DL-001",
+    "type": "Non-Functional Requirement",
+    "title": "Documents Never Auto-Deleted — Document Retention Is Permanent in Demo",
+    "description": "Uploaded documents shall not be automatically deleted. Documents may be archived by a System Admin but not purged. In the demo environment, documents persist for the session. In a production environment, document retention shall be governed by HR policy (typically 7 years).",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "documents"],
+    "demoRetention": "Permanent within demo session; cleared only by Demo Reset action",
+    "productionNote": "Production document retention: 7 years (HR records compliance baseline)"
+  },
+  {
+    "requirementId": "REQ-DL-002",
+    "type": "Non-Functional Requirement",
+    "title": "Employee Data Lifecycle: ACTIVE → INACTIVE → ARCHIVED",
+    "description": "Employee records shall follow a three-state data lifecycle. ACTIVE employees participate in current benefits. INACTIVE employees (e.g., FMLA leave, temporary suspension) retain historical records but do not receive active enrollment changes. ARCHIVED employees are terminated and historical only.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "employees"],
+    "states": ["ACTIVE", "INACTIVE", "ARCHIVED"],
+    "transitions": [
+      { "from": "ACTIVE",    "to": "INACTIVE", "trigger": "Leave of absence, temporary suspension" },
+      { "from": "ACTIVE",    "to": "ARCHIVED", "trigger": "Employment termination" },
+      { "from": "INACTIVE",  "to": "ACTIVE",   "trigger": "Return from leave" },
+      { "from": "INACTIVE",  "to": "ARCHIVED", "trigger": "Termination during leave" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DL-003",
+    "type": "Non-Functional Requirement",
+    "title": "Terminated Employee Records Retained — Never Hard-Deleted",
+    "description": "Employee records for terminated employees shall be retained in ARCHIVED status indefinitely. Terminated employee enrollment history, audit records, carrier transactions, and payroll deductions must remain accessible for COBRA administration, compliance audits, and legal hold purposes.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "employees", "termination"],
+    "retentionBasis": "ERISA, COBRA, and standard HR recordkeeping requirements",
+    "linkedRequirements": ["REQ-TERM-001"]
+  },
+  {
+    "requirementId": "REQ-DL-004",
+    "type": "Non-Functional Requirement",
+    "title": "Audit Log Retention — Immutable and Non-Deletable",
+    "description": "Audit trail records are immutable and shall never be deleted, even by System Admin. The audit log is the authoritative record of what happened in the system. In the demo, audit records persist until a Demo Reset; demo reset is the only mechanism that clears audit records.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "audit"],
+    "linkedRequirements": ["REQ-AUD-003"]
+  },
+  {
+    "requirementId": "REQ-DL-005",
+    "type": "Non-Functional Requirement",
+    "title": "Retired Plan Versions Retained for Historical Traceability",
+    "description": "When a plan is retired, its version record is retained with RETIRED status. Historical enrollments that reference the retired plan version shall continue to resolve correctly. Retired plans are not deletable.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "plans", "versioning"],
+    "linkedRequirements": ["REQ-VER-X-009"]
+  },
+  {
+    "requirementId": "REQ-DL-006",
+    "type": "Non-Functional Requirement",
+    "title": "AI Requirements Versioned and Retained — Rejected Requirements Archived Not Deleted",
+    "description": "AI-generated requirements that are rejected by a human reviewer are set to REJECTED status and archived — not hard-deleted. Rejected requirements remain visible in the history view and are searchable for audit and pattern analysis purposes.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "ai-requirements"],
+    "linkedRequirements": ["REQ-WF-002"]
+  },
+  {
+    "requirementId": "REQ-DL-007",
+    "type": "Non-Functional Requirement",
+    "title": "Soft Delete Pattern — isActive Flag on All User-Managed Entities",
+    "description": "All user-managed entities (plans, rules, requirements, templates) shall use a soft delete pattern: setting isActive=false or status=RETIRED/ARCHIVED rather than removing the record. Hard deletes are only used for demo reset operations.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "data-model"],
+    "softDeleteField": "isActive (boolean) or status enum with ARCHIVED/RETIRED/DEPRECATED value",
+    "hardDeleteAllowed": "Only during POST /api/demo/reset"
+  },
+  {
+    "requirementId": "REQ-DL-008",
+    "type": "Non-Functional Requirement",
+    "title": "Archived Data Queryable for Compliance Purposes",
+    "description": "Archived records shall remain queryable via API with an include_archived=true filter parameter. The default query excludes archived records. All audit trail queries always include archived records regardless of filter.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "api"],
+    "apiPattern": "GET /api/employees?include_archived=true — returns active + archived records"
+  },
+  {
+    "requirementId": "REQ-DL-009",
+    "type": "Non-Functional Requirement",
+    "title": "Plan Year Data Archived at End of Plan Year — Not Deleted",
+    "description": "At the end of a plan year, plan year data (enrollments, elections, transactions) shall be archived with a plan year identifier. The data remains accessible for historical reference and is not eligible for deletion during normal operations.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "plan-year"],
+    "archiveGranularity": "Plan year identifier (e.g., PLAN_YEAR_2027) on all enrollment and transaction records"
+  },
+  {
+    "requirementId": "REQ-DL-010",
+    "type": "Non-Functional Requirement",
+    "title": "Dependent Age-Out: Record Retained with COVERAGE_TERMINATED Status",
+    "description": "When a dependent is age-out terminated, the dependent record is retained with COVERAGE_TERMINATED status and the coverage termination date. The dependent is not deleted. Historical carrier transactions referencing the dependent remain resolvable.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "dependents"],
+    "linkedRequirements": ["REQ-DEP-001"]
+  },
+  {
+    "requirementId": "REQ-DL-011",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Data Has No Retention Requirements — Reset Clears All Data",
+    "description": "The demo environment is not subject to production data retention rules. The Demo Reset action (POST /api/demo/reset) performs a complete hard reset of all seed data, clearing enrollments, documents, AI extraction results, conversation history, and audit records, returning the system to its initial state.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "demo"],
+    "linkedRequirements": ["REQ-DEMO-002", "REQ-DEPLOY-010"]
+  },
+  {
+    "requirementId": "REQ-DL-012",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier Transaction Records Retained After Transmission — Not Deletable",
+    "description": "All carrier transmission transaction records (accepted, rejected, and system error) are retained indefinitely in the demo. In production, carrier transactions are subject to ERISA recordkeeping requirements. Transaction records are never editable after creation; corrections create new transactions.",
+    "status": "Approved",
+    "tags": ["data-lifecycle", "carrier", "integration"],
+    "transactionImmutability": "Carrier transaction records are append-only; corrections create new transactions with a reference to the original",
+    "linkedRequirements": ["REQ-CARRIER-SIM-001"]
+  }
+]

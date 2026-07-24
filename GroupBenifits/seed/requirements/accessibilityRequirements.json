@@ -1,0 +1,119 @@
+[
+  {
+    "requirementId": "REQ-A11Y-001",
+    "type": "Non-Functional Requirement",
+    "title": "WCAG 2.1 AA Conformance Target for All User-Facing Screens",
+    "description": "All user-facing screens in the demo application shall target WCAG 2.1 Level AA conformance. This applies to all five portals: AI Requirements Studio, Plan Configuration, Enrollment, Integration Monitoring, and Dashboard.",
+    "status": "Approved",
+    "tags": ["accessibility", "wcag"],
+    "standard": "WCAG 2.1 Level AA",
+    "complianceScope": "All user-facing screens",
+    "exclusion": "Demo Control Center (admin-only tool) targets best-effort rather than full AA"
+  },
+  {
+    "requirementId": "REQ-A11Y-002",
+    "type": "Non-Functional Requirement",
+    "title": "Keyboard Navigation — All Interactive Elements Reachable Without a Mouse",
+    "description": "All interactive elements (buttons, form fields, dropdowns, modals, table actions, wizard steps) shall be reachable and operable via keyboard alone. Tab order shall follow reading order. No keyboard trap shall exist — all modal dialogs shall be escapable via the Escape key.",
+    "status": "Approved",
+    "tags": ["accessibility", "keyboard"],
+    "tabOrderPrinciple": "Follows DOM reading order; modals trap focus within until dismissed; Escape always dismisses"
+  },
+  {
+    "requirementId": "REQ-A11Y-003",
+    "type": "Non-Functional Requirement",
+    "title": "Visible Focus Indicators on All Interactive Elements",
+    "description": "All interactive elements shall display a clearly visible focus indicator when navigated to via keyboard. The focus ring shall meet WCAG 2.1 AA contrast requirements (minimum 3:1 contrast ratio for the focus indicator against the adjacent background).",
+    "status": "Approved",
+    "tags": ["accessibility", "keyboard", "focus"],
+    "focusIndicatorSpec": "Minimum 3:1 contrast ratio; 2px solid outline recommended"
+  },
+  {
+    "requirementId": "REQ-A11Y-004",
+    "type": "Non-Functional Requirement",
+    "title": "Color Contrast — 4.5:1 Minimum for Normal Text, 3:1 for Large Text",
+    "description": "All text shall meet WCAG 2.1 AA color contrast requirements: 4.5:1 minimum for normal text (less than 18pt or less than 14pt bold), 3:1 minimum for large text (18pt+ or 14pt+ bold). This includes all UI text, status labels, error messages, and table data.",
+    "status": "Approved",
+    "tags": ["accessibility", "color-contrast"],
+    "minimumContrast": {
+      "normalText": "4.5:1",
+      "largeText": "3:1",
+      "uiComponents": "3:1"
+    }
+  },
+  {
+    "requirementId": "REQ-A11Y-005",
+    "type": "Non-Functional Requirement",
+    "title": "Status Badges Not Conveyed by Color Alone — Must Include Text Label",
+    "description": "All status indicators (workflow states, confidence bands, conflict types, eligibility status) shall never rely on color alone to convey meaning. Each status badge shall include a visible text label in addition to any color coding. This applies to: plan status badges, requirement status badges, carrier transaction status, and enrollment status.",
+    "status": "Approved",
+    "tags": ["accessibility", "color"],
+    "badgeSpec": "Color + text label required. Examples: 'APPROVED' (green background + 'Approved' text), 'REJECTED' (red background + 'Rejected' text).",
+    "linkedRequirements": ["REQ-WF-008"]
+  },
+  {
+    "requirementId": "REQ-A11Y-006",
+    "type": "Non-Functional Requirement",
+    "title": "Form Inputs Have Visible Labels — No Placeholder-Only Labels",
+    "description": "All form inputs shall have a visible label element associated via for/id or aria-labelledby. Placeholder text alone is not sufficient as a label. Labels shall remain visible when the field has content.",
+    "status": "Approved",
+    "tags": ["accessibility", "forms"],
+    "pattern": "Persistent visible label above or beside the input; placeholder text may be used as supplementary hint only"
+  },
+  {
+    "requirementId": "REQ-A11Y-007",
+    "type": "Non-Functional Requirement",
+    "title": "Error Messages Identify the Specific Field and Describe the Fix",
+    "description": "Form validation error messages shall: (1) be associated with the specific input that has an error via aria-describedby, (2) describe what is wrong and how to fix it (not just 'Invalid input'), (3) be programmatically associated so screen readers announce them when focus moves to the field.",
+    "status": "Approved",
+    "tags": ["accessibility", "forms", "errors"],
+    "badExampleMessage": "Invalid input",
+    "goodExampleMessage": "Employee ID must start with EMP- followed by 5 digits (e.g. EMP-10001)"
+  },
+  {
+    "requirementId": "REQ-A11Y-008",
+    "type": "Non-Functional Requirement",
+    "title": "Data Tables Have Programmatic Column Headers for Screen Reader Navigation",
+    "description": "All data tables (employee lists, plan tables, carrier transaction logs, audit tables) shall use proper semantic HTML table elements with <th scope> attributes for column and row headers. Screen reader users shall be able to navigate table cells and hear the relevant header context.",
+    "status": "Approved",
+    "tags": ["accessibility", "tables", "screen-reader"],
+    "htmlPattern": "<th scope=\"col\"> for column headers; <th scope=\"row\"> for row headers where applicable"
+  },
+  {
+    "requirementId": "REQ-A11Y-009",
+    "type": "Non-Functional Requirement",
+    "title": "AI Streaming Responses Announced to Screen Readers When Complete",
+    "description": "AI SSE streaming responses shall use aria-live regions to notify screen reader users when a response completes. The live region shall be set to aria-live='polite' so the completion announcement does not interrupt ongoing speech. The streaming animation shall not distract users while reading other content.",
+    "status": "Approved",
+    "tags": ["accessibility", "ai", "screen-reader"],
+    "ariaLiveRegion": "aria-live='polite' on the AI response container; 'Generating...' status announced when stream starts; 'Response complete' announced when stream ends"
+  },
+  {
+    "requirementId": "REQ-A11Y-010",
+    "type": "Non-Functional Requirement",
+    "title": "Modal Dialogs Manage Focus — Focus Traps Within Modal Until Dismissed",
+    "description": "When a modal dialog opens, focus shall move to the modal header or first focusable element. Focus shall be trapped within the modal (Tab cycles within the modal). When the modal closes, focus shall return to the element that triggered the modal. All modals are dismissible via the Escape key.",
+    "status": "Approved",
+    "tags": ["accessibility", "modals", "focus"],
+    "focusManagement": "onOpen: focus modal title; onClose: restore focus to trigger element; Escape key: always dismisses"
+  },
+  {
+    "requirementId": "REQ-A11Y-011",
+    "type": "Non-Functional Requirement",
+    "title": "Skip Navigation Link for Keyboard Users",
+    "description": "All pages with primary navigation shall include a skip navigation link ('Skip to main content') as the first focusable element. This allows keyboard users to bypass the navigation and jump directly to the main content area.",
+    "status": "Approved",
+    "tags": ["accessibility", "keyboard"],
+    "skipLinkTarget": "#main-content"
+  },
+  {
+    "requirementId": "REQ-A11Y-012",
+    "type": "Non-Functional Requirement",
+    "title": "Page Titles Are Descriptive and Updated on Navigation",
+    "description": "Each page and view shall have a descriptive <title> element that identifies: (1) the current view, (2) the application name. The page title shall update on client-side navigation. Screen reader users rely on page title for orientation when switching tabs.",
+    "status": "Approved",
+    "tags": ["accessibility", "navigation"],
+    "titleFormat": "{View Name} — Group Benefits AI Demo",
+    "examples": ["AI Requirements Studio — Group Benefits AI Demo", "Plan Configuration — Group Benefits AI Demo"]
+  }
+]

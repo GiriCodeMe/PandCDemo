@@ -1,0 +1,130 @@
+[
+  {
+    "requirementId": "REQ-PERF-001",
+    "type": "Non-Functional Requirement",
+    "title": "API Response Time — 95th Percentile ≤ 500ms for Non-AI Endpoints",
+    "description": "All non-AI API endpoints shall respond within 500ms at the 95th percentile under typical demo load. This includes: plan catalog retrieval, eligibility evaluation, employee lookup, enrollment status check, audit trail queries, and dashboard data retrieval.",
+    "status": "Approved",
+    "tags": ["performance", "api"],
+    "p95TargetMs": 500,
+    "p99TargetMs": 1000,
+    "appliesTo": "All non-AI REST endpoints",
+    "measuredUnder": "Demo load: single concurrent user; seed data loaded"
+  },
+  {
+    "requirementId": "REQ-PERF-002",
+    "type": "Non-Functional Requirement",
+    "title": "Page Load — Initial Load ≤ 3 Seconds on Standard Connection",
+    "description": "The initial page load for each major view shall complete within 3 seconds on a standard broadband connection (50 Mbps). This covers the initial HTML + JS bundle load. Subsequent navigations (after initial load) shall complete within 1 second (SPA client-side routing).",
+    "status": "Approved",
+    "tags": ["performance", "frontend"],
+    "initialLoadTargetMs": 3000,
+    "navigationTargetMs": 1000,
+    "connection": "50 Mbps broadband"
+  },
+  {
+    "requirementId": "REQ-PERF-003",
+    "type": "Non-Functional Requirement",
+    "title": "AI Extraction — Document Processing Initiates Within 2 Seconds of Upload Confirmation",
+    "description": "AI extraction processing shall begin within 2 seconds of upload confirmation. The user sees immediate feedback that extraction has started (spinner + SSE stream). Total extraction time for a 20-page PDF shall complete within 60 seconds for a standard document.",
+    "status": "Approved",
+    "tags": ["performance", "ai"],
+    "extractionStartLatencyMs": 2000,
+    "typicalExtractionTimeSeconds": 60,
+    "documentSizeProfile": "5–25 page benefits policy PDF"
+  },
+  {
+    "requirementId": "REQ-PERF-004",
+    "type": "Non-Functional Requirement",
+    "title": "AI Chat First Token ≤ 3 Seconds — Full Response ≤ 30 Seconds",
+    "description": "AI conversational responses (Requirements Interview, Benefits Knowledge Assistant, Exception Copilot) shall produce the first streamed token within 3 seconds of the user sending a message. Full response completion shall occur within 30 seconds for standard queries.",
+    "status": "Approved",
+    "tags": ["performance", "ai", "streaming"],
+    "firstTokenLatencyMs": 3000,
+    "fullResponseTimeSeconds": 30,
+    "model": "Gemini 2.0 Flash (interview/generation/assistant); Gemini 1.5 Pro (extraction/Q&A)"
+  },
+  {
+    "requirementId": "REQ-PERF-005",
+    "type": "Non-Functional Requirement",
+    "title": "Enrollment Submission Processing ≤ 5 Seconds",
+    "description": "The full enrollment submission flow (validate → persist enrollment record → trigger carrier queue → return confirmation) shall complete within 5 seconds. The user shall see the confirmation screen within 5 seconds of clicking [Submit Enrollment].",
+    "status": "Approved",
+    "tags": ["performance", "enrollment"],
+    "endToEndTargetMs": 5000,
+    "includesSteps": ["server-side validation", "LowDB write", "carrier queue push", "confirmation response"]
+  },
+  {
+    "requirementId": "REQ-PERF-006",
+    "type": "Non-Functional Requirement",
+    "title": "Eligibility Evaluation — Rule Engine Response ≤ 200ms",
+    "description": "The deterministic eligibility rule engine shall evaluate eligibility for a single employee against all applicable rules and return a result within 200ms. This is a synchronous in-process calculation, not an AI call.",
+    "status": "Approved",
+    "tags": ["performance", "eligibility"],
+    "eligibilityEvalMs": 200,
+    "implementationNote": "JSON rule AST interpreted in Node.js; seed data in memory — no database query required for in-session evaluation"
+  },
+  {
+    "requirementId": "REQ-PERF-007",
+    "type": "Non-Functional Requirement",
+    "title": "Dashboard Data Loads Within 1 Second from Seed File",
+    "description": "The Executive Dashboard and Benefits Overview dashboard shall render with populated data within 1 second. Dashboard data is served from pre-computed seed snapshots, not computed at request time.",
+    "status": "Approved",
+    "tags": ["performance", "dashboard"],
+    "loadTargetMs": 1000,
+    "dataSource": "dashboardSnapshot.json (pre-computed seed data)"
+  },
+  {
+    "requirementId": "REQ-PERF-008",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Dataset — 5,000 Employees With Acceptable Performance at All Target Endpoints",
+    "description": "The system shall perform within all defined response time targets when the seed dataset includes 5,000 employee records. Employee list pagination (25 per page), eligibility search, and enrollment status all operate on the full 5,000-employee dataset.",
+    "status": "Approved",
+    "tags": ["performance", "scalability", "demo-data"],
+    "datasetSize": "5,000 employee records",
+    "paginationPageSize": 25,
+    "linkedRequirements": ["REQ-PERF-001"]
+  },
+  {
+    "requirementId": "REQ-PERF-009",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier Simulation Transmission — 100 Transmission Records Processed in ≤ 10 Seconds",
+    "description": "The carrier simulation engine shall process a batch of 100 enrollment transmission records within 10 seconds in DETERMINISTIC mode. Individual record processing time shall not exceed 100ms per record.",
+    "status": "Approved",
+    "tags": ["performance", "carrier", "simulation"],
+    "batchTargetSeconds": 10,
+    "batchSize": 100,
+    "perRecordTargetMs": 100
+  },
+  {
+    "requirementId": "REQ-PERF-010",
+    "type": "Non-Functional Requirement",
+    "title": "AI Pre-Warm Action Reduces First Extraction Latency to ≤ 5 Seconds",
+    "description": "After the Pre-Warm AI action (Demo Control Center), the first document extraction shall complete within 5 seconds rather than the standard 60 seconds. Pre-warming primes the Gemini API connection and caches document embeddings. Cache validity: 24 hours.",
+    "status": "Approved",
+    "tags": ["performance", "ai", "demo"],
+    "preWarmedExtractionSeconds": 5,
+    "cacheValidityHours": 24,
+    "linkedRequirements": ["REQ-DEMO-009"]
+  },
+  {
+    "requirementId": "REQ-PERF-011",
+    "type": "Non-Functional Requirement",
+    "title": "Integration Monitoring Polling Updates Within 10 Seconds of State Change",
+    "description": "The Integration Monitoring dashboard shall reflect carrier and payroll transaction state changes within 10 seconds via polling. Polling interval: 10 seconds when tab is visible; paused when tab is hidden; immediate refresh when tab becomes active.",
+    "status": "Approved",
+    "tags": ["performance", "integration-monitoring"],
+    "pollingIntervalMs": 10000,
+    "linkedRequirements": ["REQ-INT-MON-001"]
+  },
+  {
+    "requirementId": "REQ-PERF-012",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Reset Completes Within 3 Seconds",
+    "description": "The Demo Reset action (POST /api/demo/reset) shall restore all seed data to initial state within 3 seconds. The user sees a confirmation notification and the UI reflects the reset state within 3 seconds of triggering the reset.",
+    "status": "Approved",
+    "tags": ["performance", "demo"],
+    "resetTargetMs": 3000,
+    "linkedRequirements": ["REQ-DEMO-002"]
+  }
+]

@@ -1,0 +1,171 @@
+[
+  {
+    "requirementId": "REQ-AI-SIM-001",
+    "type": "Functional Requirement",
+    "title": "AI What-If Simulation — Propose Configuration Changes and Project Downstream Impact",
+    "description": "The AI Requirements Studio shall include a What-If Simulation workspace where users can propose benefit configuration changes and see projected downstream impact before committing. The simulation is read-only — results are always hypothetical until the user initiates the real change workflow.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "what-if", "impact-analysis"],
+    "disclaimer": "Simulations are read-only projections. No data is changed until you explicitly initiate the configuration change workflow.",
+    "linkedRequirements": ["REQ-IMPACT-001"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-002",
+    "type": "Functional Requirement",
+    "title": "Pre-Configured What-If Scenarios for Demo — Waiting Period, Contribution, Eligibility",
+    "description": "The What-If workspace shall include three pre-configured demonstration scenarios that immediately produce compelling impact projections from the seed data.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "what-if", "demo"],
+    "demoScenarios": [
+      {
+        "id": "SCENARIO-1",
+        "change": "Waiting period: 30 days → 60 days",
+        "projectedImpact": {
+          "requirementsImpacted": 4,
+          "rulesImpacted": 3,
+          "plansImpacted": 2,
+          "employeesImpacted": 127,
+          "testCasesImpacted": 6
+        }
+      },
+      {
+        "id": "SCENARIO-2",
+        "change": "Employer contribution: 80% → 90%",
+        "projectedImpact": {
+          "plansImpacted": 7,
+          "employeesImpacted": 5000,
+          "annualCostIncrease": "$XXX,XXX",
+          "payrollImpact": true,
+          "carrierImpact": false
+        }
+      },
+      {
+        "id": "SCENARIO-3",
+        "change": "Eligibility threshold: 30 hours → 20 hours",
+        "projectedImpact": {
+          "employeesNewlyEligible": 214,
+          "plansImpacted": 7,
+          "enrollmentImpact": "HIGH",
+          "acaImpact": "Review ACA affordability recalculation"
+        }
+      }
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-003",
+    "type": "Functional Requirement",
+    "title": "Impact Analysis Extended to Include Test Case Count and Compliance Implications",
+    "description": "AI impact analysis (REQ-IMPACT-001) is extended to include two additional impact dimensions: (1) estimated test case count required for the change, (2) potential compliance implications (ACA, COBRA, ERISA) flagged for human review.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "impact-analysis"],
+    "additionalImpactDimensions": ["testCasesRequired", "complianceImplications"],
+    "linkedRequirements": ["REQ-IMPACT-001", "REQ-AI-SIM-009"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-004",
+    "type": "Functional Requirement",
+    "title": "AI Test Case Generation — Requirements Produce Acceptance Criteria and Test Case Outlines",
+    "description": "For each approved requirement, the AI shall be able to generate: (1) formal acceptance criteria in Given/When/Then format, (2) test case outlines covering happy path, boundary conditions, and negative cases. Generated test cases are advisory — a human QA engineer reviews and finalizes them.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "test-generation"],
+    "generationExample": {
+      "requirement": "Full-time employees working 30+ hours are eligible after 30 calendar days.",
+      "generatedTestCases": [
+        { "id": "TC-001", "label": "40 hours → eligible after 30 days",    "type": "HAPPY_PATH" },
+        { "id": "TC-002", "label": "Exactly 30 hours → eligible",           "type": "BOUNDARY" },
+        { "id": "TC-003", "label": "29 hours → not eligible",               "type": "NEGATIVE" },
+        { "id": "TC-004", "label": "29th day: not yet eligible",            "type": "BOUNDARY" },
+        { "id": "TC-005", "label": "31st day: eligible",                    "type": "BOUNDARY" },
+        { "id": "TC-006", "label": "Rehire within 30 days: credit preserved","type": "EDGE_CASE" }
+      ]
+    },
+    "linkedRequirements": ["REQ-TEST-001"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-005",
+    "type": "Functional Requirement",
+    "title": "AI Backlog Prioritization — Score Requirements by Business Impact, Risk, and Dependencies",
+    "description": "The AI shall provide an automated backlog prioritization pass that scores each requirement on: business impact, regulatory risk, employee impact count, estimated implementation effort, and dependency chain. Output is a ranked backlog with rationale for each prioritization decision.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "backlog"],
+    "prioritizationCriteria": ["businessImpact", "regulatoryRisk", "employeeImpactCount", "implementationEffort", "dependencies"],
+    "outputFormat": "Ranked list with: Requirement ID | Priority Score | Rationale | Dependencies",
+    "linkedRequirements": ["REQ-EXPORT-001"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-006",
+    "type": "Functional Requirement",
+    "title": "AI Compliance Assistant — Flag ACA, COBRA, ERISA Implications of Plan Changes",
+    "description": "When a plan or eligibility configuration change is proposed, the AI Compliance Assistant shall analyze whether the change has potential ACA, COBRA, or ERISA implications. The assistant surfaces relevant flags for human compliance review — it does not make compliance determinations.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "compliance"],
+    "complianceDisclaimer": "This is an informational analysis only. It does not constitute legal or compliance advice. All compliance implications require review by qualified legal and benefits counsel.",
+    "flaggedAreas": ["ACA affordability recalculation", "COBRA qualifying event triggers", "ERISA plan document amendment", "Section 125 cafeteria plan implications"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-007",
+    "type": "Functional Requirement",
+    "title": "What-If Simulation Narrative: 'Change X → See Y Impact → Decide' User Flow",
+    "description": "The What-If workspace user flow shall be: (1) User selects a configuration attribute to change, (2) User inputs the proposed new value, (3) AI runs impact analysis and presents a structured impact report, (4) User decides whether to initiate the real change workflow or discard the simulation. The simulation never modifies live data.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "ux"],
+    "userFlow": ["Select entity + attribute", "Enter proposed value", "Run simulation", "Review impact report", "→ Initiate Change Workflow OR → Discard Simulation"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-008",
+    "type": "Functional Requirement",
+    "title": "AI Agentic Orchestration Concept Demo — Multi-Agent Change Pipeline",
+    "description": "The demo shall include a showcase of the AI Agentic Orchestration concept: a single user instruction ('Change waiting period from 30 to 60 days') triggers a multi-step AI agent pipeline that produces a full impact assessment, configuration draft, and test case set for human review.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "agentic", "demo"],
+    "agentPipeline": [
+      { "agent": "Requirements Agent",    "action": "Identifies all requirements referencing the 30-day waiting period" },
+      { "agent": "Impact Analysis Agent", "action": "Finds all affected rules, plans, and enrollment workflows" },
+      { "agent": "Test Generation Agent", "action": "Generates test cases for the proposed change" },
+      { "agent": "Compliance Agent",      "action": "Flags any ACA/COBRA implications" }
+    ],
+    "humanCheckpoint": "All agent output is presented as a consolidated review package — human approves or modifies before any configuration change is applied",
+    "demoNote": "This is a concept demonstration; in MVP all agent steps may be presented sequentially rather than truly parallel"
+  },
+  {
+    "requirementId": "REQ-AI-SIM-009",
+    "type": "Functional Requirement",
+    "title": "Impact Analysis Visualized as Dependency Chain: PDF → REQ → RULE → PLAN → ENROLLMENT → CARRIER",
+    "description": "The impact analysis results shall be visualized as a navigable dependency chain showing the full downstream path from a changed requirement. Each node in the chain is clickable to navigate to the affected entity's detail view.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "impact-analysis", "ux"],
+    "chainNodes": ["Source PDF", "AI Requirement", "Eligibility Rule", "Plan Configuration", "Affected Enrollments", "Carrier Transmissions", "Payroll Deductions", "Test Cases"],
+    "linkedRequirements": ["REQ-IMPACT-001"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-010",
+    "type": "Functional Requirement",
+    "title": "What-If Simulation Results Exportable as Impact Report PDF",
+    "description": "The results of a What-If simulation shall be exportable as a structured impact report suitable for stakeholder review. The report includes: proposed change, projected impact by dimension, compliance flags, recommended next steps, and the simulation timestamp.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "export"],
+    "reportSections": ["Proposed Change", "Impact Summary", "Affected Requirements", "Affected Rules and Plans", "Employee Impact", "Compliance Flags", "Recommended Next Steps"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-011",
+    "type": "Functional Requirement",
+    "title": "AI Plan Comparison — Conversational Plan Selection Based on Profile",
+    "description": "The Plan Comparison workspace shall include an AI mode where a user can describe an employee profile in natural language and the AI explains how the available plans compare for that profile, recommending the best fit with reasoning.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "plan-comparison"],
+    "exampleInteraction": {
+      "query": "Which plan offers the best value for a family with moderate healthcare usage?",
+      "response": "For a family with moderate usage, PPO-500 provides comprehensive coverage with a $500 deductible and full network flexibility. HDHP-3000 has lower employee premiums ($X less/month) but higher out-of-pocket exposure if care usage is above average. PPO-500 is recommended for moderate usage profiles."
+    },
+    "linkedRequirements": ["REQ-PLAN-COMP-013"]
+  },
+  {
+    "requirementId": "REQ-AI-SIM-012",
+    "type": "Functional Requirement",
+    "title": "Simulation Audit Trail — All What-If Runs Logged with User, Scenario, and Timestamp",
+    "description": "Every What-If simulation run shall be logged to the audit trail: who ran it, what change was simulated, the impact summary results, and whether the simulation led to a real change being initiated. This creates an evidence trail of decision-making.",
+    "status": "Approved",
+    "tags": ["ai-simulation", "audit"],
+    "linkedRequirements": ["REQ-AUD-001"]
+  }
+]

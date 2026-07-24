@@ -1,0 +1,166 @@
+[
+  {
+    "requirementId": "REQ-SEC-001",
+    "type": "Non-Functional Requirement",
+    "title": "PII Classification — Employee SSN, DOB, Address, and Salary Are Sensitive",
+    "description": "The system shall classify the following fields as sensitive PII: employee SSN, dependent SSN, date of birth, home address, salary, and benefits election details. All PII fields must be handled according to the controls in REQ-SEC-002 through REQ-SEC-015.",
+    "status": "Approved",
+    "tags": ["security", "pii", "cross-cutting"],
+    "sensitiveFields": ["employeeSSN", "dependentSSN", "dateOfBirth", "homeAddress", "salary", "benefitsElections", "bankAccountInfo"],
+    "nonSensitiveFields": ["employeeId", "firstName", "lastName", "employeeType", "hireDate", "planId", "enrollmentStatus"]
+  },
+  {
+    "requirementId": "REQ-SEC-002",
+    "type": "Non-Functional Requirement",
+    "title": "SSN Encrypted at Rest — Cleartext SSN Never Written to Storage",
+    "description": "Employee and dependent SSNs shall be stored encrypted at rest. The cleartext SSN value shall never be written to any JSON seed file, database record, or application log. The encryption key shall be stored in an environment variable, never hardcoded in source.",
+    "status": "Approved",
+    "tags": ["security", "pii", "encryption"],
+    "demoApproach": "For demo: seed files store SSN as masked value only (XXX-XX-XXXX); no encryption implementation required in MVP unless PII is stored in demo dataset",
+    "productionNote": "Production requires AES-256 field-level encryption before any real SSN data is persisted",
+    "linkedRequirements": ["REQ-DEP-SSN-001"]
+  },
+  {
+    "requirementId": "REQ-SEC-003",
+    "type": "Non-Functional Requirement",
+    "title": "SSN Masked in All UI, API Responses, Notifications, and Error Messages (XXX-XX-1234)",
+    "description": "The full SSN value shall never appear in any UI display, API JSON response, notification email, PDF confirmation, or error message. The masked format XXX-XX-1234 (showing only last 4 digits) shall be used in all contexts. APIs receiving SSN for processing shall strip it before logging the request.",
+    "status": "Approved",
+    "tags": ["security", "pii", "masking"],
+    "maskedFormat": "XXX-XX-1234",
+    "contexts": ["UI form fields and display labels", "API response payloads", "PDF enrollment confirmations", "Email notifications", "Error messages", "Audit log display (record event only, not value)"]
+  },
+  {
+    "requirementId": "REQ-SEC-004",
+    "type": "Non-Functional Requirement",
+    "title": "No PII in Application Logs, Stack Traces, or API Error Responses",
+    "description": "Application logs, server logs, error stack traces, and API error responses shall not contain SSN, full date of birth, salary, or other PII values. Log entries for PII operations shall reference only entity IDs and operation type, never the PII value itself.",
+    "status": "Approved",
+    "tags": ["security", "pii", "logging"],
+    "prohibitedInLogs": ["SSN", "dependentSSN", "salary", "dateOfBirth (full)", "bankAccountNumber"],
+    "allowedInLogs": ["employeeId", "dependentId", "planId", "operationType", "requestId", "timestamp", "errorCode"],
+    "linkedRequirements": ["API-ERR-006"]
+  },
+  {
+    "requirementId": "REQ-SEC-005",
+    "type": "Non-Functional Requirement",
+    "title": "All Data in Transit Protected by TLS 1.2 or Higher",
+    "description": "All communication between the React frontend and the Node.js API, and between the Node.js API and any external service (Gemini, carrier mock, payroll mock), shall use TLS 1.2 or higher. Plain HTTP shall be rejected in demo and production environments.",
+    "status": "Approved",
+    "tags": ["security", "tls", "transport"]
+  },
+  {
+    "requirementId": "REQ-SEC-006",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Authentication: Mock JWT Bearer Token Encoding Persona Identity and Role",
+    "description": "For the demo environment (AUTH_MODE=mock), authentication shall use mock JWT bearer tokens where the payload encodes personaId, role, and permissions. Token validation shall occur in Express middleware on every protected route. Production environments require a real identity provider (OAuth2/OIDC).",
+    "status": "Approved",
+    "tags": ["security", "auth", "demo"],
+    "demoAuthStrategy": "Bearer token payload contains { personaId, role, name, permissions }; validated in middleware",
+    "envVar": "AUTH_MODE=mock",
+    "productionNote": "Replace with OAuth2/OIDC identity provider before any real employee data is processed",
+    "linkedRequirements": ["REQ-RBAC-001"]
+  },
+  {
+    "requirementId": "REQ-SEC-007",
+    "type": "Non-Functional Requirement",
+    "title": "Session Timeout After 30 Minutes of Inactivity",
+    "description": "User sessions shall expire after 30 minutes of inactivity. The frontend shall detect the expired session state and redirect to the persona-selector screen. In-progress enrollment drafts shall be preserved server-side and resumable after re-authentication.",
+    "status": "Approved",
+    "tags": ["security", "auth", "session"],
+    "timeoutMinutes": 30,
+    "warningAtMinutes": 25,
+    "draftPreservation": "Enrollment drafts persisted server-side; resume by re-authenticating with same persona"
+  },
+  {
+    "requirementId": "REQ-SEC-008",
+    "type": "Non-Functional Requirement",
+    "title": "All Non-Public API Endpoints Require Authorization Header",
+    "description": "All API endpoints except the health check shall require a valid Authorization header. Requests without a token shall receive HTTP 401 UNAUTHORIZED. Requests with a valid token but insufficient role shall receive HTTP 403 FORBIDDEN with error code FORBIDDEN.",
+    "status": "Approved",
+    "tags": ["security", "auth", "api"],
+    "publicEndpoints": ["GET /health", "GET /health/dependencies"],
+    "adminOnlyEndpoints": ["POST /api/demo/reset", "GET /api/demo/scenarios", "POST /api/demo/snapshot"],
+    "linkedRequirements": ["REQ-RBAC-013", "API-ERR-002"]
+  },
+  {
+    "requirementId": "REQ-SEC-009",
+    "type": "Non-Functional Requirement",
+    "title": "File Upload Restricted to PDF — MIME Type, Magic Bytes, and 25 MB Maximum",
+    "description": "The document upload endpoint shall validate: (1) Content-Type header = application/pdf, (2) magic bytes confirm PDF (%PDF-), (3) file size ≤ 25 MB, (4) filename sanitized to remove path traversal characters. Files failing any check shall be rejected before AI processing begins.",
+    "status": "Approved",
+    "tags": ["security", "file-upload"],
+    "allowedMimeType": "application/pdf",
+    "maxFileSizeMB": 25,
+    "validationOrder": ["MIME type header", "magic byte check", "file size", "filename sanitization"],
+    "malwareNote": "Demo does not implement AV scanning; production requires integration with an antivirus scan service"
+  },
+  {
+    "requirementId": "REQ-SEC-010",
+    "type": "Non-Functional Requirement",
+    "title": "Document Access Restricted to Authorized Personas Only",
+    "description": "Documents in the AI Requirements Studio shall only be accessible to personas with BENEFITS_ADMIN, REQUIREMENTS_ANALYST, BENEFITS_ANALYST, PRODUCT_OWNER, or SYSTEM_ADMIN roles. The EMPLOYEE and EXECUTIVE personas shall not have access to raw policy documents or the AI Requirements module.",
+    "status": "Approved",
+    "tags": ["security", "auth", "documents"],
+    "authorizedRoles": ["BENEFITS_ADMIN", "REQUIREMENTS_ANALYST", "BENEFITS_ANALYST", "PRODUCT_OWNER", "SYSTEM_ADMIN"],
+    "unauthorizedRoles": ["EMPLOYEE", "EXECUTIVE", "HR_ADMIN"],
+    "linkedRequirements": ["REQ-RBAC-001"]
+  },
+  {
+    "requirementId": "REQ-SEC-011",
+    "type": "Non-Functional Requirement",
+    "title": "Secrets Never Committed to Git; Gemini API Key Never in React Frontend",
+    "description": "The Gemini API key, service account credentials, and the .env file shall never be committed to the Git repository. The React frontend shall never directly call the Gemini API. All AI calls shall be proxied through the Node.js API. The .env.example file (no secrets) is committed as a template.",
+    "status": "Approved",
+    "tags": ["security", "secrets", "architecture"],
+    "gitignoreRequired": [".env", ".env.local", ".env.production", "service-account*.json", "*.pem"],
+    "gitCommittedSafe": [".env.example — template only, no real values"],
+    "architecturalPrinciple": "Gemini API key lives in Node.js server process only; the React bundle must never contain it"
+  },
+  {
+    "requirementId": "REQ-SEC-012",
+    "type": "Non-Functional Requirement",
+    "title": "CORS Policy Whitelists Only the Frontend Origin — No Wildcard Allowed",
+    "description": "The Node.js API CORS configuration shall whitelist only the origin declared in the FRONTEND_URL environment variable. Cross-origin requests from other origins shall be rejected. Wildcard CORS (*) is not permitted in any environment.",
+    "status": "Approved",
+    "tags": ["security", "cors", "api"],
+    "envVar": "FRONTEND_URL",
+    "localDefault": "http://localhost:5173",
+    "demoDefault": "The Amplify or Vercel frontend URL"
+  },
+  {
+    "requirementId": "REQ-SEC-013",
+    "type": "Non-Functional Requirement",
+    "title": "Security Headers on All API Responses via Helmet",
+    "description": "The Node.js API shall send security response headers on every response, implemented via the helmet npm package: X-Content-Type-Options: nosniff, X-Frame-Options: DENY, Strict-Transport-Security (production only), and a restrictive Content-Security-Policy for any served HTML.",
+    "status": "Approved",
+    "tags": ["security", "headers"],
+    "headers": {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Strict-Transport-Security": "max-age=31536000 (production only)"
+    },
+    "recommendedPackage": "helmet"
+  },
+  {
+    "requirementId": "REQ-SEC-014",
+    "type": "Non-Functional Requirement",
+    "title": "All PII Access Events Recorded in Audit Trail — Value Never Logged",
+    "description": "Any read or write operation on sensitive PII fields (SSN, salary, DOB) shall generate an audit event. The audit record shall contain: actorId, actorRole, entityType, entityId, operation, requestId, and timestamp. The PII value itself shall NOT be included in the audit record.",
+    "status": "Approved",
+    "tags": ["security", "pii", "audit"],
+    "auditEventFields": ["actorId", "actorRole", "entityType", "entityId", "operation", "requestId", "timestamp"],
+    "auditEventExclusions": ["ssnValue", "ssnHash", "salaryAmount", "dateOfBirth"],
+    "linkedRequirements": ["REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-SEC-015",
+    "type": "Non-Functional Requirement",
+    "title": "Dependent SSN Blocked from Carrier Transmission Until Validation Passes",
+    "description": "A dependent's SSN shall not be included in any EDI 834 carrier transmission until both FORMAT_VALID and IDENTITY_VERIFIED checks pass per REQ-DEP-SSN-001. Any transmission attempt with an unverified dependent SSN shall be blocked and generate a CT-BLOCKED status event.",
+    "status": "Approved",
+    "tags": ["security", "pii", "carrier"],
+    "blockCondition": "dependentSSNStatus not in ['FORMAT_VALID', 'IDENTITY_VERIFIED']",
+    "linkedRequirements": ["REQ-DEP-SSN-001", "REQ-DEP-SSN-009", "REQ-EDI-834-012"]
+  }
+]

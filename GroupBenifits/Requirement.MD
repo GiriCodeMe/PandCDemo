@@ -98,6 +98,20 @@ seed/
                  planComparisonRequirements.json             (REQ-PLAN-COMP-001–014)
                  documentPreviewRequirements.json            (REQ-DOC-REV-001–014)
                  integrationMonitoringRequirements.json      (REQ-INT-MON-001–014)
+                 securityPrivacyRequirements.json           (REQ-SEC-001–015)
+                 rbacRequirements.json                      (REQ-RBAC-001–015)
+                 aiGovernanceRequirements.json              (REQ-AIGOV-001–015)
+                 workflowStateRequirements.json             (REQ-WF-001–015)
+                 configurationArchitectureRequirements.json (REQ-CFG-001–012)
+                 demoControlCenterRequirements.json         (REQ-DEMO-001–012)
+                 crossEntityVersioningRequirements.json     (REQ-VER-X-001–012)
+                 aiDocumentIntelligenceRequirements.json    (REQ-AI-KNOW-001–015)
+                 aiCopilotRequirements.json                 (REQ-AI-COP-001–015)
+                 aiSimulationRequirements.json              (REQ-AI-SIM-001–012)
+                 dataLifecycleRequirements.json             (REQ-DL-001–012)
+                 operationalResilienceRequirements.json     (REQ-OPS-001–012)
+                 accessibilityRequirements.json             (REQ-A11Y-001–012)
+                 performanceRequirements.json               (REQ-PERF-001–012)
   validation/    fieldValidationMetadata.json
   documents/     documents.json
 samples/
@@ -148,5 +162,19 @@ Requirements seeded in `seed/requirements/` — each file is a self-contained JS
 | Document Preview & Extraction Review | `documentPreviewRequirements.json` | REQ-DOC-REV-001–014 | 14 | Three-panel workspace: PDF Preview / Extracted Content / AI Findings; confidence-based review (≥90%/70–89%/<70%); explicit commit workflow; never auto-commit; document lifecycle UPLOADED → COMMITTED |
 | Integration Monitoring | `integrationMonitoringRequirements.json` | REQ-INT-MON-001–014 | 14 | setInterval polling 10s; manual refresh; last-updated timestamp; records counter progress bar; pause on tab hidden; prevent overlapping polls; deterministic carrier simulations |
 | API Error Schema | `apiErrorSchemaRequirements.json` | API-ERR-001–010 | 10 | Standard error envelope { success, error: { code, message, details, requestId, timestamp } }; HTTP status mapping; field-level validation details; retryable flag; no stack-trace exposure; 17-code error taxonomy |
+| Security & Privacy | `securityPrivacyRequirements.json` | REQ-SEC-001–015 | 15 | PII classification; SSN encrypted at rest + masked XXX-XX-1234 in all UI/API/logs; TLS 1.2+; demo mock JWT; file upload magic-bytes validation; CORS whitelist; security headers via helmet; PII access events audited |
+| Role-Based Access Control | `rbacRequirements.json` | REQ-RBAC-001–015 | 15 | 10 personas; permission matrix (VIEW/CREATE/EDIT/DELETE/APPROVE/PUBLISH/TRANSMIT/EXPORT) per feature; UI hides + API enforces independently; persona quick-switch in global nav |
+| AI Governance | `aiGovernanceRequirements.json` | REQ-AIGOV-001–015 | 15 | Provenance schema (sourceDocumentId, sourcePage, sourceTextSnippet, modelVersion, promptTemplateVersion); confidence bands ≥90%/70–89%/<70%; no auto-commit without human approval; status badges [AI]/[HR]/[✓]/[✗]/[?]; 5-type conflict classification; governance dashboard |
+| Workflow State Machines | `workflowStateRequirements.json` | REQ-WF-001–015 | 15 | Plan: DRAFT→UNDER_REVIEW→APPROVED→PUBLISHED→ACTIVE→RETIRED; AI Requirement: EXTRACTED→AI_REVIEWED→HUMAN_REVIEW→APPROVED→REJECTED→IMPLEMENTED; Enrollment: DRAFT→SUBMITTED→VALIDATED→CONFIRMED→TRANSMITTED→ACCEPTED/REJECTED→ACTIVE; state transitions create immutable audit events; HTTP 422 on invalid transitions |
+| Configuration Architecture | `configurationArchitectureRequirements.json` | REQ-CFG-001–012 | 12 | Core principle: eligibility rules as JSON config not if/else code; AI targets named typed config fields; premiums from rate tables at runtime; FEATURE_* env var flags; CARRIER_SIMULATION_MODE; age-out policy configurable; AI-driven config change requires diff preview |
+| Demo Control Center | `demoControlCenterRequirements.json` | REQ-DEMO-001–012 | 12 | SYSTEM_ADMIN only; reset ≤3s scope (seed+drafts+queue+docs+conversations); 3 scenario presets (HAPPY_PATH/EXCEPTIONS/FAILURES); carrier simulation one-click (Accept All/Partial/Reject All); AI mode toggle (Live Gemini/Demo Fallback); date override; snapshot save/restore (max 3) |
+| Cross-Entity Versioning | `crossEntityVersioningRequirements.json` | REQ-VER-X-001–012 | 12 | Versioning on: plans, eligibilityRules, aiRequirements, rateTable, employerContribution, carrierMapping, payrollMapping; future effective dates; historical enrollment resolved at enrollment-date config version; diff view with AI source requirement reference |
+| AI Document Intelligence | `aiDocumentIntelligenceRequirements.json` | REQ-AI-KNOW-001–015 | 15 | Multi-document knowledge base across all 5 Acme PDFs; Benefits Knowledge Assistant with source citation (document/page/section/snippet); cross-document requirement aggregation; EXPLICIT/INFERRED/CALCULATED extraction types; missing requirement detection (MISSING_INFORMATION); end-to-end traceability PDF→KB→REQ→CONFIG both directions |
+| AI Copilot | `aiCopilotRequirements.json` | REQ-AI-COP-001–015 | 15 | Eligibility Copilot (why ineligible? + path-to-eligibility + predict eligibility within 30 days); Enrollment Assistant (conversational plan selection; advisory only); Life Event Assistant (natural language → event type + window + docs); Exception Copilot (root cause + fix recommendation; human approves before retry); Reconciliation Assistant; Benefits Decision Support |
+| AI Simulation & Strategy | `aiSimulationRequirements.json` | REQ-AI-SIM-001–012 | 12 | What-If Simulation (change X → see impact → decide; read-only); 3 pre-configured scenarios (waiting period / contribution / eligibility threshold); impact dependency chain PDF→REQ→RULE→PLAN→ENROLLMENT→CARRIER→TEST; AI Test Case Generation (Given/When/Then + happy/boundary/negative/edge); AI Backlog Prioritization; Agentic Orchestration (Requirements→Impact→Testing→Compliance agents) |
+| Data Lifecycle & Retention | `dataLifecycleRequirements.json` | REQ-DL-001–012 | 12 | Soft delete on all user-managed entities; terminated employees retained (ARCHIVED); audit log immutable + non-deletable; plan versions retained (RETIRED ≠ deleted); hard deletes only on POST /api/demo/reset; archived data queryable via include_archived=true |
+| Operational Resilience | `operationalResilienceRequirements.json` | REQ-OPS-001–012 | 12 | Idempotency keys on all mutating APIs (24h window; duplicate → HTTP 200 + Idempotent-Replayed: true); partial batch processing (one failure ≠ batch failure); dead-letter queue for FAILED_PERMANENT transactions; correlation ID end-to-end; graceful degradation (non-critical failures don't block enrollment); health check endpoints |
+| Accessibility | `accessibilityRequirements.json` | REQ-A11Y-001–012 | 12 | WCAG 2.1 AA target; keyboard nav (all interactive elements reachable; no traps; Escape dismisses modals); visible focus indicators 3:1+; 4.5:1 color contrast; status badges never color-only (always include text label); aria-live regions for AI streaming; skip navigation link; descriptive page titles updated on SPA navigation |
+| Performance | `performanceRequirements.json` | REQ-PERF-001–012 | 12 | Non-AI API p95 ≤ 500ms; page load ≤ 3s (50 Mbps); AI first token ≤ 3s; AI full response ≤ 30s; enrollment submission ≤ 5s; eligibility rule engine ≤ 200ms; dashboard ≤ 1s (from seed snapshot); 5,000-employee dataset at all targets; carrier simulation 100 records ≤ 10s; demo reset ≤ 3s |
 
-**Total seeded requirements (seed/requirements/):** 423+ across 31 requirement sets.
+**Total seeded requirements (seed/requirements/):** 609+ across 45 requirement sets.

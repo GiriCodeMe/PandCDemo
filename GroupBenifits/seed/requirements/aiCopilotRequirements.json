@@ -1,0 +1,173 @@
+[
+  {
+    "requirementId": "REQ-AI-COP-001",
+    "type": "Functional Requirement",
+    "title": "AI Eligibility Copilot — 'Why Is This Employee Not Eligible?'",
+    "description": "The Eligibility workspace shall include an AI Copilot that explains why a specific employee is or is not eligible for a given plan. The explanation shall reference the applicable rule, the employee's specific attribute values, and the source document the rule was derived from.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "eligibility"],
+    "exampleInteraction": {
+      "query": "Why is John Smith not eligible for PPO-500?",
+      "response": "John Smith works 28 hours per week. PPO-500 requires a minimum of 30 hours per week for full-time eligibility. Rule: RULE-ELIG-001 (Acme_Eligibility_Policy.pdf, Page 4)."
+    }
+  },
+  {
+    "requirementId": "REQ-AI-COP-002",
+    "type": "Functional Requirement",
+    "title": "AI Eligibility Explanation Always References Applicable Rule and Source Document",
+    "description": "Every AI eligibility explanation shall cite: the specific eligibility rule evaluated, the employee's actual attribute value, the required threshold, and the source document and page number where the rule originated. Unsourced AI eligibility explanations are not permitted.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "eligibility", "traceability"],
+    "linkedRequirements": ["REQ-AIGOV-004"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-003",
+    "type": "Functional Requirement",
+    "title": "AI 'What Would Make This Employee Eligible?' Path-to-Eligibility Recommendation",
+    "description": "The AI Eligibility Copilot shall answer path-to-eligibility questions: given the current eligibility rules, what change would make a specific employee eligible? The AI recommends the minimum qualifying condition (e.g., increase to 30 hours/week; wait 14 more days for waiting period completion).",
+    "status": "Approved",
+    "tags": ["ai-copilot", "eligibility"],
+    "exampleInteraction": {
+      "query": "What would make John Smith eligible?",
+      "response": "Increasing John Smith's scheduled hours from 28 to 30 hours per week would qualify him under RULE-ELIG-001. Alternatively, if the eligibility threshold changes to 20 hours (currently proposed in REQ-ELIG-005, pending approval), John would become eligible without a schedule change."
+    }
+  },
+  {
+    "requirementId": "REQ-AI-COP-004",
+    "type": "Functional Requirement",
+    "title": "AI Predictive Eligibility — 'Find Employees Who Will Become Eligible Within 30 Days'",
+    "description": "The AI Eligibility Copilot shall support predictive queries: identify employees who will cross an eligibility threshold within a specified time window. This helps Benefits Administrators proactively manage enrollment communications.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "eligibility", "predictive"],
+    "exampleInteraction": {
+      "query": "Find employees who will become eligible in the next 30 days.",
+      "response": "23 employees will complete their 30-day waiting period between January 15 and February 15, 2027. The earliest: ACM-E027 (Maria Chen, hire date Dec 16, 2026 — eligible Jan 16, 2027)."
+    },
+    "implementationNote": "Deterministic calculation using seed data — no LLM needed for the query execution; LLM formats the natural language response"
+  },
+  {
+    "requirementId": "REQ-AI-COP-005",
+    "type": "Functional Requirement",
+    "title": "AI Enrollment Assistant — Conversational Plan Selection for Employee Persona",
+    "description": "The Enrollment wizard shall include an optional AI Enrollment Assistant that helps employees choose a plan through a guided conversation. The assistant asks about family size, healthcare usage, HSA preference, and budget, then explains how each available plan compares on those dimensions.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "enrollment", "employee"],
+    "conversationFlow": [
+      "How many people need coverage? (Just me / Me + Spouse / Me + Child(ren) / Family)",
+      "Do you have regular prescription needs or planned medical procedures?",
+      "Would you like to contribute to an HSA?",
+      "What monthly premium range works for your budget?"
+    ],
+    "outputFormat": "Ranked plan recommendations with plain-language explanation of tradeoffs"
+  },
+  {
+    "requirementId": "REQ-AI-COP-006",
+    "type": "Functional Requirement",
+    "title": "AI Enrollment Recommendation Explains Tradeoffs — Does Not Make the Election",
+    "description": "The AI Enrollment Assistant shall explain and recommend plans but shall never automatically select a plan. The employee makes the final election by explicitly clicking [Select This Plan] in the wizard. AI recommendation is advisory; the enrollment system records the employee's explicit choice.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "enrollment", "human-in-the-loop"],
+    "governancePrinciple": "AI recommends; human decides. The elected plan is always the one the employee explicitly selected, regardless of the AI recommendation.",
+    "linkedRequirements": ["REQ-AIGOV-003"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-007",
+    "type": "Functional Requirement",
+    "title": "AI Life Event Assistant — Natural Language Life Event Initiation",
+    "description": "The Life Events workspace shall include an AI assistant that accepts natural language descriptions of life events and identifies the correct event type, checks the enrollment window, and lists required documentation. The assistant hands off to the structured enrollment workflow for data capture.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "life-events"],
+    "exampleInteraction": {
+      "query": "I got married last week.",
+      "response": "Congratulations! This is a Marriage life event. Your enrollment window is 30 days from your marriage date (by Feb 15, 2027). You can add your spouse to Medical, Dental, and Vision coverage. Required documentation: marriage certificate. [Start Life Event Enrollment →]"
+    },
+    "linkedRequirements": ["REQ-LE-001"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-008",
+    "type": "Functional Requirement",
+    "title": "AI Life Event Identifies Event Type, Window, and Required Documentation",
+    "description": "Given a natural language description of a life event, the AI shall identify: (1) the correct event type from the lifeEventRuleCatalog, (2) the enrollment window duration and deadline, (3) the list of required documentation for that event type.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "life-events"],
+    "linkedRequirements": ["REQ-LE-003", "REQ-LE-005"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-009",
+    "type": "Functional Requirement",
+    "title": "AI Exception Resolution — 'Why Did This Carrier Transaction Fail?'",
+    "description": "The Integration workspace shall include an AI Exception Copilot that investigates failed carrier transactions. Given a transaction ID, the AI analyzes the rejection code, identifies the root cause in the enrollment or employee data, and recommends a specific corrective action.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "integration", "exception-resolution"],
+    "exampleInteraction": {
+      "query": "Why did carrier transaction CT-10045 fail?",
+      "response": "CT-10045 was rejected by Aetna with code DEP-INVALID-ID. Root cause: Dependent DEP-022 (Sarah Smith) does not have a valid carrier member ID in the identity mapping for Aetna Medical. Recommendation: Verify dependent SSN and request carrier member ID assignment before retransmission."
+    },
+    "linkedRequirements": ["REQ-CARRIER-SIM-004", "REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-010",
+    "type": "Functional Requirement",
+    "title": "AI Exception Root Cause Identifies Specific Data Issue Causing Rejection",
+    "description": "The AI Exception Copilot shall pinpoint the specific data field or configuration gap causing a rejection, not just re-state the carrier error code. The AI traces from the carrier error code back to the enrollment record, employee record, and eligibility rule to identify the source of the problem.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "integration", "exception-resolution"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-011",
+    "type": "Functional Requirement",
+    "title": "AI Exception Recommends Corrective Action — Human Approves Before Retry",
+    "description": "After identifying the root cause, the AI Exception Copilot shall recommend a specific corrective action (e.g., 'Update the carrier member ID mapping for DEP-022'). The recommended action is presented as a workflow step; the Integration Admin explicitly approves before the system retries the transaction.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "integration", "human-in-the-loop"],
+    "workflowSteps": ["AI identifies root cause → AI recommends fix → Integration Admin reviews → [Apply Fix] → [Retry Transaction]"],
+    "linkedRequirements": ["REQ-AIGOV-003"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-012",
+    "type": "Functional Requirement",
+    "title": "AI Reconciliation Assistant — Conversational Interface for Mismatch Investigation",
+    "description": "The Reconciliation workspace shall include an AI assistant that answers natural language questions about mismatches between Benefits, Carrier, and Payroll records. The assistant aggregates, prioritizes, and explains reconciliation exceptions.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "reconciliation"],
+    "exampleInteractions": [
+      "Show me all payroll and carrier mismatches. → 42 exceptions: 20 premium mismatch, 12 missing carrier record, 7 effective date mismatch, 3 employee ID mismatch.",
+      "Which ones are high priority? → 20 premium mismatches affecting payroll deductions are highest priority ($18,400 variance this period)."
+    ],
+    "linkedRequirements": ["REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-013",
+    "type": "Functional Requirement",
+    "title": "AI Benefits Decision Support — Natural Language Analytics Questions",
+    "description": "The Dashboard shall support natural language analytics queries via an AI Benefits Analyst copilot. The AI analyzes the seeded dashboard and enrollment data to answer operational questions with evidence-based responses.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "analytics", "dashboard"],
+    "exampleInteractions": [
+      "Which plans are most popular? → PPO-500 is the most elected plan (52%), followed by HDHP-3000 (28%).",
+      "Why did PPO-500 enrollment decrease? → PPO-500 enrollment is down 4% from the prior year. The premium increase of $25/month effective July 2027 coincided with the HDHP-3000 enrollment increase.",
+      "Which employee groups have the highest exception rate? → Hourly employees have a 23% higher exception rate than salaried employees, primarily due to waiting-period eligibility issues."
+    ],
+    "implementationNote": "AI synthesizes seeded dashboard data; does not perform live data analysis beyond what is available in dashboardSnapshot.json"
+  },
+  {
+    "requirementId": "REQ-AI-COP-014",
+    "type": "Functional Requirement",
+    "title": "AI Copilot Interactions Logged to Audit Trail for Governance Review",
+    "description": "AI copilot interactions (eligibility explanations, exception root cause analyses, enrollment recommendations) shall be logged to the audit trail with: actor, query text, AI response summary, and data accessed. This provides governance visibility into how AI is being used in decision support.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "audit", "governance"],
+    "linkedRequirements": ["REQ-AUD-001", "REQ-AIGOV-001"]
+  },
+  {
+    "requirementId": "REQ-AI-COP-015",
+    "type": "Functional Requirement",
+    "title": "AI Copilot Clearly Labeled as AI — Never Impersonates a System Decision",
+    "description": "AI copilot responses shall always be visually distinguished from system-generated data with an 'AI' badge or label. AI responses are advisory and shall include the disclaimer: 'AI-generated insight — verify with source data before acting.' The system decision (eligibility status, enrollment result) always comes from the deterministic rule engine, not the AI explanation.",
+    "status": "Approved",
+    "tags": ["ai-copilot", "governance", "ux"],
+    "aiLabel": "🤖 AI Insight",
+    "disclaimer": "AI-generated insight — verify with source data before acting.",
+    "linkedRequirements": ["REQ-AIGOV-003"]
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "requirementId": "REQ-AIGOV-001",
+    "type": "Non-Functional Requirement",
+    "title": "AI Provenance Tracking — Source Document, Page, Model, and Prompt Version Recorded",
+    "description": "Every AI-generated requirement shall include provenance metadata: source document name, page number, section heading, Gemini model version, prompt template version, and extraction timestamp. Provenance is immutable and preserved through the requirement's lifecycle.",
+    "status": "Approved",
+    "tags": ["ai-governance", "traceability", "ai"],
+    "provenanceSchema": {
+      "sourceDocumentId": "DOC-001",
+      "sourceDocumentName": "Acme_2027_Benefits_Guide.pdf",
+      "sourcePage": 4,
+      "sourceSection": "Section 3.1 — Eligibility",
+      "sourceTextSnippet": "Full-time employees are eligible after 30 calendar days...",
+      "aiModelVersion": "gemini-1.5-pro-001",
+      "promptTemplateVersion": "extract-requirements-v2.1",
+      "extractedAt": "2027-01-15T10:32:14.123Z"
+    }
+  },
+  {
+    "requirementId": "REQ-AIGOV-002",
+    "type": "Non-Functional Requirement",
+    "title": "Confidence Score Required on All AI-Generated Requirements",
+    "description": "Every AI-generated requirement shall include a confidence score (0.0–1.0) reflecting the AI's certainty about the extraction. The score shall drive the review priority: ≥0.90 pre-selected for approval, 0.70–0.89 requires human review, <0.70 requires manual examination.",
+    "status": "Approved",
+    "tags": ["ai-governance", "confidence"],
+    "confidenceBands": [
+      { "range": "≥0.90", "label": "High Confidence", "reviewAction": "Pre-selected for approval; human confirms" },
+      { "range": "0.70–0.89", "label": "Medium Confidence", "reviewAction": "Requires explicit human review before approval" },
+      { "range": "<0.70", "label": "Low Confidence", "reviewAction": "Manual examination required; AI may have misinterpreted context" }
+    ],
+    "linkedRequirements": ["REQ-DOC-REV-014"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-003",
+    "type": "Non-Functional Requirement",
+    "title": "AI-Generated Requirements Cannot Auto-Commit to Configuration Without Human Approval",
+    "description": "No AI-generated requirement, conflict resolution, or plan recommendation shall be automatically applied to any production configuration. Every AI output must pass through a human review and explicit approval step before it can be used to create rules, modify plans, or update any configuration.",
+    "status": "Approved",
+    "tags": ["ai-governance", "human-in-the-loop"],
+    "architecturalPrinciple": "AI accelerates human experts; it does not replace them. The approval chain is: AI Generated → Human Reviewed → Explicitly Approved → Configuration Applied.",
+    "prohibitedBehaviors": ["Auto-approve based on confidence threshold alone", "Silent background application of AI recommendations", "One-click 'approve all' without individual review"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-004",
+    "type": "Non-Functional Requirement",
+    "title": "AI Hallucination Control — Source Citation Must Link to Verifiable Document Page",
+    "description": "AI-generated requirements shall include a source citation that links to a specific document, page number, and highlighted text. If the AI cannot identify a source citation with high confidence, it shall flag the requirement with UNVERIFIED_SOURCE status rather than fabricating a citation.",
+    "status": "Approved",
+    "tags": ["ai-governance", "hallucination-control"],
+    "sourceVerificationStates": ["CITATION_VERIFIED", "CITATION_UNVERIFIED", "NO_CITATION"],
+    "uiDisplay": "Requirements with CITATION_UNVERIFIED displayed with ⚠ Source Unverified indicator; requires mandatory human review"
+  },
+  {
+    "requirementId": "REQ-AIGOV-005",
+    "type": "Non-Functional Requirement",
+    "title": "Visual Status Badges — AI Generated vs Human Reviewed vs Approved on All Requirements",
+    "description": "Every requirement in the Requirements Studio shall display a visual status badge indicating its governance state: [AI] AI Generated, [HR] Human Reviewed, [✓] Approved, [✗] Rejected, [↩] Needs Clarification. These badges appear in all list views, detail panels, and traceability maps.",
+    "status": "Approved",
+    "tags": ["ai-governance", "ux"],
+    "governanceStates": [
+      { "state": "AI_GENERATED",        "badge": "[AI]", "color": "blue",   "description": "Raw AI output, not yet reviewed" },
+      { "state": "HUMAN_REVIEWED",      "badge": "[HR]", "color": "yellow", "description": "Reviewed by human, pending formal approval" },
+      { "state": "APPROVED",            "badge": "[✓]",  "color": "green",  "description": "Approved; eligible for plan/rule configuration" },
+      { "state": "REJECTED",            "badge": "[✗]",  "color": "red",    "description": "Rejected; archived but visible for audit" },
+      { "state": "NEEDS_CLARIFICATION", "badge": "[?]",  "color": "orange", "description": "Referred back to AI Interview for clarification" }
+    ]
+  },
+  {
+    "requirementId": "REQ-AIGOV-006",
+    "type": "Non-Functional Requirement",
+    "title": "Human Approval Required Before AI Requirement Maps to Plan or Rule Configuration",
+    "description": "The [Create Rule] and [Apply to Plan] actions shall be enabled only for requirements in the APPROVED state. Attempting to map an AI_GENERATED or HUMAN_REVIEWED requirement to configuration shall display an advisory: 'Approve this requirement before applying to plan configuration.'",
+    "status": "Approved",
+    "tags": ["ai-governance", "human-in-the-loop"],
+    "enabledStates": ["APPROVED"],
+    "disabledStates": ["AI_GENERATED", "HUMAN_REVIEWED", "NEEDS_CLARIFICATION", "REJECTED"],
+    "linkedRequirements": ["REQ-REQPLAN-001"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-007",
+    "type": "Non-Functional Requirement",
+    "title": "AI Model Version and Prompt Template Version Recorded with Each Extraction Run",
+    "description": "Each AI document extraction run shall record: Gemini model version, prompt template ID and version, extraction timestamp, document SHA-256 fingerprint, and the raw AI response (stored separately from the parsed requirement). This enables reproducibility and prompt iteration tracking.",
+    "status": "Approved",
+    "tags": ["ai-governance", "observability"],
+    "extractionRunSchema": {
+      "runId": "RUN-20270115-001",
+      "documentId": "DOC-001",
+      "documentFingerprint": "sha256:...",
+      "modelVersion": "gemini-1.5-pro-001",
+      "promptTemplateId": "extract-requirements",
+      "promptTemplateVersion": "v2.1",
+      "extractedAt": "2027-01-15T10:32:14.123Z",
+      "requirementsGenerated": 48,
+      "conflictsDetected": 6
+    }
+  },
+  {
+    "requirementId": "REQ-AIGOV-008",
+    "type": "Non-Functional Requirement",
+    "title": "AI Explainability — 'Why Did AI Generate This?' Audit Trail on Each Requirement",
+    "description": "The Requirements Studio detail panel shall display an AI Reasoning section for each AI-generated requirement, showing: the source text snippet, the AI's extraction rationale (summary of why it was identified as a requirement), and the confidence score explanation.",
+    "status": "Approved",
+    "tags": ["ai-governance", "explainability", "ux"],
+    "uiSection": "AI Reasoning",
+    "displayFields": ["sourceTextSnippet", "extractionRationale", "confidenceScore", "confidenceExplanation"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-009",
+    "type": "Non-Functional Requirement",
+    "title": "AI Conflict Classification: CONTRADICTION / OVERLAP / AMBIGUITY / MISSING / DUPLICATE",
+    "description": "AI conflict detection shall classify each detected issue into one of five categories. Each category has a distinct severity default and resolution workflow.",
+    "status": "Approved",
+    "tags": ["ai-governance", "conflict-detection"],
+    "conflictTypes": [
+      { "type": "CONTRADICTION",      "description": "Two documents state directly opposing rules", "defaultSeverity": "HIGH", "example": "Doc A: 30-day wait. Doc B: 60-day wait." },
+      { "type": "OVERLAP",            "description": "Two rules cover the same population differently", "defaultSeverity": "MEDIUM", "example": "Doc A: FT employees eligible. Doc B: 30+ hr employees eligible." },
+      { "type": "AMBIGUITY",          "description": "A requirement uses undefined or vague language", "defaultSeverity": "MEDIUM", "example": "Employees are eligible after completing the required waiting period. (No period defined.)" },
+      { "type": "MISSING_INFORMATION","description": "A process is referenced but no supporting rule exists", "defaultSeverity": "HIGH", "example": "Plan requires dependent verification but no verification process is specified." },
+      { "type": "DUPLICATE",          "description": "Same requirement stated in two documents with minor wording variation", "defaultSeverity": "LOW", "example": "Both Benefits Guide and Eligibility Policy state the 30-day rule in identical terms." }
+    ],
+    "linkedRequirements": ["REQ-CONFLICT-001"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-010",
+    "type": "Non-Functional Requirement",
+    "title": "Bulk AI Actions Require Explicit Human Confirmation — No Silent Batch Apply",
+    "description": "Any bulk AI action (Approve All, Reject All, Apply All to Plan) shall require an explicit confirmation dialog listing the count and summary of items affected. Auto-application of AI batch recommendations without confirmation is prohibited.",
+    "status": "Approved",
+    "tags": ["ai-governance", "human-in-the-loop", "ux"],
+    "requiredConfirmationActions": ["Approve All", "Reject All", "Apply All to Plan Config", "Export All to Backlog"],
+    "confirmationDialogContent": "Action summary: N items affected | Preview of items | [Confirm] [Cancel]"
+  },
+  {
+    "requirementId": "REQ-AIGOV-011",
+    "type": "Non-Functional Requirement",
+    "title": "AI Errors Must Be Human-Recoverable — No Silent AI Failures",
+    "description": "When an AI operation fails, the system shall surface a clear, actionable error message to the user. The error shall identify the operation, what failed, and what the user can do (retry, run in background, view partial results). Silent AI failures — where an operation fails without user notification — are prohibited.",
+    "status": "Approved",
+    "tags": ["ai-governance", "error-handling"],
+    "linkedRequirements": ["REQ-AI-UX-012", "REQ-AI-RELIABILITY-005"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-012",
+    "type": "Non-Functional Requirement",
+    "title": "No AI-Generated Content Modifies Published Plan or Rule Without Explicit Approval Workflow",
+    "description": "AI-generated content (requirements, conflict resolutions, impact analysis recommendations) shall only affect configuration in DRAFT state. Published plans and active eligibility rules cannot be modified by AI action. Changes always require the human-approved workflow: AI Output → Requirement Approval → Draft Change → Human Review → Publish.",
+    "status": "Approved",
+    "tags": ["ai-governance", "configuration-safety"],
+    "linkedRequirements": ["REQ-CFG-001", "REQ-WF-001", "REQ-REQPLAN-001"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-013",
+    "type": "Non-Functional Requirement",
+    "title": "AI Governance Dashboard — Pending Review Count and Extraction Health Summary",
+    "description": "The AI Requirements section header shall display a governance summary: total extracted, pending review, approved, rejected, unverified citations, and active conflicts. This gives the Requirements Analyst an immediate quality picture on entry to the workspace.",
+    "status": "Approved",
+    "tags": ["ai-governance", "ux", "dashboard"],
+    "governanceSummaryFields": ["totalExtracted", "pendingReview", "approved", "rejected", "unverifiedCitations", "activeConflicts"]
+  },
+  {
+    "requirementId": "REQ-AIGOV-014",
+    "type": "Non-Functional Requirement",
+    "title": "Reviewer Assignment — AI Requirements Can Be Assigned to Specific Analyst",
+    "description": "An AI-generated requirement can be assigned to a specific Requirements Analyst or Benefits Administrator for review. Assigned reviewer is notified (in-app notification) when the requirement is ready for review. Unassigned requirements are visible to all authorized reviewers.",
+    "status": "Approved",
+    "tags": ["ai-governance", "workflow"],
+    "assignmentModel": "Optional; unassigned requirements are unowned and visible to all authorized roles",
+    "notificationTrigger": "Assignment created → in-app notification to assigned reviewer"
+  },
+  {
+    "requirementId": "REQ-AIGOV-015",
+    "type": "Non-Functional Requirement",
+    "title": "AI Provenance Chain: Document → Extraction Run → Requirement → Review → Approval → Configuration",
+    "description": "The complete provenance chain for every approved requirement shall be navigable in the Audit & Traceability workspace. Starting from any approved requirement, a user shall be able to trace backwards to the source PDF page and forward to the configuration it affects.",
+    "status": "Approved",
+    "tags": ["ai-governance", "traceability"],
+    "provenanceChain": "Source PDF page → Extraction Run → AI-Generated Requirement → Human Review event → Approval event → Configuration artifact (Rule / Plan)",
+    "linkedRequirements": ["REQ-AUD-001", "REQ-REQPLAN-009"]
+  }
+]

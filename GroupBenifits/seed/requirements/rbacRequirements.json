@@ -1,0 +1,208 @@
+[
+  {
+    "requirementId": "REQ-RBAC-001",
+    "type": "Non-Functional Requirement",
+    "title": "Role-Based Access Control Model — 10 Defined Personas with Permission Sets",
+    "description": "The system shall enforce role-based access control based on 10 defined demo personas. Every UI action, API endpoint, and data entity shall require a matching permission. The RBAC model applies to both the frontend (hide/disable) and the backend (enforce on API).",
+    "status": "Approved",
+    "tags": ["rbac", "security", "cross-cutting"],
+    "personas": [
+      { "role": "BENEFITS_ADMIN",       "name": "Benefits Administrator",  "primary": "Configure plans, eligibility, enrollment" },
+      { "role": "HR_ADMIN",             "name": "HR Administrator",        "primary": "Manage employees and life events" },
+      { "role": "EMPLOYEE",             "name": "Employee",                "primary": "View and select own benefits" },
+      { "role": "BENEFITS_ANALYST",     "name": "Benefits Analyst",        "primary": "Analyze plans, exceptions, and data" },
+      { "role": "PAYROLL_ADMIN",        "name": "Payroll Administrator",   "primary": "Review payroll deductions" },
+      { "role": "INTEGRATION_ADMIN",    "name": "Integration Admin",       "primary": "Monitor carrier/payroll transactions" },
+      { "role": "REQUIREMENTS_ANALYST", "name": "Requirements Analyst",    "primary": "Review AI-generated requirements" },
+      { "role": "PRODUCT_OWNER",        "name": "Product Owner",           "primary": "Approve requirements and backlog" },
+      { "role": "SYSTEM_ADMIN",         "name": "System Admin",            "primary": "Demo reset, configuration" },
+      { "role": "EXECUTIVE",            "name": "Executive",               "primary": "Dashboard and read-only reporting" }
+    ]
+  },
+  {
+    "requirementId": "REQ-RBAC-002",
+    "type": "Non-Functional Requirement",
+    "title": "Permission Matrix — View, Create, Edit, Delete, Approve, Publish, Transmit, Export by Feature",
+    "description": "Each persona shall have explicitly defined permissions for each feature area. Permissions are: VIEW, CREATE, EDIT, DELETE, APPROVE, PUBLISH, TRANSMIT, EXPORT. The absence of a permission means the action is hidden in the UI and rejected by the API.",
+    "status": "Approved",
+    "tags": ["rbac", "security"],
+    "permissionTypes": ["VIEW", "CREATE", "EDIT", "DELETE", "APPROVE", "PUBLISH", "TRANSMIT", "EXPORT"],
+    "permissionMatrix": {
+      "planConfiguration": {
+        "BENEFITS_ADMIN": ["VIEW", "CREATE", "EDIT", "APPROVE", "PUBLISH"],
+        "BENEFITS_ANALYST": ["VIEW"],
+        "EXECUTIVE": ["VIEW"],
+        "EMPLOYEE": [],
+        "SYSTEM_ADMIN": ["VIEW", "CREATE", "EDIT", "DELETE", "APPROVE", "PUBLISH"]
+      },
+      "eligibilityRules": {
+        "BENEFITS_ADMIN": ["VIEW", "CREATE", "EDIT", "APPROVE", "PUBLISH"],
+        "BENEFITS_ANALYST": ["VIEW"],
+        "HR_ADMIN": ["VIEW"],
+        "EMPLOYEE": [],
+        "SYSTEM_ADMIN": ["VIEW", "CREATE", "EDIT", "DELETE", "APPROVE", "PUBLISH"]
+      },
+      "employeeEnrollment": {
+        "BENEFITS_ADMIN": ["VIEW", "EDIT", "APPROVE"],
+        "HR_ADMIN": ["VIEW", "CREATE", "EDIT"],
+        "EMPLOYEE": ["VIEW", "CREATE", "EDIT"],
+        "BENEFITS_ANALYST": ["VIEW"],
+        "EXECUTIVE": ["VIEW"]
+      },
+      "carrierTransmission": {
+        "INTEGRATION_ADMIN": ["VIEW", "TRANSMIT", "EXPORT"],
+        "BENEFITS_ADMIN": ["VIEW"],
+        "PAYROLL_ADMIN": ["VIEW"],
+        "EXECUTIVE": ["VIEW"]
+      },
+      "aiRequirements": {
+        "REQUIREMENTS_ANALYST": ["VIEW", "CREATE", "EDIT", "APPROVE"],
+        "PRODUCT_OWNER": ["VIEW", "APPROVE", "EXPORT"],
+        "BENEFITS_ADMIN": ["VIEW", "APPROVE"],
+        "BENEFITS_ANALYST": ["VIEW"],
+        "EMPLOYEE": [],
+        "SYSTEM_ADMIN": ["VIEW", "CREATE", "EDIT", "DELETE", "APPROVE", "PUBLISH", "EXPORT"]
+      },
+      "auditTrail": {
+        "BENEFITS_ADMIN": ["VIEW"],
+        "BENEFITS_ANALYST": ["VIEW", "EXPORT"],
+        "INTEGRATION_ADMIN": ["VIEW"],
+        "SYSTEM_ADMIN": ["VIEW", "EXPORT"],
+        "EXECUTIVE": ["VIEW"]
+      },
+      "demoAdmin": {
+        "SYSTEM_ADMIN": ["VIEW", "CREATE", "EDIT", "DELETE"]
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-RBAC-003",
+    "type": "Non-Functional Requirement",
+    "title": "UI Hides and Disables Unauthorized Actions — Not Just Server-Side Check",
+    "description": "The React frontend shall hide or disable any action that the current persona's role does not permit. This is a UX requirement (clean persona experience), not the security boundary — the API must still enforce RBAC independently.",
+    "status": "Approved",
+    "tags": ["rbac", "ux", "frontend"],
+    "uiPattern": "Hide entire buttons/menus for unauthorized CREATE/DELETE/APPROVE. Disable (gray out with tooltip) for context-dependent permissions. Never show a 403 error for actions the user was never supposed to see."
+  },
+  {
+    "requirementId": "REQ-RBAC-004",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Persona Quick-Switch Control in Global Navigation",
+    "description": "The demo application shall provide a quick persona-switch control in the global navigation header. Switching personas shall reload the current view with the new persona's role, permissions, and visible navigation sections. This is essential for demo presentations.",
+    "status": "Approved",
+    "tags": ["rbac", "demo", "ux"],
+    "switchControl": "Persona picker dropdown in top-right header (next to username display)",
+    "switchBehavior": "Immediate reload of navigation and current workspace with new role; preserves navigation context where permitted",
+    "demoNote": "Demo personas in seed/auth/personas.json: 8 personas defined"
+  },
+  {
+    "requirementId": "REQ-RBAC-005",
+    "type": "Non-Functional Requirement",
+    "title": "Benefits Administrator — Full Plan, Eligibility, and Enrollment Access",
+    "description": "The Benefits Administrator persona shall have full access to Plan Configuration, Eligibility Rules, and Enrollment management. Read-only access to Integration Monitoring and AI Requirements Studio (cannot approve AI requirements without REQUIREMENTS_ANALYST role).",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "BENEFITS_ADMIN",
+    "primaryWorkspaces": ["Plans", "Eligibility", "Enrollment", "AI Requirements (view + approve)", "Audit Trail"]
+  },
+  {
+    "requirementId": "REQ-RBAC-006",
+    "type": "Non-Functional Requirement",
+    "title": "HR Administrator — Employee and Life Event Management Only",
+    "description": "The HR Administrator persona shall have access to employee record management, life event initiation, and enrollment support. HR Admin does not have access to Plan Configuration, Eligibility Rule Builder, or AI Requirements Studio.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "HR_ADMIN",
+    "primaryWorkspaces": ["Employees", "Enrollment", "Life Events"],
+    "restrictedWorkspaces": ["Plans", "Eligibility Rule Builder", "AI Requirements", "Carrier Transmission"]
+  },
+  {
+    "requirementId": "REQ-RBAC-007",
+    "type": "Non-Functional Requirement",
+    "title": "Employee Persona — Own Benefits View and Enrollment Only",
+    "description": "The Employee persona shall access only their own benefits information: plan comparison, plan details, enrollment wizard, life event submission, and benefit confirmation documents. The Employee shall not view other employees' data, plan configurations, or any administrative workspace.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "EMPLOYEE",
+    "primaryWorkspaces": ["My Benefits", "Plan Comparison", "Enrollment Wizard", "Life Events", "My Documents"],
+    "restrictedWorkspaces": ["Admin workspaces", "Other employees' data", "AI Requirements", "Integration monitoring"]
+  },
+  {
+    "requirementId": "REQ-RBAC-008",
+    "type": "Non-Functional Requirement",
+    "title": "Integration Admin — Carrier and Payroll Transmission Access",
+    "description": "The Integration Admin persona shall have full access to carrier and payroll transmission management: transmission queue, error review, retry actions, reconciliation, and monitoring dashboard. Does not have plan configuration or enrollment editing access.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "INTEGRATION_ADMIN",
+    "primaryWorkspaces": ["Integration Dashboard", "Carrier Transactions", "Payroll Transactions", "Reconciliation", "Monitoring", "Errors", "Audit Trail (integration events)"]
+  },
+  {
+    "requirementId": "REQ-RBAC-009",
+    "type": "Non-Functional Requirement",
+    "title": "Requirements Analyst and Product Owner — AI Requirements Studio Full Access",
+    "description": "Requirements Analyst: full AI Requirements Studio access including review, edit, and approve AI-generated requirements. Product Owner: approve requirements, manage backlog, initiate exports. Neither role has direct plan configuration or carrier transmission access.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "personas": ["REQUIREMENTS_ANALYST", "PRODUCT_OWNER"],
+    "primaryWorkspaces": ["AI Requirements Studio", "Requirements Backlog", "Conflict Detection", "Impact Analysis", "Traceability", "Backlog Export"]
+  },
+  {
+    "requirementId": "REQ-RBAC-010",
+    "type": "Non-Functional Requirement",
+    "title": "Executive — Dashboard and Read-Only Access Only",
+    "description": "The Executive persona shall have access only to the Dashboard (KPI cards, summary charts). The Executive shall not be able to navigate to any operational workspace, modify data, or access PII-containing screens.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "EXECUTIVE",
+    "primaryWorkspaces": ["Dashboard"],
+    "restrictedWorkspaces": ["All operational workspaces", "All employee detail screens"]
+  },
+  {
+    "requirementId": "REQ-RBAC-011",
+    "type": "Non-Functional Requirement",
+    "title": "System Admin — Full Access Including Demo Controls",
+    "description": "The System Admin persona shall have full access to all workspaces including the Demo Control Center (reset, scenario loading, snapshot). System Admin is the only role authorized to execute POST /api/demo/reset.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "SYSTEM_ADMIN",
+    "primaryWorkspaces": ["All workspaces", "Demo Admin", "Demo Control Center"]
+  },
+  {
+    "requirementId": "REQ-RBAC-012",
+    "type": "Non-Functional Requirement",
+    "title": "Navigation Sections Hidden When All Child Items Are Unauthorized",
+    "description": "If a persona has no permissions for any item in a navigation section, the entire section shall be hidden from the left navigation. Partial access shows the section with only permitted items visible.",
+    "status": "Approved",
+    "tags": ["rbac", "ux", "navigation"],
+    "example": "EMPLOYEE persona sees no 'Plans & Products' admin section, no 'Eligibility' admin section, no 'Integrations', no 'AI Requirements'. Sees only 'My Benefits' and personal enrollment."
+  },
+  {
+    "requirementId": "REQ-RBAC-013",
+    "type": "Non-Functional Requirement",
+    "title": "API Enforces RBAC on All Endpoints Independent of Frontend",
+    "description": "Every API endpoint shall enforce role-based authorization in Express middleware, independent of what the frontend hides. A request with a valid token but insufficient role shall return HTTP 403 FORBIDDEN with error code FORBIDDEN. This is the security boundary; the frontend RBAC is UX only.",
+    "status": "Approved",
+    "tags": ["rbac", "security", "api"],
+    "implementation": "Express middleware checks req.user.role against required permissions for each route",
+    "linkedRequirements": ["API-ERR-002", "REQ-SEC-008"]
+  },
+  {
+    "requirementId": "REQ-RBAC-014",
+    "type": "Non-Functional Requirement",
+    "title": "Role Changes Effective Immediately on Next Request",
+    "description": "When a persona's role or permissions change, the change shall be reflected on the next API request. There is no caching of authorization decisions beyond the current request. This ensures demo persona switching takes effect immediately.",
+    "status": "Approved",
+    "tags": ["rbac", "security"]
+  },
+  {
+    "requirementId": "REQ-RBAC-015",
+    "type": "Non-Functional Requirement",
+    "title": "Benefit Analyst Read-Only Across All Five Epics — Analytics and Exception Review",
+    "description": "The Benefits Analyst persona shall have read-only access to all five epic workspaces: plan analytics, eligibility exception review (view + comment, not approve), enrollment analysis, integration reporting, and AI requirements review. The analyst can export data but cannot modify configuration.",
+    "status": "Approved",
+    "tags": ["rbac"],
+    "persona": "BENEFITS_ANALYST",
+    "primaryWorkspaces": ["Plans (read)", "Eligibility Exceptions (view)", "Enrollment Analytics", "Integration Reports", "AI Requirements (view)", "Audit Trail", "Backlog Export"]
+  }
+]
