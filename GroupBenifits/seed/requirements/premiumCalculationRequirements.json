@@ -1,0 +1,129 @@
+[
+  {
+    "requirementId": "REQ-PREM-001",
+    "type": "Functional Requirement",
+    "title": "Annual Premium Calculation",
+    "description": "The system shall calculate annual employee premium as monthly premium multiplied by 12. Annual Premium = Monthly Premium × 12. The monthly premium stored on the coverage tier is the authoritative source.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "calculation"],
+    "acceptanceCriteria": [
+      "Annual premium equals monthly premium × 12 for all plans",
+      "Annual premium is recalculated when monthly premium changes",
+      "Annual premium is displayed on enrollment confirmation"
+    ]
+  },
+  {
+    "requirementId": "REQ-PREM-002",
+    "type": "Functional Requirement",
+    "title": "Pay-Period Deduction Calculation",
+    "description": "The system shall calculate payroll deductions based on the employee's configured payroll frequency using the formula: Pay-Period Deduction = (Monthly Premium × 12) ÷ Pay Periods Per Year. This is NOT Monthly Premium ÷ 2 for biweekly — that formula is incorrect and produces a different result.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "calculation"],
+    "acceptanceCriteria": [
+      "Biweekly deduction = (Monthly Premium × 12) ÷ 26",
+      "Semi-monthly deduction = (Monthly Premium × 12) ÷ 24",
+      "Weekly deduction = (Monthly Premium × 12) ÷ 52",
+      "Monthly deduction = (Monthly Premium × 12) ÷ 12",
+      "Example: $150/month biweekly = $69.23 per paycheck (NOT $75.00)"
+    ]
+  },
+  {
+    "requirementId": "REQ-PREM-003",
+    "type": "Functional Requirement",
+    "title": "Supported Pay Frequencies",
+    "description": "The system shall support the following payroll frequencies with their corresponding annual pay period counts: Weekly (52), Biweekly (26), Semi-Monthly (24), Monthly (12).",
+    "status": "Approved",
+    "payPeriodTable": [
+      { "frequency": "WEEKLY", "payPeriodsPerYear": 52, "example": { "monthlyPremium": 150, "annualPremium": 1800, "perPaycheckDeduction": 34.62 } },
+      { "frequency": "BIWEEKLY", "payPeriodsPerYear": 26, "example": { "monthlyPremium": 150, "annualPremium": 1800, "perPaycheckDeduction": 69.23 } },
+      { "frequency": "SEMI_MONTHLY", "payPeriodsPerYear": 24, "example": { "monthlyPremium": 150, "annualPremium": 1800, "perPaycheckDeduction": 75.00 } },
+      { "frequency": "MONTHLY", "payPeriodsPerYear": 12, "example": { "monthlyPremium": 150, "annualPremium": 1800, "perPaycheckDeduction": 150.00 } }
+    ],
+    "tags": ["premium", "payroll", "calculation"]
+  },
+  {
+    "requirementId": "REQ-PREM-004",
+    "type": "Functional Requirement",
+    "title": "Deduction Rounding",
+    "description": "The system shall round payroll deductions to two decimal places using half-up rounding. Formula: ROUND((Monthly Premium × 12) ÷ PayPeriodsPerYear, 2).",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "rounding"],
+    "acceptanceCriteria": [
+      "All deduction amounts are rounded to 2 decimal places",
+      "Rounding method is half-up (0.005 rounds up)",
+      "Rounding method is configurable at employer level"
+    ]
+  },
+  {
+    "requirementId": "REQ-PREM-005",
+    "type": "Functional Requirement",
+    "title": "Final-Pay-Period True-Up",
+    "description": "The system shall perform a final-pay-period true-up to ensure total annual employee deductions equal the annual premium exactly. The final pay period deduction = Annual Premium - Sum of Prior Pay-Period Deductions. A configurable maximum adjustment threshold prevents unexpected large adjustments.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "true-up"],
+    "example": {
+      "monthlyPremium": 100,
+      "annualPremium": 1200,
+      "payFrequency": "BIWEEKLY",
+      "regularDeduction": 46.15,
+      "regularDeductions25": 1153.75,
+      "finalPayPeriodDeduction": 46.25,
+      "totalAnnualDeduction": 1200.00
+    }
+  },
+  {
+    "requirementId": "REQ-PREM-006",
+    "type": "Functional Requirement",
+    "title": "Prorated Premium for Mid-Year Enrollment",
+    "description": "The system shall support prorated premium calculations for employees enrolling after the plan year begins and for qualifying life events. Remaining Premium = Monthly Premium × Remaining Coverage Months. Pay-period deduction is then calculated using the remaining pay periods for the year.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "proration", "life-events"],
+    "example": {
+      "monthlyPremium": 100,
+      "coverageEffectiveDate": "2027-07-01",
+      "remainingMonths": 6,
+      "remainingPremium": 600,
+      "remainingPayPeriods": 13,
+      "regularDeduction": 46.15,
+      "finalDeduction": "true-up"
+    }
+  },
+  {
+    "requirementId": "REQ-PREM-007",
+    "type": "Functional Requirement",
+    "title": "Separate Employee and Employer Contribution Calculation",
+    "description": "The system shall calculate employee and employer contributions independently. Employee premium = Total premium - Employer contribution. Payroll deduction is based on employee contribution only. Carrier funding amount is based on employer contribution × coverage period.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "employer-contribution"],
+    "example": {
+      "plan": "PPO 500 EE+Spouse",
+      "totalMonthlyPremium": 800,
+      "employerContribution": 525,
+      "employeeContribution": 275,
+      "biweeklyDeduction": 126.92,
+      "formula": "(275 × 12) ÷ 26 = 126.923076 → $126.92"
+    }
+  },
+  {
+    "requirementId": "REQ-PREM-008",
+    "type": "Functional Requirement",
+    "title": "Premium Calculation Audit Trail",
+    "description": "The system shall retain an auditable calculation trace for every payroll deduction showing: source monthly premium, annualization factor, pay frequency, pay periods per year, unrounded amount, rounding method, rounded amount, and true-up adjustment if applicable. This trace supports payroll reconciliation and exception investigation.",
+    "status": "Approved",
+    "tags": ["premium", "payroll", "audit", "reconciliation"],
+    "dataModel": {
+      "premiumCalculation": {
+        "monthlyPremium": "number",
+        "annualPremium": "number — monthlyPremium × 12",
+        "payFrequency": "WEEKLY | BIWEEKLY | SEMI_MONTHLY | MONTHLY",
+        "payPeriodsPerYear": "integer",
+        "calculationMethod": "ANNUAL_PREMIUM_DIVIDED_BY_PAY_PERIODS",
+        "unroundedPayPeriodPremium": "number",
+        "regularPayPeriodDeduction": "number — rounded",
+        "roundingMethod": "HALF_UP",
+        "trueUpMethod": "FINAL_PAY_PERIOD",
+        "taxTreatment": "PRE_TAX | POST_TAX | EMPLOYER_PAID"
+      }
+    }
+  }
+]

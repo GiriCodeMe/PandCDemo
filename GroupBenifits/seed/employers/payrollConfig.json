@@ -1,0 +1,28 @@
+[
+  {
+    "configId": "PCFG-001",
+    "employerId": "ACM-001",
+    "payFrequency": "BIWEEKLY",
+    "payPeriodsPerYear": 26,
+    "roundingMethod": "HALF_UP",
+    "roundingPrecision": 2,
+    "trueUpEnabled": true,
+    "trueUpPeriod": "FINAL_PAY_PERIOD",
+    "maxTrueUpAdjustment": 5.00,
+    "partialPeriodMethod": "PRORATED",
+    "prorationMethod": "MONTHLY",
+    "deductionTaxTreatment": "PLAN_DEFINED",
+    "planTaxTreatment": {
+      "Medical": "PRE_TAX",
+      "Dental": "PRE_TAX",
+      "Vision": "PRE_TAX",
+      "Basic Life": "EMPLOYER_PAID",
+      "Voluntary Life": "POST_TAX",
+      "STD": "POST_TAX",
+      "LTD": "POST_TAX",
+      "HSA": "PRE_TAX",
+      "FSA": "PRE_TAX"
+    },
+    "notes": "Acme Corporation runs biweekly payroll (26 pay periods/year). Standard biweekly deduction formula: (Monthly Premium × 12) ÷ 26. Example: $150/month medical = $1,800 annual = $69.23 per paycheck (NOT $75.00 which is the semi-monthly / 24-period amount)."
+  }
+]

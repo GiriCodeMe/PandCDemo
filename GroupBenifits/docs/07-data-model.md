@@ -331,14 +331,20 @@ Supported operators: `equals`, `not_equals`, `greater_than`, `less_than`, `great
 | terminationDate | date \| null | |
 | status | enum | `Active` \| `Suspended` \| `Terminated` |
 
-**Pay period divisors:**
+**Pay-period deduction formula:**
 
-| Frequency | Divisor | Example ($150/month) |
-|-----------|---------|----------------------|
-| Weekly | 4.333 | $34.62 |
-| Biweekly | 2.167 | $69.23 |
-| Semi-Monthly | 2 | $75.00 |
-| Monthly | 1 | $150.00 |
+```
+Pay-Period Deduction = ROUND((Monthly Premium × 12) ÷ Pay Periods Per Year, 2)
+```
+
+| Frequency | Pay Periods / Year | Example ($150/month) | Annual Check |
+|-----------|-------------------|----------------------|-------------|
+| Weekly | 52 | $34.62 | $34.62 × 52 = $1,800.24 → true-up |
+| Biweekly | 26 | $69.23 | $69.23 × 26 = $1,800.00 — exact |
+| Semi-Monthly | 24 | $75.00 | $75.00 × 24 = $1,800.00 — exact |
+| Monthly | 12 | $150.00 | exact |
+
+> **Note:** Do NOT use `Monthly Premium ÷ 2` for biweekly — that equals $75.00 which is the semi-monthly (24 pay period) amount, not biweekly (26 pay period). The correct biweekly deduction for $150/month is $69.23. See `seed/requirements/premiumCalculationRequirements.json`.
 
 ---
 
