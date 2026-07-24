@@ -9,7 +9,7 @@ router.get('/open-period', requireAuth, (req: Request, res: Response) => {
   const employerId = (req.query.employerId as string) ?? 'ACM-001';
   const period = enrollmentService.getOpenPeriod(employerId);
   if (!period) {
-    sendError(res, 404, 'NOT_FOUND', 'No open enrollment period found');
+    sendError(res, 'NOT_FOUND', 'No open enrollment period found', 404);
     return;
   }
   sendSuccess(res, period);
@@ -57,12 +57,12 @@ router.put('/wizard/:sessionId/step', requireAuth, (req: Request, res: Response)
   const { sessionId } = req.params;
   const { step, elections } = req.body as { step?: number; elections?: unknown[] };
   if (!step || !elections) {
-    sendError(res, 400, 'INVALID_INPUT', 'step and elections are required');
+    sendError(res, 'INVALID_INPUT', 'step and elections are required', 400);
     return;
   }
   const session = enrollmentService.updateWizardStep(sessionId, step, elections as never);
   if (!session) {
-    sendError(res, 404, 'NOT_FOUND', 'Wizard session not found');
+    sendError(res, 'NOT_FOUND', 'Wizard session not found', 404);
     return;
   }
   const premiumSummary = enrollmentService.calculatePremiumSummary(session.elections);
@@ -73,7 +73,7 @@ router.post('/wizard/:sessionId/submit', requireAuth, (req: Request, res: Respon
   const { sessionId } = req.params;
   const result = enrollmentService.submitWizard(sessionId);
   if (!result) {
-    sendError(res, 404, 'NOT_FOUND', 'Wizard session not found');
+    sendError(res, 'NOT_FOUND', 'Wizard session not found', 404);
     return;
   }
   sendSuccess(res, result);

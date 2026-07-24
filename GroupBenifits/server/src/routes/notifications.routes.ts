@@ -17,7 +17,7 @@ router.get('/templates', requireAuth, (req: Request, res: Response) => {
 router.get('/templates/:id', requireAuth, (req: Request, res: Response) => {
   const tpl = notificationsService.getTemplateById(req.params.id);
   if (!tpl) {
-    sendError(res, 404, 'NOT_FOUND', 'Template not found');
+    sendError(res, 'NOT_FOUND', 'Template not found', 404);
     return;
   }
   sendSuccess(res, tpl);

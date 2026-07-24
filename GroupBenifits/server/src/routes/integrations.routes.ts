@@ -20,7 +20,7 @@ router.get('/carriers', requireAuth, (_req: Request, res: Response) => {
 router.get('/carriers/:id', requireAuth, (req: Request, res: Response) => {
   const carrier = integrationsService.getCarrierById(req.params.id);
   if (!carrier) {
-    sendError(res, 404, 'NOT_FOUND', 'Carrier not found');
+    sendError(res, 'NOT_FOUND', 'Carrier not found', 404);
     return;
   }
   sendSuccess(res, carrier);

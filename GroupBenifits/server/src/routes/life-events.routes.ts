@@ -31,7 +31,7 @@ router.get('/employee/:employeeId', requireAuth, (req: Request, res: Response) =
 router.get('/:id', requireAuth, (req: Request, res: Response) => {
   const event = lifeEventsService.getById(req.params.id);
   if (!event) {
-    sendError(res, 404, 'NOT_FOUND', 'Life event not found');
+    sendError(res, 'NOT_FOUND', 'Life event not found', 404);
     return;
   }
   sendSuccess(res, event);
@@ -44,7 +44,7 @@ router.post('/', requireAuth, (req: Request, res: Response) => {
     eventDate?: string;
   };
   if (!employeeId || !eventType || !eventDate) {
-    sendError(res, 400, 'VALIDATION_ERROR', 'employeeId, eventType, and eventDate are required');
+    sendError(res, 'VALIDATION_ERROR', 'employeeId, eventType, and eventDate are required', 400);
     return;
   }
   const event = lifeEventsService.submit(employeeId, eventType, eventDate);
@@ -54,17 +54,17 @@ router.post('/', requireAuth, (req: Request, res: Response) => {
 router.put('/:id/status', requireAuth, (req: Request, res: Response) => {
   const { status } = req.body as { status?: string };
   if (!status) {
-    sendError(res, 400, 'VALIDATION_ERROR', 'status is required');
+    sendError(res, 'VALIDATION_ERROR', 'status is required', 400);
     return;
   }
   const valid = ['Pending Documentation', 'Submitted', 'Approved', 'Completed', 'Rejected'];
   if (!valid.includes(status)) {
-    sendError(res, 400, 'VALIDATION_ERROR', `status must be one of: ${valid.join(', ')}`);
+    sendError(res, 'VALIDATION_ERROR', `status must be one of: ${valid.join(', ')}`, 400);
     return;
   }
   const updated = lifeEventsService.updateStatus(req.params.id, status);
   if (!updated) {
-    sendError(res, 404, 'NOT_FOUND', 'Life event not found');
+    sendError(res, 'NOT_FOUND', 'Life event not found', 404);
     return;
   }
   sendSuccess(res, updated);
@@ -73,12 +73,12 @@ router.put('/:id/status', requireAuth, (req: Request, res: Response) => {
 router.post('/:id/documents', requireAuth, (req: Request, res: Response) => {
   const { documentName } = req.body as { documentName?: string };
   if (!documentName) {
-    sendError(res, 400, 'VALIDATION_ERROR', 'documentName is required');
+    sendError(res, 'VALIDATION_ERROR', 'documentName is required', 400);
     return;
   }
   const updated = lifeEventsService.submitDocument(req.params.id, documentName);
   if (!updated) {
-    sendError(res, 404, 'NOT_FOUND', 'Life event not found');
+    sendError(res, 'NOT_FOUND', 'Life event not found', 404);
     return;
   }
   sendSuccess(res, updated);

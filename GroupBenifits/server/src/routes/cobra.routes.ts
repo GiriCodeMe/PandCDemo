@@ -25,7 +25,7 @@ router.get('/employee/:employeeId', requireAuth, (req: Request, res: Response) =
 router.get('/:id', requireAuth, (req: Request, res: Response) => {
   const event = cobraService.getById(req.params.id);
   if (!event) {
-    sendError(res, 404, 'NOT_FOUND', 'COBRA event not found');
+    sendError(res, 'NOT_FOUND', 'COBRA event not found', 404);
     return;
   }
   sendSuccess(res, event);
