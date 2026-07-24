@@ -13,6 +13,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/enrollment': 'Open Enrollment',
   '/life-events': 'Life Events',
   '/integrations': 'Integrations',
+  '/cobra': 'COBRA & Compliance',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -88,6 +89,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What is a payroll deduction mismatch?',
     'What is EDI 834?',
   ],
+  '/cobra': [
+    'What is COBRA and who is eligible?',
+    'How long is the COBRA election window?',
+    'What happens if a COBRA payment is missed?',
+    'What are ACA compliance requirements for employers?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -99,6 +106,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/enrollment')) return 'Open Enrollment';
   if (pathname.startsWith('/life-events')) return 'Life Events';
   if (pathname.startsWith('/integrations')) return 'Integrations';
+  if (pathname.startsWith('/cobra')) return 'COBRA & Compliance';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -126,6 +134,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/integrations')) {
     return STARTER_QUESTIONS['/integrations'];
+  }
+  if (pathname.startsWith('/cobra')) {
+    return STARTER_QUESTIONS['/cobra'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }

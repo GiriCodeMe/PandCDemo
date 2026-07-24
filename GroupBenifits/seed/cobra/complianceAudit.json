@@ -1,0 +1,110 @@
+[
+  {
+    "auditId": "AUD-001",
+    "timestamp": "2026-07-01T08:00:00Z",
+    "eventType": "COBRA_NOTICE_GENERATED",
+    "actor": "System",
+    "entityType": "COBRA",
+    "entityId": "COBRA-001",
+    "employeeId": "ACM-E005",
+    "description": "COBRA qualifying event notice generated for David Wilson (Voluntary Termination 2026-06-30)",
+    "status": "Success",
+    "complianceNote": "Notice generated within required 14-day window"
+  },
+  {
+    "auditId": "AUD-002",
+    "timestamp": "2026-07-01T08:05:00Z",
+    "eventType": "COBRA_NOTICE_SENT",
+    "actor": "System",
+    "entityType": "COBRA",
+    "entityId": "COBRA-001",
+    "employeeId": "ACM-E005",
+    "description": "COBRA election notice sent to david.wilson@acme.demo",
+    "status": "Success",
+    "complianceNote": "Sent via certified mail + email per ERISA requirement"
+  },
+  {
+    "auditId": "AUD-003",
+    "timestamp": "2026-05-02T09:00:00Z",
+    "eventType": "COBRA_NOTICE_SENT",
+    "actor": "System",
+    "entityType": "COBRA",
+    "entityId": "COBRA-002",
+    "employeeId": "ACM-E999",
+    "description": "COBRA election notice sent to sarah.chen@acme.demo",
+    "status": "Success",
+    "complianceNote": "Notice sent within 44-day DOL window"
+  },
+  {
+    "auditId": "AUD-004",
+    "timestamp": "2026-05-20T14:30:00Z",
+    "eventType": "COBRA_ELECTION",
+    "actor": "sarah.chen@acme.demo",
+    "entityType": "COBRA",
+    "entityId": "COBRA-002",
+    "employeeId": "ACM-E999",
+    "description": "Sarah Chen elected COBRA Medical HDHP 1500 coverage at $86.70/month",
+    "status": "Success",
+    "complianceNote": "Election received within 60-day window"
+  },
+  {
+    "auditId": "AUD-005",
+    "timestamp": "2026-04-18T10:15:00Z",
+    "eventType": "COBRA_DECLINED",
+    "actor": "marcus.johnson@acme.demo",
+    "entityType": "COBRA",
+    "entityId": "COBRA-003",
+    "employeeId": "ACM-E998",
+    "description": "Marcus Johnson declined all COBRA coverage options",
+    "status": "Success",
+    "complianceNote": "Declination recorded, alternative coverage reported"
+  },
+  {
+    "auditId": "AUD-006",
+    "timestamp": "2026-04-01T00:00:00Z",
+    "eventType": "COBRA_PAYMENT_OVERDUE",
+    "actor": "System",
+    "entityType": "COBRA",
+    "entityId": "COBRA-004",
+    "employeeId": "ACM-E997",
+    "description": "COBRA payment overdue for Patricia Martinez — March payment not received by grace period",
+    "status": "Warning",
+    "complianceNote": "30-day grace period expired. Coverage to be terminated."
+  },
+  {
+    "auditId": "AUD-007",
+    "timestamp": "2026-04-02T00:00:00Z",
+    "eventType": "COBRA_LAPSED",
+    "actor": "System",
+    "entityType": "COBRA",
+    "entityId": "COBRA-004",
+    "employeeId": "ACM-E997",
+    "description": "COBRA coverage lapsed for Patricia Martinez due to non-payment",
+    "status": "Error",
+    "complianceNote": "Coverage terminated retroactive to March 1. Termination notice required within 14 days."
+  },
+  {
+    "auditId": "AUD-008",
+    "timestamp": "2026-06-15T09:30:00Z",
+    "eventType": "ACA_1095C_GENERATED",
+    "actor": "System",
+    "entityType": "ACA",
+    "entityId": "ACM-001",
+    "employeeId": null,
+    "description": "ACA 1095-C forms generated for Acme Corp — 35 employees",
+    "status": "Success",
+    "complianceNote": "Forms generated for 2025 tax year filing"
+  },
+  {
+    "auditId": "AUD-009",
+    "timestamp": "2026-06-30T17:00:00Z",
+    "eventType": "TERMINATION_PROCESSED",
+    "actor": "hr.admin@acme.demo",
+    "entityType": "Employee",
+    "entityId": "ACM-E005",
+    "employeeId": "ACM-E005",
+    "description": "Employment termination processed for David Wilson effective 2026-06-30",
+    "status": "Success",
+    "complianceNote": "Benefits coverage ended per plan terms. COBRA notification triggered."
+  }
+]

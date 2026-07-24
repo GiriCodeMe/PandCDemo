@@ -19,6 +19,7 @@ import planConfigRoutes from './routes/planConfig.routes';
 import enrollmentRoutes from './routes/enrollment.routes';
 import lifeEventsRoutes from './routes/life-events.routes';
 import integrationsRoutes from './routes/integrations.routes';
+import cobraRoutes from './routes/cobra.routes';
 
 export function createApp(): express.Application {
   const app = express();
@@ -48,6 +49,7 @@ export function createApp(): express.Application {
   app.use('/api/enrollment', enrollmentRoutes);
   app.use('/api/life-events', lifeEventsRoutes);
   app.use('/api/integrations', integrationsRoutes);
+  app.use('/api/cobra', cobraRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

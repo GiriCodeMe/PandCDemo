@@ -1,0 +1,160 @@
+[
+  {
+    "cobraEventId": "COBRA-001",
+    "employeeId": "ACM-E005",
+    "employerName": "Acme Corp",
+    "firstName": "David",
+    "lastName": "Wilson",
+    "email": "david.wilson@acme.demo",
+    "qualifyingEventType": "Voluntary Termination",
+    "qualifyingEventDate": "2026-06-30",
+    "coverageLossDate": "2026-06-30",
+    "noticeGeneratedDate": "2026-07-01",
+    "noticeSentDate": "2026-07-01",
+    "electionDeadline": "2026-08-30",
+    "electionStatus": "Pending",
+    "coverageTypes": ["Medical", "Dental", "Vision"],
+    "elections": [
+      {
+        "planCode": "MED-PPO-500",
+        "planName": "Medical PPO 500",
+        "coverageType": "Medical",
+        "monthlyPremiumEmployee": 150.00,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 153.00,
+        "electionStatus": "Pending",
+        "electedDate": null
+      },
+      {
+        "planCode": "DENT-BASIC",
+        "planName": "Dental Basic",
+        "coverageType": "Dental",
+        "monthlyPremiumEmployee": 18.50,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 18.87,
+        "electionStatus": "Pending",
+        "electedDate": null
+      },
+      {
+        "planCode": "VIS-STD",
+        "planName": "Vision Standard",
+        "coverageType": "Vision",
+        "monthlyPremiumEmployee": 8.20,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 8.36,
+        "electionStatus": "Pending",
+        "electedDate": null
+      }
+    ],
+    "_notes": "DEMO: Active election window. David terminated Jun 30. Election window expires Aug 30, 2026."
+  },
+  {
+    "cobraEventId": "COBRA-002",
+    "employeeId": "ACM-E999",
+    "employerName": "Acme Corp",
+    "firstName": "Sarah",
+    "lastName": "Chen",
+    "email": "sarah.chen@acme.demo",
+    "qualifyingEventType": "Involuntary Termination",
+    "qualifyingEventDate": "2026-04-15",
+    "coverageLossDate": "2026-04-30",
+    "noticeGeneratedDate": "2026-05-01",
+    "noticeSentDate": "2026-05-02",
+    "electionDeadline": "2026-07-01",
+    "electionStatus": "Elected",
+    "coverageTypes": ["Medical"],
+    "elections": [
+      {
+        "planCode": "MED-HDHP-1500",
+        "planName": "Medical HDHP 1500",
+        "coverageType": "Medical",
+        "monthlyPremiumEmployee": 85.00,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 86.70,
+        "electionStatus": "Active",
+        "electedDate": "2026-05-20",
+        "coverageStartDate": "2026-05-01",
+        "coverageEndDate": "2027-10-31",
+        "paymentsReceived": 3,
+        "paymentsDue": 0,
+        "lastPaymentDate": "2026-07-05"
+      }
+    ],
+    "_notes": "DEMO: Active COBRA election. Sarah elected medical HDHP. 3 payments received, current through July."
+  },
+  {
+    "cobraEventId": "COBRA-003",
+    "employeeId": "ACM-E998",
+    "employerName": "Acme Corp",
+    "firstName": "Marcus",
+    "lastName": "Johnson",
+    "email": "marcus.johnson@acme.demo",
+    "qualifyingEventType": "Reduction in Hours",
+    "qualifyingEventDate": "2026-03-01",
+    "coverageLossDate": "2026-03-31",
+    "noticeGeneratedDate": "2026-04-01",
+    "noticeSentDate": "2026-04-01",
+    "electionDeadline": "2026-05-31",
+    "electionStatus": "Declined",
+    "coverageTypes": ["Medical", "Dental"],
+    "elections": [
+      {
+        "planCode": "MED-PPO-500",
+        "planName": "Medical PPO 500",
+        "coverageType": "Medical",
+        "monthlyPremiumEmployee": 150.00,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 153.00,
+        "electionStatus": "Declined",
+        "electedDate": null,
+        "declinedDate": "2026-04-18"
+      },
+      {
+        "planCode": "DENT-BASIC",
+        "planName": "Dental Basic",
+        "coverageType": "Dental",
+        "monthlyPremiumEmployee": 18.50,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 18.87,
+        "electionStatus": "Declined",
+        "electedDate": null,
+        "declinedDate": "2026-04-18"
+      }
+    ],
+    "_notes": "DEMO: Declined all COBRA coverage. Marcus cited finding new employer coverage."
+  },
+  {
+    "cobraEventId": "COBRA-004",
+    "employeeId": "ACM-E997",
+    "employerName": "Acme Corp",
+    "firstName": "Patricia",
+    "lastName": "Martinez",
+    "email": "patricia.martinez@acme.demo",
+    "qualifyingEventType": "Voluntary Termination",
+    "qualifyingEventDate": "2026-01-31",
+    "coverageLossDate": "2026-01-31",
+    "noticeGeneratedDate": "2026-02-01",
+    "noticeSentDate": "2026-02-01",
+    "electionDeadline": "2026-04-01",
+    "electionStatus": "Lapsed",
+    "coverageTypes": ["Medical"],
+    "elections": [
+      {
+        "planCode": "MED-PPO-500",
+        "planName": "Medical PPO 500",
+        "coverageType": "Medical",
+        "monthlyPremiumEmployee": 150.00,
+        "adminFeeRate": 0.02,
+        "monthlyCobraCost": 153.00,
+        "electionStatus": "Lapsed",
+        "electedDate": "2026-02-15",
+        "coverageStartDate": "2026-02-01",
+        "coverageEndDate": null,
+        "paymentsReceived": 1,
+        "paymentsDue": 1,
+        "lastPaymentDate": "2026-02-28"
+      }
+    ],
+    "_notes": "DEMO: COBRA lapsed due to missed payment. Patricia elected Feb 15 but missed March payment."
+  }
+]
