@@ -96,7 +96,7 @@ test.describe('Stay Protection', () => {
     await page.getByRole('button', { name: 'Get Quote' }).click();
 
     await expect(page.locator('strong').filter({ hasText: '$14.00' })).toBeVisible();
-    await expect(page.getByText('$3.50')).toBeVisible();
+    await expect(page.getByText('$3.50', { exact: true })).toBeVisible();
   });
 
   test('full booking flow issues a MICRO-STAY- policy number', async ({ page }) => {
