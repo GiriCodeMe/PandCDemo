@@ -12,6 +12,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/plans': 'Plan Configuration',
   '/enrollment': 'Open Enrollment',
   '/life-events': 'Life Events',
+  '/integrations': 'Integrations',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -81,6 +82,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What documents do I need for a marriage life event?',
     'Can I add a dependent mid-year?',
   ],
+  '/integrations': [
+    'What does carrier success rate mean?',
+    'Why was a carrier transaction rejected?',
+    'What is a payroll deduction mismatch?',
+    'What is EDI 834?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -91,6 +98,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/plans')) return 'Plan Configuration';
   if (pathname.startsWith('/enrollment')) return 'Open Enrollment';
   if (pathname.startsWith('/life-events')) return 'Life Events';
+  if (pathname.startsWith('/integrations')) return 'Integrations';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -115,6 +123,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/life-events')) {
     return STARTER_QUESTIONS['/life-events'];
+  }
+  if (pathname.startsWith('/integrations')) {
+    return STARTER_QUESTIONS['/integrations'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }

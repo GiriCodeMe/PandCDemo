@@ -11,6 +11,7 @@ import RequirementsStudio from './pages/requirements/RequirementsStudio';
 import PlansHub from './pages/plans/PlansHub';
 import EnrollmentHub from './pages/enrollment/EnrollmentHub';
 import LifeEventsHub from './pages/life-events/LifeEventsHub';
+import IntegrationsHub from './pages/integrations/IntegrationsHub';
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div className="flex flex-col items-center justify-center h-64">
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
   {
     path: '/life-events',
     element: <AppShell><LifeEventsHub /></AppShell>,
+  },
+  {
+    path: '/integrations',
+    element: <AppShell><IntegrationsHub /></AppShell>,
   },
   {
     path: '/requirements',

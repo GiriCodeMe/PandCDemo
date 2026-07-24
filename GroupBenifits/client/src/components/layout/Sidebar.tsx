@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen, Layers, Heart } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen, Layers, Heart, Link2 } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '../../stores/uiStore';
 
@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { label: 'Plans', href: '/plans', icon: FileText },
   { label: 'Enrollment', href: '/enrollment', icon: ClipboardCheck },
   { label: 'Life Events', href: '/life-events', icon: Heart },
+  { label: 'Integrations', href: '/integrations', icon: Link2 },
   { label: 'Requirements', href: '/requirements', icon: BookOpen },
 ];
 
