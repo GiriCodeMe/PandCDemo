@@ -1,0 +1,235 @@
+[
+  {
+    "requirementId": "REQ-REPORT-001",
+    "type": "Functional Requirement",
+    "title": "Reporting Dashboard — Centralized Reports Workspace with Three Report Categories",
+    "description": "The system shall provide a centralized Reports workspace organizing available reports into three categories: Operational Reports, Compliance Reports, and Integration Reports.",
+    "status": "Approved",
+    "tags": ["reporting", "dashboard"],
+    "reportCategories": {
+      "Operational": ["Enrollment Census", "ACA Eligibility Status", "Dependent Verification", "Benefits Cost Summary", "Life Event Activity", "Open Enrollment Completion"],
+      "Compliance":  ["ACA Reporting", "Eligibility Exceptions", "Coverage Audit"],
+      "Integration": ["Carrier Transaction Report", "Payroll Deduction Report", "Reconciliation Report"]
+    },
+    "linkedRequirements": ["REQ-REPORT-002", "REQ-REPORT-017"]
+  },
+  {
+    "requirementId": "REQ-REPORT-002",
+    "type": "Functional Requirement",
+    "title": "Report Catalog — Role-Filtered Report Availability",
+    "description": "Users shall see only reports authorized for their role.",
+    "status": "Approved",
+    "tags": ["reporting", "rbac"],
+    "reportRoleMapping": [
+      { "report": "Enrollment Census",          "audience": "HR Admin / Benefits Admin", "priority": "P1" },
+      { "report": "ACA Eligibility Status",      "audience": "HR Admin / Compliance",     "priority": "P1" },
+      { "report": "Dependent Verification",      "audience": "Benefits Admin",             "priority": "P1" },
+      { "report": "Benefits Cost Summary",       "audience": "HR Admin / Finance",         "priority": "P1" },
+      { "report": "Life Event Activity",         "audience": "Benefits Admin",             "priority": "P1" },
+      { "report": "Open Enrollment Completion",  "audience": "HR Admin / Benefits Admin",  "priority": "P1" },
+      { "report": "Carrier Transaction Report",  "audience": "Benefits / Operations",      "priority": "P1" },
+      { "report": "Payroll Deduction Report",    "audience": "Payroll / Benefits Admin",   "priority": "P1" },
+      { "report": "Reconciliation Report",       "audience": "Benefits / Finance",         "priority": "P1" },
+      { "report": "Eligibility Exceptions",      "audience": "Benefits Admin",             "priority": "P1" }
+    ]
+  },
+  {
+    "requirementId": "REQ-REPORT-003",
+    "type": "Functional Requirement",
+    "title": "Report Builder UX — Standardized Filter Panel Across All Reports",
+    "description": "Each report shall provide a standardized filter panel. Common filters: employer group, plan year, as-of date, employment status, plan, and coverage tier. Report-specific filters are added per report.",
+    "status": "Approved",
+    "tags": ["reporting", "filters", "ux"],
+    "commonFilters": ["Employer Group", "Plan Year", "As Of Date", "Employment Status", "Plan", "Coverage Tier"],
+    "actions": ["[Preview Report]", "[Reset]"],
+    "exportFormats": ["CSV", "Excel", "PDF"]
+  },
+  {
+    "requirementId": "REQ-REPORT-004",
+    "type": "Functional Requirement",
+    "title": "Enrollment Census Report — Current Enrollment Status Per Employee Per Benefit",
+    "description": "The Enrollment Census report shows each employee's current enrollment status for all offered benefit types. Exportable to CSV/Excel/PDF.",
+    "status": "Approved",
+    "tags": ["reporting", "enrollment"],
+    "columns": ["Employee ID", "Employee Name", "Medical", "Dental", "Vision", "Enrollment Status"],
+    "filters": ["Plan Year", "Employer", "Plan", "Coverage Tier", "Employment Class", "Enrollment Status"],
+    "demoSample": [
+      { "id": "ACM-E030", "name": "Linda White", "medical": "PPO 500",  "dental": "Premium", "vision": "Standard", "status": "Active"   },
+      { "id": "ACM-E031", "name": "John Smith",  "medical": "HDHP 3000","dental": "Basic",   "vision": "Standard", "status": "Active"   },
+      { "id": "ACM-E032", "name": "Sarah Jones", "medical": "PPO 1000", "dental": "Waived",  "vision": "Waived",   "status": "Pending"  }
+    ]
+  },
+  {
+    "requirementId": "REQ-REPORT-005",
+    "type": "Functional Requirement",
+    "title": "ACA Eligibility Status Report — Hours, ACA Classification, and Offer Status",
+    "description": "The system shall generate an ACA eligibility status report. This is an operational ACA eligibility report, not necessarily the final IRS 1094-C/1095-C filing output unless that functionality is explicitly implemented.",
+    "status": "Approved",
+    "tags": ["reporting", "aca", "compliance"],
+    "columns": ["Employee ID", "Employee Name", "Employment Status", "Measurement Period", "ACA Full-Time Status", "Avg Weekly Hours", "Medical Offer Status", "Coverage Effective Date", "Coverage Status"],
+    "complianceDisclaimer": "Operational ACA eligibility report. Not a substitute for IRS 1094-C/1095-C filings unless explicitly implemented."
+  },
+  {
+    "requirementId": "REQ-REPORT-006",
+    "type": "Functional Requirement",
+    "title": "Dependent Verification Report — Verification Status Per Dependent",
+    "description": "The system shall generate a report of dependent verification status per employee and dependent. Directly supports the Dependent Documentation Upload & Verification workflow.",
+    "status": "Approved",
+    "tags": ["reporting", "dependent-verification"],
+    "columns": ["Employee", "Dependent", "Relationship", "Verification", "Document", "Status"],
+    "verificationStatuses": ["NOT_REQUIRED", "REQUIRED", "PENDING", "APPROVED", "REJECTED", "EXPIRED"],
+    "linkedRequirements": ["REQ-DOC-001"]
+  },
+  {
+    "requirementId": "REQ-REPORT-007",
+    "type": "Functional Requirement",
+    "title": "Benefits Cost Summary — Employer and Employee Costs by Plan, Tier, and Period",
+    "description": "The system shall provide a benefits cost summary report showing plan enrollment counts, employer cost, employee cost, and total cost. Supports monthly, quarterly, and annualized periods.",
+    "status": "Approved",
+    "tags": ["reporting", "cost"],
+    "columns": ["Plan", "Tier", "Employees", "Employer Cost", "Employee Cost", "Total"],
+    "supportedPeriods": ["Monthly", "Quarterly", "Annualized"],
+    "demoSample": [
+      { "plan": "PPO 500",   "tier": "Employee",     "employees": 1250, "employerCost": "$1.2M", "employeeCost": "$350K", "total": "$1.55M" },
+      { "plan": "PPO 500",   "tier": "Family",        "employees": 1800, "employerCost": "$2.5M", "employeeCost": "$1.1M", "total": "$3.6M"  },
+      { "plan": "HDHP 3000", "tier": "Employee",      "employees": 900,  "employerCost": "$600K", "employeeCost": "$200K", "total": "$800K"  }
+    ]
+  },
+  {
+    "requirementId": "REQ-REPORT-008",
+    "type": "Functional Requirement",
+    "title": "Life Event Activity Report — Life Events by Type, Status, and Documentation",
+    "description": "The system shall report life event activity with filters by event type, status, date range, documentation status, and employer.",
+    "status": "Approved",
+    "tags": ["reporting", "life-events"],
+    "columns": ["Employee", "Event", "Event Date", "Submitted", "Documentation", "Status"],
+    "filterOptions": ["Event Type", "Status", "Date Range", "Documentation Status", "Employer"],
+    "linkedRequirements": ["REQ-LE-005", "REQ-DOC-001"]
+  },
+  {
+    "requirementId": "REQ-REPORT-009",
+    "type": "Functional Requirement",
+    "title": "Open Enrollment Completion Report — Completion and Submission Rates",
+    "description": "The system shall provide an open enrollment progress report showing eligible employees, started, submitted, pending, and not started. Employee-level completion detail is included.",
+    "status": "Approved",
+    "tags": ["reporting", "open-enrollment"],
+    "summaryMetrics": {
+      "eligible": 5000,
+      "started": 4750,
+      "submitted": 4400,
+      "pending": 350,
+      "notStarted": 250,
+      "completionRate": "88%",
+      "submissionRate": "88%"
+    },
+    "columns": ["Employee", "Eligible", "Started", "Submitted", "Status"]
+  },
+  {
+    "requirementId": "REQ-REPORT-010",
+    "type": "Functional Requirement",
+    "title": "Eligibility Exceptions Report — Open Exceptions with Links to Eligibility Workspace",
+    "description": "The system shall provide a report of eligibility exceptions. Each exception links directly to the Eligibility Workspace for resolution.",
+    "status": "Approved",
+    "tags": ["reporting", "eligibility"],
+    "columns": ["Employee", "Exception", "Plan", "Severity", "Status"],
+    "linkedRequirements": ["REQ-ELIG-005"]
+  },
+  {
+    "requirementId": "REQ-REPORT-011",
+    "type": "Functional Requirement",
+    "title": "Carrier Transaction Report — Exportable Log of All Carrier Transactions",
+    "description": "The system shall provide an exportable carrier transaction report with full transaction detail including error codes and descriptions.",
+    "status": "Approved",
+    "tags": ["reporting", "carrier"],
+    "columns": ["Transaction ID", "Employee", "Carrier", "Plan", "Transaction Type", "Submitted Date", "Response Date", "Status", "Error Code", "Error Description"],
+    "linkedRequirements": ["REQ-CARRIER-SIM-001"]
+  },
+  {
+    "requirementId": "REQ-REPORT-012",
+    "type": "Functional Requirement",
+    "title": "Payroll Deduction Report — Per-Employee Deduction Code, Frequency, and Amount",
+    "description": "The system shall provide payroll deduction reporting showing each employee's active deduction records. Reconciles directly with the Payroll Transmission Lifecycle.",
+    "status": "Approved",
+    "tags": ["reporting", "payroll"],
+    "columns": ["Employee", "Plan", "Deduction Code", "Frequency", "Amount", "Status"],
+    "demoSample": [
+      { "employee": "Linda White", "plan": "PPO 500",      "code": "MED-PPO500", "frequency": "Biweekly", "amount": "$204.46", "status": "Active" },
+      { "employee": "Linda White", "plan": "Dental Premium","code": "DEN-PREM",  "frequency": "Biweekly", "amount": "$16.15",  "status": "Active" }
+    ],
+    "linkedRequirements": ["REQ-PAY-001"]
+  },
+  {
+    "requirementId": "REQ-REPORT-013",
+    "type": "Functional Requirement",
+    "title": "Reconciliation Report — Three-Way Match: Benefits vs. Carrier vs. Payroll",
+    "description": "The system shall provide a three-way reconciliation report showing matching and mismatched records across benefits enrollment, carrier enrollment, and payroll deductions.",
+    "status": "Approved",
+    "tags": ["reporting", "reconciliation"],
+    "columns": ["Employee", "Benefit", "Benefits System", "Carrier", "Payroll", "Result"],
+    "reconciliationOutcomes": ["Match", "Mismatch"],
+    "linkedRequirements": ["REQ-PAY-012", "REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-REPORT-014",
+    "type": "Functional Requirement",
+    "title": "Report Preview — Record Count, Active Filters, and Export Buttons",
+    "description": "Before export, users shall see a report preview showing total record count, active filter summary, and export action buttons.",
+    "status": "Approved",
+    "tags": ["reporting", "preview"],
+    "demoPreview": {
+      "report": "2027 Enrollment Census",
+      "showing": "4,892 Employees",
+      "filters": ["Acme Corporation", "Plan Year: 2027", "Status: Active"]
+    },
+    "exportActions": ["[Export Excel]", "[Export CSV]", "[Export PDF]"]
+  },
+  {
+    "requirementId": "REQ-REPORT-015",
+    "type": "Functional Requirement",
+    "title": "Export History — Log of All Generated Reports with Download Links",
+    "description": "The system should maintain a log of all report generation events showing report type, generated by, record count, format, timestamp, and status.",
+    "status": "Approved",
+    "tags": ["reporting", "export-history"],
+    "historyColumns": ["Report", "Generated", "Generated By", "Records", "Format", "Status"],
+    "demoRecord": {
+      "report": "Enrollment Census", "generated": "Jul 23, 2026 10:22 PM",
+      "generatedBy": "HR Admin", "records": 4892, "format": "Excel", "status": "Completed"
+    }
+  },
+  {
+    "requirementId": "REQ-REPORT-016",
+    "type": "Functional Requirement",
+    "title": "Scheduled Reports — Recurring Report Delivery on Configured Frequency",
+    "description": "P2: Authorized users may schedule recurring reports with configurable frequency, delivery method (email and/or in-app), format, and recipient list.",
+    "status": "Approved",
+    "tags": ["reporting", "scheduling"],
+    "scheduleOptions": { "frequency": ["Daily", "Weekly", "Monthly"], "delivery": ["Email", "In-App"], "format": "Excel" },
+    "demoExample": "Every Monday at 8:00 AM, send the Open Enrollment Completion Report to the Benefits Operations team."
+  },
+  {
+    "requirementId": "REQ-REPORT-017",
+    "type": "Functional Requirement",
+    "title": "Report Access Control — Role-Based Data Visibility Rules",
+    "description": "Reports shall enforce data access rules per persona. SSN and highly sensitive fields must never appear in standard exports unless explicitly authorized.",
+    "status": "Approved",
+    "tags": ["reporting", "rbac", "security"],
+    "accessMatrix": {
+      "Employee":       { "employeeData": "Own only", "costData": "Own only", "compliance": false, "audit": false },
+      "HR Admin":       { "employeeData": true, "costData": "Limited", "compliance": true, "audit": "Limited" },
+      "Benefits Admin": { "employeeData": true, "costData": true,      "compliance": true, "audit": true },
+      "Finance":        { "employeeData": "Aggregated", "costData": true, "compliance": "Limited", "audit": false },
+      "Auditor":        { "employeeData": "Read-only", "costData": "Read-only", "compliance": true, "audit": true }
+    },
+    "securityConstraint": "SSN must never appear in standard report exports",
+    "linkedRequirements": ["REQ-RBAC-001", "REQ-SEC-002"]
+  },
+  {
+    "requirementId": "REQ-REPORT-018",
+    "type": "Functional Requirement",
+    "title": "Report Data Freshness — Display Data As-Of Timestamp",
+    "description": "Each report shall display its data freshness: the as-of timestamp for the report data and the last carrier synchronization time. For the demo, these can be simulated.",
+    "status": "Approved",
+    "tags": ["reporting", "data-freshness"],
+    "displayFields": ["Data as of: {timestamp}", "Last carrier synchronization: {timestamp}"]
+  }
+]

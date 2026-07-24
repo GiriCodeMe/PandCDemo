@@ -1,0 +1,322 @@
+[
+  {
+    "requirementId": "REQ-EMPLOYER-001",
+    "type": "Functional Requirement",
+    "title": "Employer Group Directory — Searchable List of All Configured Employers",
+    "description": "The system shall provide an Employer Group Management screen listing all configured employer groups. The directory shows employer name, FEIN, active plan year, status, and key metrics.",
+    "status": "Approved",
+    "tags": ["employer-profile", "multi-employer"],
+    "columns": ["Employer Name", "Employer ID", "FEIN", "Plan Year", "Employee Count", "Active Plans", "Status", "Last Updated"],
+    "actions": ["[+ Add Employer]"],
+    "demoEmployers": [
+      { "name": "Acme Corporation", "fein": "XX-XXX1234", "planYear": "2027", "status": "ACTIVE"   },
+      { "name": "Globex Inc.",      "fein": "XX-XXX5678", "planYear": "2027", "status": "ACTIVE"   },
+      { "name": "Initech LLC",      "fein": "XX-XXX9012", "planYear": "2026", "status": "INACTIVE" }
+    ]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-002",
+    "type": "Functional Requirement",
+    "title": "Create Employer Profile — Required Legal and Contact Information",
+    "description": "Authorized administrators shall be able to create a new employer profile with required legal, operational, and contact information.",
+    "status": "Approved",
+    "tags": ["employer-profile"],
+    "requiredFields": ["legalName", "dbaName", "employerId", "fein", "address", "primaryContact", "contactEmail", "contactPhone"],
+    "systemGeneratedFields": ["employerId", "createdDate", "createdBy", "status"],
+    "demoProfile": {
+      "legalName": "Acme Corporation", "dbaName": "Acme",
+      "fein": "XX-XXX1234", "address": "123 Corporate Drive, Princeton, NJ 08540",
+      "contactEmail": "benefits@acme.com"
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-003",
+    "type": "Functional Requirement",
+    "title": "Employer Profile Details — Organization, Contacts, and Configuration Sections",
+    "description": "The employer profile shall maintain complete organizational, contact, and configuration information.",
+    "status": "Approved",
+    "tags": ["employer-profile"],
+    "profileSections": {
+      "Organization": ["legalName", "dbaName", "employerId", "fein", "industry", "address", "phone", "website"],
+      "Contacts":     ["primaryHRContact", "benefitsAdministrator", "payrollContact", "financeContact", "technicalContact"],
+      "Configuration": ["planYear", "payrollFrequency", "timeZone", "workWeek", "eligibilityPolicies", "defaultCarrierSettings"]
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-004",
+    "type": "Functional Requirement",
+    "title": "Plan Year Configuration — Dates, Open Enrollment Window, and Validation",
+    "description": "The administrator shall configure plan year start/end dates and open enrollment period. The system validates date logic: start < end, and open enrollment must precede plan year start.",
+    "status": "Approved",
+    "tags": ["employer-profile", "plan-year"],
+    "fields": ["planYear", "startDate", "endDate", "openEnrollmentStart", "openEnrollmentEnd", "status"],
+    "validationRules": [
+      "Start Date < End Date",
+      "Open Enrollment Start < Open Enrollment End",
+      "Open Enrollment must occur before Plan Year Start"
+    ],
+    "demoConfig": {
+      "planYear": 2027, "startDate": "01/01/2027", "endDate": "12/31/2027",
+      "openEnrollmentStart": "10/15/2026", "openEnrollmentEnd": "11/15/2026",
+      "status": "Scheduled"
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-005",
+    "type": "Functional Requirement",
+    "title": "Plan Year Lifecycle States — Controls Enrollment Availability",
+    "description": "Plan years shall follow a defined lifecycle. The current plan year state determines whether employees can enroll. Multiple plan years can coexist for rollover and historical data.",
+    "status": "Approved",
+    "tags": ["employer-profile", "plan-year", "lifecycle"],
+    "states": ["DRAFT", "CONFIGURATION", "OPEN_ENROLLMENT", "ACTIVE", "CLOSED", "ARCHIVED"],
+    "demoYears": [
+      { "year": 2026, "status": "ACTIVE" },
+      { "year": 2027, "status": "OPEN_ENROLLMENT" },
+      { "year": 2028, "status": "DRAFT" }
+    ]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-006",
+    "type": "Functional Requirement",
+    "title": "Payroll Frequency Configuration — Drives Premium Calculation Engine",
+    "description": "The employer shall define its payroll frequency. This configuration feeds the Premium Calculation Engine to compute per-pay-period deductions.",
+    "status": "Approved",
+    "tags": ["employer-profile", "payroll-frequency"],
+    "supportedFrequencies": ["WEEKLY", "BIWEEKLY", "SEMI_MONTHLY", "MONTHLY"],
+    "demoConfig": {
+      "frequency": "BIWEEKLY", "payPeriodsPerYear": 26, "nextPayrollDate": "01/08/2027"
+    },
+    "linkedRequirements": ["REQ-PAY-002", "REQ-PREM-003"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-007",
+    "type": "Functional Requirement",
+    "title": "Payroll Calendar — Configured Pay Dates for Accurate Deduction Calculations",
+    "description": "The system should support a payroll calendar defining pay dates for the employer's plan year. This enables accurate per-pay-period deduction calculations and payroll transmission scheduling.",
+    "status": "Approved",
+    "tags": ["employer-profile", "payroll-calendar"],
+    "demoCalendar": {
+      "frequency": "BIWEEKLY", "payPeriods": 26,
+      "firstPayDate": "01/08/2027", "lastPayDate": "12/24/2027"
+    },
+    "linkedRequirements": ["REQ-EMPLOYER-006"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-008",
+    "type": "Functional Requirement",
+    "title": "Product Linking — Select Which Benefit Products Are Available to the Employer",
+    "description": "Administrators shall be able to select which benefit product types are available to the employer. The employer may then configure which products are offered for each plan year.",
+    "status": "Approved",
+    "tags": ["employer-profile", "products"],
+    "availableProducts": ["Medical", "Dental", "Vision", "Basic Life", "AD&D", "STD", "LTD", "HSA", "FSA"],
+    "linkedRequirements": ["REQ-EMPLOYER-009"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-009",
+    "type": "Functional Requirement",
+    "title": "Employer Plan Configuration — Plans Linked to Employer and Plan Year",
+    "description": "The system shall allow specific plans to be linked to an employer and plan year. This prevents globally configured plans from appearing in contexts where they do not apply.",
+    "status": "Approved",
+    "tags": ["employer-profile", "plans"],
+    "demoConfig": {
+      "employer": "Acme Corporation", "planYear": 2027,
+      "medical": ["PPO 500", "PPO 1000", "HDHP 3000"],
+      "dental":  ["Dental Basic", "Dental Premium"],
+      "vision":  ["Vision Standard"]
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-010",
+    "type": "Functional Requirement",
+    "title": "Global Employer Context Switcher — Persistent Header with Employer and Plan Year",
+    "description": "The global application header shall display the currently selected employer and plan year. Clicking the employer name opens a context switcher allowing authorized users to switch employers.",
+    "status": "Approved",
+    "tags": ["employer-profile", "context-switcher", "navigation"],
+    "headerDisplay": "Acme Benefits Admin ▼  |  2027 Plan Year  |  🔍 Search",
+    "contextSwitcherDisplay": {
+      "options": [
+        { "name": "Acme Corporation", "employees": 5000, "planYear": 2027, "selected": true },
+        { "name": "Globex Inc.",      "employees": 2500, "planYear": 2027 },
+        { "name": "Initech LLC",      "employees": 850,  "planYear": 2026 }
+      ]
+    },
+    "linkedRequirements": ["REQ-EMPLOYER-011"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-011",
+    "type": "Functional Requirement",
+    "title": "Employer Context Persistence — All Screens Filter to Selected Employer + Plan Year",
+    "description": "The selected employer and plan year context shall persist across all navigation within the session. All screens, API queries, reports, AI conversations, and workflows shall automatically use the active employer context.",
+    "status": "Approved",
+    "tags": ["employer-profile", "context-persistence", "architecture"],
+    "architecturePrinciple": "employerId + planYearId are mandatory context keys in all data model queries. This prevents data from multiple employers from being accidentally mixed.",
+    "linkedRequirements": ["REQ-EMPLOYER-010", "REQ-EMPLOYER-012"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-012",
+    "type": "Functional Requirement",
+    "title": "Context Switch Confirmation — Warn on Unsaved Changes Before Switching Employer",
+    "description": "If the user switches employer while editing unsaved data, the system shall warn them and offer to stay or discard and switch.",
+    "status": "Approved",
+    "tags": ["employer-profile", "context-switcher", "ux"],
+    "warningMessage": "You have unsaved changes for Acme Corporation 2027 Plan Year. Switching to Globex Inc. will discard these changes.",
+    "actions": ["[Stay]", "[Discard & Switch]"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-013",
+    "type": "Functional Requirement",
+    "title": "Employer Dashboard — Benefits Overview with Key Metrics for Selected Employer",
+    "description": "Each employer shall have a dashboard showing key benefits metrics for the current plan year. This is the entry point for the Executive Dashboard.",
+    "status": "Approved",
+    "tags": ["employer-profile", "dashboard"],
+    "demoMetrics": {
+      "employer": "Acme Corporation",
+      "planYear": "2027 Benefits Overview",
+      "employees": 5000,
+      "activePlans": 9,
+      "enrolled": 4892,
+      "enrollmentCompletion": "97.8%",
+      "eligibilityExceptions": 42,
+      "carrierTransactions": 4934,
+      "carrierPending": 18,
+      "payrollReconciliation": "98.7%"
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-014",
+    "type": "Functional Requirement",
+    "title": "Employer Employee Count — Dynamic Headcount by Status",
+    "description": "The system shall maintain employee counts by employer and employment status. Counts are dynamically calculated, not hardcoded.",
+    "status": "Approved",
+    "tags": ["employer-profile", "employee-count"],
+    "demoHeadcount": {
+      "total": 5000, "active": 4850, "leave": 75, "terminated": 75
+    }
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-015",
+    "type": "Functional Requirement",
+    "title": "Employer Eligibility Configuration — Waiting Period, Effective Date, and Thresholds",
+    "description": "The employer shall be associated with eligibility policies that drive the Eligibility Engine. Eligibility configuration connects Employer Profile directly to Eligibility Rule processing.",
+    "status": "Approved",
+    "tags": ["employer-profile", "eligibility"],
+    "demoEligibilityPolicy": {
+      "newHireWaitingPeriodDays": 30,
+      "coverageEffectiveRule": "First of Month Following Waiting Period",
+      "fullTimeHoursThreshold": 30,
+      "dependentAgeLimitYears": 26,
+      "openEnrollmentWindow": "10/15 – 11/15"
+    },
+    "linkedRequirements": ["REQ-ELIG-001"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-016",
+    "type": "Functional Requirement",
+    "title": "Employer Payroll Configuration — System, Employee ID Field, and Deduction Code Format",
+    "description": "The system shall configure payroll integration settings per employer including payroll system name, employee ID field mapping, deduction code format template, and transmission frequency.",
+    "status": "Approved",
+    "tags": ["employer-profile", "payroll-configuration"],
+    "demoConfig": {
+      "payrollSystem": "Acme Payroll", "frequency": "BIWEEKLY",
+      "employeeIdField": "employeeId",
+      "deductionCodeFormat": "BEN-{PLAN}-{TIER}",
+      "transmissionFrequency": "Weekly",
+      "format": "CSV"
+    },
+    "linkedRequirements": ["REQ-PAY-001", "REQ-PAY-015"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-017",
+    "type": "Functional Requirement",
+    "title": "Employer Carrier Configuration — Per-Benefit Carrier Assignments and Transmission Settings",
+    "description": "The employer shall be associated with specific carriers for each benefit type. Carrier configuration connects directly to the Carrier Integration workspace.",
+    "status": "Approved",
+    "tags": ["employer-profile", "carrier-configuration"],
+    "demoConfig": {
+      "medical": "Acme Health", "dental": "Acme Dental",
+      "vision": "Acme Vision", "life": "Acme Life",
+      "transmissionMode": "Mock API", "frequency": "Weekly"
+    },
+    "linkedRequirements": ["REQ-CARRIER-SIM-001"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-018",
+    "type": "Functional Requirement",
+    "title": "Employer as Top-Level Context for Requirements Studio",
+    "description": "The employer and plan year shall be the top-level context for the Requirements Studio. AI-generated requirements from uploaded Benefits Guide documents are associated with employer + plan year + product.",
+    "status": "Approved",
+    "tags": ["employer-profile", "requirements-studio"],
+    "requirementsTree": {
+      "employer": "Acme Corporation",
+      "planYear": 2027,
+      "benefitsProducts": ["Medical", "Dental", "Vision", "Life", "Eligibility", "Enrollment", "Carrier Integration"]
+    },
+    "linkedRequirements": ["REQ-AI-KNOW-001"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-019",
+    "type": "Functional Requirement",
+    "title": "Employer Status Lifecycle — Controls Whether New Enrollment Activity Is Permitted",
+    "description": "Employer profiles shall support a status lifecycle. An inactive employer prevents new enrollment activity but retains all historical data.",
+    "status": "Approved",
+    "tags": ["employer-profile", "lifecycle"],
+    "statuses": ["DRAFT", "ACTIVE", "SUSPENDED", "INACTIVE", "ARCHIVED"],
+    "inactiveRule": "INACTIVE status prevents new enrollment, life event, or configuration activity while preserving all historical records"
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-020",
+    "type": "Functional Requirement",
+    "title": "Employer Configuration Audit Trail — All Configuration Changes Recorded",
+    "description": "All employer configuration changes shall be recorded in the audit trail with actor, action, previous value, new value, effective date, and timestamp.",
+    "status": "Approved",
+    "tags": ["employer-profile", "audit"],
+    "demoAuditRecord": {
+      "actor": "Benefits Admin", "action": "Updated Payroll Frequency",
+      "previousValue": "Monthly", "newValue": "Biweekly",
+      "effectiveDate": "01/01/2027", "timestamp": "07/23/2026 10:45 PM"
+    },
+    "linkedRequirements": ["REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-EMPLOYER-021",
+    "type": "Functional Requirement",
+    "title": "Employer RBAC — Users Only Access Assigned Employer Groups",
+    "description": "Users shall only be able to access employer groups assigned to their role or user account. The context switcher shall only display employers the user is authorized to access.",
+    "status": "Approved",
+    "tags": ["employer-profile", "rbac", "security"],
+    "demoExample": {
+      "user": "Benefits Admin",
+      "assignedEmployers": ["Acme Corporation", "Globex Inc."],
+      "unauthorizedEmployers": ["Initech LLC"]
+    },
+    "linkedRequirements": ["REQ-RBAC-001"]
+  },
+  {
+    "requirementId": "REQ-AI-EMPLOYER-001",
+    "type": "Functional Requirement",
+    "title": "AI Employer Configuration Assistant — Extract Employer Config from Benefits Guide",
+    "description": "The AI assistant may help administrators configure an employer based on uploaded benefits documents. AI extracts configuration fields and presents them for admin review — it does not automatically publish configuration.",
+    "status": "Approved",
+    "tags": ["employer-profile", "ai", "configuration"],
+    "exampleInteraction": {
+      "prompt": "Set up Acme Corporation for the 2027 plan year based on the Benefits Guide.",
+      "aiExtracted": {
+        "employer": "Acme Corporation", "planYear": 2027,
+        "payroll": "Biweekly",
+        "products": ["Medical", "Dental", "Vision", "Life", "STD", "LTD", "HSA", "FSA"],
+        "openEnrollment": "Oct 15 – Nov 15",
+        "eligibility": "30-day waiting period"
+      }
+    },
+    "recommendedWorkflow": [
+      "Upload Benefits Guide",
+      "AI Extraction",
+      "Requirements Workspace",
+      "Admin Review",
+      "Plan Configuration",
+      "Validation",
+      "Publish"
+    ],
+    "linkedRequirements": ["REQ-EMPLOYER-018", "REQ-AI-KNOW-001"]
+  }
+]

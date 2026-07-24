@@ -1,0 +1,308 @@
+[
+  {
+    "requirementId": "REQ-COBRA-001",
+    "type": "Functional Requirement",
+    "title": "COBRA Qualifying Event Creation — Automatic Case Generation on Triggering Event",
+    "description": "When a qualifying event occurs, the system shall automatically create a COBRA case with status QUALIFYING_EVENT_CREATED. Qualifying event types are configurable.",
+    "status": "Approved",
+    "tags": ["cobra", "qualifying-event", "workflow"],
+    "supportedQualifyingEvents": [
+      "EMPLOYMENT_TERMINATION",
+      "REDUCTION_IN_HOURS",
+      "EMPLOYEE_DEATH",
+      "DIVORCE_LEGAL_SEPARATION",
+      "LOSS_OF_DEPENDENT_ELIGIBILITY",
+      "MEDICARE_ENTITLEMENT"
+    ],
+    "demoScenario": {
+      "employee": "Linda White",
+      "employeeId": "ACM-E030",
+      "eventType": "EMPLOYMENT_TERMINATION",
+      "terminationDate": "2027-06-30",
+      "cobraStatus": "QUALIFYING_EVENT_CREATED"
+    },
+    "linkedRequirements": ["REQ-COBRA-002", "REQ-ELIG-002"]
+  },
+  {
+    "requirementId": "REQ-COBRA-002",
+    "type": "Functional Requirement",
+    "title": "Qualified Beneficiary Identification — Employee and All Covered Dependents",
+    "description": "The system shall identify all individuals potentially eligible for COBRA continuation coverage based on the current enrollment record. Each qualified beneficiary is linked to the COBRA case with their coverage information.",
+    "status": "Approved",
+    "tags": ["cobra", "beneficiary"],
+    "beneficiaryFields": ["employeeId", "name", "relationship", "coveredPlans", "coverageEndDate", "cobraEligibilityStatus"],
+    "demoQualifiedBeneficiaries": [
+      { "name": "Linda White", "relationship": "Employee" },
+      { "name": "John White",  "relationship": "Spouse" },
+      { "name": "Emily White", "relationship": "Dependent Child" }
+    ],
+    "linkedRequirements": ["REQ-COBRA-001", "REQ-COBRA-003"]
+  },
+  {
+    "requirementId": "REQ-COBRA-003",
+    "type": "Functional Requirement",
+    "title": "COBRA Election Notice Generation — Required Notice with All Statutory Fields",
+    "description": "The system shall generate a COBRA election notice for eligible beneficiaries. The notice includes all required fields: qualifying event, event date, coverage termination date, eligible plans, COBRA premium, election deadline, election instructions, effective date, and payment instructions.",
+    "status": "Approved",
+    "tags": ["cobra", "notice", "document-generation"],
+    "noticeFields": [
+      "qualifyingEvent",
+      "eventDate",
+      "coverageTerminationDate",
+      "eligiblePlans",
+      "cobraPremium",
+      "electionDeadline",
+      "electionInstructions",
+      "coverageEffectiveDate",
+      "paymentInstructions"
+    ],
+    "demoNotice": {
+      "employee": "Linda White",
+      "qualifyingEvent": "Employment Termination",
+      "eventDate": "June 30, 2027",
+      "coverageEnds": "June 30, 2027",
+      "electionDeadlineNote": "Calculated from configured 60-day election window",
+      "monthlyCobraPremium": 765.00
+    },
+    "actions": ["[View Notice]", "[Download PDF]"],
+    "linkedRequirements": ["REQ-COBRA-004", "REQ-COBRA-006"]
+  },
+  {
+    "requirementId": "REQ-COBRA-004",
+    "type": "Functional Requirement",
+    "title": "Election Deadline Tracking — Configurable Window with Status Indicators",
+    "description": "The system shall calculate and track the COBRA election deadline. The election window duration is configurable per jurisdiction and plan configuration — not hardcoded. The system shall display days remaining and election status.",
+    "status": "Approved",
+    "tags": ["cobra", "deadline", "election-window"],
+    "electionWindowConfiguration": "Configurable per jurisdiction — demo seeds 60-day window. Deadline calculated from applicable notice or event date per configured rule.",
+    "statusIndicators": {
+      "PENDING":  "⏳ Election Pending",
+      "ELECTED":  "✓ Elected",
+      "DECLINED": "✕ Declined",
+      "EXPIRED":  "⚠ Election Expired"
+    },
+    "demoCalculation": {
+      "qualifyingEvent": "June 30, 2027",
+      "noticeSent": "July 5, 2027",
+      "daysRemaining": 42,
+      "status": "PENDING"
+    },
+    "linkedRequirements": ["REQ-COBRA-010"]
+  },
+  {
+    "requirementId": "REQ-COBRA-005",
+    "type": "Functional Requirement",
+    "title": "COBRA Election UI — Record Election with Plan Selection and Decision",
+    "description": "The COBRA administrator shall be able to record a beneficiary's COBRA election. The UI displays each eligible plan with a checkbox and an Elect / Decline radio selection.",
+    "status": "Approved",
+    "tags": ["cobra", "election-ui", "admin"],
+    "electionFormFields": {
+      "beneficiary": "Linda White",
+      "eligibleCoverage": [
+        { "plan": "Medical — PPO 500", "selected": true },
+        { "plan": "Dental — Dental Premium", "selected": true },
+        { "plan": "Vision — Vision Standard", "selected": false }
+      ],
+      "decision": "ELECT | DECLINE"
+    },
+    "recordedFields": ["electionDate", "beneficiary", "plansElected", "coverageTier", "effectiveDate", "electionStatus"],
+    "linkedRequirements": ["REQ-COBRA-007"]
+  },
+  {
+    "requirementId": "REQ-COBRA-006",
+    "type": "Functional Requirement",
+    "title": "COBRA Premium Calculation — Group Rate Plus Configurable Administrative Fee",
+    "description": "The system shall calculate the COBRA premium for each eligible plan by applying a configurable administrative fee percentage to the group rate. Both the base group rate and the administrative fee percentage are stored as configurable plan-year data.",
+    "status": "Approved",
+    "tags": ["cobra", "premium-calculation"],
+    "formula": "COBRA Premium = Group Rate × (1 + Administrative Fee %)",
+    "demoValues": {
+      "medicalPPO500GroupRate": 750.00,
+      "administrativeFeePercent": 2,
+      "cobraPremium": 765.00
+    },
+    "displayBreakdown": {
+      "baseGroupRate": 750.00,
+      "administrativeFee": 15.00,
+      "totalCobraPremium": 765.00
+    },
+    "linkedRequirements": ["REQ-PREM-001"]
+  },
+  {
+    "requirementId": "REQ-COBRA-007",
+    "type": "Functional Requirement",
+    "title": "COBRA Coverage Activation — On Election and Payment Confirmation",
+    "description": "When an eligible beneficiary elects COBRA coverage and payment is confirmed, the system shall activate continuation coverage, create a carrier transaction, and preserve the original coverage history.",
+    "status": "Approved",
+    "tags": ["cobra", "coverage-activation"],
+    "activationWorkflow": [
+      "COBRA Election recorded",
+      "Election Accepted",
+      "Coverage Activated → COBRA_ACTIVE",
+      "Carrier Transaction created",
+      "COBRA Coverage Confirmed"
+    ],
+    "linkedRequirements": ["REQ-COBRA-008", "REQ-COBRA-009"]
+  },
+  {
+    "requirementId": "REQ-COBRA-008",
+    "type": "Functional Requirement",
+    "title": "Retroactive COBRA Coverage — Support for Retroactive Effective Date on Late Election",
+    "description": "The system shall support retroactive COBRA coverage activation when permitted by applicable rules and election/payment status. The system calculates any required retroactive premium amount for the gap between coverage end and election date.",
+    "status": "Approved",
+    "tags": ["cobra", "retroactive"],
+    "demoExample": {
+      "coverageEnd": "June 30",
+      "cobraElection": "July 20",
+      "retroactiveCoverageEffective": "July 1",
+      "retroactivePremiumNote": "System calculates premium for July 1–20 gap per configured rules"
+    },
+    "linkedRequirements": ["REQ-COBRA-007"]
+  },
+  {
+    "requirementId": "REQ-COBRA-009",
+    "type": "Functional Requirement",
+    "title": "COBRA Payment Tracking — Monthly Payment Status Per Beneficiary",
+    "description": "The system shall track COBRA premium payment status per beneficiary per coverage period. Payment statuses include PAID, PENDING, LATE, GRACE_PERIOD, and UNPAID. For the demo, payment processing is simulated.",
+    "status": "Approved",
+    "tags": ["cobra", "payment"],
+    "paymentStatuses": ["PAID", "PENDING", "LATE", "GRACE_PERIOD", "UNPAID"],
+    "demoAccount": {
+      "monthlyPremium": 765.00,
+      "currentPeriod": "August 2027",
+      "paymentStatus": "PAID",
+      "nextDueDate": "September 1, 2027"
+    },
+    "linkedRequirements": ["REQ-COBRA-007"]
+  },
+  {
+    "requirementId": "REQ-COBRA-010",
+    "type": "Functional Requirement",
+    "title": "Election Expiration — Automatic Identification and Prevention of Late Election",
+    "description": "The system shall automatically identify COBRA cases where the election deadline has passed without an election being recorded. The system shall prevent late elections unless an authorized administrator explicitly overrides the status.",
+    "status": "Approved",
+    "tags": ["cobra", "expiration"],
+    "demoExample": {
+      "electionDeadline": "August 30, 2027",
+      "currentDate": "September 5, 2027",
+      "status": "ELECTION_EXPIRED",
+      "message": "⚠ Election window has expired"
+    },
+    "overridePermission": "Integration Admin — requires audit justification",
+    "linkedRequirements": ["REQ-COBRA-004"]
+  },
+  {
+    "requirementId": "REQ-COBRA-011",
+    "type": "Functional Requirement",
+    "title": "COBRA Administration Dashboard — Summary Metrics and Queue Management",
+    "description": "The system shall include a dedicated COBRA Administration dashboard with summary metrics and filterable case queues. The dashboard enables administrators to monitor qualifying events, notice status, election pipeline, active COBRA coverage, and payment issues.",
+    "status": "Approved",
+    "tags": ["cobra", "dashboard", "admin"],
+    "summaryMetrics": {
+      "qualifyingEvents": 24,
+      "noticesPending": 5,
+      "electionsPending": 12,
+      "elected": 8,
+      "declined": 3,
+      "expired": 1,
+      "activeCobra": 87,
+      "paymentIssues": 6
+    },
+    "filterOptions": ["Employee", "Beneficiary", "Qualifying Event", "Election Status", "Deadline", "Coverage", "Payment Status"],
+    "linkedRequirements": ["REQ-COBRA-012"]
+  },
+  {
+    "requirementId": "REQ-COBRA-012",
+    "type": "Functional Requirement",
+    "title": "COBRA Case Detail — Complete Lifecycle View with Timeline",
+    "description": "Each COBRA case shall provide a complete lifecycle view showing qualifying event, notice history, election status, coverage, premium, and an ordered timeline of all events.",
+    "status": "Approved",
+    "tags": ["cobra", "case-detail"],
+    "caseDetailSections": ["Qualifying Event", "Notice History", "Election Status", "Coverage Details", "Premium", "Timeline"],
+    "demoTimeline": [
+      { "date": "Jun 30", "event": "Employment Termination" },
+      { "date": "Jul 5",  "event": "COBRA Notice Generated and Sent" },
+      { "date": "Jul 20", "event": "Election Received and Accepted" },
+      { "date": "Jul 1",  "event": "Retroactive Coverage Effective" },
+      { "date": "Jul 25", "event": "Carrier Updated" }
+    ],
+    "linkedRequirements": ["REQ-COBRA-001"]
+  },
+  {
+    "requirementId": "REQ-COBRA-013",
+    "type": "Functional Requirement",
+    "title": "COBRA Notifications — Event-Driven Alerts for All Key Lifecycle Transitions",
+    "description": "The system shall generate notifications for all key COBRA lifecycle events. Notifications are delivered to the relevant actor (employee, administrator, or HR).",
+    "status": "Approved",
+    "tags": ["cobra", "notifications"],
+    "notificationEvents": [
+      "COBRA_NOTICE_GENERATED",
+      "NOTICE_SENT",
+      "ELECTION_DEADLINE_APPROACHING",
+      "ELECTION_RECEIVED",
+      "ELECTION_ACCEPTED",
+      "ELECTION_DECLINED",
+      "ELECTION_EXPIRED",
+      "COVERAGE_ACTIVATED",
+      "PAYMENT_DUE",
+      "PAYMENT_OVERDUE"
+    ],
+    "demoNotification": {
+      "type": "ELECTION_DEADLINE_APPROACHING",
+      "message": "Linda White's COBRA election deadline is in 7 days.",
+      "action": "[View Case]"
+    },
+    "linkedRequirements": ["REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-AI-COBRA-001",
+    "type": "Functional Requirement",
+    "title": "AI COBRA Employee Assistant — Status, Eligibility, and Premium Questions",
+    "description": "The AI Benefits Assistant shall answer employee questions about COBRA status, eligibility, premium costs, and election deadlines. AI responses cite the applicable plan configuration and audit data.",
+    "status": "Approved",
+    "tags": ["cobra", "ai", "employee-assistant"],
+    "exampleInteractions": [
+      {
+        "question": "Am I eligible for COBRA?",
+        "response": "Based on your termination event on June 30, you have been identified as a potential COBRA qualified beneficiary. Your election notice was sent on July 5. Your current election status is Pending."
+      },
+      {
+        "question": "How much will COBRA cost?",
+        "response": "Your monthly continuation premium for PPO 500 is $765, including the configured 2% administrative fee."
+      }
+    ],
+    "linkedRequirements": ["REQ-ESS-009", "REQ-COBRA-006"]
+  },
+  {
+    "requirementId": "REQ-AI-COBRA-002",
+    "type": "Functional Requirement",
+    "title": "AI COBRA Operations Assistant — Administrator-Facing Exception and Deadline Monitoring",
+    "description": "The AI Operations Assistant shall support administrator workflows for COBRA case management: identifying cases approaching deadlines, diagnosing coverage activation failures, and generating bulk action recommendations.",
+    "status": "Approved",
+    "tags": ["cobra", "ai", "admin-assistant"],
+    "exampleInteractions": [
+      {
+        "query": "Show me COBRA cases with elections expiring this week.",
+        "response": {
+          "casesFound": 3,
+          "cases": [
+            { "name": "Linda White", "deadline": "Aug 28" },
+            { "name": "James Smith",  "deadline": "Aug 29" },
+            { "name": "Robert Jones", "deadline": "Aug 30" }
+          ],
+          "actions": ["[View Cases]", "[Send Reminder]"]
+        }
+      },
+      {
+        "query": "Why hasn't Linda's COBRA coverage been activated?",
+        "response": {
+          "rootCause": "Election was received but payment confirmation has not been recorded.",
+          "currentStatus": "ELECTION_RECEIVED",
+          "nextAction": "Confirm initial premium payment.",
+          "action": "[View Payment]"
+        }
+      }
+    ],
+    "linkedRequirements": ["REQ-AI-COP-009", "REQ-COBRA-009"]
+  }
+]

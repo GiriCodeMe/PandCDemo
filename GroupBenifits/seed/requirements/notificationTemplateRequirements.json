@@ -1,0 +1,268 @@
+[
+  {
+    "requirementId": "REQ-NOTIFY-UI-001",
+    "type": "Functional Requirement",
+    "title": "Notification Template Catalog — Filterable List with Status and Channel",
+    "description": "The system shall provide a Notification Template Management screen listing all configured templates. The catalog is filterable by event, channel, status, benefit type, language, and owner.",
+    "status": "Approved",
+    "tags": ["notification-templates", "admin"],
+    "catalogColumns": ["Template Name", "Event", "Channel", "Status"],
+    "filterOptions": ["Event", "Channel", "Status", "Benefit Type", "Language", "Last Updated", "Owner"],
+    "actions": ["[+ Create Template]", "[Import Template]"],
+    "demoTemplates": [
+      { "name": "Enrollment Submitted",         "event": "Enrollment",        "channel": "Email",  "status": "Active" },
+      { "name": "Enrollment Accepted",          "event": "Carrier Accepted",  "channel": "Email",  "status": "Active" },
+      { "name": "Enrollment Rejected",          "event": "Carrier Rejected",  "channel": "Email",  "status": "Active" },
+      { "name": "Life Event Received",          "event": "Life Event",        "channel": "Email",  "status": "Active" },
+      { "name": "COBRA Election Notice",        "event": "COBRA",             "channel": "Email",  "status": "Active" },
+      { "name": "COBRA Deadline Reminder",      "event": "COBRA",             "channel": "Email",  "status": "Active" },
+      { "name": "Payroll Deduction Changed",    "event": "Payroll",           "channel": "In-App", "status": "Draft"  }
+    ]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-002",
+    "type": "Functional Requirement",
+    "title": "Template Categories — Organized by Business Event Domain",
+    "description": "Templates shall be organized by business event domain for easy discovery and management.",
+    "status": "Approved",
+    "tags": ["notification-templates"],
+    "categories": {
+      "Enrollment":      ["Enrollment Started", "Enrollment Submitted", "Enrollment Accepted", "Enrollment Rejected", "Enrollment Activated"],
+      "Open Enrollment": ["Enrollment Opens", "Reminder", "Final Reminder", "Enrollment Closes"],
+      "Life Events":     ["Life Event Submitted", "Documentation Required", "Documentation Approved", "Documentation Rejected"],
+      "COBRA":           ["Qualifying Event", "Election Notice", "Election Reminder", "Election Accepted", "Election Expired", "Coverage Activated"],
+      "Payroll":         ["Deduction Changed", "Payroll Transmission Accepted", "Payroll Transmission Failed"],
+      "Carrier":         ["Transaction Submitted", "Transaction Accepted", "Transaction Rejected"]
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-003",
+    "type": "Functional Requirement",
+    "title": "Create Notification Template — Required Fields and Channel Selection",
+    "description": "Authorized users shall be able to create a new notification template with required fields.",
+    "status": "Approved",
+    "tags": ["notification-templates", "create"],
+    "requiredFields": ["templateName", "event", "channel", "audience", "language", "subject"],
+    "templateStatuses": ["DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED"],
+    "channels": ["EMAIL", "IN_APP", "SMS"],
+    "demoExample": {
+      "templateName": "Enrollment Submitted",
+      "event": "Enrollment Submitted",
+      "channel": "EMAIL",
+      "audience": "Employee",
+      "language": "English"
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-004",
+    "type": "Functional Requirement",
+    "title": "Template Editor — Rich Text Editor with Merge Field Support",
+    "description": "The system shall provide a rich text template editor supporting bold, italic, lists, links, headings, tables, action buttons, and image/logo embedding. Merge fields are inserted via the picker.",
+    "status": "Approved",
+    "tags": ["notification-templates", "editor"],
+    "supportedFormatting": ["Bold", "Italic", "Lists", "Links", "Headings", "Tables", "Buttons", "Images", "Attachments"],
+    "mergeFieldSyntax": "{{merge.field.path}}",
+    "demoTemplate": "Hi {{employee.firstName}},\n\nYour {{enrollment.planYear}} benefits enrollment has been successfully submitted.\n\nConfirmation Number: {{enrollment.confirmationNumber}}\n\nCoverage Effective Date: {{enrollment.effectiveDate}}\n\n[View My Benefits]",
+    "linkedRequirements": ["REQ-NOTIFY-UI-005"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-005",
+    "type": "Functional Requirement",
+    "title": "Merge Field Picker — Point-and-Click Insertion of Merge Variables",
+    "description": "The editor shall provide a merge field picker so administrators do not need to manually type merge-field syntax. Fields are organized by entity and selecting one inserts the correct variable at the cursor position.",
+    "status": "Approved",
+    "tags": ["notification-templates", "merge-fields"],
+    "mergeFieldCategories": {
+      "Employee":   ["First Name", "Last Name", "Employee ID", "Email"],
+      "Enrollment": ["Confirmation Number", "Plan Year", "Effective Date", "Status"],
+      "Benefits":   ["Medical Plan", "Dental Plan", "Vision Plan", "Employee Premium"],
+      "Employer":   ["Employer Name", "Benefits Contact"]
+    },
+    "linkedRequirements": ["REQ-NOTIFY-UI-006"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-006",
+    "type": "Functional Requirement",
+    "title": "Context-Aware Merge Fields — Only Event-Applicable Fields Shown",
+    "description": "The merge field picker shall display only fields applicable to the selected event. This prevents invalid template variables that cannot be resolved at send time.",
+    "status": "Approved",
+    "tags": ["notification-templates", "merge-fields"],
+    "contextExamples": {
+      "Enrollment Submitted": ["Employee", "Enrollment", "Benefits", "Employer"],
+      "COBRA Election Notice": ["Employee", "Qualified Beneficiary", "COBRA", "Coverage", "Premium", "Employer"],
+      "Carrier Rejection":    ["Employee", "Enrollment", "Carrier Transaction", "Error", "Recommended Action"]
+    },
+    "linkedRequirements": ["REQ-NOTIFY-UI-018"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-007",
+    "type": "Functional Requirement",
+    "title": "Template Preview — Render with Sample Data Before Activation",
+    "description": "Administrators shall be able to select sample data (e.g. Linda White, ENR-2027-10045) and generate a rendered preview of the template with all merge fields resolved.",
+    "status": "Approved",
+    "tags": ["notification-templates", "preview"],
+    "demoPreviewData": {
+      "employee": "Linda White",
+      "planYear": 2027,
+      "confirmationNumber": "ENR-2027-10045",
+      "effectiveDate": "January 1, 2027"
+    },
+    "action": "[Generate Preview]",
+    "linkedRequirements": ["REQ-NOTIFY-UI-008"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-008",
+    "type": "Functional Requirement",
+    "title": "Live Preview — Split-Screen Editor and Rendered Preview",
+    "description": "The editor shall support a split-screen experience where the rendered preview updates in real time as the administrator edits the template body.",
+    "status": "Approved",
+    "tags": ["notification-templates", "live-preview", "ux"],
+    "layoutDescription": "Left panel: Template Editor | Right panel: Live Preview rendering with sample data",
+    "linkedRequirements": ["REQ-NOTIFY-UI-007"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-009",
+    "type": "Functional Requirement",
+    "title": "Test Notification — Send Test to Admin Email with Sample Data",
+    "description": "Administrators shall be able to send a test notification to a specified email address using sample data. Test notifications are clearly labeled to prevent confusion with real notifications.",
+    "status": "Approved",
+    "tags": ["notification-templates", "testing"],
+    "testLabel": "TEST — DO NOT REPLY",
+    "testFields": ["sendTo", "sampleEmployee", "sampleData", "channel"],
+    "demoTest": {
+      "sendTo": "admin@acme.com",
+      "sampleData": { "employee": "Linda White", "enrollment": "2027 Enrollment", "confirmation": "ENR-2027-10045" }
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-010",
+    "type": "Functional Requirement",
+    "title": "Template Activation and Deactivation — Status Toggle with Confirmation",
+    "description": "Administrators shall be able to activate or deactivate templates. Deactivating an active template requires confirmation. The system shall not delete an active template that has historical delivery records.",
+    "status": "Approved",
+    "tags": ["notification-templates", "activation"],
+    "linkedRequirements": ["REQ-NOTIFY-UI-016"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-011",
+    "type": "Functional Requirement",
+    "title": "Template Versioning — Create New Version from Active Template",
+    "description": "Templates shall be versioned. Editing an active template creates a new draft version. The prior version remains available for audit and rollback.",
+    "status": "Approved",
+    "tags": ["notification-templates", "versioning"],
+    "versionWorkflow": [
+      "Active v1.0",
+      "Create New Version → Draft v1.1",
+      "Preview v1.1",
+      "Approve v1.1",
+      "Activate v1.1 → v1.0 becomes SUPERSEDED"
+    ],
+    "linkedRequirements": ["REQ-DL-001"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-012",
+    "type": "Functional Requirement",
+    "title": "Template Effective Dating — Plan-Year-Specific Templates",
+    "description": "Templates shall support effective dates, enabling plan-year-specific communication variants to be prepared in advance.",
+    "status": "Approved",
+    "tags": ["notification-templates", "effective-dating"],
+    "demoExample": {
+      "v2026": { "name": "2026 Enrollment Confirmation", "effective": "01/01/2026", "expires": "12/31/2026" },
+      "v2027": { "name": "2027 Enrollment Confirmation", "effective": "01/01/2027" }
+    },
+    "linkedRequirements": ["REQ-NOTIFY-UI-011"]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-014",
+    "type": "Functional Requirement",
+    "title": "Multi-Channel Template Support — Email, In-App, and SMS",
+    "description": "The template editor shall support multiple notification channels. Content may vary by channel (email: full HTML; in-app: short message; SMS: plain text).",
+    "status": "Approved",
+    "tags": ["notification-templates", "multi-channel"],
+    "channelContentRules": {
+      "EMAIL":  "Full rich text HTML message",
+      "IN_APP": "Short notification text (under 200 chars recommended)",
+      "SMS":    "Plain text only (under 160 chars)"
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-015",
+    "type": "Functional Requirement",
+    "title": "Notification Event Mapping — Visible Trigger, Audience, Channel, and Timing",
+    "description": "Administrators shall be able to see which event triggers each template, who receives it, via which channel, and when it is sent.",
+    "status": "Approved",
+    "tags": ["notification-templates", "event-mapping"],
+    "demoMapping": {
+      "templateName": "Enrollment Accepted",
+      "trigger": "Carrier Transaction = ACCEPTED",
+      "audience": "Employee",
+      "channels": ["EMAIL", "IN_APP"],
+      "timing": "Immediately"
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-016",
+    "type": "Functional Requirement",
+    "title": "Notification Delivery History — Per-Employee Delivery Status Log",
+    "description": "Administrators shall be able to view notification delivery history per employee and per event. Delivery statuses include QUEUED, SENT, DELIVERED, FAILED, and BOUNCED.",
+    "status": "Approved",
+    "tags": ["notification-templates", "delivery-history"],
+    "deliveryStatuses": ["QUEUED", "SENT", "DELIVERED", "FAILED", "BOUNCED"],
+    "demoRecord": {
+      "employee": "Linda White",
+      "event": "Enrollment Accepted",
+      "template": "Enrollment Accepted v2.1",
+      "channel": "Email",
+      "sentAt": "Dec 16, 2026 10:42 AM",
+      "status": "DELIVERED"
+    }
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-018",
+    "type": "Functional Requirement",
+    "title": "Template Validation — Required Fields, Valid Merge Fields, and Event Mapping",
+    "description": "Before activation, the system shall validate templates for required subject and body, valid and resolvable merge fields for the selected event, valid links, and required event mapping.",
+    "status": "Approved",
+    "tags": ["notification-templates", "validation"],
+    "validationChecks": [
+      "Required subject",
+      "Required body",
+      "Valid merge fields (resolvable for the selected event)",
+      "No unresolved variables",
+      "Valid links",
+      "Valid recipient configuration",
+      "Supported channel",
+      "Required event mapping"
+    ]
+  },
+  {
+    "requirementId": "REQ-NOTIFY-UI-019",
+    "type": "Functional Requirement",
+    "title": "Notification Template RBAC — Role-Based Access for View, Create, Edit, and Activate",
+    "description": "Template management shall be restricted by role. Only Benefits Admin and System Admin may activate templates.",
+    "status": "Approved",
+    "tags": ["notification-templates", "rbac"],
+    "rbacMatrix": {
+      "Employee":      { "view": "Own notifications only", "create": false, "edit": false, "activate": false, "test": false },
+      "HR Admin":      { "view": true, "create": true,  "edit": true,  "activate": false, "test": true  },
+      "Benefits Admin":{ "view": true, "create": true,  "edit": true,  "activate": true,  "test": true  },
+      "Auditor":       { "view": true, "create": false, "edit": false, "activate": false, "test": false },
+      "System Admin":  { "view": true, "create": true,  "edit": true,  "activate": true,  "test": true  }
+    },
+    "linkedRequirements": ["REQ-RBAC-001"]
+  },
+  {
+    "requirementId": "REQ-AI-NOTIFY-001",
+    "type": "Functional Requirement",
+    "title": "AI-Assisted Template Authoring — Generate Template from Event Description",
+    "description": "The administrator may ask AI to generate a notification template based on a plain-language description of the event and audience. The AI uses only merge fields available for the selected event.",
+    "status": "Approved",
+    "tags": ["notification-templates", "ai"],
+    "exampleInteraction": {
+      "prompt": "Create an enrollment confirmation email for employees whose carrier enrollment was accepted.",
+      "generatedSubject": "Your {{planYear}} Benefits Enrollment Is Confirmed",
+      "generatedBody": "Hi {{employee.firstName}},\n\nGood news! Your {{planYear}} benefits enrollment has been accepted by your carrier.\n\nYour coverage is effective {{enrollment.effectiveDate}}.\n\nYou can review your benefits and download your Benefits Summary from the Employee Benefits Portal.\n\n[View My Benefits]\n\nThank you,\n{{employer.name}} Benefits Team"
+    },
+    "linkedRequirements": ["REQ-NOTIFY-UI-006"]
+  }
+]

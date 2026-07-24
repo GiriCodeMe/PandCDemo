@@ -1,0 +1,349 @@
+[
+  {
+    "requirementId": "REQ-ESS-001",
+    "type": "Functional Requirement",
+    "title": "Employee Benefits Dashboard — Personalized Home Screen",
+    "description": "The system shall provide an employee-specific Benefits Dashboard as the home screen after login for the Employee persona. The dashboard displays the employee's identity, active enrollment status across all benefit types, and primary action shortcuts.",
+    "status": "Approved",
+    "tags": ["employee-portal", "dashboard"],
+    "displayFields": {
+      "identity": ["Full Name", "Employee ID", "Status", "Benefits Effective Date"],
+      "currentBenefits": ["benefit type", "plan name", "coverage tier", "status badge per benefit"],
+      "actions": [
+        "[View My Benefits]",
+        "[View My Elections]",
+        "[View My Deductions]",
+        "[My Documents]",
+        "[Report a Life Event]",
+        "[Ask Benefits AI]"
+      ]
+    },
+    "demoPrimary": "Linda White — EMP-10045 — Active — Benefits Effective Jan 1, 2027",
+    "linkedRequirements": ["REQ-RBAC-007", "REQ-ESS-009"]
+  },
+  {
+    "requirementId": "REQ-ESS-002",
+    "type": "Functional Requirement",
+    "title": "My Benefits — Employee Current Coverage View",
+    "description": "The Employee Portal shall provide a My Benefits screen listing all active benefit enrollments as a summary table. Each row is selectable to expand a detail view showing plan specifics, deductible, out-of-pocket maximum, employer contribution, employee premium, coverage tier, and which dependents are covered.",
+    "status": "Approved",
+    "tags": ["employee-portal", "benefits"],
+    "summaryTableColumns": ["Benefit", "Plan", "Coverage Tier", "Effective Date", "Status"],
+    "detailViewFields": [
+      "Plan Name",
+      "Plan Type",
+      "Deductible",
+      "Out-of-Pocket Maximum",
+      "Employer Contribution",
+      "Employee Premium",
+      "Coverage Tier",
+      "Covered Dependents"
+    ],
+    "demoBenefits": [
+      { "benefit": "Medical",     "plan": "PPO 500",         "tier": "Employee + Family", "status": "Active" },
+      { "benefit": "Dental",      "plan": "Dental Premium",  "tier": "Employee + Family", "status": "Active" },
+      { "benefit": "Vision",      "plan": "Vision Standard", "tier": "Employee + Family", "status": "Active" },
+      { "benefit": "Basic Life",  "plan": "2x Annual Salary","tier": "Employee",          "status": "Active" }
+    ],
+    "linkedRequirements": ["REQ-ESS-001", "REQ-RBAC-007"]
+  },
+  {
+    "requirementId": "REQ-ESS-003",
+    "type": "Functional Requirement",
+    "title": "My Elections — Current and Historical Election History",
+    "description": "The Employee Portal shall allow employees to view their current plan elections and election history organized by plan year. Each election record shows the election date, effective date, enrollment type, plan version at time of election, and status.",
+    "status": "Approved",
+    "tags": ["employee-portal", "elections"],
+    "electionRecordFields": [
+      "Plan Year",
+      "Benefit Type",
+      "Plan Name",
+      "Coverage Tier",
+      "Election Date",
+      "Effective Date",
+      "Enrollment Type (Open Enrollment / Life Event / New Hire)",
+      "Plan Version",
+      "Status"
+    ],
+    "historicalNavigation": "Year selector tabs (e.g. '2026 Elections' | '2027 Elections')",
+    "linkedRequirements": ["REQ-ESS-002", "REQ-VER-X-005"]
+  },
+  {
+    "requirementId": "REQ-ESS-004",
+    "type": "Functional Requirement",
+    "title": "My Deductions — Payroll Deduction Summary and History",
+    "description": "The Employee Portal shall provide a My Deductions screen showing the employee's current per-pay-period deduction breakdown by benefit type, a running total, and a historical deduction ledger. All four payroll frequencies (weekly, biweekly, semi-monthly, monthly) must be supported and displayed correctly.",
+    "status": "Approved",
+    "tags": ["employee-portal", "deductions", "payroll"],
+    "currentDeductionDisplay": {
+      "lineItems": "One row per benefit with plan name and employee premium amount",
+      "total": "Sum of all benefit deductions per pay period",
+      "payFrequencyLabel": "Displayed below total (e.g. 'per biweekly pay period')"
+    },
+    "deductionHistoryColumns": ["Pay Date", "Medical", "Dental", "Vision", "Life", "Total"],
+    "demoDeductions": {
+      "Medical":            "$150.00",
+      "Dental":              "$35.00",
+      "Vision":               "$8.00",
+      "Supplemental Life":   "$12.50",
+      "Total":              "$205.50"
+    },
+    "aiUseCase": {
+      "query": "Why did my payroll deduction increase this month?",
+      "response": "Your medical deduction increased from $125 to $150 because your 2027 PPO 500 employee premium became effective January 1. This was the result of the plan year renewal approved on November 15, 2026."
+    },
+    "linkedRequirements": ["REQ-ESS-001", "REQ-PREM-001", "REQ-ESS-009"]
+  },
+  {
+    "requirementId": "REQ-ESS-005",
+    "type": "Functional Requirement",
+    "title": "My Documents — Employee Benefit Document Center",
+    "description": "The Employee Portal shall provide a My Documents screen listing all benefit-related documents available to the employee. Each document supports inline HTML preview and PDF download. The document list is scoped to the employee's own documents only — no other employees' documents are accessible.",
+    "status": "Approved",
+    "tags": ["employee-portal", "documents"],
+    "documentTypes": [
+      "2027 Benefits Summary (generated PDF)",
+      "2027 Enrollment Confirmation",
+      "Medical Plan Summary",
+      "Dental Plan Summary",
+      "Vision Plan Summary",
+      "Life Insurance Certificate",
+      "Life Event Enrollment Confirmation (if applicable)"
+    ],
+    "documentActions": ["[View]", "[Download]"],
+    "accessScope": "Employee's own documents only. HR Admin and Benefits Admin may view on behalf.",
+    "linkedRequirements": ["REQ-ESS-006", "REQ-RBAC-007", "REQ-NOTIFY-015"]
+  },
+  {
+    "requirementId": "REQ-ESS-006",
+    "type": "Functional Requirement",
+    "title": "Benefit Summary PDF — Personalized Per-Employee Generated Document",
+    "description": "The system shall generate a personalized benefit summary PDF for each employee that summarizes their current benefit elections, coverage levels, dependents, effective dates, premiums, employer contributions, and per-pay-period deduction total. The PDF is generated on demand and made available in My Documents.",
+    "status": "Approved",
+    "tags": ["employee-portal", "documents", "pdf"],
+    "pdfSections": [
+      "Employer branding header (Acme Corporation + plan year)",
+      "Employee information (name, ID, status, benefits effective date)",
+      "Benefit elections table (benefit / plan / coverage tier / effective date / status)",
+      "Covered dependents list per benefit",
+      "Premium summary (employee premium / employer contribution per benefit)",
+      "Payroll deduction summary (per-pay-period amounts + total)",
+      "Footer (generated date, disclaimer)"
+    ],
+    "generationTrigger": "On demand from My Documents; also generated automatically on enrollment confirmation",
+    "demoNote": "Demo generates a real PDF using seeded data for Linda White (EMP-10045)",
+    "linkedRequirements": ["REQ-ESS-005", "REQ-NOTIFY-012"]
+  },
+  {
+    "requirementId": "REQ-ESS-007",
+    "type": "Functional Requirement",
+    "title": "Life Event Self-Service — AI-Assisted Life Event Reporting",
+    "description": "The Employee Portal shall allow employees to report a qualifying life event via a structured form or via the AI Benefits Assistant. The AI assistant accepts natural language input, identifies the event type, confirms the event date, states the enrollment window deadline, lists required documentation, and provides a [Start Enrollment] call-to-action.",
+    "status": "Approved",
+    "tags": ["employee-portal", "life-events", "ai"],
+    "lifeEventTypes": ["Marriage", "Birth / Adoption", "Divorce", "Loss of Other Coverage", "Death of Dependent", "Employment Status Change"],
+    "aiAssistantFlow": [
+      "Employee: 'I got married.'",
+      "AI: 'Congratulations! When did you get married?'",
+      "Employee: 'June 15.'",
+      "AI confirms: Life Event = Marriage | Event Date = June 15 | Enrollment Deadline = July 15 | Status = Eligible | Required docs: marriage certificate",
+      "[Start Enrollment →]"
+    ],
+    "handoff": "AI collects event type + date via conversation then hands off to the structured life event enrollment workflow",
+    "linkedRequirements": ["REQ-AI-COP-007", "REQ-LE-001", "REQ-ESS-008"]
+  },
+  {
+    "requirementId": "REQ-ESS-008",
+    "type": "Functional Requirement",
+    "title": "Employee Enrollment — Self-Service Enrollment Wizard in Employee Portal",
+    "description": "The Employee Portal shall allow eligible employees to complete benefit enrollment independently through the enrollment wizard. The wizard follows the same 8-step flow defined in REQ-ENROLL-UX-001–015, but rendered within the employee's portal context. HR Admin and Benefits Admin can complete enrollment on behalf of an employee.",
+    "status": "Approved",
+    "tags": ["employee-portal", "enrollment"],
+    "wizardSteps": [
+      "Enrollment Open — active window confirmation",
+      "Review Current Elections",
+      "Select Benefits — benefit by benefit",
+      "Select Dependents — per benefit",
+      "Review Premium — cost breakdown before confirming",
+      "Review Elections — full summary",
+      "Confirm — explicit confirmation action",
+      "Confirmation — summary screen + PDF download"
+    ],
+    "employeeCapabilities": ["Save draft", "Navigate backward", "Change elections", "Review cost before confirming", "Confirm enrollment"],
+    "onBehalfOf": "HR Admin and Benefits Admin may complete enrollment on behalf of an employee; the employee's explicit confirmation is required for self-service enrollment",
+    "linkedRequirements": ["REQ-ENROLL-UX-001", "REQ-AI-COP-005", "REQ-RBAC-005"]
+  },
+  {
+    "requirementId": "REQ-ESS-009",
+    "type": "Functional Requirement",
+    "title": "AI Benefits Assistant — Employee-Scoped Conversational Assistant",
+    "description": "The Employee Portal shall provide an AI Benefits Assistant accessible from the dashboard and from any portal screen. The assistant answers natural language questions about the employee's own benefits, explains deduction changes, compares plans for the employee's situation, and can initiate enrollment or life event workflows.",
+    "status": "Approved",
+    "tags": ["employee-portal", "ai", "assistant"],
+    "exampleQueries": [
+      "What benefits do I currently have?",
+      "How much do I pay for medical coverage?",
+      "Which dependents are covered?",
+      "What happens if I get married?",
+      "Can I add my newborn?",
+      "What is the difference between PPO 500 and HDHP 3000?",
+      "Why did my deduction change?",
+      "Why is my dependent not covered?"
+    ],
+    "responseFormat": "Answer + Source citation (document, page) + Relevant Action button (e.g. [View Policy], [Continue Enrollment], [Update Dependent])",
+    "aiFramework": {
+      "Explain":   ["My benefits", "Why deduction changed", "Why rejected"],
+      "Recommend": ["Which plan is best for me?", "Compare plans", "What-if HSA vs PPO?"],
+      "Act":       ["Add spouse", "Report life event", "Enroll", "Download summary"]
+    },
+    "dataScope": "Employee's own benefits, elections, deductions, dependents, and published plan summaries only — never other employees' data or draft configurations",
+    "linkedRequirements": ["REQ-AI-KNOW-013", "REQ-AI-COP-005", "REQ-AI-COP-007", "REQ-RBAC-007"]
+  },
+  {
+    "requirementId": "REQ-ESS-010",
+    "type": "Functional Requirement",
+    "title": "Persona Switch — Admin-to-Employee View Context Switch for Demo",
+    "description": "The demo shall support a persona switch from Benefits Administrator to a specific employee (Linda White) that immediately renders the Employee Portal in the context of that employee's data. The persona switch is accessible from the global navigation header and the Demo Control Center.",
+    "status": "Approved",
+    "tags": ["employee-portal", "demo", "persona"],
+    "switchFlow": [
+      "Benefits Administrator view → [Switch Persona] → Employee: Linda White",
+      "Renders: Employee Benefits Dashboard for EMP-10045",
+      "Scoped to: Linda White's benefits, elections, deductions, documents, AI assistant"
+    ],
+    "demoNarrative": "Admin finds Linda White's enrollment exception → switches to Linda's view → employee sees the same exception from their own perspective → AI assistant explains the issue → employee corrects dependent information",
+    "linkedRequirements": ["REQ-RBAC-001", "REQ-DEMO-008"]
+  },
+  {
+    "requirementId": "REQ-ESS-011",
+    "type": "Functional Requirement",
+    "title": "Employee Portal Role Capability Matrix",
+    "description": "The Employee Portal enforces the following capability matrix. UI hides unauthorized actions; API enforces access restrictions independently.",
+    "status": "Approved",
+    "tags": ["employee-portal", "rbac"],
+    "capabilityMatrix": {
+      "View Own Benefits":           { "Employee": true,  "HR Admin": false, "Benefits Admin": true },
+      "View Own Elections":          { "Employee": true,  "HR Admin": false, "Benefits Admin": true },
+      "View Own Deductions":         { "Employee": true,  "HR Admin": false, "Benefits Admin": true },
+      "Download Benefit Summary PDF":{ "Employee": true,  "HR Admin": false, "Benefits Admin": true },
+      "Report Life Event":           { "Employee": true,  "HR Admin": true,  "Benefits Admin": true },
+      "Complete Enrollment":         { "Employee": "Self","HR Admin": "On Behalf", "Benefits Admin": "On Behalf" },
+      "Ask Benefits AI":             { "Employee": true,  "HR Admin": true,  "Benefits Admin": true },
+      "View All Employees":          { "Employee": false, "HR Admin": true,  "Benefits Admin": true },
+      "Change Plan Configuration":   { "Employee": false, "HR Admin": false, "Benefits Admin": true },
+      "Manage Eligibility Rules":    { "Employee": false, "HR Admin": false, "Benefits Admin": true },
+      "Review AI Requirements":      { "Employee": false, "HR Admin": false, "Benefits Admin": true },
+      "Approve AI Requirements":     { "Employee": false, "HR Admin": false, "Benefits Admin": true }
+    },
+    "linkedRequirements": ["REQ-RBAC-007"]
+  },
+  {
+    "requirementId": "REQ-ESS-012",
+    "type": "Functional Requirement",
+    "title": "Demo Flow Steps 10–13 — Employee Portal Closes the End-to-End Loop",
+    "description": "The master demo script shall include a four-step employee portal sequence (Steps 10–13) that follows the administrator's carrier rejection discovery, switches to the employee's view, uses the AI assistant to diagnose the issue, and demonstrates the full resolution cycle through to carrier confirmation.",
+    "status": "Approved",
+    "tags": ["employee-portal", "demo"],
+    "demoSteps": [
+      {
+        "step": 10,
+        "persona": "Benefits Administrator",
+        "actions": [
+          "Open Enrollment Management",
+          "Search for Linda White",
+          "View Employee Enrollment",
+          "Identify exception: Dependent SSN Invalid → CT-10045 carrier rejection"
+        ]
+      },
+      {
+        "step": 11,
+        "persona": "Employee: Linda White",
+        "actions": [
+          "Switch persona to Linda White",
+          "View My Benefits",
+          "View My Elections",
+          "View My Deductions",
+          "View My Documents",
+          "Open Ask Benefits AI"
+        ]
+      },
+      {
+        "step": 12,
+        "persona": "Employee: Linda White (AI)",
+        "actions": [
+          "Linda asks: 'Why is my dependent not covered?'",
+          "AI identifies invalid SSN on DEP-022 (Sarah Smith)",
+          "AI explains the carrier rejection",
+          "AI provides action: [Update Dependent Information]",
+          "Employee corrects dependent SSN"
+        ]
+      },
+      {
+        "step": 13,
+        "persona": "System (automated cascade)",
+        "actions": [
+          "Eligibility re-evaluated",
+          "Enrollment updated",
+          "Carrier transaction re-generated and transmitted",
+          "Payroll deduction updated",
+          "Confirmation notification sent to employee",
+          "Audit trail updated end-to-end"
+        ]
+      }
+    ],
+    "narrativeClose": "Full end-to-end AI-powered employee journey: PDF → REQ → RULE → PLAN → ENROLLMENT → CARRIER TX → PAYROLL → EMPLOYEE CONFIRMATION",
+    "linkedRequirements": ["REQ-ESS-009", "REQ-ESS-010", "REQ-AI-COP-009", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-ESS-013",
+    "type": "Functional Requirement",
+    "title": "AI Benefits Assistant — Explain / Recommend / Act Framework",
+    "description": "The AI Benefits Assistant in the Employee Portal shall operate across three interaction modes: Explain (answer questions about current benefits, deductions, and eligibility), Recommend (compare plans, suggest elections based on profile), and Act (initiate enrollment, report a life event, update dependent, download summary). Every AI response includes a source citation and a contextually relevant action button.",
+    "status": "Approved",
+    "tags": ["employee-portal", "ai", "assistant"],
+    "interactionModes": {
+      "Explain": {
+        "examples": ["My benefits", "Why my deduction changed", "Why a claim was rejected", "What is my deductible"],
+        "responseIncludes": "Answer + source citation (document/page)"
+      },
+      "Recommend": {
+        "examples": ["Which plan is best for my family?", "Compare PPO 500 vs HDHP 3000", "Should I use an HSA?"],
+        "responseIncludes": "Ranked recommendation + tradeoff explanation + plan comparison table"
+      },
+      "Act": {
+        "examples": ["Add my spouse", "Report that I got married", "Enroll in dental", "Download my benefit summary"],
+        "responseIncludes": "Action button that initiates the relevant workflow directly from the AI response"
+      }
+    },
+    "governancePrinciple": "AI explains and recommends; employee confirms all enrollment actions explicitly. AI cannot auto-enroll.",
+    "linkedRequirements": ["REQ-ESS-009", "REQ-AIGOV-003", "REQ-AI-COP-015"]
+  },
+  {
+    "requirementId": "REQ-ESS-014",
+    "type": "Functional Requirement",
+    "title": "Employee Portal Access is Scoped — Employee Cannot Access Other Employees' Data",
+    "description": "All Employee Portal API endpoints shall enforce employee-scoped data access. An authenticated employee may only retrieve their own enrollment records, deductions, documents, and dependent information. Attempting to access another employee's data returns HTTP 403 regardless of any query parameter manipulation. This is enforced at the API layer independently of the UI.",
+    "status": "Approved",
+    "tags": ["employee-portal", "security", "rbac"],
+    "apiEnforcement": "Server reads employeeId from the authenticated token — never from a request body or query param — and applies it as a mandatory filter on all employee-scoped queries",
+    "linkedRequirements": ["REQ-RBAC-007", "REQ-SEC-001", "REQ-SEC-008"]
+  },
+  {
+    "requirementId": "REQ-ESS-015",
+    "type": "Functional Requirement",
+    "title": "Enrollment Confirmation Screen — Post-Submission Summary with PDF Download",
+    "description": "After the employee submits enrollment, the system shall display an enrollment confirmation screen summarizing all elected benefits, covered dependents, the per-pay-period deduction total, the effective date, and a confirmation reference number. The employee can immediately download their Benefit Summary PDF from this screen.",
+    "status": "Approved",
+    "tags": ["employee-portal", "enrollment", "confirmation"],
+    "confirmationScreenSections": [
+      "Confirmation reference number and submission timestamp",
+      "Elected benefits summary table (benefit / plan / coverage tier / effective date)",
+      "Covered dependents per benefit",
+      "Per-pay-period deduction total",
+      "Next steps (e.g. 'Your carrier will be notified. Your coverage is effective January 1, 2027.')",
+      "[Download Benefit Summary PDF]",
+      "[Return to My Benefits]"
+    ],
+    "linkedRequirements": ["REQ-ESS-006", "REQ-ESS-008", "REQ-NOTIFY-001"]
+  }
+]

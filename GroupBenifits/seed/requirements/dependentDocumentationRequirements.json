@@ -1,0 +1,308 @@
+[
+  {
+    "requirementId": "REQ-DOC-001",
+    "type": "Functional Requirement",
+    "title": "Document Requirement Rules — Configurable Per Life Event and Dependent Relationship",
+    "description": "The system shall determine required documentation based on the life event type and dependent relationship. Document requirements shall be configurable (stored in seed data, not hardcoded). Each rule specifies: life event type, dependent relationship type, document type required, and whether it is mandatory or conditional.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "life-events", "documents"],
+    "documentRequirementRules": [
+      { "lifeEvent": "Marriage",          "dependent": "Spouse",    "documentType": "Marriage Certificate",                "required": true },
+      { "lifeEvent": "Birth",             "dependent": "Child",     "documentType": "Birth Certificate",                   "required": true },
+      { "lifeEvent": "Adoption",          "dependent": "Child",     "documentType": "Adoption Decree or Placement Document","required": true },
+      { "lifeEvent": "Divorce",           "dependent": "Spouse",    "documentType": "Divorce Decree",                      "required": true },
+      { "lifeEvent": "Loss of Coverage",  "dependent": "Any",       "documentType": "Loss of Coverage Letter",             "required": true },
+      { "lifeEvent": "Death of Dependent","dependent": "Any",       "documentType": "Death Certificate",                   "required": true },
+      { "lifeEvent": "Add Spouse",        "dependent": "Spouse",    "documentType": "Marriage Certificate",                "required": true },
+      { "lifeEvent": "Add Child",         "dependent": "Child",     "documentType": "Birth Certificate",                   "required": true }
+    ],
+    "configurationNote": "Document requirement rules are stored in seed data. The system reads requirements at runtime — no hardcoded document logic in application code.",
+    "linkedRequirements": ["REQ-LE-005", "REQ-CFG-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-002",
+    "type": "Functional Requirement",
+    "title": "Life Event Document Upload Step in Employee Portal",
+    "description": "The Life Event enrollment workflow in the Employee Portal shall include a dedicated document upload step. The upload step appears after the employee adds the dependent and before the review/submit step. The system identifies the required document type from the document requirement rules and presents a targeted upload prompt.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "employee-portal", "upload"],
+    "workflowPosition": "Report Life Event → Select Event Type → Enter Event Date → Add Dependent → Upload Documentation → Review → Submit",
+    "uploadScreenElements": {
+      "documentTypeLabel": "e.g. 'Marriage Certificate *'",
+      "uploadControl": "File chooser button with drag-and-drop support",
+      "acceptedFormats": ["PDF", "JPG", "JPEG", "PNG"],
+      "maxFileSizeMB": 10,
+      "postUploadStatus": "✓ {filename} — Status: Uploaded — Verification: Pending"
+    },
+    "linkedRequirements": ["REQ-ESS-007", "REQ-DOC-001", "REQ-DOC-003"]
+  },
+  {
+    "requirementId": "REQ-DOC-003",
+    "type": "Functional Requirement",
+    "title": "File Validation — MIME Type, Size, Integrity, and Duplicate Detection",
+    "description": "The system shall validate uploaded files before storing them. Validation occurs server-side using MIME type inspection (magic bytes), not client-provided MIME type. The system rejects files that fail any validation check and returns a specific error message.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "upload", "validation"],
+    "validationChecks": [
+      { "check": "Allowed MIME type", "allowed": ["application/pdf", "image/jpeg", "image/png"], "errorCode": "DOC_INVALID_TYPE" },
+      { "check": "File extension match", "note": "Extension must match MIME type", "errorCode": "DOC_EXTENSION_MISMATCH" },
+      { "check": "Maximum file size", "limitMB": 10, "errorCode": "DOC_TOO_LARGE" },
+      { "check": "File not corrupted", "note": "PDF/image header validation", "errorCode": "DOC_CORRUPT" },
+      { "check": "File not empty", "errorCode": "DOC_EMPTY" },
+      { "check": "Duplicate detection", "note": "SHA-256 hash matches an existing document for same employee + life event + document type", "errorCode": "DOC_DUPLICATE" }
+    ],
+    "linkedRequirements": ["REQ-SEC-009", "REQ-VALIDATION-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-004",
+    "type": "Functional Requirement",
+    "title": "Document Metadata Schema — Full Lifecycle Tracking Per Document",
+    "description": "Each uploaded document shall have a metadata record capturing its full lifecycle from upload through verification decision. The metadata record is immutable once created; state changes append new audit events.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "metadata"],
+    "metadataFields": {
+      "documentId":       "DOC-NNNN (auto-generated)",
+      "employeeId":       "Links to employee record",
+      "lifeEventId":      "Links to life event record",
+      "dependentId":      "Links to dependent record (if applicable)",
+      "documentType":     "Marriage Certificate | Birth Certificate | etc.",
+      "fileName":         "Original uploaded filename",
+      "fileType":         "MIME type",
+      "fileSizeBytes":    "Integer",
+      "uploadedBy":       "Actor (employee self-upload or HR Admin on-behalf)",
+      "uploadedAt":       "ISO timestamp",
+      "status":           "PENDING_REVIEW | UNDER_REVIEW | APPROVED | REJECTED",
+      "reviewedBy":       "Reviewer actor",
+      "reviewedAt":       "ISO timestamp",
+      "rejectionReason":  "Coded reason + free-text comment (on rejection)"
+    },
+    "demoSample": {
+      "documentId": "DOC-0001",
+      "employeeId": "ACM-E030",
+      "lifeEventId": "LE-001",
+      "documentType": "Marriage Certificate",
+      "status": "PENDING_REVIEW"
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-005",
+    "type": "Functional Requirement",
+    "title": "Document Verification Queue — HR Admin and Benefits Admin Review Interface",
+    "description": "HR Administrators and Benefits Administrators shall have access to a Document Verification Queue listing all documents in PENDING_REVIEW status. The queue is filterable and sortable. Each row provides a one-click action to open the document review screen.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "admin", "queue"],
+    "queueTableColumns": ["Employee", "Life Event", "Document Type", "Uploaded Date", "Status", "Actions"],
+    "filterOptions": ["Employee", "Life Event Type", "Document Type", "Status", "Submitted Date"],
+    "queueBadge": "Pending Review count displayed in navigation badge",
+    "demoQueueState": [
+      { "employee": "ACM-E030 (Linda White)", "lifeEvent": "Marriage", "document": "Marriage Certificate", "status": "PENDING_REVIEW" }
+    ],
+    "linkedRequirements": ["REQ-RBAC-002", "REQ-RBAC-003"]
+  },
+  {
+    "requirementId": "REQ-DOC-006",
+    "type": "Functional Requirement",
+    "title": "Document Review Screen — Inline Preview with Verification Checklist",
+    "description": "The document review screen shall display: employee identity, life event details, the uploaded document inline (PDF viewer or image), the AI extraction result if available, and a verification checklist. The reviewer completes the checklist before approving or rejecting.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "review", "admin"],
+    "reviewScreenSections": [
+      "Employee info (name, ID, life event type, event date)",
+      "Document preview (inline PDF/image render)",
+      "AI Verification Assistant panel (if REQ-DOC-013 is enabled)",
+      "Verification checklist (configurable per document type)",
+      "[Approve] and [Reject] action buttons"
+    ],
+    "marriageCertificateChecklist": [
+      "Document is readable",
+      "Correct document type",
+      "Employee name matches enrollment record",
+      "Spouse name matches dependent record",
+      "Event date is consistent with reported life event date"
+    ],
+    "linkedRequirements": ["REQ-DOC-005", "REQ-DOC-013"]
+  },
+  {
+    "requirementId": "REQ-DOC-007",
+    "type": "Functional Requirement",
+    "title": "Document Approval — Triggers Coverage Activation Workflow",
+    "description": "When a reviewer approves a document, the system shall update the document status to APPROVED, mark the life event as VERIFIED, and trigger the coverage activation workflow. All downstream steps (eligibility recalculation, enrollment update, carrier transaction, payroll update, notification) are initiated automatically after human approval.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "approval", "workflow"],
+    "approvalCascade": [
+      "Document → APPROVED",
+      "Life Event → VERIFIED",
+      "Eligibility re-evaluated for dependent",
+      "Enrollment updated (dependent coverage activated)",
+      "Premium recalculated",
+      "Carrier transaction created",
+      "Payroll deduction updated",
+      "Employee notification sent (coverage activated)"
+    ],
+    "auditRecord": {
+      "fields": ["reviewer", "reviewedAt", "decision: APPROVED", "documentId", "documentVersion"]
+    },
+    "linkedRequirements": ["REQ-DOC-010", "REQ-WF-006", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-008",
+    "type": "Functional Requirement",
+    "title": "Document Rejection — Coded Reason Required, Employee Notified with Re-upload Option",
+    "description": "When a reviewer rejects a document, a rejection reason code must be selected (and an optional comment added). The document status becomes REJECTED, and the employee receives a notification explaining why the document was rejected and providing a [Upload New Document] call-to-action. The life event remains in PENDING_DOCS status.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "rejection", "notification"],
+    "rejectionReasonCodes": [
+      "UNREADABLE",
+      "WRONG_DOCUMENT_TYPE",
+      "NAME_MISMATCH",
+      "DATE_MISMATCH",
+      "DOCUMENT_EXPIRED",
+      "MISSING_INFORMATION",
+      "OTHER"
+    ],
+    "employeeNotificationContent": {
+      "subject": "Action Required: Document Verification Failed",
+      "body": "Your {documentType} could not be verified. Reason: {rejectionReason}. Please upload a new document to continue your life event enrollment.",
+      "action": "[Upload New Document]"
+    },
+    "linkedRequirements": ["REQ-NOTIFY-001", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-009",
+    "type": "Functional Requirement",
+    "title": "Coverage Hold — Dependent Coverage Not Activated Until Documentation is Approved",
+    "description": "If a life event or dependent addition requires documentation that has not yet been approved, the affected dependent's coverage shall be placed in PENDING status. The carrier shall NOT be notified and payroll shall NOT be updated until documentation is approved. This prevents premature carrier enrollment of unverified dependents.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "coverage-hold", "workflow"],
+    "pendingCoverageState": {
+      "coverageStatus": "PENDING",
+      "carrierTransmission": "NOT TRANSMITTED",
+      "payrollUpdate": "NOT UPDATED"
+    },
+    "resolutionPaths": {
+      "approved": "Document approved → Coverage ACTIVATED → Carrier transmitted → Payroll updated",
+      "rejected": "Document rejected → Employee re-uploads → Returns to PENDING_REVIEW"
+    },
+    "demoDisplay": "Life Event: Marriage | Spouse: John White | Documentation: Pending Verification | Coverage: PENDING",
+    "linkedRequirements": ["REQ-LE-005", "REQ-DOC-007"]
+  },
+  {
+    "requirementId": "REQ-DOC-010",
+    "type": "Functional Requirement",
+    "title": "Post-Approval Cascade — Automated Coverage Activation After Document Approval",
+    "description": "Document approval triggers a fully automated cascade that activates coverage and updates all downstream systems. No additional manual action is required after the reviewer clicks [Approve]. The employee is notified when each stage completes.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "activation", "workflow"],
+    "cascadeSteps": [
+      { "step": 1, "action": "Document status → APPROVED" },
+      { "step": 2, "action": "Life event status → VERIFIED" },
+      { "step": 3, "action": "Eligibility recalculation for dependent" },
+      { "step": 4, "action": "Dependent eligibility status → ELIGIBLE" },
+      { "step": 5, "action": "Enrollment record updated — dependent coverage status → ACTIVE" },
+      { "step": 6, "action": "Premium recalculated for updated coverage tier" },
+      { "step": 7, "action": "Carrier transaction created — ADD dependent to carrier" },
+      { "step": 8, "action": "Payroll deduction record updated for new premium" },
+      { "step": 9, "action": "Employee notification: Coverage Activated" }
+    ],
+    "linkedRequirements": ["REQ-DOC-007", "REQ-WF-006", "REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-011",
+    "type": "Functional Requirement",
+    "title": "Employee Document Status Visibility — Life Event Progress Tracker",
+    "description": "The Employee Portal shall display a life event progress tracker showing the employee the status of each stage in their life event and documentation workflow. The tracker provides visibility into where the process stands without the employee needing to contact HR.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "employee-portal", "ux"],
+    "progressTrackerStages": [
+      "✓ Life Event Submitted",
+      "✓ Document Uploaded",
+      "⏳ Document Verification (pending)",
+      "○ Coverage Activation",
+      "○ Carrier Submission",
+      "○ Payroll Update"
+    ],
+    "postApprovalStages": [
+      "✓ Life Event Submitted",
+      "✓ Document Uploaded",
+      "✓ Document Verified",
+      "✓ Coverage Activated",
+      "✓ Carrier Submitted",
+      "✓ Payroll Updated"
+    ],
+    "linkedRequirements": ["REQ-ESS-007", "REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-DOC-012",
+    "type": "Functional Requirement",
+    "title": "Document Lifecycle Audit Trail — Every Event Recorded",
+    "description": "The audit trail shall record every document lifecycle event: upload, view (by reviewer), AI extraction, approval, rejection, and coverage activation triggered by approval. Each audit event records: actor, role, timestamp, action, document ID, decision, and reason (if applicable).",
+    "status": "Approved",
+    "tags": ["dependent-verification", "audit"],
+    "auditableEvents": [
+      "DOCUMENT_UPLOADED",
+      "DOCUMENT_VIEWED",
+      "AI_EXTRACTION_COMPLETE",
+      "DOCUMENT_APPROVED",
+      "DOCUMENT_REJECTED",
+      "DOCUMENT_RE_UPLOADED",
+      "COVERAGE_ACTIVATED"
+    ],
+    "linkedRequirements": ["REQ-AUD-001", "REQ-AUD-004"]
+  },
+  {
+    "requirementId": "REQ-DOC-013",
+    "type": "Functional Requirement",
+    "title": "AI Document Verification Assistant — Extract, Validate, and Recommend",
+    "description": "The system shall include an AI Document Verification Assistant that processes uploaded documents to extract key fields, compares extracted values against the employee and dependent records, and produces a verification recommendation. The AI recommends APPROVE or FLAG FOR REVIEW — final decision is always made by a human reviewer.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "ai", "document-intelligence"],
+    "extractionFields": {
+      "marriageCertificate": ["Employee Name", "Spouse Name", "Marriage Date", "Issuing Authority"],
+      "birthCertificate":    ["Child Name", "Date of Birth", "Parent Name(s)", "Issuing Authority"],
+      "divorceDecree":       ["Employee Name", "Dependent Name", "Divorce Date", "Issuing Court"]
+    },
+    "validationChecks": [
+      "Employee name matches enrollment record",
+      "Dependent name matches dependent record",
+      "Event date matches reported life event date",
+      "Document type matches expected type"
+    ],
+    "demoExtractionResult": {
+      "documentType": "Marriage Certificate",
+      "extracted": {
+        "employeeName": "Linda White",
+        "spouseName": "John White",
+        "marriageDate": "June 15, 2027"
+      },
+      "confidence": 0.96,
+      "validations": {
+        "employeeNameMatch": true,
+        "spouseNameMatch":   true,
+        "eventDateMatch":    true,
+        "documentTypeMatch": true
+      },
+      "recommendation": "APPROVE"
+    },
+    "governancePrinciple": "AI recommends; human reviewer makes final approval or rejection decision",
+    "linkedRequirements": ["REQ-AIGOV-003", "REQ-AI-KNOW-009"]
+  },
+  {
+    "requirementId": "REQ-DOC-014",
+    "type": "Functional Requirement",
+    "title": "Document Verification as a Reusable Platform Service",
+    "description": "Document verification shall be implemented as a reusable platform service, not as logic specific to marriage events. The same service handles all dependent documentation types: marriage certificates, birth certificates, adoption documents, loss-of-coverage letters, and death certificates. The document requirement rules (REQ-DOC-001) drive which document type is required; the verification workflow is identical across all types.",
+    "status": "Approved",
+    "tags": ["dependent-verification", "architecture"],
+    "serviceCapabilities": [
+      "Determine required document type from life event + dependent relationship rules",
+      "Accept file upload with validation",
+      "Store document with full metadata",
+      "Route to AI extraction (REQ-DOC-013)",
+      "Route to human review queue (REQ-DOC-005)",
+      "Process approval/rejection decision",
+      "Trigger downstream coverage activation cascade on approval"
+    ],
+    "architecturalPrinciple": "One service, configurable rules. Adding a new life event type requires only a new row in the document requirement rules catalog — no code changes.",
+    "linkedRequirements": ["REQ-DOC-001", "REQ-CFG-001"]
+  }
+]

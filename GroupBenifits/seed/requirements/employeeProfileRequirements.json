@@ -1,0 +1,290 @@
+[
+  {
+    "requirementId": "REQ-EMP-001",
+    "type": "Functional Requirement",
+    "title": "Employee 360 — Central Hub Accessible from Any Workflow",
+    "description": "Authorized users shall be able to open an Employee 360 profile from Global Search, Employee Directory, Enrollment, Life Event, Eligibility, Payroll, Carrier Transaction, and COBRA workflows. The profile header shows identity, status, and primary actions.",
+    "status": "Approved",
+    "tags": ["employee-profile", "employee-360"],
+    "profileHeader": {
+      "name": "Linda White",
+      "status": "ACTIVE",
+      "employeeId": "ACM-E030",
+      "employer": "Acme Corporation",
+      "employmentClass": "Full-Time · Salaried",
+      "hireDate": "Jan 15, 2022"
+    },
+    "primaryActions": ["[Edit Profile]", "[Start Life Event]", "[View Benefits]"],
+    "linkedRequirements": ["REQ-EMP-002", "REQ-SEARCH-003"]
+  },
+  {
+    "requirementId": "REQ-EMP-002",
+    "type": "Functional Requirement",
+    "title": "Employee Demographic Information — Core Identity Fields with SSN Masking",
+    "description": "The profile shall maintain all core demographic fields. SSN is always displayed masked (XXX-XX-1234) in all UI, API responses, notifications, and logs. Access to unmasked SSN requires elevated RBAC permission and audit logging.",
+    "status": "Approved",
+    "tags": ["employee-profile", "demographics", "security"],
+    "fields": ["employeeId", "firstName", "middleName", "lastName", "preferredName", "dateOfBirth", "gender", "ssnMasked", "personalEmail", "workEmail", "primaryPhone", "preferredCommunicationMethod"],
+    "demoProfile": {
+      "firstName": "Linda", "lastName": "White", "preferredName": "Linda",
+      "dob": "05/12/1985", "ssnMasked": "XXX-XX-1234",
+      "personalEmail": "linda.white@email.com", "phone": "609-555-0123"
+    },
+    "securityConstraint": "SSN plaintext must never appear in server logs, application logs, error messages, or audit records",
+    "linkedRequirements": ["REQ-SEC-002"]
+  },
+  {
+    "requirementId": "REQ-EMP-003",
+    "type": "Functional Requirement",
+    "title": "Address Management — Home, Mailing, and Previous Addresses with Effective Dating",
+    "description": "The system shall allow authorized users to create and update employee addresses. Home address, mailing address, and previous addresses are all stored with effective dates.",
+    "status": "Approved",
+    "tags": ["employee-profile", "address"],
+    "addressTypes": ["HOME", "MAILING", "PREVIOUS"],
+    "fields": ["streetAddress1", "streetAddress2", "city", "state", "zipCode", "country", "effectiveDate"],
+    "linkedRequirements": ["REQ-EMP-011"]
+  },
+  {
+    "requirementId": "REQ-EMP-004",
+    "type": "Functional Requirement",
+    "title": "Name Change — Preserves History, Triggers Carrier and Payroll Identity Update",
+    "description": "Authorized users shall be able to update an employee's legal name. The system preserves prior name history, triggers a carrier identity update transaction, updates the payroll identity record, and creates an audit event.",
+    "status": "Approved",
+    "tags": ["employee-profile", "name-change"],
+    "nameChangeWorkflow": [
+      "Update employee master data",
+      "Preserve previous name in history",
+      "Trigger carrier identity update",
+      "Update payroll identity record",
+      "Identify impacted benefits records",
+      "Record audit event"
+    ],
+    "demoExample": {
+      "previous": "Linda Smith", "new": "Linda White",
+      "effectiveDate": "07/01/2027", "reason": "Marriage"
+    },
+    "linkedRequirements": ["REQ-EMP-010", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-005",
+    "type": "Functional Requirement",
+    "title": "Employment Information — Status, Class, Job, Department, and Key Dates",
+    "description": "The profile shall maintain complete employment information including all fields used by eligibility rules and plan configurations.",
+    "status": "Approved",
+    "tags": ["employee-profile", "employment"],
+    "fields": ["employmentStatus", "employmentClass", "workerType", "jobTitle", "department", "location", "businessUnit", "manager", "hireDate", "rehireDate", "terminationDate", "isFullTime", "isExempt", "isUnion", "workLocation"],
+    "demoRecord": {
+      "status": "Active", "class": "Full-Time", "workerType": "Salaried",
+      "jobTitle": "Software Engineer", "department": "Technology",
+      "location": "New Jersey", "hireDate": "01/15/2022"
+    },
+    "linkedRequirements": ["REQ-ELIG-001", "REQ-EMP-006"]
+  },
+  {
+    "requirementId": "REQ-EMP-006",
+    "type": "Functional Requirement",
+    "title": "Employment Class Change — Automatically Triggers Eligibility and Enrollment Cascade",
+    "description": "When an employment class change is saved (e.g. Part-Time → Full-Time), the system shall automatically trigger eligibility recalculation, identify any new plan eligibility, raise a qualifying status change event, update payroll, create a carrier transaction, and notify the employee. The system shall not auto-enroll the employee unless plan rules explicitly permit it.",
+    "status": "Approved",
+    "tags": ["employee-profile", "employment-class", "eligibility-trigger"],
+    "cascadeWorkflow": [
+      "Employment Class Change saved",
+      "Eligibility recalculation triggered",
+      "Plan eligibility changes identified",
+      "Qualifying status change event raised",
+      "Enrollment window opened (if applicable)",
+      "Payroll deduction codes updated",
+      "Carrier transaction created",
+      "Employee notification sent"
+    ],
+    "demoExample": {
+      "previous": "Part-Time", "new": "Full-Time",
+      "effectiveDate": "08/01/2027",
+      "newlyEligible": ["Medical", "Dental", "Vision"]
+    },
+    "linkedRequirements": ["REQ-ELIG-001", "REQ-EMP-010", "REQ-EMP-015"]
+  },
+  {
+    "requirementId": "REQ-EMP-007",
+    "type": "Functional Requirement",
+    "title": "Compensation Management — Salary Change with Salary-Based Benefit Impact Analysis",
+    "description": "Authorized users shall be able to update employee compensation (annual salary, hourly rate, pay frequency, effective date). The system identifies salary-based benefits (Life, AD&D, LTD, disability) that are impacted by the salary change.",
+    "status": "Approved",
+    "tags": ["employee-profile", "compensation"],
+    "compensationFields": ["annualSalary", "hourlyRate", "payFrequency", "effectiveDate"],
+    "demoImpactAnalysis": {
+      "salaryChange": { "previous": 85000, "new": 100000, "effective": "07/01/2027" },
+      "impact": {
+        "basicLife": { "previous": "$170,000 coverage", "new": "$200,000 coverage", "status": "Coverage Amount Changed" },
+        "payroll": "No Impact",
+        "carrier": "Update Required"
+      }
+    },
+    "linkedRequirements": ["REQ-EMP-010", "REQ-RATE-006"]
+  },
+  {
+    "requirementId": "REQ-EMP-008",
+    "type": "Functional Requirement",
+    "title": "Payroll Identity Mapping — Employee-to-Payroll-System ID and Deduction Code Mapping",
+    "description": "Each employee shall maintain payroll identity mappings linking the benefits platform employee ID to the external payroll system's employee ID and benefit-specific deduction codes.",
+    "status": "Approved",
+    "tags": ["employee-profile", "payroll-mapping"],
+    "demoMapping": {
+      "employeeId": "ACM-E030",
+      "payrollEmployeeId": "PAY-88321",
+      "deductionCodes": {
+        "medical": "MED-PPO500",
+        "dental":  "DEN-PREM",
+        "vision":  "VIS-STD"
+      },
+      "status": "Mapped"
+    },
+    "linkedRequirements": ["REQ-PAY-001", "REQ-PAY-007"]
+  },
+  {
+    "requirementId": "REQ-EMP-009",
+    "type": "Functional Requirement",
+    "title": "Carrier Identity Mapping — Per-Carrier Member ID and Subscriber ID",
+    "description": "The system shall maintain carrier-specific identity mappings for each employee. Different carriers use different identifiers; the system stores all carrier identity records on the employee profile.",
+    "status": "Approved",
+    "tags": ["employee-profile", "carrier-mapping"],
+    "demoMappings": [
+      { "carrier": "Acme Health",  "memberId": "AH-998821",  "subscriberId": "SUB-88210", "status": "Active" },
+      { "carrier": "Acme Dental",  "memberId": "AD-772199",  "status": "Active" },
+      { "carrier": "Acme Vision",  "memberId": "AV-112344",  "status": "Active" }
+    ],
+    "linkedRequirements": ["REQ-CARRIER-SIM-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-010",
+    "type": "Functional Requirement",
+    "title": "Change Propagation Engine — Downstream Impact Classification for Every Profile Change",
+    "description": "The system shall classify every employee profile change by type and determine downstream systems affected: eligibility, enrollment, payroll, carrier, and audit. The propagation engine generates the appropriate transactions automatically.",
+    "status": "Approved",
+    "tags": ["employee-profile", "change-propagation", "architecture"],
+    "impactMatrix": {
+      "nameChange":       { "eligibility": false, "enrollment": false, "payroll": true,  "carrier": true,  "audit": true },
+      "addressChange":    { "eligibility": "conditional", "enrollment": false, "payroll": "conditional", "carrier": true, "audit": true },
+      "employmentClass":  { "eligibility": true, "enrollment": true,  "payroll": true,  "carrier": true,  "audit": true },
+      "employmentStatus": { "eligibility": true, "enrollment": true,  "payroll": true,  "carrier": true,  "audit": true },
+      "salaryChange":     { "eligibility": "conditional", "enrollment": false, "payroll": true, "carrier": true, "audit": true },
+      "locationChange":   { "eligibility": true, "enrollment": true,  "payroll": "conditional", "carrier": true, "audit": true },
+      "dobChange":        { "eligibility": true, "enrollment": true,  "payroll": false, "carrier": true,  "audit": true }
+    },
+    "linkedRequirements": ["REQ-EMP-006", "REQ-ELIG-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-011",
+    "type": "Functional Requirement",
+    "title": "Effective Dating — All Employment and Compensation Changes Are Date-Stamped",
+    "description": "All employment and compensation changes shall support effective dating. The system preserves the historical record of all prior values with their effective periods.",
+    "status": "Approved",
+    "tags": ["employee-profile", "effective-dating"],
+    "demoHistoricalRecord": {
+      "employmentClass": [
+        { "value": "Part-Time",  "effectiveFrom": "01/15/2022", "effectiveTo": "07/31/2027" },
+        { "value": "Full-Time",  "effectiveFrom": "08/01/2027", "effectiveTo": null }
+      ],
+      "salary": [
+        { "value": 85000, "effectiveFrom": "01/15/2022", "effectiveTo": "06/30/2027" },
+        { "value": 100000,"effectiveFrom": "07/01/2027", "effectiveTo": null }
+      ]
+    },
+    "linkedRequirements": ["REQ-EMP-012"]
+  },
+  {
+    "requirementId": "REQ-EMP-012",
+    "type": "Functional Requirement",
+    "title": "Employee Change History — Chronological Log Linked to Audit Records",
+    "description": "The Employee 360 profile shall display a chronological change history. Each entry links to the corresponding audit record.",
+    "status": "Approved",
+    "tags": ["employee-profile", "change-history"],
+    "demoHistory": [
+      { "date": "07/01/2027", "field": "Salary", "from": "$85,000", "to": "$100,000", "changedBy": "HR Admin" },
+      { "date": "07/01/2027", "field": "Address", "note": "Updated", "changedBy": "HR Admin" },
+      { "date": "01/15/2022", "event": "Employee Created" }
+    ],
+    "linkedRequirements": ["REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-013",
+    "type": "Functional Requirement",
+    "title": "Profile Validation — Required Fields, Uniqueness, and Business Rules",
+    "description": "The system shall validate employee profile data on save. Validation catches required field violations, uniqueness conflicts, and business-rule violations.",
+    "status": "Approved",
+    "tags": ["employee-profile", "validation"],
+    "validationRules": [
+      { "field": "employeeId",       "rule": "Required, unique" },
+      { "field": "ssn",              "rule": "9 digits, unique" },
+      { "field": "dateOfBirth",      "rule": "Valid date, cannot be future" },
+      { "field": "hireDate",         "rule": "Cannot be after termination date" },
+      { "field": "terminationDate",  "rule": "Cannot precede hire date" },
+      { "field": "salary",           "rule": "Must be >= $0" },
+      { "field": "email",            "rule": "Valid email format" }
+    ],
+    "linkedRequirements": ["REQ-VALIDATION-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-014",
+    "type": "Functional Requirement",
+    "title": "New Hire Workflow — 5-Step Creation with Automatic Eligibility Calculation",
+    "description": "HR Admin shall be able to create a new employee through a structured workflow. After creation, the system automatically calculates the eligibility date and creates an enrollment opportunity.",
+    "status": "Approved",
+    "tags": ["employee-profile", "new-hire"],
+    "workflowSteps": ["Demographics", "Employment", "Compensation", "Address", "Validate & Create"],
+    "postCreationAutomation": [
+      "Generate Employee ID",
+      "Calculate eligibility date from hire date and configured waiting period",
+      "Create enrollment opportunity",
+      "Send welcome notification to employee"
+    ],
+    "demoNewHire": {
+      "name": "James Smith", "hireDate": "08/01/2027",
+      "employmentClass": "Full-Time", "salary": 110000,
+      "location": "New Jersey", "calculatedEligibilityDate": "09/01/2027"
+    },
+    "linkedRequirements": ["REQ-ELIG-001", "REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-EMP-015",
+    "type": "Functional Requirement",
+    "title": "Change Impact Preview — Show Downstream Impact Before Saving Significant Changes",
+    "description": "Before saving significant employee profile changes (employment class, status, location, salary), the system shall display a downstream impact preview showing which systems will be affected. The administrator confirms before applying.",
+    "status": "Approved",
+    "tags": ["employee-profile", "impact-preview", "ux"],
+    "demoImpactPreview": {
+      "change": "Employment Class: Part-Time → Full-Time",
+      "effectiveDate": "August 1, 2027",
+      "impacts": [
+        "✓ Medical eligibility changes",
+        "✓ Dental eligibility changes",
+        "✓ Vision eligibility changes",
+        "✓ Enrollment window may open",
+        "✓ Payroll deduction codes may change",
+        "✓ Carrier transaction required"
+      ],
+      "actions": ["[Cancel]", "[Apply Change]"]
+    },
+    "linkedRequirements": ["REQ-EMP-010", "REQ-EMP-006"]
+  },
+  {
+    "requirementId": "REQ-AI-EMP-001",
+    "type": "Functional Requirement",
+    "title": "AI Employee Change Impact Analysis — Natural Language Downstream Impact Summary",
+    "description": "The AI Operations Assistant shall explain the downstream impact of proposed employee profile changes in plain language. The AI summarizes which systems are affected and recommends next steps.",
+    "status": "Approved",
+    "tags": ["employee-profile", "ai"],
+    "exampleInteraction": {
+      "query": "Linda is moving from part-time to full-time on August 1. What changes?",
+      "response": {
+        "effectiveDate": "August 1, 2027",
+        "eligibility": "Medical, Dental, Vision — Newly Eligible",
+        "enrollment": "Qualifying status change detected",
+        "payroll": "New deduction codes may be required",
+        "carrier": "Eligibility transaction required",
+        "recommendedAction": "Open employee enrollment window."
+      }
+    },
+    "linkedRequirements": ["REQ-EMP-015", "REQ-AI-SIM-001"]
+  }
+]

@@ -1,0 +1,258 @@
+[
+  {
+    "requirementId": "REQ-ENROLL-POST-001",
+    "type": "Functional Requirement",
+    "title": "Enrollment Confirmation Screen — Displayed Immediately After Successful Submission",
+    "description": "After successful enrollment submission, the system shall display a confirmation screen. The screen includes the enrollment confirmation number, submission date, coverage effective date, current status, and primary action buttons.",
+    "status": "Approved",
+    "tags": ["enrollment", "confirmation", "post-enrollment"],
+    "screenContent": {
+      "heading": "✓ Enrollment Submitted Successfully",
+      "subheading": "Congratulations, {employeeName}!",
+      "body": "Your 2027 benefits enrollment has been submitted.",
+      "confirmationNumber": "ENR-2027-10045",
+      "submittedDate": "December 15, 2026",
+      "coverageEffective": "January 1, 2027",
+      "status": "⏳ Pending Carrier Confirmation"
+    },
+    "primaryActions": ["[View Benefit Summary]", "[Download PDF]", "[View My Elections]", "[Return to Benefits Home]"],
+    "linkedRequirements": ["REQ-ENROLL-POST-002", "REQ-ENROLL-POST-003"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-002",
+    "type": "Functional Requirement",
+    "title": "Enrollment Confirmation Number — Unique Reference ID Searchable by Employee and Admin",
+    "description": "The system shall generate a unique enrollment confirmation number at submission time. Both the employee and administrator shall be able to search or look up an enrollment using this number.",
+    "status": "Approved",
+    "tags": ["enrollment", "confirmation-number"],
+    "format": "ENR-{planYear}-{employeeId}",
+    "demoExample": "ENR-2027-10045",
+    "associatedFields": ["employeeId", "enrollmentSessionId", "planYear", "enrollmentType", "submissionTimestamp", "enrollmentVersion"],
+    "linkedRequirements": ["REQ-ENROLL-POST-001"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-003",
+    "type": "Functional Requirement",
+    "title": "Election Summary on Confirmation Screen — Plan, Coverage, Cost, and Totals",
+    "description": "The confirmation screen shall display a summary table of all submitted elections with plan, coverage tier, and employee cost per benefit. Total monthly and biweekly costs are shown. Calculation uses the same Premium Calculation Engine used by payroll.",
+    "status": "Approved",
+    "tags": ["enrollment", "election-summary"],
+    "demoElectionSummary": [
+      { "benefit": "Medical", "plan": "PPO 500",         "coverage": "Employee + Family", "employeeCost": "$400/month" },
+      { "benefit": "Dental",  "plan": "Dental Premium",  "coverage": "Employee + Family", "employeeCost": "$35/month"  },
+      { "benefit": "Vision",  "plan": "Vision Standard", "coverage": "Employee + Family", "employeeCost": "$8/month"   },
+      { "benefit": "Basic Life", "plan": "2× Salary",   "coverage": "Employee",          "employeeCost": "$0"         },
+      { "benefit": "HSA",    "plan": "N/A",              "coverage": "Not Eligible",      "employeeCost": "—"          }
+    ],
+    "totalCosts": {
+      "monthly": "$443.00",
+      "biweekly": "$204.46"
+    },
+    "linkedRequirements": ["REQ-PREM-001", "REQ-PAY-002"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-004",
+    "type": "Functional Requirement",
+    "title": "Enrollment Status Lifecycle — Shared State Machine Across Employee Portal, Carrier, Payroll, and Notifications",
+    "description": "The system shall track enrollment status through a defined lifecycle after submission. This state machine is the single source of truth shared by the Employee Portal, Carrier Integration, Payroll Integration, Notifications, and Reconciliation.",
+    "status": "Approved",
+    "tags": ["enrollment", "lifecycle", "state-machine"],
+    "happyPathStates": ["DRAFT", "SUBMITTED", "VALIDATING", "PENDING_CARRIER", "ACCEPTED", "ACTIVE"],
+    "exceptionPathStates": ["SUBMITTED", "REJECTED", "CORRECTION_REQUIRED", "RESUBMITTED"],
+    "employeeFacingStates": {
+      "SUBMITTED":       "✓ Enrollment Submitted",
+      "VALIDATING":      "✓ Enrollment Validated",
+      "PENDING_CARRIER": "⏳ Carrier Confirmation",
+      "ACTIVE":          "○ Coverage Active"
+    },
+    "linkedRequirements": ["REQ-ENROLL-POST-005", "REQ-ENROLL-POST-006"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-005",
+    "type": "Functional Requirement",
+    "title": "Carrier Acceptance Transition — Enrollment Moves to ACTIVE on Carrier Confirmation",
+    "description": "When the carrier mock API accepts an enrollment transaction, the system shall automatically transition the enrollment status from PENDING_CARRIER to ACTIVE, update the employee portal display, and send an activation notification.",
+    "status": "Approved",
+    "tags": ["enrollment", "carrier-acceptance", "activation"],
+    "transitionTrigger": "Carrier API returns ACCEPTED acknowledgment",
+    "cascadeOnAcceptance": [
+      "Enrollment status → ACTIVE",
+      "Employee portal benefits display updated",
+      "Activation email notification sent",
+      "Benefit Summary PDF updated to ACTIVE status version"
+    ],
+    "employeePortalMessage": "✓ Your Benefits Are Active — Your 2027 benefits enrollment has been confirmed by the carrier. Effective Date: January 1, 2027.",
+    "linkedRequirements": ["REQ-CARRIER-SIM-001", "REQ-ENROLL-POST-011"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-006",
+    "type": "Functional Requirement",
+    "title": "Carrier Rejection Employee Experience — Plain-Language Explanation with Correction Action",
+    "description": "If the carrier rejects an enrollment, the employee-facing experience shall show a plain-language explanation of the issue with a clear call-to-action. Technical carrier error codes shall not be displayed directly to employees.",
+    "status": "Approved",
+    "tags": ["enrollment", "carrier-rejection", "employee-ux"],
+    "employeeFacingMessage": {
+      "heading": "⚠ Action Required",
+      "body": "Your medical enrollment could not be completed.",
+      "reason": "Dependent SSN validation failed.",
+      "affected": "John White",
+      "actions": ["[Correct Dependent Information]", "[Contact Benefits Support]"]
+    },
+    "audienceSplit": {
+      "employee": "Plain-language explanation",
+      "administrator": "Technical carrier error code + carrier response + recommended action"
+    },
+    "linkedRequirements": ["REQ-ENROLL-POST-004", "REQ-CARRIER-SIM-004"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-007",
+    "type": "Functional Requirement",
+    "title": "Benefit Summary PDF — Auto-Generated Personalized Document After Submission",
+    "description": "The system shall automatically generate a personalized Benefit Summary PDF after enrollment submission. The document includes employer header, employee identity, confirmation number, all elections with coverage tiers and dependents, cost summary, payroll deductions, and enrollment status.",
+    "status": "Approved",
+    "tags": ["enrollment", "benefit-summary-pdf"],
+    "documentSections": [
+      "Employer header (Acme Corporation)",
+      "Employee name, ID, confirmation number",
+      "Submission date and coverage effective date",
+      "Elections table (plan, coverage tier, dependents)",
+      "Cost summary (monthly employee cost, biweekly payroll deduction, employer contribution)",
+      "Enrollment status"
+    ],
+    "demoDocument": {
+      "employee": "Linda White",
+      "employeeId": "ACM-E030",
+      "confirmationNumber": "ENR-2027-10045",
+      "submissionDate": "December 15, 2026",
+      "coverageEffective": "January 1, 2027",
+      "monthlyEmployeeCost": 443.00,
+      "biweeklyDeduction": 204.46,
+      "employerContribution": 1250.00
+    },
+    "linkedRequirements": ["REQ-ENROLL-POST-008", "REQ-ESS-006"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-008",
+    "type": "Functional Requirement",
+    "title": "Benefit Summary PDF Versioning — Submitted Version and Active Version",
+    "description": "The system shall maintain two versions of the Benefit Summary PDF: a Submitted version (labeled PENDING CARRIER CONFIRMATION) generated at enrollment submission, and an Active version (labeled ACTIVE) generated after carrier acceptance. This aligns with the existing document versioning model.",
+    "status": "Approved",
+    "tags": ["enrollment", "benefit-summary-pdf", "versioning"],
+    "versionModel": {
+      "v1": { "label": "Benefit Summary v1", "status": "PENDING CARRIER CONFIRMATION", "trigger": "Enrollment submitted" },
+      "v2": { "label": "Benefit Summary v2", "status": "ACTIVE",                      "trigger": "Carrier acceptance" }
+    },
+    "linkedRequirements": ["REQ-ENROLL-POST-007", "REQ-DL-001"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-009",
+    "type": "Functional Requirement",
+    "title": "Enrollment Submission Confirmation Email — Sent Immediately After Submission",
+    "description": "The system shall generate a confirmation email after enrollment submission. For the demo, email delivery is simulated via the notification system.",
+    "status": "Approved",
+    "tags": ["enrollment", "email-notification"],
+    "emailTemplate": {
+      "subject": "Your 2027 Benefits Enrollment Has Been Submitted",
+      "body": "Your 2027 benefits enrollment has been successfully submitted. Enrollment Confirmation: ENR-2027-10045. Coverage Effective Date: January 1, 2027. Your enrollment is currently pending carrier confirmation.",
+      "action": "[View My Benefits]",
+      "signature": "Acme Benefits Team"
+    },
+    "linkedRequirements": ["REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-010",
+    "type": "Functional Requirement",
+    "title": "Active Coverage Email — Sent After Carrier Acceptance",
+    "description": "After carrier acceptance transitions enrollment to ACTIVE, the system shall send an activation confirmation email listing all active benefits and linking to the updated Benefit Summary.",
+    "status": "Approved",
+    "tags": ["enrollment", "email-notification", "activation"],
+    "emailTemplate": {
+      "subject": "Your 2027 Benefits Are Active",
+      "body": "Your 2027 benefits enrollment has been confirmed. Your coverage is active effective January 1, 2027.",
+      "electionsListed": ["Medical: PPO 500 — Employee + Family", "Dental: Dental Premium — Employee + Family", "Vision: Vision Standard — Employee + Family"],
+      "actions": ["[View My Benefits]", "[Download Benefit Summary]"],
+      "signature": "Acme Benefits Team"
+    },
+    "linkedRequirements": ["REQ-ENROLL-POST-005", "REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-011",
+    "type": "Functional Requirement",
+    "title": "Employee Benefits Dashboard — Dynamic Enrollment Status Reflection",
+    "description": "The Employee Benefits Dashboard shall dynamically reflect the current enrollment status. Before carrier acceptance, benefits show as Pending Confirmation. After carrier acceptance, benefits show as Active with effective date.",
+    "status": "Approved",
+    "tags": ["enrollment", "employee-portal", "dashboard"],
+    "dashboardStates": {
+      "pendingCarrier": {
+        "badge": "⏳ Pending Confirmation",
+        "display": ["Medical: PPO 500", "Dental: Dental Premium", "Vision: Vision Standard"]
+      },
+      "active": {
+        "badge": "✓ ACTIVE — Effective January 1, 2027",
+        "display": ["Medical: PPO 500", "Dental: Dental Premium", "Vision: Vision Standard"]
+      }
+    },
+    "linkedRequirements": ["REQ-ESS-001", "REQ-ENROLL-POST-005"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-012",
+    "type": "Functional Requirement",
+    "title": "Enrollment Timeline — Complete Processing History for Employee",
+    "description": "The employee shall be able to view an enrollment processing timeline showing each completed stage with date. The timeline provides transparency into the enrollment lifecycle without requiring HR contact.",
+    "status": "Approved",
+    "tags": ["enrollment", "timeline", "employee-portal"],
+    "demoTimeline": [
+      { "date": "Dec 15", "event": "✓ Enrollment Submitted" },
+      { "date": "Dec 15", "event": "✓ Eligibility Validated" },
+      { "date": "Dec 15", "event": "✓ Carrier Transaction Created" },
+      { "date": "Dec 16", "event": "✓ Carrier Accepted" },
+      { "date": "Dec 16", "event": "✓ Coverage Activated" },
+      { "date": "Dec 16", "event": "✓ Confirmation Sent" }
+    ],
+    "linkedRequirements": ["REQ-ENROLL-POST-004", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-AI-ENROLL-POST-001",
+    "type": "Functional Requirement",
+    "title": "AI Post-Enrollment Assistant — Enrollment Status, Elections, and Coverage Questions",
+    "description": "The AI Benefits Assistant shall be aware of the employee's current enrollment state and be able to answer questions about submission confirmation, election details, carrier status, and coverage effective dates.",
+    "status": "Approved",
+    "tags": ["enrollment", "ai", "employee-assistant"],
+    "exampleInteractions": [
+      {
+        "question": "Did my enrollment go through?",
+        "response": "Yes. Your enrollment was submitted successfully on December 15. Your confirmation number is ENR-2027-10045. The carrier accepted your enrollment on December 16, and your coverage is now active effective January 1, 2027."
+      },
+      {
+        "question": "What benefits did I choose?",
+        "response": "You selected PPO 500 Medical with Employee + Family coverage, Dental Premium with Employee + Family coverage, and Vision Standard with Employee + Family coverage."
+      }
+    ],
+    "linkedRequirements": ["REQ-ESS-009", "REQ-ENROLL-POST-004"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-POST-DEMO",
+    "type": "Functional Requirement",
+    "title": "Demo Enrollment Centerpiece — Linda White End-to-End Open Enrollment Story",
+    "description": "The Linda White enrollment story is the primary demo scenario for the enrollment confirmation and post-enrollment experience. The flow demonstrates the complete lifecycle from enrollment wizard to confirmed active coverage.",
+    "status": "Approved",
+    "tags": ["enrollment", "demo", "linda-white"],
+    "demoStorySteps": [
+      "Linda White starts 2027 Open Enrollment",
+      "AI Enrollment Assistant helps select PPO 500",
+      "Adds Dental + Vision",
+      "Reviews $204.46 biweekly deduction",
+      "Confirms enrollment",
+      "✓ Confirmation Number: ENR-2027-10045",
+      "Downloads Benefit Summary PDF",
+      "Status: Pending Carrier",
+      "Mock Carrier accepts",
+      "Status: ACTIVE",
+      "Activation email notification sent",
+      "Employee Dashboard updated",
+      "Linda asks AI: 'Show me my benefits'",
+      "AI retrieves ACTIVE coverage record"
+    ],
+    "linkedRequirements": ["REQ-ENROLL-POST-001", "REQ-ESS-009", "REQ-CARRIER-SIM-001"]
+  }
+]

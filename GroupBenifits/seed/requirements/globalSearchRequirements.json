@@ -1,0 +1,258 @@
+[
+  {
+    "requirementId": "REQ-SEARCH-001",
+    "type": "Functional Requirement",
+    "title": "Global Search Entry Point — Persistent Ctrl+K Command Palette",
+    "description": "The application shall provide a persistent global search field accessible from the primary application navigation. The recommended demo shortcut is Ctrl+K / Cmd+K.",
+    "status": "Approved",
+    "tags": ["global-search", "navigation", "ux"],
+    "activationMethods": ["Click search field", "Keyboard shortcut /", "Ctrl+K / Cmd+K command palette"],
+    "placeholder": "Search employees, plans, requirements, transactions...",
+    "linkedRequirements": ["REQ-SEARCH-002", "REQ-RBAC-001"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-002",
+    "type": "Functional Requirement",
+    "title": "Cross-Application Search Scope — Employees, Plans, Requirements, and More",
+    "description": "The global search shall search across key entity types. The architecture shall allow additional entity types to be added without redesigning the search experience.",
+    "status": "Approved",
+    "tags": ["global-search", "scope"],
+    "mvpScope": ["Employees", "Plans", "Requirements", "Audit Records", "Carrier Transactions"],
+    "fullScope": ["Employees", "Plans", "Employers / Groups", "Enrollments", "Life Events", "Requirements", "Documents", "Carrier Transactions", "Payroll Transactions", "COBRA Cases", "Audit Records", "Rate Tables"],
+    "linkedRequirements": ["REQ-SEARCH-009", "REQ-SEARCH-013"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-003",
+    "type": "Functional Requirement",
+    "title": "Employee Search — By Name, ID, Email, or Employer Group",
+    "description": "Users with appropriate permissions shall be able to search employees by first name, last name, full name, employee ID, email, SSN last four digits, or employer group. Employee results navigate to Employee 360.",
+    "status": "Approved",
+    "tags": ["global-search", "employee"],
+    "searchFields": ["firstName", "lastName", "fullName", "employeeId", "email", "ssnLast4", "employerGroup"],
+    "demoResult": {
+      "type": "employee",
+      "name": "Linda White",
+      "id": "ACM-E030",
+      "employer": "Acme Corporation",
+      "status": "Active",
+      "navigatesTo": "Employee 360"
+    },
+    "linkedRequirements": ["REQ-SEARCH-004", "REQ-EMP-001"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-004",
+    "type": "Functional Requirement",
+    "title": "Employee ID Exact Lookup — Returns Employee and Related Records",
+    "description": "The system shall support exact employee ID lookup returning the employee record and key related entities (enrollment, COBRA status).",
+    "status": "Approved",
+    "tags": ["global-search", "employee-id"],
+    "demoLookup": {
+      "query": "ACM-E030",
+      "results": { "name": "Linda White", "id": "ACM-E030", "enrollment": "Active", "medical": "PPO 500", "cobra": "Not Applicable" }
+    },
+    "linkedRequirements": ["REQ-SEARCH-003"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-005",
+    "type": "Functional Requirement",
+    "title": "Plan Search — By Name, ID, Type, Carrier, or Plan Year",
+    "description": "Users shall be able to search plans by name, plan ID, plan type, carrier, and plan year. Results show plan status and effective dates.",
+    "status": "Approved",
+    "tags": ["global-search", "plans"],
+    "demoResults": [
+      { "name": "2026 PPO 500", "type": "Medical", "carrier": "Acme Health", "status": "Expired" },
+      { "name": "2027 PPO 500", "type": "Medical", "carrier": "Acme Health", "status": "Active" }
+    ],
+    "linkedRequirements": ["REQ-SEARCH-002"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-006",
+    "type": "Functional Requirement",
+    "title": "Requirement Search — By ID, Keyword, Title, Epic, Status, or Priority",
+    "description": "Users shall be able to search requirements by ID, keyword, title, description, epic, feature, status, and priority. Clicking a result opens the Requirements Studio.",
+    "status": "Approved",
+    "tags": ["global-search", "requirements"],
+    "demoResults": [
+      { "id": "REQ-COBRA-004", "title": "Election Deadline Tracking" },
+      { "id": "REQ-COBRA-005", "title": "Election UI" },
+      { "id": "REQ-COBRA-007", "title": "Coverage Activation" }
+    ],
+    "linkedRequirements": ["REQ-AI-KNOW-001"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-007",
+    "type": "Functional Requirement",
+    "title": "Audit Search — By Actor, Entity, Action, Date Range, or Change Type",
+    "description": "Authorized users (Auditor, Benefits Admin, System Admin) shall be able to search audit records by actor, entity type, entity ID, action, date range, and change type.",
+    "status": "Approved",
+    "tags": ["global-search", "audit"],
+    "filterExample": { "actor": "Giri Ramadoss", "entity": "Plan", "action": "Updated", "dateRange": "Last 30 Days" },
+    "linkedRequirements": ["REQ-AUD-001", "REQ-RBAC-006"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-008",
+    "type": "Functional Requirement",
+    "title": "Carrier Transaction Search — By Transaction ID, Employee, Carrier, Status, or Date",
+    "description": "Users shall be able to search carrier transactions by transaction ID, employee ID, employee name, carrier, plan, transaction type, status, and date.",
+    "status": "Approved",
+    "tags": ["global-search", "carrier-transactions"],
+    "demoResults": [
+      { "id": "TX-10045", "type": "Enrollment", "plan": "Medical", "status": "Accepted" },
+      { "id": "TX-10046", "type": "Enrollment", "plan": "Dental",  "status": "Pending" },
+      { "id": "TX-10047", "type": "Enrollment", "plan": "Vision",  "status": "Rejected" }
+    ],
+    "linkedRequirements": ["REQ-CARRIER-SIM-001"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-009",
+    "type": "Functional Requirement",
+    "title": "Search Results Grouping — Results Organized by Entity Type",
+    "description": "Search results shall be grouped by entity type. Each group shows a count and a preview of results. This is significantly more useful than a single flat result list.",
+    "status": "Approved",
+    "tags": ["global-search", "ux"],
+    "demoGrouping": {
+      "query": "PPO 500",
+      "groups": [
+        { "type": "Employees",            "count": 12 },
+        { "type": "Plans",                "count": 2 },
+        { "type": "Requirements",         "count": 4 },
+        { "type": "Carrier Transactions", "count": 24 }
+      ]
+    },
+    "linkedRequirements": ["REQ-SEARCH-010"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-010",
+    "type": "Functional Requirement",
+    "title": "Search Result Preview — Quick-Look Panel on Hover or Selection",
+    "description": "Hovering over or selecting a search result shall display a quick preview with key fields and a deep-link action button. This reduces unnecessary navigation to open records.",
+    "status": "Approved",
+    "tags": ["global-search", "ux"],
+    "demoPreview": {
+      "record": "2027 PPO 500",
+      "type": "Medical Plan",
+      "carrier": "Acme Health",
+      "planYear": 2027,
+      "status": "Active",
+      "effective": "Jan 1, 2027",
+      "action": "[Open Plan]"
+    },
+    "linkedRequirements": ["REQ-SEARCH-014"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-011",
+    "type": "Functional Requirement",
+    "title": "Search Filters — Refine Results by Type, Status, Date, and Entity-Specific Criteria",
+    "description": "Users shall be able to refine search results using generic filters (entity type, status, date, employer, plan year) and dynamically displayed entity-specific filters.",
+    "status": "Approved",
+    "tags": ["global-search", "filters"],
+    "genericFilters": ["Entity Type", "Status", "Date", "Employer", "Plan Year", "Owner", "Priority"],
+    "linkedRequirements": ["REQ-SEARCH-009"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-012",
+    "type": "Functional Requirement",
+    "title": "Search Result Ranking — Exact Match First, Then Prefix, Then Keyword",
+    "description": "Search results shall be ranked by match quality: exact ID match, exact name match, exact phrase, prefix match, keyword match.",
+    "status": "Approved",
+    "tags": ["global-search", "ranking"],
+    "rankingPriority": ["Exact ID match", "Exact name match", "Exact phrase match", "Prefix match", "Keyword match"],
+    "linkedRequirements": ["REQ-SEARCH-009"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-013",
+    "type": "Functional Requirement",
+    "title": "Role-Based Search Results — RBAC Applied to All Entity Types",
+    "description": "Search results shall respect the user's RBAC permissions. An employee searching for another employee's name shall receive no unauthorized results.",
+    "status": "Approved",
+    "tags": ["global-search", "security", "rbac"],
+    "rbacMatrix": {
+      "HR Admin":      ["Employees", "Plans", "Enrollments", "Life Events"],
+      "Benefits Admin":["Employees", "Plans", "Rates", "Carrier Transactions"],
+      "Auditor":       ["Audit Records", "Read-only Entity History"],
+      "Employee":      ["Own Benefits", "Own Enrollment", "Own Documents"]
+    },
+    "linkedRequirements": ["REQ-RBAC-001", "REQ-ESS-014"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-014",
+    "type": "Functional Requirement",
+    "title": "Search Result Deep Linking — Direct Navigation to Target Screen",
+    "description": "Each search result shall navigate directly to the relevant screen based on entity type.",
+    "status": "Approved",
+    "tags": ["global-search", "navigation"],
+    "deepLinkRoutes": {
+      "employee":           "/employees/{id}",
+      "plan":               "/plans/{id}",
+      "requirement":        "/requirements/{id}",
+      "auditRecord":        "/audit/{id}",
+      "carrierTransaction": "/integrations/carrier/{id}"
+    },
+    "linkedRequirements": ["REQ-SEARCH-009"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-016",
+    "type": "Functional Requirement",
+    "title": "Search Empty State — Helpful Suggestions When No Results Found",
+    "description": "When no results are found, the system shall display a helpful empty state with search suggestions.",
+    "status": "Approved",
+    "tags": ["global-search", "empty-state"],
+    "emptyStateContent": {
+      "heading": "No results found for: \"{query}\"",
+      "suggestions": ["Check the spelling", "Search by employee ID", "Search by plan name", "Remove filters"]
+    }
+  },
+  {
+    "requirementId": "REQ-SEARCH-017",
+    "type": "Functional Requirement",
+    "title": "Search Loading Experience — Per-Entity-Type Loading Indicators",
+    "description": "Search shall provide a responsive loading state with per-entity-type loading indicators. For the demo, results should appear within 1–2 seconds for local seeded data.",
+    "status": "Approved",
+    "tags": ["global-search", "ux", "performance"],
+    "performanceTarget": "Results appear within 1–2 seconds for local seeded data",
+    "linkedRequirements": ["REQ-PERF-001"]
+  },
+  {
+    "requirementId": "REQ-AI-SEARCH-001",
+    "type": "Functional Requirement",
+    "title": "AI Natural Language Search — Intent Interpretation Across Entity Types",
+    "description": "The system may support natural language queries that are interpreted by the AI Benefits Assistant and converted to structured filters. The AI agentic search pattern is a compelling P2 demo capability.",
+    "status": "Approved",
+    "tags": ["global-search", "ai"],
+    "exampleInteractions": [
+      {
+        "query": "Show me employees enrolled in PPO 500 who have pending carrier transactions.",
+        "parsed": { "entity": "Employee", "medicalPlan": "PPO 500", "carrierStatus": "PENDING" },
+        "resultsFound": 24
+      },
+      {
+        "query": "Find all COBRA cases expiring this week.",
+        "parsed": { "entity": "COBRA", "filter": "Election Deadline", "date": "Current Week", "status": "PENDING" }
+      }
+    ],
+    "linkedRequirements": ["REQ-SEARCH-002", "REQ-ESS-009"]
+  },
+  {
+    "requirementId": "REQ-SEARCH-API",
+    "type": "Functional Requirement",
+    "title": "Unified Search API Response Schema — Consistent Entity-Agnostic Result Shape",
+    "description": "The search API shall return a standardized response shape regardless of entity type, enabling the UI to render results consistently.",
+    "status": "Approved",
+    "tags": ["global-search", "api-design"],
+    "responseSchema": {
+      "query": "string",
+      "total": "integer",
+      "results": [
+        {
+          "type": "entity type string (employee | plan | requirement | ...)",
+          "id": "entity ID",
+          "title": "display title",
+          "subtitle": "secondary display info",
+          "status": "status string",
+          "route": "SPA deep-link route"
+        }
+      ]
+    },
+    "architectureNote": "For demo, simple in-memory indexed search or server-side filtering across JSON collections is sufficient. API contract should remain unchanged when the backend moves from LowDB to a real database."
+  }
+]

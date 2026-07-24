@@ -1,0 +1,290 @@
+[
+  {
+    "requirementId": "REQ-HSA-001",
+    "type": "Functional Requirement",
+    "title": "HSA Eligibility — Independent Determination from Medical Plan Eligibility",
+    "description": "The system shall determine HSA eligibility independently from medical plan eligibility. An employee is HSA-eligible only when all configured qualification criteria are satisfied. The eligibility determination is driven by configurable rules, not hardcoded logic.",
+    "status": "Approved",
+    "tags": ["hsa", "eligibility", "spending-accounts"],
+    "qualificationCriteria": [
+      "Enrolled in a configured HSA-qualified HDHP",
+      "HDHP meets configured minimum deductible threshold",
+      "Not enrolled in disqualifying non-HDHP medical coverage",
+      "No disqualifying coverage through another source",
+      "Not enrolled in Medicare",
+      "All other configured HSA eligibility rules satisfied"
+    ],
+    "demoFlow": {
+      "employee": "John Smith",
+      "medicalPlan": "HDHP 3000",
+      "checks": {
+        "hdhpQualifies": true,
+        "deductibleQualifies": true,
+        "disqualifyingCoverage": false,
+        "medicareEnrolled": false,
+        "result": "HSA_ELIGIBLE"
+      }
+    },
+    "linkedRequirements": ["REQ-HSA-002", "REQ-ELIG-001"]
+  },
+  {
+    "requirementId": "REQ-HSA-002",
+    "type": "Functional Requirement",
+    "title": "HDHP Qualification Check — Plan Must Be Configured as HSA-Qualified",
+    "description": "The system shall validate that a selected medical plan is configured as an HSA-qualified HDHP before allowing HSA enrollment. Qualification thresholds are stored as configurable reference data, not hardcoded. If the plan does not qualify, HSA enrollment is blocked with an explanatory message.",
+    "status": "Approved",
+    "tags": ["hsa", "hdhp", "qualification"],
+    "planConfigurationFields": {
+      "hsaQualified": "boolean",
+      "minimumDeductibleConfigured": "stored in plan reference data",
+      "maximumOutOfPocketConfigured": "stored in plan reference data"
+    },
+    "uiMessage": {
+      "notQualified": "HSA Enrollment Not Available — Your selected medical plan does not qualify for HSA participation."
+    },
+    "configurationNote": "IRS deductible thresholds are stored as versioned reference data by plan year, not hardcoded. Demo values labeled as demo data.",
+    "linkedRequirements": ["REQ-HSA-001", "REQ-CFG-001"]
+  },
+  {
+    "requirementId": "REQ-HSA-003",
+    "type": "Functional Requirement",
+    "title": "HSA Contribution Limits — Annual Maximum with Remaining Capacity Tracking",
+    "description": "The system shall enforce configurable annual HSA contribution limits and track total contributions from all sources. Limits are stored as plan-year reference data.",
+    "status": "Approved",
+    "tags": ["hsa", "contribution-limits"],
+    "demoSeedValues": {
+      "employeeOnlyLimit": 4150,
+      "familyLimit": 8300,
+      "catchUpAdditional": 1000,
+      "note": "Demo data — verify against IRS-published limits before production use"
+    },
+    "contributionSources": ["employeeContribution", "employerContribution", "payrollContribution", "employerSeedContribution"],
+    "calculationDisplay": {
+      "annualLimit": 8300,
+      "employeeContributions": 4500,
+      "employerContributions": 1000,
+      "totalContributions": 5500,
+      "remainingCapacity": 2800
+    },
+    "linkedRequirements": ["REQ-HSA-004", "REQ-HSA-005", "REQ-HSA-006"]
+  },
+  {
+    "requirementId": "REQ-HSA-004",
+    "type": "Functional Requirement",
+    "title": "HSA Catch-Up Contribution — Configurable Age-Based Additional Limit",
+    "description": "The system shall support configurable catch-up contributions for employees who meet the configured age eligibility threshold. The catch-up amount and age threshold are stored as plan-year reference data, not hardcoded.",
+    "status": "Approved",
+    "tags": ["hsa", "catch-up"],
+    "demoExample": {
+      "employeeAge": 57,
+      "coverageTier": "Employee + Family",
+      "baseLimit": 8300,
+      "catchUpAmount": 1000,
+      "maximumContribution": 9300
+    },
+    "configurationNote": "Age threshold and catch-up amount are configurable per plan year.",
+    "linkedRequirements": ["REQ-HSA-003"]
+  },
+  {
+    "requirementId": "REQ-HSA-005",
+    "type": "Functional Requirement",
+    "title": "Employer HSA Seed Contribution — Configurable Amount, Frequency, and Proration",
+    "description": "The system shall support employer-funded HSA contributions with configurable annual amount, funding frequency, eligibility waiting period, and proration for mid-year eligibility.",
+    "status": "Approved",
+    "tags": ["hsa", "employer-contribution"],
+    "configurationFields": {
+      "annualEmployerContribution": 1000,
+      "fundingFrequency": "ANNUAL | QUARTERLY | PER_PAY_PERIOD",
+      "eligibilityWaitingPeriodDays": 30,
+      "prorateForMidYearEligibility": true
+    },
+    "demoExample": {
+      "note": "Employee becomes HSA eligible July 1. System calculates prorated employer contribution per configured plan rules."
+    },
+    "linkedRequirements": ["REQ-HSA-003", "REQ-PREM-001"]
+  },
+  {
+    "requirementId": "REQ-HSA-006",
+    "type": "Functional Requirement",
+    "title": "HSA Contribution Monitoring — Real-Time Tracking with Over-Limit Alert",
+    "description": "The system shall track HSA contributions against the annual limit in real time. When projected annual contributions approach or exceed the configured limit, the system shall generate a warning notification. This is an AI Benefits Assistant use case.",
+    "status": "Approved",
+    "tags": ["hsa", "monitoring", "alerts"],
+    "dashboardDisplay": {
+      "annualLimit": 8300,
+      "employeeContribution": 4500,
+      "employerContribution": 1000,
+      "totalContribution": 5500,
+      "remainingCapacity": 2800
+    },
+    "warningExample": {
+      "trigger": "Projected annual contributions: $8,650 exceeds annual limit: $8,300",
+      "potentialExcess": 350,
+      "alertType": "CONTRIBUTION_LIMIT_WARNING"
+    },
+    "aiBenefitsAssistantUseCase": "\"How much can I still contribute to my HSA this year?\"",
+    "linkedRequirements": ["REQ-HSA-003", "REQ-AI-HSA-001"]
+  },
+  {
+    "requirementId": "REQ-FSA-001",
+    "type": "Functional Requirement",
+    "title": "FSA Eligibility — Three FSA Types with Plan-Enrollment Dependencies",
+    "description": "The system shall determine FSA eligibility independently from medical plan eligibility. Three FSA types are supported: Healthcare FSA, Limited Purpose FSA, and Dependent Care FSA. Healthcare FSA is available with non-HDHP plans; Limited Purpose FSA is available to HSA participants; Dependent Care FSA has no medical plan dependency.",
+    "status": "Approved",
+    "tags": ["fsa", "eligibility", "spending-accounts"],
+    "eligibilityMatrix": [
+      { "medicalPlan": "PPO 500",    "hsaEnrolled": false, "healthcareFsa": "ELIGIBLE",     "limitedPurposeFsa": "NOT_ELIGIBLE", "dependentCareFsa": "ELIGIBLE" },
+      { "medicalPlan": "HDHP 3000", "hsaEnrolled": true,  "healthcareFsa": "NOT_ELIGIBLE", "limitedPurposeFsa": "ELIGIBLE",     "dependentCareFsa": "ELIGIBLE" }
+    ],
+    "demoEmployees": {
+      "lindaWhite": { "plan": "PPO 500", "fsaType": "Healthcare FSA", "eligible": true },
+      "johnSmith":  { "plan": "HDHP 3000 + HSA", "fsaType": "Limited Purpose FSA", "eligible": true }
+    },
+    "linkedRequirements": ["REQ-HSA-001"]
+  },
+  {
+    "requirementId": "REQ-FSA-002",
+    "type": "Functional Requirement",
+    "title": "FSA Annual Election — Per-Pay-Period Deduction Calculation",
+    "description": "The system shall allow eligible employees to elect an annual FSA contribution amount. The system calculates the per-pay-period deduction using the same premium calculation formula used for medical, dental, and vision deductions.",
+    "status": "Approved",
+    "tags": ["fsa", "election", "deduction-calculation"],
+    "demoExample": {
+      "annualElection": 2500,
+      "payFrequency": "BIWEEKLY",
+      "payPeriods": 26,
+      "perPayDeduction": 96.15
+    },
+    "formula": "ROUND(Annual Election / Pay Periods Per Year, 2)",
+    "linkedRequirements": ["REQ-PREM-003", "REQ-PAY-002"]
+  },
+  {
+    "requirementId": "REQ-FSA-003",
+    "type": "Functional Requirement",
+    "title": "FSA Carryover — Configurable Annual Carry-Forward Amount",
+    "description": "The system shall support configurable FSA carryover rules. At plan-year transition, unused FSA balances are carried forward up to the configured carryover limit. Carryover and grace period are mutually exclusive configurations per plan.",
+    "status": "Approved",
+    "tags": ["fsa", "carryover"],
+    "configurationFields": {
+      "carryoverEnabled": true,
+      "carryoverLimit": "Configurable — stored as plan-year reference data, not hardcoded",
+      "carryoverExpiration": "None"
+    },
+    "configurationNote": "IRS carryover limit is stored as versioned reference data by plan year and labeled as demo data in the demo environment.",
+    "linkedRequirements": ["REQ-FSA-004", "REQ-FSA-005"]
+  },
+  {
+    "requirementId": "REQ-FSA-004",
+    "type": "Functional Requirement",
+    "title": "FSA Grace Period — Configurable Extended Spending Window",
+    "description": "The system shall support a configurable FSA grace period that extends the time an employee can incur new expenses using prior-year FSA funds. Grace period and carryover are mutually exclusive per plan configuration.",
+    "status": "Approved",
+    "tags": ["fsa", "grace-period"],
+    "demoExample": {
+      "planYear": "Jan 1 – Dec 31, 2027",
+      "gracePeriodMonths": 2.5,
+      "gracePeriodEndDate": "March 15, 2028"
+    },
+    "distinction": {
+      "gracePeriod": "Additional time to incur new expenses using prior-year funds",
+      "runOutPeriod": "Additional time to submit claims for expenses already incurred (REQ-FSA-006)"
+    },
+    "linkedRequirements": ["REQ-FSA-003", "REQ-FSA-006"]
+  },
+  {
+    "requirementId": "REQ-FSA-005",
+    "type": "Functional Requirement",
+    "title": "FSA Use-It-or-Lose-It — Forfeiture Identification and Employee Alert",
+    "description": "When FSA carryover and grace period are both disabled, the system shall identify unused balances that will be forfeited at plan-year end and notify the employee before the deadline.",
+    "status": "Approved",
+    "tags": ["fsa", "forfeiture", "notifications"],
+    "demoExample": {
+      "planYear": 2027,
+      "annualElection": 2500,
+      "used": 2100,
+      "remaining": 400,
+      "carryoverEnabled": false,
+      "gracePeriodEnabled": false,
+      "status": "FORFEITURE_RISK",
+      "message": "$400 Subject to Forfeiture at December 31, 2027"
+    },
+    "notificationTrigger": "System alerts employee 30 days before plan-year end when unused balance > 0 and neither carryover nor grace period applies.",
+    "linkedRequirements": ["REQ-FSA-003", "REQ-NOTIFY-001"]
+  },
+  {
+    "requirementId": "REQ-FSA-006",
+    "type": "Functional Requirement",
+    "title": "FSA Run-Out Period — Configurable Claim Submission Window for Prior-Year Expenses",
+    "description": "The system shall support a configurable run-out period that extends the time an employee can submit claims for expenses incurred during the prior plan year.",
+    "status": "Approved",
+    "tags": ["fsa", "run-out"],
+    "demoExample": {
+      "planYearEnd": "December 31, 2027",
+      "runOutPeriodDays": 90,
+      "claimSubmissionDeadline": "March 31, 2028"
+    },
+    "distinction": {
+      "runOutPeriod": "Additional time to submit claims for expenses already incurred — different from grace period which extends the expense incurral window"
+    },
+    "linkedRequirements": ["REQ-FSA-004"]
+  },
+  {
+    "requirementId": "REQ-FSA-007",
+    "type": "Functional Requirement",
+    "title": "FSA Employee Dashboard — Balance, Claims, and Forfeiture Status",
+    "description": "The Employee Portal shall display an FSA dashboard showing annual election, contributions, claims, reimbursements, available balance, carryover, and forfeiture risk.",
+    "status": "Approved",
+    "tags": ["fsa", "employee-portal", "dashboard"],
+    "dashboardFields": {
+      "annualElection": "$2,500",
+      "contributed": "$1,250",
+      "claims": "$900",
+      "reimbursed": "$900",
+      "availableBalance": "$350",
+      "carryoverEligible": true,
+      "carryoverAmount": "$350"
+    },
+    "linkedRequirements": ["REQ-ESS-001", "REQ-FSA-003"]
+  },
+  {
+    "requirementId": "REQ-AI-HSA-001",
+    "type": "Functional Requirement",
+    "title": "AI HSA/FSA Benefits Assistant — Eligibility and Contribution Guidance",
+    "description": "The AI Benefits Assistant shall answer employee questions about HSA and FSA eligibility, contribution limits, and account status. AI responses include source citations and action buttons. AI provides informational guidance only — not financial or tax advice.",
+    "status": "Approved",
+    "tags": ["hsa", "fsa", "ai", "benefits-assistant"],
+    "exampleInteractions": [
+      {
+        "question": "Can I contribute to an HSA?",
+        "response": "Yes. You are enrolled in the HDHP 3000, which is configured as HSA-qualified. Based on your current benefits profile, you are eligible to participate.",
+        "sourcesCited": ["Plan Configuration — HDHP 3000", "HSA Eligibility Rules"]
+      },
+      {
+        "question": "Why can't I enroll in the Healthcare FSA?",
+        "response": "You are enrolled in an HSA-qualified HDHP and are participating in an HSA. Your current plan configuration does not allow a general-purpose Healthcare FSA. You may be eligible for a Limited Purpose FSA.",
+        "action": "[View Limited Purpose FSA Options]"
+      },
+      {
+        "question": "How much can I still contribute to my HSA?",
+        "response": "Your 2027 annual HSA limit is $8,300. Your current contributions total $5,500 ($4,500 employee + $1,000 employer). You can contribute up to $2,800 more this year.",
+        "note": "AI provides informational guidance only — not financial or tax advice."
+      }
+    ],
+    "linkedRequirements": ["REQ-ESS-009", "REQ-HSA-003", "REQ-FSA-001"]
+  },
+  {
+    "requirementId": "REQ-HSA-FSA-CONFIG",
+    "type": "Functional Requirement",
+    "title": "HSA/FSA Plan Configuration UI — Dedicated Spending Account Section",
+    "description": "The Plan Configuration screen shall include a dedicated Spending Accounts configuration section with sub-sections for HSA and FSA. All IRS thresholds and plan-specific limits are stored as configurable reference data by plan year.",
+    "status": "Approved",
+    "tags": ["hsa", "fsa", "plan-configuration", "admin"],
+    "configurationTree": {
+      "SpendingAccounts": {
+        "HSA": ["Eligibility Rules", "Contribution Limits by Year", "Catch-Up Eligibility", "Employer Seed Amount", "Contribution Frequency"],
+        "FSA": ["Annual Election Limit", "Carryover Rules", "Grace Period", "Run-Out Period", "Forfeiture Rules"]
+      }
+    },
+    "linkedRequirements": ["REQ-PLAN-CFG-001", "REQ-CFG-001"]
+  }
+]

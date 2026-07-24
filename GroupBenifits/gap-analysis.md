@@ -165,37 +165,37 @@ The 14 new requirement sets implement the horizontal platform layer that cuts ac
 
 ## 11. Phase 3 — Feature Completeness Gaps
 
-_Identified during Phase 3 gap review (2026-07-23). These gaps are open — no requirement files exist yet._
+_Identified during Phase 3 gap review (2026-07-23). All 12 gaps resolved 2026-07-23._
 
-| # | Gap | Priority | Status | Notes |
-|---|-----|----------|--------|-------|
-| 1 | **Employee Self-Service Portal** | P0 | ⬜ OPEN | No requirement set for the Employee persona's read experience: view my current benefits, view my elections, view my payroll deduction history, download benefit summary PDF. `REQ-AI-COP-005` covers enrollment assistant; `REQ-AI-KNOW-013` covers benefits chat — but the portal screens themselves (My Benefits, My Deductions, My Documents) are unspecified. Critical: the demo presenter flow step 11 ("Switch to Enrollment → find Linda White") assumes this view exists. |
-| 2 | **Payroll Transmission Lifecycle** | P0 | ⬜ OPEN | `REQ-TRANSMISSION` covers carrier file generation and transmission only. No requirement set for the payroll side: generating the deduction file, transmitting to payroll system, receiving acknowledgment, handling rejections, and the payroll transmission monitoring view. Payroll deductions appear throughout seed data and reconciliation but the payroll transmission workflow is unspecified. |
-| 3 | **Dependent Documentation Upload & Verification** | P0 | ⬜ OPEN | `REQ-LE` specifies that documentation is required per life event (marriage certificate, birth certificate) but the workflow is not defined: file upload step in the life event wizard, document review queue for HR Admin, verification approve/reject action, and coverage-hold behavior while verification is pending. The marriage life event demo scenario explicitly involves document upload (LE-001, ACM-E030). |
-| 4 | **HSA / FSA Business Rules** | P1 | ⬜ OPEN | HSA and FSA are listed as plan types in the product catalog but have no business logic requirements: IRS annual contribution limits ($4,150 employee / $8,300 family for 2027; $1,000 catch-up), HDHP minimum deductible qualification check before HSA enrollment, FSA use-it-or-lose-it rule with grace period option, FSA run-out period, HSA employer seed contribution, FSA carryover limit. These rules are materially different from medical plan eligibility. |
-| 5 | **COBRA Election Tracking** | P1 | ⬜ OPEN | `REQ-TERM` covers qualifying event generation and qualifying beneficiary identification but the COBRA election workflow is not covered: election deadline tracking (60 days from qualifying event notice), election recording UI, continuation coverage activation on election, COBRA premium calculation (102% of group rate), and election confirmation notification. |
-| 6 | **Rate Table Management UI** | P1 | ⬜ OPEN | Rate tables are seeded in `rates.json` and referenced throughout premium calculation requirements, but there is no requirement set for: rate table creation/editing UI, carrier-provided rate import (CSV), mid-year rate amendment workflow, age-banded rate tiers for life and AD&D coverage, and rate table effective dating. Without this, plan configuration has no data entry path for premiums. |
-| 7 | **Enrollment Confirmation & Post-Enrollment Experience** | P1 | ⬜ OPEN | The enrollment wizard (`REQ-ENROLL-UX-001–015`) ends at submission. The post-submission experience is unspecified: confirmation screen design, benefit summary PDF generation (the document the employee receives), confirmation email content and format, and the visual transition from SUBMITTED to ACTIVE once carrier acceptance is confirmed. `REQ-NOTIFY` covers the notification events but not the confirmation screen or summary document artifact. |
-| 8 | **Cross-Application Search** | P2 | ⬜ OPEN | Mentioned in Demo.MD gap backlog as item #30 but never formalized. Searching across employees, plans, requirements, audit records, and carrier transactions is standard enterprise app behavior and is expected by all personas. Minimum scope: employee search by name/ID, plan search by name/type, requirement search by keyword, audit search by actor/entity/date. |
-| 9 | **Employee Demographics & Profile Management UI** | P2 | ⬜ OPEN | Employees are seeded but there are no requirements for the HR Admin workflow of creating or updating an employee record: new hire data entry, employment class changes, compensation changes, address updates, name changes, and how each change type propagates to carrier identity mappings and payroll deduction codes. |
-| 10 | **Notification Template Editor UI** | P2 | ⬜ OPEN | `REQ-NOTIFY-001–017` specifies that templates exist with named merge fields and are configurable, but the admin UI for managing notification templates is not defined: template list, template editor (with merge field picker), preview with sample data, and activation/deactivation. |
-| 11 | **Standard Compliance Reports** | P2 | ⬜ OPEN | Beyond AI analytics (`REQ-AI-COP-013`), HR and Benefits Admins expect tabular, exportable reports: enrollment census, ACA eligibility status report, dependent verification status, benefits cost summary by plan and coverage tier, life event activity log, and open enrollment completion report. No requirement set covers structured report generation or export. |
-| 12 | **Multi-Employer / Employer Profile Management** | P2 | ⬜ OPEN | The seed has one employer (Acme Corp). No requirements cover the employer setup flow: creating an employer profile, configuring plan year start/end dates, setting payroll frequency and FEIN, linking products to employer, and the employer selection context switch in the global header. This is the starting point of the demo story and must be defined before Epic 1 screens can be built. |
+| # | Gap | Priority | Status | Requirement Set |
+|---|-----|----------|--------|----------------|
+| 1 | **Employee Self-Service Portal** | P0 | ✅ RESOLVED | 15 requirements REQ-ESS-001–015 in `employeeSelfServiceRequirements.json`. Employee Benefits Dashboard, My Benefits, My Elections, My Deductions, My Documents, Benefit Summary PDF, Life Event Self-Service, Employee Enrollment Wizard, AI Benefits Assistant, Persona Switch, Employee Role Matrix, Demo Flow Steps 10–13, API enforcement (employeeId from token only), Enrollment Confirmation screen. |
+| 2 | **Payroll Transmission Lifecycle** | P0 | ✅ RESOLVED | 15 requirements REQ-PAY-001–015 in `payrollTransmissionRequirements.json`. Deduction file generation, ROUND((Monthly×12)÷PayPeriods,2) formula, pre-transmission validation (10 rules), lifecycle DRAFT→GENERATED→VALIDATED→READY_TO_TRANSMIT→TRANSMITTED→ACKNOWLEDGED→PROCESSED, acknowledgment codes, rejection handling, AI exception resolution, Payroll Transmission Monitor dashboard, retry scopes, idempotency, three-way reconciliation, configurable schedule. Demo: Linda White journey. |
+| 3 | **Dependent Documentation Upload & Verification** | P0 | ✅ RESOLVED | 14 requirements REQ-DOC-001–014 in `dependentDocumentationRequirements.json`. Configurable document rules per life event + relationship type (8 seed rules), upload step in Life Event workflow, MIME magic bytes validation (PDF/JPEG/PNG, 10 MB max), document metadata schema (PENDING_REVIEW→APPROVED/REJECTED), Document Verification Queue, Document Review Screen with inline preview + AI extraction panel, approval cascade (9 steps), rejection with 7 reason codes, coverage HOLD pending approval, audit trail (7 events), AI Document Verification Assistant. Reusable platform service — new life event type = new data row, no code change. |
+| 4 | **HSA / FSA Business Rules** | P1 | ✅ RESOLVED | 15 requirements (REQ-HSA-001–006, REQ-FSA-001–007, REQ-AI-HSA-001, REQ-HSA-FSA-CONFIG) in `hsaFsaRequirements.json`. HSA eligibility independent from medical (6 criteria including HDHP enrollment, no Medicare), HDHP qualification check, annual contribution limits (IRS limits stored as configurable reference data, not hardcoded; demo values labeled as demo data), catch-up, employer HSA seed, contribution monitoring. FSA: 3 types, annual election, carryover, grace period, use-it-or-lose-it, run-out period, employee dashboard. AI HSA/FSA assistant. |
+| 5 | **COBRA Election Tracking** | P1 | ✅ RESOLVED | 15 requirements (REQ-COBRA-001–013, REQ-AI-COBRA-001–002) in `cobraAdministrationRequirements.json`. Automatic COBRA case creation on qualifying event, qualified beneficiary identification, election notice generation, deadline tracking (configurable window, not hardcoded), election UI, COBRA premium = Group Rate × 102% (configurable admin fee %), coverage activation, retroactive coverage, payment tracking, expiration, COBRA administration dashboard with 8 metric tiles, case detail timeline (5 events), notifications for 10 lifecycle events. AI employee and admin COBRA assistants. Demo: Linda White termination June 30, 2027 (stateful workflow, not just a record). |
+| 6 | **Rate Table Management UI** | P1 | ✅ RESOLVED | 18 requirements (REQ-RATE-001–017, REQ-AI-RATE-001) in `rateTableRequirements.json`. Rate Table Catalog (6 statuses), Create Rate Table (9 required fields), coverage tier rates, 7 rate calculation methods, age-banded rates (10 bands), salary-based life insurance, effective dating, mid-year amendment (original immutable → new version → SUPERSEDED), version history, CSV import with validation (9 checks, demo: 24 records, 2 errors), rate preview, approval workflow, rate change impact analysis (demo: +10% PPO 500, 2,450 employees, +$36,750/month), premium engine integration (no hardcoded values), calculation audit trace, side-by-side rate comparison. Rate Table is a first-class versioned business object; eliminates dependency on `rates.json`. |
+| 7 | **Enrollment Confirmation & Post-Enrollment Experience** | P1 | ✅ RESOLVED | 14 requirements (REQ-ENROLL-POST-001–012, REQ-AI-ENROLL-POST-001, REQ-ENROLL-POST-DEMO) in `enrollmentConfirmationRequirements.json`. Confirmation screen, confirmation number ENR-{planYear}-{employeeId}, election summary (Monthly $443.00 / Biweekly $204.46), enrollment status lifecycle state machine shared across Employee Portal/Carrier/Payroll/Notifications/Reconciliation (DRAFT→SUBMITTED→VALIDATING→PENDING_CARRIER→ACCEPTED→ACTIVE; REJECTED→CORRECTION_REQUIRED→RESUBMITTED), carrier acceptance cascade, carrier rejection UX (plain language, not raw error codes), Benefit Summary PDF v1/v2, submission and active coverage emails. Demo: Linda White 14-step journey. |
+| 8 | **Cross-Application Search** | P2 | ✅ RESOLVED | 18 requirements (REQ-SEARCH-001–017, REQ-AI-SEARCH-001, REQ-SEARCH-API) in `globalSearchRequirements.json`. Ctrl+K/Cmd+K command palette, search across 12 entity types (MVP: Employees/Plans/Requirements/Audit/Carrier Transactions), results grouped by entity type, quick-look preview panel, search filters, exact-first ranking, RBAC-filtered results, deep linking per entity type, empty state, loading UX, AI natural language search, unified API schema. Lightweight — no Elasticsearch required for demo. |
+| 9 | **Employee Demographics & Profile Management UI** | P2 | ✅ RESOLVED | 16 requirements (REQ-EMP-001–015, REQ-AI-EMP-001) in `employeeProfileRequirements.json`. Reclassified P2→P1 (Employee 360 is master data hub). Employee 360 hub accessible from any workflow, demographic management (SSN masked XXX-XX-1234), address management, name change cascade (carrier + payroll identity update), employment information, employment class change → eligibility trigger + cascade (8-step), compensation management → salary-based benefit impact analysis, payroll identity mapping, carrier identity mapping, change propagation engine with impact matrix (7 change types × 5 downstream systems), effective dating, change history, profile validation, new hire workflow (5-step + eligibility calculation), change impact preview UI. AI change impact analysis. |
+| 10 | **Notification Template Editor UI** | P2 | ✅ RESOLVED | 18 requirements (REQ-NOTIFY-UI-001–019, REQ-AI-NOTIFY-001) in `notificationTemplateRequirements.json`. Template catalog with 6 event categories, create template, rich text editor, merge field picker (no manual `{{}}` typing), context-aware merge fields per event, template preview with sample data, live split-screen preview, test send (labeled TEST — DO NOT REPLY), activate/deactivate, versioning, effective dating, multi-channel (Email/In-App/SMS), event mapping visibility, notification delivery history, template validation before activation, RBAC. AI template authoring. 3 templates fully functional for demo: Enrollment Submitted, Carrier Accepted, Carrier Rejected. |
+| 11 | **Standard Compliance Reports** | P2 | ✅ RESOLVED | 18 requirements (REQ-REPORT-001–018) in `reportingRequirements.json`. Reporting dashboard with 3 categories (Operational/Compliance/Integration), RBAC-filtered catalog, standard filter panel (Employer/Plan Year/As Of Date/Status/Coverage Tier), Enrollment Census, ACA Eligibility Status (operational), Dependent Verification Report, Benefits Cost Summary (monthly/quarterly/annualized), Life Event Activity, Open Enrollment Completion (88% demo rate), Eligibility Exceptions, Carrier Transaction Report, Payroll Deduction Report, Reconciliation Report (three-way match), report preview, export history, scheduled reports, role-based data visibility (SSN never in standard exports), data freshness display. |
+| 12 | **Multi-Employer / Employer Profile Management** | P0 | ✅ RESOLVED | 22 requirements (REQ-EMPLOYER-001–021, REQ-AI-EMPLOYER-001) in `employerProfileRequirements.json`. Reclassified P2→P0 (Epic 0 — all features depend on employer context). Employer directory, create employer profile, profile detail (Organization + Contacts + Configuration), plan year configuration + validation, plan year lifecycle (DRAFT→CONFIGURATION→OPEN_ENROLLMENT→ACTIVE→CLOSED→ARCHIVED), payroll frequency → premium engine, payroll calendar, product linking (9 products), employer plan configuration, global context switcher (`Acme Corporation ▼ | 2027 Plan Year`), context persistence across all navigation, unsaved-changes warning on switch, employer dashboard (8 metric tiles), employee count by status, eligibility configuration, payroll configuration, carrier configuration, requirements workspace context, employer status lifecycle, employer audit trail, employer RBAC. `employerId + planYearId` are mandatory context keys across the entire data model. AI employer configuration assistant. |
 
-### Gap Status Summary
+### Gap Status Summary — Phase 3
 
 | Priority | Open | Resolved |
 |----------|------|---------|
-| P0 | 3 (Employee Portal, Payroll Transmission, Dependent Docs) | 0 |
-| P1 | 4 (HSA/FSA, COBRA Election, Rate Table UI, Enrollment Confirmation) | 0 |
-| P2 | 5 (Search, Employee Profile, Notification Templates, Reports, Multi-Employer) | 0 |
-| **Total** | **12** | **0** |
+| P0 | 0 | 5 (Employer Profile, Employee Portal, Payroll Transmission, Dependent Docs, Enrollment Confirmation) |
+| P1 | 0 | 4 (HSA/FSA, COBRA, Rate Table UI, Employee Profile reclassified P1) |
+| P2 | 0 | 5 (Global Search, Notification Templates, Reports, original P2 gaps) |
+| **Total** | **0** | **12** |
 
 ---
 
 ## Gaps vs. PetLife AI Factory Pattern
 
-The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload). 
+The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload).
 Group Benefits breaks that in three ways:
 
 | Dimension | PetLife | Group Benefits |
@@ -206,33 +206,317 @@ Group Benefits breaks that in three ways:
 
 ---
 
-## Recommended Build Order
+## 12. Recommended Build Order
 
+_Revised 2026-07-23. 10-phase dependency-ordered build plan replacing the original Epic-sequence order. All Phase 3 gaps resolved; build order updated accordingly._
+
+### 10-Phase Build Plan
+
+**Phase 0 — Platform Foundation & Employer Context (P0)**
+
+Build this first — every downstream feature depends on employer and plan-year context.
+
+- Multi-Employer / Employer Profile Management
+- Global Employer Context Switcher (`Acme Corporation ▼ | 2027 Plan Year`)
+- Plan Year Management
+- User Authentication & RBAC
+- Environment / Configuration Management
+- API Error Response Schema
+- Audit Trail Foundation
+- Cross-Application Search Foundation (Ctrl+K)
+- Global Navigation / Application Shell
+- React State Management (Zustand — employer, planYear, persona slices)
+
+Key output: `employerId + planYearId + userId` inherited by every screen and API call.
+
+**Phase 1 — Core Data & Reference Configuration (P0)**
+
+Establish the master data that all workflows consume.
+
+- Employee & Employee Profile Management (Employee 360)
+- Employee Seed Dataset — 30 employees (ACM-E001–ACM-E030)
+- Dependent Management
+- Product Catalog (Medical / Dental / Vision / Life / AD&D / STD / LTD / HSA / FSA)
+- Rate Table Management (versioned first-class business object — eliminates hardcoded `rates.json`)
+- Payroll Frequency & Calendar
+- Carrier Configuration
+- Plan Versioning
+- Eligibility Policy Configuration
+
+Key output: `Acme Corporation → 2027 Plan Year → Employees / Dependents / Plans / Rates / Eligibility Rules / Carriers / Payroll`
+
+**Phase 2 — Benefits Requirements & AI Requirements Studio (P0/P1)**
+
+Where AI differentiation becomes visible.
+
+- Benefits Guide Upload + File Storage + MIME/Size Validation
+- Document Preview + Extraction Review + Approval
+- AI Requirements Generation + Requirements Workspace
+- Conflict Detection + Impact Analysis
+- AI Interview / Multi-turn Conversation + Conversation State Management
+- Requirements Versioning + Requirements → Plan Configuration + Requirements → Rule Builder
+- Backlog Generation + Backlog Export (JSON/CSV/Jira)
+
+Context strategy: `Document → Extraction → Chunking/Metadata → Requirements Store → Retrieval/RAG → AI Agent`.
+Do not inject the entire requirements corpus into every Gemini prompt.
+
+**Phase 3 — Plan Configuration & Rule Engine (P0)**
+
+Build the deterministic configuration engine before relying heavily on AI.
+
+- Plan Configuration + Effective Dating
+- Rule Builder (visual IF→AND/OR→THEN; JSON rule AST)
+- Eligibility Rules / Life Event Rules / Dependent Rules / Age-Out Rules / Waiting Period Rules
+- Premium Calculation Engine (payroll frequency conversion, rounding rules, HSA/FSA rules)
+- Validation Engine
+- Configuration Publish Workflow
+
+Architectural principle: **AI proposes configuration fields; the deterministic rule engine executes them.**
+
+**Phase 4 — Open Enrollment & Employee Experience (P0)**
+
+The employee-facing core workflow.
+
+- Open Enrollment Period Management
+- Enrollment Wizard (8-step, draft state, back navigation)
+- Plan Comparison (2–4 plans side-by-side, "Differences Only" mode)
+- Employee Self-Service Portal (My Benefits / My Elections / My Deductions / My Documents)
+- Premium Calculation + Enrollment Validation
+- Enrollment Confirmation + Benefit Summary PDF (v1 PENDING / v2 ACTIVE)
+- Employee Notifications (submission + active coverage emails)
+
+Recommended flow: `Employee → My Benefits → Open Enrollment → Compare Plans → Select Benefits → Review → Submit → Confirmation → Benefit Summary PDF`
+
+**Phase 5 — Life Events & Dependent Verification (P0/P1)**
+
+- Life Event Workflow (Marriage / Birth / Adoption / Divorce / Loss of Coverage / Death of Dependent)
+- Life Event Windows (configurable per event type)
+- Dependent Documentation Upload + Document Verification Queue + Approve/Reject + Coverage Hold
+- Eligibility Recalculation + Enrollment Update + Employee Notification
+
+Demo scenario: **Linda White → Marriage → Upload Marriage Certificate → HR Review → Approve → Add Spouse → Recalculate Coverage → Carrier Transaction**
+
+**Phase 6 — Carrier & Payroll Integration (P0/P1)**
+
+Full transmission lifecycle.
+
+- Carrier: Mock API / Transaction Generation / Accepted/Rejected Simulation / Deterministic Rejection Rules / EDI 834 Sample / Transmission Scheduling / Transaction Monitoring / Retry Handling
+- Payroll: Deduction Generation / Transmission / Acknowledgment / Rejection Handling / Monitoring
+- Three-way Reconciliation: `Benefits ↔ Carrier ↔ Payroll → Exceptions Queue`
+
+Canonical identity model: `employeeId ↔ carrierMemberId (per product) ↔ payrollEmployeeId`
+
+**Phase 7 — Termination, COBRA & Compliance (P1)**
+
+- Employment Termination + Qualifying Event
+- COBRA Eligibility / Notice Generation / Election Tracking / Premium Calculation (Group Rate × 102%) / Deadline Tracking / Coverage Activation
+- ACA Eligibility Tracking / Reporting Data / 1095-C Data Preparation
+- Dependent Age-Out + Coverage Termination
+
+Flow: `Employee Terminated → Qualifying Event → COBRA Eligibility → COBRA Notice → Election Window → Employee Elects → Premium Calculation → Coverage Activated`
+
+**Phase 8 — Notifications & Communications (P1/P2)**
+
+- Notification Engine + Event Mapping (trigger / audience / channel / timing)
+- Notification Template Management (editor / merge field picker / preview / test send)
+- Email / In-App / SMS + Notification Delivery History
+- Template Versioning + Effective Dating + Template Activation
+- AI Template Authoring
+
+Demo: `Carrier Accepted → Notification Event → Template Selection → Merge Employee Data → Send Notification → Employee Portal`
+
+**Phase 9 — Standard Reporting & Executive Dashboard (P1/P2)**
+
+- Standard Reports: Enrollment Census / ACA Eligibility / Dependent Verification / Benefits Cost Summary / Life Event Activity / Open Enrollment Completion / Eligibility Exceptions / Carrier Transactions / Payroll Deductions / Reconciliation
+- Executive Dashboard: Active Employer Groups / Plans / Employees / Enrollments / Eligibility Exceptions / Carrier Status / Payroll Status / Open Enrollment Progress / AI Requirements Progress
+- AI-generated insights and recommended actions per dashboard panel
+
+**Phase 10 — Hardening, Testing & Deployment (P0 before demo)**
+
+- Unit Tests: eligibility dates (7 edge cases), premium calculation (4 frequencies + rounding), payroll frequency conversion, dependent age-out, life event windows, plan versions
+- API Integration Tests + 5 E2E journeys (enrollment, carrier rejection CT-10045, reconciliation, life event, AI requirements flow)
+- AI Reliability: Gemini 429 handling / exponential backoff + jitter / circuit breaker / timeout / graceful degradation / prompt versioning / AI output validation / human review enforcement
+- Deployment: `.env` configuration / API key management / no Docker prerequisite
+
+```bash
+npm install
+npm run seed
+npm run dev
 ```
-Epic 1 (Plan Config)
-  → seed data: employer, products, plans, rates
 
-Epic 2 (Eligibility)
-  → depends on: plan data, employee classes
+- Demo Seed Reset endpoint (`POST /api/demo/reset`)
 
-Epic 3 (Enrollment)
-  → depends on: plans, eligibility rules, dependent data
+### MVP Sprint Path — Fastest Route to Compelling Demo
 
-Epic 5 (AI Requirements Studio)   ← "wow" moment
-  → depends on: Epics 1–3 data model to populate from AI output
-  → requires: SSE streaming, multi-turn conversation, PDF ingestion
+| Sprint | Theme | Key Deliverables |
+|--------|-------|-----------------|
+| Sprint 1 | Foundation | Employer → Plan Year → Employee Data → Plans → Global Context |
+| Sprint 2 | AI Differentiation | PDF Upload → Extraction → Requirements → AI Interview → Requirements Review |
+| Sprint 3 | Configuration | Requirements → Plan Config → Rule Builder → Eligibility → Premiums |
+| Sprint 4 | Employee Journey | Open Enrollment → Plan Comparison → Enrollment Wizard → Confirmation |
+| Sprint 5 | Integration | Enrollment → Carrier Mock → Accepted/Rejected → Payroll → Reconciliation |
+| Sprint 6 | Operational Story | Life Event → Dependent Document → Approval → Coverage Update → Notification |
+| Sprint 7 | Executive Story | Dashboard → Reports → Exceptions → AI Insights |
+| Sprint 8 | Demo Hardening | Seed Data → Error Handling → AI Rate Limits → Testing → Deployment |
 
-Epic 4 (Carrier + Payroll Integration)   ← last, all mock
-  → depends on: enrollment records from Epic 3
-```
+### Golden Path Demo Storyline
+
+> Acme Corporation selects 2027 Plan Year → AI ingests the Benefits Guide → generates requirements → HR reviews and approves requirements → plans and rules are configured → Linda White completes open enrollment → premium is calculated → enrollment is sent to carrier → carrier accepts → payroll deduction is generated → employee receives confirmation → Executive Dashboard updates → AI explains enrollment and integration exceptions.
 
 ---
 
-## Prioritized Next Steps
+## 13. AI Platform Architecture
 
-1. **Resolve the 6 critical decisions** (AI model, persistence, auth, streaming, seed data, sample PDF)
-2. **Define the Acme Corp seed dataset** — 25–30 employees, full plan catalog, 3 carriers, pre-seeded enrollment states
-3. **Design the Epic 5 data model** — Requirement entity schema and traceability edge model before any UI work
-4. **Specify life event enrollment windows** for all 8 event types
-5. **Choose rule builder approach** for Epic 2 (library vs. custom)
-6. **Define the carrier rejection mock rule** for the demo climax (Step 10)
+_Received 2026-07-23. 24 AI architecture considerations; all applicable items already addressed in existing requirement sets. This section serves as the AI architecture reference for implementation._
+
+### AI Use Case Matrix
+
+| AI Capability | AI Role | Deterministic System |
+|--------------|---------|---------------------|
+| Benefits Document Extraction | Extract / summarize | Document validation |
+| Requirements Generation | Generate | Requirements approval |
+| AI Interview | Ask / clarify | Persist requirements |
+| Conflict Detection | Reason / identify | Rule comparison |
+| Impact Analysis | Reason / explain | Dependency graph |
+| Plan Configuration | Recommend | Configuration validation |
+| Rule Builder | Translate natural language | Rule execution engine |
+| Benefits Chat | Answer | Access control |
+| Enrollment Assistant | Guide | Eligibility / enrollment engine |
+| AI Reporting | Analyze | Reporting database |
+| Notification Authoring | Generate | Template validation |
+| Operations / SRE | Diagnose | Execute approved actions only |
+
+### AI vs. Deterministic Decision Boundary
+
+AI must never directly execute:
+
+- Eligibility date or coverage date calculation
+- Premium or payroll deduction calculation
+- Coverage status changes
+- COBRA deadline calculation
+- ACA measurement or calculation
+- Carrier transactions
+- Payroll deductions
+
+The architectural boundary:
+
+```
+AI
+ ↓  Extract rule text
+ ↓  Human review & approval
+ ↓  Rule stored in configuration (JSON AST)
+ ↓  Deterministic rule engine executes
+```
+
+### RAG / Grounding Architecture
+
+Every document chunk must carry metadata to prevent AI from using 2026 rules for 2027 questions:
+
+```json
+{
+  "employerId": "ACM",
+  "planYearId": "2027",
+  "documentId": "doc-001",
+  "documentType": "Benefits Guide",
+  "productType": "Medical",
+  "section": "Eligibility",
+  "pageNumber": 12,
+  "effectiveDate": "2027-01-01",
+  "version": "v1.0"
+}
+```
+
+### AI Structured Output Schema
+
+AI must return structured data when its output feeds application logic — never rely on free-form text:
+
+```json
+{
+  "requirement": "Employees are eligible after 30 days",
+  "category": "ELIGIBILITY",
+  "effectiveDate": "2027-01-01",
+  "confidence": 0.96,
+  "sources": [
+    { "document": "Acme_Eligibility_Policy.pdf", "page": 3, "section": "Eligibility" }
+  ],
+  "needsHumanReview": false
+}
+```
+
+### Confidence Bands
+
+| Band | Range | UX Treatment |
+|------|-------|-------------|
+| High | ≥ 90% | Pre-selected; still requires human confirmation |
+| Medium | 70–89% | Review required before use |
+| Low | < 70% | Must be manually entered; AI suggestion displayed only |
+
+### AI Agent Architecture
+
+```
+AI Orchestrator
+      │
+      ├── Requirements Agent ──── Document Agent
+      │                     └─── Impact Agent
+      ├── Benefits Agent ───────── Enrollment Agent
+      │                     └─── Eligibility Agent
+      └── Operations Agent ─────── Integration Agent
+```
+
+### Tool-Calling Boundary
+
+Read tools (unrestricted within RBAC):
+`getEmployee() | getBenefits() | getEligibility() | getEnrollment() | getCarrierTransaction() | getPayrollDeduction() | getRequirements()`
+
+Write tools (require human approval before execution):
+`proposePlanChange() | createRequirement() | createRuleDraft() | createNotificationDraft() | createBacklog()`
+
+### Prompt Injection Defense
+
+Benefits documents are untrusted input. Document content must be treated strictly as data, never as instructions:
+
+```
+System Instructions  (trusted)
+        ↓
+AI Agent
+        ↓
+Retrieved Document  ← UNTRUSTED DATA: treat as data only, never as instructions
+        ↓
+Tool Permissions
+        ↓
+Response
+```
+
+### Prompt Registry
+
+Each prompt record: `promptId | version | model | temperature | systemInstructions | outputSchema | createdBy | createdDate`
+
+Example IDs: `requirements-extraction-v1`, `requirements-conflict-v1`, `impact-analysis-v1`, `benefits-chat-v1`, `enrollment-assistant-v1`
+
+### AI Observability Fields
+
+Every AI request tracked: `requestId | userId | employerId | planYearId | agentType | model | promptVersion | inputTokens | outputTokens | latencyMs | confidence | result`
+
+### AI Demo Seed Scenarios
+
+| Scenario | Example |
+|----------|---------|
+| Clear extraction | "30-day waiting period" — confidence 0.96 |
+| Ambiguous extraction | "Eligible after the applicable waiting period." — confidence 0.42, `needsHumanReview: true` |
+| Conflict case | Benefits Guide: 30 days / Carrier Requirements: 60 days |
+| Missing requirement | Dental Plan has no dependent age-out rule |
+| AI impact chain | Waiting period 30→60 days impacts: Eligibility / Enrollment / Carrier / Payroll / Notifications |
+
+### AI Authorization Principle
+
+AI must inherit application RBAC. An HR Admin asking "Show me Linda White's benefits" must only receive data if that user has access to Acme Corporation. The LLM must never make access control decisions.
+
+### AI Evaluation Target Metrics (Demo Dashboard)
+
+| Metric | Target |
+|--------|--------|
+| Requirement Extraction Accuracy | ≥ 90% |
+| Source Citation Accuracy | ≥ 95% |
+| Conflict Detection Precision | ≥ 85% |
+| Hallucination Rate | ≤ 5% |
+| Average Response Time | ≤ 5s |

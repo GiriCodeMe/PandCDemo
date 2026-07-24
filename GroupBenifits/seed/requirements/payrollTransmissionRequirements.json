@@ -1,0 +1,336 @@
+[
+  {
+    "requirementId": "REQ-PAY-001",
+    "type": "Functional Requirement",
+    "title": "Payroll Deduction File Generation — Record Per Active Employee Enrollment",
+    "description": "The system shall generate a payroll deduction file based on approved employee benefit elections. Each record represents one employee's deduction for one benefit type. The file is generated as CSV (demo) with each record including all fields required for the payroll system to apply the correct deduction.",
+    "status": "Approved",
+    "tags": ["payroll", "transmission", "integration"],
+    "fileRecordFields": [
+      "employeeId",
+      "payrollId",
+      "employeeName",
+      "planId",
+      "benefitType",
+      "coverageTier",
+      "deductionCode",
+      "deductionAmount",
+      "payFrequency",
+      "effectiveDate",
+      "terminationDate",
+      "transactionType"
+    ],
+    "transactionTypes": ["ADD", "CHANGE", "TERMINATE"],
+    "demoSample": {
+      "employeeId": "EMP-10045",
+      "payrollId": "PAY-10045",
+      "employeeName": "Linda White",
+      "planId": "MED-PPO500",
+      "benefitType": "Medical",
+      "coverageTier": "Employee + Family",
+      "deductionCode": "MED-PPO500-FAM-2027",
+      "deductionAmount": 150.00,
+      "payFrequency": "BIWEEKLY",
+      "effectiveDate": "2027-01-01",
+      "transactionType": "ADD"
+    }
+  },
+  {
+    "requirementId": "REQ-PAY-002",
+    "type": "Functional Requirement",
+    "title": "Payroll Deduction Calculation — Per-Pay-Period Amount for All Four Frequencies",
+    "description": "The system shall calculate employee payroll deductions from the monthly employee premium using the authoritative formula: Pay-Period Deduction = ROUND((Monthly Premium × 12) ÷ Pay Periods Per Year, 2). All four pay frequencies must be supported. Calculation is centralized in the Premium & Deduction Calculation Service.",
+    "status": "Approved",
+    "tags": ["payroll", "premium-calculation"],
+    "formula": "ROUND((Monthly Premium × 12) ÷ Pay Periods Per Year, 2)",
+    "payPeriods": {
+      "WEEKLY":       52,
+      "BIWEEKLY":     26,
+      "SEMI_MONTHLY": 24,
+      "MONTHLY":      12
+    },
+    "demoExample": {
+      "monthlyPremium": 150.00,
+      "biweekly":     69.23,
+      "semiMonthly":  75.00,
+      "weekly":       34.62,
+      "monthly":     150.00
+    },
+    "linkedRequirements": ["REQ-PREM-001", "REQ-PREM-003"]
+  },
+  {
+    "requirementId": "REQ-PAY-003",
+    "type": "Functional Requirement",
+    "title": "Payroll File Pre-Transmission Validation",
+    "description": "Before transmitting to the payroll system, the system shall validate all records in the payroll deduction file. Validation failures produce a pre-flight report showing record counts, warnings, and errors. The user can transmit valid records while investigating errors, or hold the entire batch.",
+    "status": "Approved",
+    "tags": ["payroll", "validation"],
+    "validationRules": [
+      "Employee exists and is active",
+      "Payroll ID exists in identity mapping",
+      "Plan ID references an active published plan",
+      "Deduction code exists and is active for the current plan year",
+      "Deduction amount matches premium calculation output",
+      "Effective date is valid and not in the past",
+      "Pay frequency is supported",
+      "Employee is currently eligible for the plan",
+      "Enrollment record is in ACTIVE or TRANSMITTED status",
+      "No duplicate transaction for the same employee + plan + effective date"
+    ],
+    "preFlightReport": {
+      "fields": ["recordsTotal", "recordsValid", "recordsWarning", "recordsError"],
+      "actions": ["[View Errors]", "[Download Report]", "[Transmit Valid Records]", "[Hold Batch]"]
+    },
+    "demoNumbers": {
+      "total": 4892,
+      "valid": 4880,
+      "warnings": 8,
+      "errors": 4
+    },
+    "linkedRequirements": ["REQ-VALIDATION-001", "REQ-OPS-005"]
+  },
+  {
+    "requirementId": "REQ-PAY-004",
+    "type": "Functional Requirement",
+    "title": "Payroll Transmission Lifecycle States",
+    "description": "Each payroll transmission batch shall follow a defined lifecycle. State transitions are recorded in the audit trail. The failure path supports investigation and resubmission without creating a new batch.",
+    "status": "Approved",
+    "tags": ["payroll", "lifecycle"],
+    "happyPathStates": ["DRAFT", "GENERATED", "VALIDATED", "READY_TO_TRANSMIT", "TRANSMITTED", "ACKNOWLEDGED", "PROCESSED"],
+    "failurePathStates": ["TRANSMITTED", "REJECTED", "INVESTIGATING", "CORRECTED", "RETRANSMITTED"],
+    "stateTransitions": [
+      { "from": "DRAFT",             "to": "GENERATED",        "trigger": "File generation complete" },
+      { "from": "GENERATED",         "to": "VALIDATED",        "trigger": "Pre-flight validation passes" },
+      { "from": "VALIDATED",         "to": "READY_TO_TRANSMIT","trigger": "User approves transmission" },
+      { "from": "READY_TO_TRANSMIT", "to": "TRANSMITTED",      "trigger": "File sent to payroll API" },
+      { "from": "TRANSMITTED",       "to": "ACKNOWLEDGED",     "trigger": "Payroll system acknowledges receipt" },
+      { "from": "ACKNOWLEDGED",      "to": "PROCESSED",        "trigger": "Payroll system confirms processing" },
+      { "from": "TRANSMITTED",       "to": "REJECTED",         "trigger": "Payroll system rejects batch or records" },
+      { "from": "REJECTED",          "to": "INVESTIGATING",    "trigger": "Integration Admin opens investigation" },
+      { "from": "INVESTIGATING",     "to": "CORRECTED",        "trigger": "Root cause resolved" },
+      { "from": "CORRECTED",         "to": "RETRANSMITTED",    "trigger": "Resubmission sent" }
+    ],
+    "linkedRequirements": ["REQ-WF-001", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-PAY-005",
+    "type": "Functional Requirement",
+    "title": "Payroll Transmission — Manual, Scheduled, and Retry Modes",
+    "description": "The system shall transmit validated payroll deduction files to the configured payroll endpoint. Three trigger modes are supported: manual (Integration Admin clicks [Transmit to Payroll]), scheduled (cron-based at configured frequency), and retry (resubmit rejected records after correction). For the demo, transmission uses a mock payroll API that returns deterministic or chaos-mode responses.",
+    "status": "Approved",
+    "tags": ["payroll", "transmission"],
+    "transmissionModes": ["MANUAL", "SCHEDULED", "RETRY"],
+    "demoEndpoint": "Mock Payroll API — same deterministic/chaos pattern as carrier simulation",
+    "demoAction": "[Transmit to Payroll]",
+    "linkedRequirements": ["REQ-TRANSMISSION-002", "REQ-OPS-001"]
+  },
+  {
+    "requirementId": "REQ-PAY-006",
+    "type": "Functional Requirement",
+    "title": "Payroll Acknowledgment — Accept, Partial, Reject, Timeout",
+    "description": "The system shall receive and process a payroll acknowledgment response after transmission. The acknowledgment contains a record-level result for each transmitted record. The batch result is calculated from the individual record outcomes.",
+    "status": "Approved",
+    "tags": ["payroll", "acknowledgment"],
+    "batchOutcomes": ["ACCEPTED", "PARTIALLY_ACCEPTED", "REJECTED", "FAILED", "TIMEOUT"],
+    "acknowledgmentFields": ["batchId", "recordsReceived", "recordsAccepted", "recordsRejected", "processingStatus", "recordLevelResults"],
+    "demoAcknowledgment": {
+      "fileName": "PAYROLL_2027_01_15_001.csv",
+      "recordsTransmitted": 4892,
+      "recordsAccepted": 4850,
+      "recordsRejected": 42,
+      "status": "PARTIALLY_ACCEPTED"
+    },
+    "actions": ["[View Rejections]", "[Retry Failed Records]"],
+    "linkedRequirements": ["REQ-OPS-005", "REQ-OPS-006"]
+  },
+  {
+    "requirementId": "REQ-PAY-007",
+    "type": "Functional Requirement",
+    "title": "Payroll Rejection Handling — Capture Rejection Code, Affected Employee, and Recommended Fix",
+    "description": "For each rejected payroll record, the system shall capture the rejection code, a human-readable description, the affected employee, plan, and deduction code. The rejection detail view links to the AI Exception Copilot for root cause analysis and resolution recommendation.",
+    "status": "Approved",
+    "tags": ["payroll", "rejection", "exception-handling"],
+    "rejectionRecordFields": ["employeeId", "employeeName", "planId", "deductionCode", "rejectionCode", "rejectionDescription", "recommendedAction"],
+    "demoRejection": {
+      "employeeId": "EMP-10045",
+      "employeeName": "Linda White",
+      "deductionCode": "MED-EE-FAM",
+      "rejectionCode": "PAY-0042",
+      "rejectionDescription": "Deduction code MED-EE-FAM is not configured for the 2027 payroll period.",
+      "recommendedAction": "Map deduction code to MED-PPO500-FAM-2027."
+    },
+    "linkedRequirements": ["REQ-AI-COP-009"]
+  },
+  {
+    "requirementId": "REQ-PAY-008",
+    "type": "Functional Requirement",
+    "title": "AI Payroll Exception Resolution — Root Cause, Impact, and Corrective Action",
+    "description": "The AI Operations Agent shall analyze payroll transmission failures and produce a structured exception report: root cause, affected employees count, financial impact estimate, recommended resolution, and a corrective action button. This is the payroll equivalent of the carrier exception copilot (REQ-AI-COP-009).",
+    "status": "Approved",
+    "tags": ["payroll", "ai", "exception-resolution"],
+    "exampleInteraction": {
+      "query": "Why did payroll reject 42 records?",
+      "response": {
+        "rootCause": "42 records reference deduction code MED-EE-FAM which is not active in the 2027 payroll period.",
+        "affectedPlan": "PPO 500",
+        "affectedEmployees": 42,
+        "financialImpact": "$6,300 estimated monthly deductions not applied",
+        "recommendation": "Update deduction code mapping: MED-EE-FAM → MED-PPO500-FAM-2027",
+        "actions": ["[Apply Mapping]", "[Revalidate]", "[Retransmit]"]
+      }
+    },
+    "humanCheckpoint": "Integration Admin approves the mapping correction before revalidation and retransmission",
+    "linkedRequirements": ["REQ-AI-COP-009", "REQ-AIGOV-003"]
+  },
+  {
+    "requirementId": "REQ-PAY-009",
+    "type": "Functional Requirement",
+    "title": "Payroll Transmission Monitor — Dedicated Dashboard Panel",
+    "description": "The Integrations workspace shall include a dedicated Payroll Transmission Monitor panel alongside the Carrier Integration Monitor. The panel shows the last transmission summary, current status, and quick-access actions.",
+    "status": "Approved",
+    "tags": ["payroll", "monitoring"],
+    "dashboardPanelFields": {
+      "lastTransmission": "Date and time",
+      "recordsSummary": { "total": "N", "accepted": "N", "rejected": "N", "failed": "N" },
+      "status": "ACCEPTED | PARTIALLY_ACCEPTED | REJECTED | IN_PROGRESS"
+    },
+    "statusBadges": {
+      "ACCEPTED":           "✓ Accepted (green)",
+      "PARTIALLY_ACCEPTED": "⚠ Partial (amber)",
+      "REJECTED":           "✕ Rejected (red)",
+      "IN_PROGRESS":        "⟳ In Progress (blue)"
+    },
+    "linkedRequirements": ["REQ-INT-MON-001"]
+  },
+  {
+    "requirementId": "REQ-PAY-010",
+    "type": "Functional Requirement",
+    "title": "Payroll Transmission History — Filterable Ledger of All Transmission Batches",
+    "description": "The system shall maintain a paginated history of all payroll transmission batches with summary statistics per batch. The history is filterable by date range, status, employee, plan, benefit type, and error code.",
+    "status": "Approved",
+    "tags": ["payroll", "history"],
+    "historyTableColumns": ["File Name", "Transmission Date", "Records", "Accepted", "Rejected", "Status"],
+    "filterOptions": ["Date Range", "Status", "Employee", "Plan", "Benefit Type", "Error Code"],
+    "demoHistory": [
+      { "file": "PAY-001", "date": "Jan 15", "records": 4892, "accepted": 4850, "rejected": 42, "status": "PARTIALLY_ACCEPTED" },
+      { "file": "PAY-002", "date": "Jan 29", "records": 4850, "accepted": 4850, "rejected": 0,  "status": "ACCEPTED" },
+      { "file": "PAY-003", "date": "Feb 12", "records": 4875, "accepted": 4860, "rejected": 15, "status": "PARTIALLY_ACCEPTED" }
+    ]
+  },
+  {
+    "requirementId": "REQ-PAY-011",
+    "type": "Functional Requirement",
+    "title": "Payroll Retry & Resubmission — Correct, Revalidate, Retransmit",
+    "description": "The system shall allow authorized Integration Admins to retry failed payroll records after correcting the root cause. Retry supports three scopes: all failed records, a selected subset, or a single employee. Idempotency keys prevent duplicate deduction submissions.",
+    "status": "Approved",
+    "tags": ["payroll", "retry", "idempotency"],
+    "retryScopes": ["Retry All Failed", "Retry Selected", "Retry Individual Employee"],
+    "retryWorkflow": [
+      "REJECTED → AI Root Cause Analysis",
+      "AI recommends fix",
+      "Integration Admin approves correction",
+      "System applies fix (e.g. deduction code remapping)",
+      "Revalidate affected records",
+      "Retry transmission",
+      "Receive payroll acknowledgment"
+    ],
+    "idempotencyKey": "SHA-256(employerId + employeeId + planId + deductionCode + effectiveDate + transmissionVersion)",
+    "linkedRequirements": ["REQ-OPS-001", "REQ-OPS-002"]
+  },
+  {
+    "requirementId": "REQ-PAY-012",
+    "type": "Functional Requirement",
+    "title": "Payroll Reconciliation — Three-Way Match: Benefits vs. Payroll vs. Carrier",
+    "description": "The reconciliation process shall perform a three-way match between: (1) the benefit enrollment record, (2) the payroll deduction applied, and (3) the carrier enrollment confirmation. A reconciled employee has matching data across all three systems. Mismatches are classified by type and surfaced in the Reconciliation workspace.",
+    "status": "Approved",
+    "tags": ["payroll", "reconciliation"],
+    "reconciliationOutcomes": {
+      "RECONCILED": "Benefits enrollment + payroll deduction + carrier enrollment all match",
+      "PREMIUM_MISMATCH": "Expected deduction ≠ actual payroll deduction applied",
+      "MISSING_PAYROLL_RECORD": "Benefit enrollment exists; no payroll deduction found",
+      "MISSING_CARRIER_RECORD": "Benefit enrollment exists; no carrier confirmation",
+      "EFFECTIVE_DATE_MISMATCH": "Effective dates differ between systems"
+    },
+    "demoScenarios": [
+      {
+        "employee": "Linda White",
+        "benefits": "PPO 500 / Employee + Family",
+        "expectedDeduction": "$150.00",
+        "payroll": "$150.00",
+        "carrier": "Active",
+        "result": "RECONCILED"
+      },
+      {
+        "employee": "ACM-E001 (post-divorce)",
+        "benefits": "PPO 500 / Employee Only",
+        "expectedDeduction": "$75.00",
+        "payroll": "$150.00",
+        "carrier": "Employee Only",
+        "result": "PREMIUM_MISMATCH",
+        "note": "Old EE+Spouse rate still running after divorce"
+      }
+    ],
+    "linkedRequirements": ["REQ-REC-001"]
+  },
+  {
+    "requirementId": "REQ-PAY-013",
+    "type": "Functional Requirement",
+    "title": "Payroll Transmission Schedule — Configurable Frequency with Manual Override",
+    "description": "The system shall support configurable payroll transmission frequency: daily, weekly, biweekly, monthly, or manual-only. For the demo, the default is manual trigger plus a scheduled simulation option. The next scheduled transmission date and time are displayed on the Payroll Transmission Monitor.",
+    "status": "Approved",
+    "tags": ["payroll", "scheduling"],
+    "supportedFrequencies": ["DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "MANUAL"],
+    "demoDefault": "MANUAL + optional scheduled simulation",
+    "demoDisplay": "Next Scheduled Transmission: Friday, Jan 29, 2027 — 2:00 AM",
+    "demoAction": "[Run Transmission Now]",
+    "linkedRequirements": ["REQ-TRANSMISSION-003"]
+  },
+  {
+    "requirementId": "REQ-PAY-014",
+    "type": "Functional Requirement",
+    "title": "Payroll File Format — CSV for Demo with Mock API Acknowledgment",
+    "description": "The demo payroll integration shall use CSV as the primary file format for the generated deduction file. The mock payroll API receives the CSV and returns a JSON acknowledgment. This is simpler and visually understandable for demo audiences.",
+    "status": "Approved",
+    "tags": ["payroll", "file-format", "demo"],
+    "demoStack": [
+      "Benefits Platform generates: PAYROLL_YYYY_MM_DD_NNN.csv",
+      "Mock Payroll API: POST /api/payroll/transmit (receives CSV as multipart)",
+      "Acknowledgment: JSON response { batchId, recordsReceived, recordsAccepted, recordsRejected, status }",
+      "Simulation mode: DETERMINISTIC (default) or CHAOS"
+    ],
+    "supportedFormats": {
+      "MVP": "CSV",
+      "P1": "JSON",
+      "P2": "Fixed Width, SFTP File"
+    }
+  },
+  {
+    "requirementId": "REQ-PAY-015",
+    "type": "Functional Requirement",
+    "title": "End-to-End Payroll Integration Architecture — Parallel to Carrier Integration",
+    "description": "The payroll integration shall mirror the carrier integration architecture: enrollment → file generation → validation → transmission → acknowledgment → reconciliation → AI operations agent. Both integrations feed into the same Reconciliation workspace and share the AI Exception Resolution copilot pattern.",
+    "status": "Approved",
+    "tags": ["payroll", "architecture"],
+    "architectureDiagram": {
+      "leftBranch": "Carrier Integration: Enrollment File → Carrier Mock API → Acknowledgment",
+      "rightBranch": "Payroll Integration: Deduction File → Payroll Mock API → Acknowledgment",
+      "convergence": "Reconciliation → AI Operations Agent → Detect / Explain / Resolve"
+    },
+    "demoJourney": [
+      "Linda White completes enrollment",
+      "Benefits election approved",
+      "Premium calculated ($150/mo biweekly = $69.23)",
+      "Payroll deduction record generated",
+      "Payroll file generated and validated",
+      "Payroll file transmitted to mock API",
+      "Payroll rejects Linda's record (invalid deduction code PAY-0042)",
+      "AI Operations Agent investigates → identifies invalid deduction code",
+      "Benefits Admin approves deduction code mapping correction",
+      "System regenerates payroll record with corrected code",
+      "Retransmission → Payroll accepts",
+      "Three-way reconciliation passes (Benefits ✓ / Carrier ✓ / Payroll ✓)",
+      "Linda sees updated deduction in Employee Portal My Deductions"
+    ],
+    "linkedRequirements": ["REQ-PAY-001", "REQ-CARRIER-SIM-001", "REQ-REC-001", "REQ-ESS-004"]
+  }
+]

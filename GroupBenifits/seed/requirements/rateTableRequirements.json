@@ -1,0 +1,333 @@
+[
+  {
+    "requirementId": "REQ-RATE-001",
+    "type": "Functional Requirement",
+    "title": "Rate Table Catalog — Filterable List of All Rate Tables",
+    "description": "The system shall provide a Rate Table Management screen listing all benefit rate tables. The catalog is filterable by benefit type, carrier, plan, plan year, status, and effective date.",
+    "status": "Approved",
+    "tags": ["rate-table", "plan-configuration", "admin"],
+    "catalogColumns": ["Rate Table Name", "Benefit Type", "Effective Date", "Status"],
+    "rateTableStatuses": ["DRAFT", "PENDING_APPROVAL", "APPROVED", "ACTIVE", "SUPERSEDED", "EXPIRED"],
+    "filterOptions": ["Benefit Type", "Carrier", "Plan", "Plan Year", "Status", "Effective Date"],
+    "demoRateTables": [
+      { "name": "2027 Medical Rates", "type": "Medical", "effective": "01/01/2027", "status": "ACTIVE" },
+      { "name": "2027 Dental Rates",  "type": "Dental",  "effective": "01/01/2027", "status": "ACTIVE" },
+      { "name": "2027 Vision Rates",  "type": "Vision",  "effective": "01/01/2027", "status": "ACTIVE" },
+      { "name": "2027 Life Rates",    "type": "Life",     "effective": "01/01/2027", "status": "ACTIVE" },
+      { "name": "2027 AD&D Rates",    "type": "AD&D",     "effective": "01/01/2027", "status": "DRAFT" }
+    ],
+    "actions": ["[+ Create Rate Table]", "[Import CSV]"],
+    "linkedRequirements": ["REQ-RATE-002", "REQ-RATE-009"]
+  },
+  {
+    "requirementId": "REQ-RATE-002",
+    "type": "Functional Requirement",
+    "title": "Create Rate Table — Required Metadata Fields and Rate Method Selection",
+    "description": "Authorized users shall be able to create a new rate table by providing required metadata fields and selecting a rate calculation method.",
+    "status": "Approved",
+    "tags": ["rate-table", "plan-configuration"],
+    "requiredFields": ["rateTableName", "benefitType", "carrier", "planId", "planYear", "effectiveDate", "expirationDate", "rateMethod", "currency"],
+    "demoExample": {
+      "rateTableName": "2027 PPO 500 Rates",
+      "benefitType": "Medical",
+      "carrier": "Acme Health",
+      "plan": "PPO 500",
+      "effective": "01/01/2027",
+      "rateMethod": "COVERAGE_TIER"
+    },
+    "linkedRequirements": ["REQ-RATE-003", "REQ-RATE-004"]
+  },
+  {
+    "requirementId": "REQ-RATE-003",
+    "type": "Functional Requirement",
+    "title": "Coverage Tier Rates — Employee and Employer Amounts Per Standard Tier",
+    "description": "The rate table shall support standard coverage-tier-based rates with configurable tier names. Each tier defines both the monthly employee rate and the monthly employer contribution.",
+    "status": "Approved",
+    "tags": ["rate-table", "coverage-tiers"],
+    "demoTierRates": [
+      { "tier": "Employee Only",      "monthlyEmployeeRate": 150, "monthlyEmployerRate": 500 },
+      { "tier": "Employee + Spouse",  "monthlyEmployeeRate": 300, "monthlyEmployerRate": 700 },
+      { "tier": "Employee + Child",   "monthlyEmployeeRate": 275, "monthlyEmployerRate": 650 },
+      { "tier": "Employee + Family",  "monthlyEmployeeRate": 400, "monthlyEmployerRate": 850 }
+    ],
+    "linkedRequirements": ["REQ-PREM-001"]
+  },
+  {
+    "requirementId": "REQ-RATE-004",
+    "type": "Functional Requirement",
+    "title": "Rate Calculation Methods — Six Supported Methodologies Configurable Per Plan Type",
+    "description": "The rate table engine shall support six rate calculation methodologies. The method is configured per plan; the same engine handles all benefit types.",
+    "status": "Approved",
+    "tags": ["rate-table", "calculation-methods"],
+    "supportedMethods": [
+      "FLAT_RATE",
+      "COVERAGE_TIER",
+      "AGE_BANDED",
+      "SALARY_BASED",
+      "PERCENTAGE_OF_PREMIUM",
+      "PER_1000_COVERAGE",
+      "PER_PAY_PERIOD"
+    ],
+    "productMethodMapping": {
+      "Medical":  "COVERAGE_TIER",
+      "Dental":   "COVERAGE_TIER",
+      "Vision":   "COVERAGE_TIER",
+      "Life":     "AGE_BANDED + SALARY_BASED",
+      "AD&D":     "PER_1000_COVERAGE"
+    },
+    "linkedRequirements": ["REQ-RATE-005", "REQ-RATE-006"]
+  },
+  {
+    "requirementId": "REQ-RATE-005",
+    "type": "Functional Requirement",
+    "title": "Age-Banded Rates — Rate Per $1,000 Coverage by Age Band for Life and AD&D",
+    "description": "The system shall support age-banded rate tables for Life and AD&D plans. The rate engine determines the applicable age band based on the configured age calculation method.",
+    "status": "Approved",
+    "tags": ["rate-table", "age-banded", "life-insurance"],
+    "demoAgeBands": [
+      { "from": 18, "to": 24, "ratePer1000": 0.05 },
+      { "from": 25, "to": 29, "ratePer1000": 0.06 },
+      { "from": 30, "to": 34, "ratePer1000": 0.07 },
+      { "from": 35, "to": 39, "ratePer1000": 0.08 },
+      { "from": 40, "to": 44, "ratePer1000": 0.10 },
+      { "from": 45, "to": 49, "ratePer1000": 0.14 },
+      { "from": 50, "to": 54, "ratePer1000": 0.20 },
+      { "from": 55, "to": 59, "ratePer1000": 0.30 },
+      { "from": 60, "to": 64, "ratePer1000": 0.45 },
+      { "from": 65, "to": 999,"ratePer1000": 0.60 }
+    ],
+    "linkedRequirements": ["REQ-RATE-006"]
+  },
+  {
+    "requirementId": "REQ-RATE-006",
+    "type": "Functional Requirement",
+    "title": "Salary-Based Life Insurance Rate Calculation",
+    "description": "The system shall support salary-based Life Insurance calculations where the coverage amount is a configurable multiple of the employee's annual salary. Calculation parameters are all configurable.",
+    "status": "Approved",
+    "tags": ["rate-table", "salary-based", "life-insurance"],
+    "configurationFields": ["salaryMultiple", "maximumCoverage", "minimumCoverage", "roundingRules", "ratePer1000"],
+    "demoCalculation": {
+      "annualSalary": 100000,
+      "coverageMultiple": 2,
+      "coverageAmount": 200000,
+      "ratePer1000": 0.10,
+      "monthlyPremium": 20.00
+    },
+    "linkedRequirements": ["REQ-RATE-005"]
+  },
+  {
+    "requirementId": "REQ-RATE-007",
+    "type": "Functional Requirement",
+    "title": "Rate Table Effective Dating — Non-Overlapping Active Periods Per Plan",
+    "description": "Every rate table shall have an effective date. The rate engine selects the correct rate table based on plan, coverage, eligibility date, transaction effective date, and plan year. Overlapping active rate periods for the same plan and rate method are prevented unless explicitly configured.",
+    "status": "Approved",
+    "tags": ["rate-table", "effective-dating", "versioning"],
+    "rateLookupKey": "Plan + Coverage Tier + Employee Eligibility Date + Transaction Effective Date + Plan Year",
+    "demoVersions": [
+      { "rateTable": "2026 PPO 500 Rates", "effective": "01/01/2026" },
+      { "rateTable": "2027 PPO 500 Rates", "effective": "01/01/2027" }
+    ],
+    "linkedRequirements": ["REQ-RATE-008", "REQ-RATE-015"]
+  },
+  {
+    "requirementId": "REQ-RATE-008",
+    "type": "Functional Requirement",
+    "title": "Mid-Year Rate Amendment — New Version Without Overwriting Original",
+    "description": "Authorized users shall be able to create a mid-year rate amendment that creates a new rate table version with a future effective date. The original version remains immutable and its status changes to SUPERSEDED.",
+    "status": "Approved",
+    "tags": ["rate-table", "amendment", "versioning"],
+    "amendmentWorkflow": {
+      "v1": { "label": "2027 PPO 500 Rates Version 1", "effective": "Jan 1",  "status": "SUPERSEDED" },
+      "v2": { "label": "2027 PPO 500 Rates Version 2", "effective": "Jul 1",  "status": "ACTIVE" }
+    },
+    "impactNote": "System shall recalculate premiums only for transactions affected by the amendment effective date.",
+    "linkedRequirements": ["REQ-RATE-009", "REQ-RATE-014"]
+  },
+  {
+    "requirementId": "REQ-RATE-009",
+    "type": "Functional Requirement",
+    "title": "Rate Table Versioning — Full Version History with Creator and Approval Status",
+    "description": "Each rate table shall maintain a complete version history. Version metadata includes version number, created by, created date, effective date, changed fields, previous version reference, and approval status.",
+    "status": "Approved",
+    "tags": ["rate-table", "versioning"],
+    "versionMetadataFields": ["versionNumber", "createdBy", "createdAt", "effectiveDate", "changedFields", "previousVersion", "approvalStatus"],
+    "linkedRequirements": ["REQ-RATE-008", "REQ-RATE-013"]
+  },
+  {
+    "requirementId": "REQ-RATE-010",
+    "type": "Functional Requirement",
+    "title": "Carrier Rate Table CSV Import — Structured Import of Carrier-Provided Rate Files",
+    "description": "The system shall allow authorized users to import carrier-provided rate tables using CSV. The import process includes file validation, preview, and import confirmation.",
+    "status": "Approved",
+    "tags": ["rate-table", "import", "csv"],
+    "tierRateColumns": ["plan_id", "plan_name", "coverage_tier", "employee_rate", "employer_rate", "effective_date", "termination_date"],
+    "ageBandedColumns": ["plan_id", "age_from", "age_to", "rate_per_1000", "effective_date"],
+    "demoImport": {
+      "carrier": "Acme Health",
+      "file": "ACME_2027_MEDICAL_RATES.csv",
+      "records": 12,
+      "valid": 12,
+      "warnings": 0,
+      "errors": 0
+    },
+    "actions": ["[Preview]", "[Import]"],
+    "linkedRequirements": ["REQ-RATE-011", "REQ-RATE-012"]
+  },
+  {
+    "requirementId": "REQ-RATE-011",
+    "type": "Functional Requirement",
+    "title": "Rate Import Validation — Field-Level and Business-Rule Validation with Error Report",
+    "description": "The system shall validate imported rate files at both field level and business-rule level before saving. Validation errors are presented in a line-level error report.",
+    "status": "Approved",
+    "tags": ["rate-table", "import", "validation"],
+    "validationChecks": [
+      "Required fields present",
+      "Valid plan ID references an existing plan",
+      "Valid coverage tier name",
+      "Numeric rate (non-negative)",
+      "Valid effective date",
+      "No overlapping effective dates for the same plan and tier",
+      "No duplicate rate records",
+      "Valid age bands (no gaps for age-banded plans)",
+      "Age ranges do not overlap"
+    ],
+    "demoValidation": {
+      "records": 24,
+      "valid": 20,
+      "warnings": 2,
+      "errors": 2,
+      "errorDetails": [
+        { "line": 12, "error": "Invalid plan ID: MED-PPOOLD" },
+        { "line": 18, "error": "Overlapping effective date for PPO 500 Employee Only" }
+      ]
+    },
+    "linkedRequirements": ["REQ-VALIDATION-001"]
+  },
+  {
+    "requirementId": "REQ-RATE-012",
+    "type": "Functional Requirement",
+    "title": "Rate Table Preview — Visual Preview Before Save or Activation",
+    "description": "Before saving or activating a rate table (whether manually entered or imported), users shall be able to preview all rate data in a structured table view.",
+    "status": "Approved",
+    "tags": ["rate-table", "preview"],
+    "demoPreview": {
+      "label": "2027 Medical Rate Preview — PPO 500",
+      "tiers": [
+        { "tier": "Employee Only",     "rate": "$150" },
+        { "tier": "Employee + Spouse", "rate": "$300" },
+        { "tier": "Employee + Child",  "rate": "$275" },
+        { "tier": "Employee + Family", "rate": "$400" }
+      ]
+    },
+    "actions": ["[Cancel]", "[Save as Draft]", "[Submit for Approval]"],
+    "linkedRequirements": ["REQ-RATE-013"]
+  },
+  {
+    "requirementId": "REQ-RATE-013",
+    "type": "Functional Requirement",
+    "title": "Rate Approval Workflow — Draft → Validation → Review → Approved → Active",
+    "description": "Rate tables shall follow an approval workflow before activation. The approver sees the new rates, previous rates, percentage changes, impacted plans, and estimated impacted employee count before approving.",
+    "status": "Approved",
+    "tags": ["rate-table", "approval-workflow"],
+    "workflowStates": ["DRAFT", "VALIDATION", "PENDING_APPROVAL", "APPROVED", "ACTIVE"],
+    "approverView": ["New rates", "Previous rates", "Percentage changes per tier", "Impacted plans", "Impacted employees"],
+    "linkedRequirements": ["REQ-RATE-014", "REQ-WF-001"]
+  },
+  {
+    "requirementId": "REQ-RATE-014",
+    "type": "Functional Requirement",
+    "title": "Rate Change Impact Analysis — Employee Count, Financial Impact, AI Summary",
+    "description": "Before a rate change is activated, the system shall calculate the impact: affected employees by plan and coverage tier, estimated monthly premium change, and financial impact to payroll deductions. The AI Operations Assistant can summarize the impact in plain language.",
+    "status": "Approved",
+    "tags": ["rate-table", "impact-analysis", "ai"],
+    "demoImpactAnalysis": {
+      "plan": "PPO 500",
+      "effectiveDate": "Jan 1, 2027",
+      "changes": [
+        { "tier": "Employee Only",     "oldRate": 150, "newRate": 165, "change": "+10%" },
+        { "tier": "Employee + Family", "oldRate": 400, "newRate": 440, "change": "+10%" }
+      ],
+      "impactedEmployees": 2450,
+      "estimatedPayrollImpact": "+$36,750 / Month"
+    },
+    "aiSummary": "The proposed rate amendment increases employee premiums by 10% across all PPO 500 coverage tiers and affects 2,450 employees. Payroll deductions and COBRA premiums will require recalculation.",
+    "linkedRequirements": ["REQ-AI-RATE-001", "REQ-RATE-015"]
+  },
+  {
+    "requirementId": "REQ-RATE-015",
+    "type": "Functional Requirement",
+    "title": "Premium Calculation Engine Integration — Active Rate Table as Single Source of Truth",
+    "description": "The Premium Calculation Engine shall retrieve all rates from the active rate table at runtime. No rate values shall be hardcoded in application logic. When rates change, only the rate table data changes — no code changes are required.",
+    "status": "Approved",
+    "tags": ["rate-table", "premium-engine", "architecture"],
+    "lookupChain": [
+      "Employee",
+      "Plan",
+      "Coverage Tier",
+      "Effective Date",
+      "Active Rate Table Lookup",
+      "Employee Premium",
+      "Employer Contribution",
+      "Payroll Deduction Calculation"
+    ],
+    "architecturePrinciple": "Rate data is configuration, not code. The rate engine is generic; the rates table is the only artifact that changes at renewal.",
+    "linkedRequirements": ["REQ-PREM-001", "REQ-PAY-002"]
+  },
+  {
+    "requirementId": "REQ-RATE-016",
+    "type": "Functional Requirement",
+    "title": "Rate Calculation Audit — Show How Premium Was Derived for Any Employee",
+    "description": "The system shall display a full premium calculation audit for any employee showing the rate table version, coverage tier, rate retrieved, pay frequency, and the exact formula used to arrive at the payroll deduction.",
+    "status": "Approved",
+    "tags": ["rate-table", "audit", "troubleshooting"],
+    "demoCalculationAudit": {
+      "employee": "Linda White",
+      "plan": "PPO 500",
+      "coverageTier": "Employee + Family",
+      "rateTable": "2027 PPO 500 v1.0",
+      "effectiveDate": "01/01/2027",
+      "monthlyEmployeeRate": 400.00,
+      "payFrequency": "BIWEEKLY",
+      "formula": "$400 × 12 / 26",
+      "payrollDeduction": 184.62
+    },
+    "linkedRequirements": ["REQ-PAY-002", "REQ-AUD-001"]
+  },
+  {
+    "requirementId": "REQ-RATE-017",
+    "type": "Functional Requirement",
+    "title": "Rate Table Comparison — Side-by-Side View of Two Rate Table Versions",
+    "description": "Users shall be able to compare two rate table versions side by side. Changed rates are highlighted with the percentage difference. This is used for the mid-year amendment approval workflow and annual renewal review.",
+    "status": "Approved",
+    "tags": ["rate-table", "comparison"],
+    "demoComparison": {
+      "plan": "2027 PPO 500",
+      "tiers": [
+        { "tier": "Employee Only",     "current": "$150", "proposed": "$165", "change": "+10%" },
+        { "tier": "Employee + Spouse", "current": "$300", "proposed": "$330", "change": "+10%" },
+        { "tier": "Employee + Child",  "current": "$275", "proposed": "$303", "change": "+10%" },
+        { "tier": "Employee + Family", "current": "$400", "proposed": "$440", "change": "+10%" }
+      ]
+    },
+    "linkedRequirements": ["REQ-RATE-013", "REQ-RATE-014"]
+  },
+  {
+    "requirementId": "REQ-AI-RATE-001",
+    "type": "Functional Requirement",
+    "title": "AI Rate Table Assistant — Analysis, Comparison, and Employee Impact Queries",
+    "description": "The AI assistant shall analyze rate tables and answer configuration and impact questions in plain language. The assistant can explain premium changes to specific employees, compare plan-year rates, and identify plans with significant rate movements.",
+    "status": "Approved",
+    "tags": ["rate-table", "ai", "benefits-assistant"],
+    "exampleInteractions": [
+      { "query": "Which plans have rate increases greater than 5%?", "scope": "Admin" },
+      { "query": "How many employees will be impacted by the new PPO rates?", "scope": "Admin" },
+      {
+        "query": "Why did Linda's payroll deduction increase?",
+        "response": "Linda's deduction increased because the 2027 PPO 500 rate for Employee + Family changed from $350/month to $400/month (+$50/month). Her biweekly deduction changed from $161.54 to $184.62, effective January 1, 2027.",
+        "scope": "Admin or Employee"
+      },
+      { "query": "What happens if we make the PPO 500 rate effective July 1?", "scope": "Admin" }
+    ],
+    "linkedRequirements": ["REQ-RATE-014", "REQ-ESS-009"]
+  }
+]
