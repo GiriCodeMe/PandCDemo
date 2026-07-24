@@ -121,6 +121,22 @@ const KB: Array<{ patterns: string[]; answer: string }> = [
     answer: '**FSA vs HSA — Which Savings Account is Right for You?**\n\n| Feature | FSA | HSA |\n|---|---|---|\n| Eligibility | Any health plan | HDHP only |\n| 2027 Limit | $3,300 | $4,300 individual / $8,550 family |\n| Rollover | Up to $610 | Unlimited |\n| Tax benefit | Pre-tax contributions | Triple tax advantage |\n| Ownership | Employer-held | Yours permanently |\n\n**Choose FSA if:** You\'re enrolled in PPO 500 or PPO 1000 and want to set aside pre-tax dollars for known medical costs.\n\n**Choose HSA if:** You\'re enrolled in HDHP 3000 and want to build long-term medical savings that grow tax-free.\n\nYou cannot have both an HSA and a standard FSA at the same time.',
   },
   {
+    patterns: ['qualifying life event', 'what qualifies', 'life event', 'qle'],
+    answer: '**Qualifying Life Events (QLEs)** are specific events that allow employees to make mid-year benefit changes outside of Open Enrollment.\n\n**Common QLEs:**\n- **Marriage** — Add spouse; change from EE Only to EE+Spouse tier\n- **Divorce** — Remove spouse; change to EE Only tier\n- **Birth / Adoption** — Add new dependent; upgrade to EE+Child or Family tier\n- **Loss of Other Coverage** — Spouse or employee loses coverage from another plan\n- **Gain of Other Coverage** — Employee or dependent gains coverage elsewhere\n- **Death of Dependent** — Remove deceased dependent from coverage\n- **Domestic Partnership** — Add domestic partner (imputed income may apply)\n\nEmployees must report a life event within **30 days** of the event date. Failure to report in time forfeits the enrollment window.',
+  },
+  {
+    patterns: ['enrollment window', 'how long', 'life event window', 'when do i have to'],
+    answer: '**Life Event Enrollment Window** gives employees **30 days** from the qualifying life event date to make benefit changes.\n\nFor example: if you get married on June 15, you have until July 15 to submit your updated elections.\n\n**Important rules:**\n- Changes must be consistent with the life event (e.g., marriage → can add spouse, but cannot change medical plan design)\n- Missing the 30-day window means waiting until the next Open Enrollment period\n- Documentation must be submitted and verified before changes are finalized\n- HR can grant a 1-time extension in exceptional circumstances',
+  },
+  {
+    patterns: ['documents life event', 'documents do i need', 'marriage certificate', 'birth certificate', 'what do i need to submit'],
+    answer: '**Documents Required by Life Event Type:**\n\n| Life Event | Required Documentation |\n|---|---|\n| Marriage | Marriage Certificate |\n| Divorce | Divorce Decree |\n| Birth | Birth Certificate |\n| Adoption | Adoption Decree |\n| Loss of Other Coverage | Carrier Termination Letter |\n| Gain of Other Coverage | Proof of Other Coverage |\n| Death of Dependent | Death Certificate |\n| Domestic Partnership | Domestic Partnership Affidavit + Proof of joint residency |\n\nDocuments must be submitted to HR for verification. Coverage changes are not finalized until documentation is approved. Only the minimum required documents for the specific life event type are needed.',
+  },
+  {
+    patterns: ['dependent rules', 'who can be covered', 'dependent eligibility', 'add dependent mid-year'],
+    answer: '**Dependent Eligibility Rules** determine who can be added to an employee\'s coverage:\n\n- **Spouse** — Legal spouse; requires Marriage Certificate\n- **Domestic Partner** — Requires Domestic Partnership Affidavit and proof of joint residency; imputed income applies federally\n- **Child (natural/adopted/step)** — Eligible through the end of the month they turn 26; requires Birth Certificate\n- **Disabled Adult Child** — May continue beyond age 26 if continuously disabled before age 26; requires annual physician certification\n- **Stepchild** — Requires both Marriage Certificate (to custodial parent) and Birth Certificate\n\nDependents can only be **added mid-year** through a qualifying life event. They can be **removed** at any time.',
+  },
+  {
     patterns: ['what is this page', 'what can i do', 'help', 'explain this'],
     answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, payroll deductions, employee eligibility, or product benefits.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is the difference between HSA and FSA?"\n- "What does DRAFT plan year mean?"',
   },

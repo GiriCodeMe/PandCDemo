@@ -11,6 +11,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/requirements': 'AI Requirements Studio',
   '/plans': 'Plan Configuration',
   '/enrollment': 'Open Enrollment',
+  '/life-events': 'Life Events',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -74,6 +75,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What is an HSA and how does it work?',
     'When does my coverage become effective?',
   ],
+  '/life-events': [
+    'What qualifies as a life event?',
+    'How long is the enrollment window after a life event?',
+    'What documents do I need for a marriage life event?',
+    'Can I add a dependent mid-year?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -83,6 +90,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/requirements')) return 'AI Requirements Studio';
   if (pathname.startsWith('/plans')) return 'Plan Configuration';
   if (pathname.startsWith('/enrollment')) return 'Open Enrollment';
+  if (pathname.startsWith('/life-events')) return 'Life Events';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -104,6 +112,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/enrollment')) {
     return STARTER_QUESTIONS['/enrollment'];
+  }
+  if (pathname.startsWith('/life-events')) {
+    return STARTER_QUESTIONS['/life-events'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }
