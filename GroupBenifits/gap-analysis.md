@@ -61,13 +61,13 @@ The requirements document covers 5 EPICs, ~35 features, and a clear demo story. 
 
 ## 5. UI/UX Gaps
 
-- **Rule builder component unspecified.** "IF → AND → THEN" is described but no interaction pattern is given: dropdown selects, drag-and-drop, code-style tokens? No library selected (e.g., react-querybuilder).
-- **Enrollment wizard back-navigation and draft state not specified.** The 8-step workflow (Feature 3.3) has no spec for saving partial enrollment or navigating backward without losing selections.
-- **Requirements Studio → Plan Config auto-population transition.** Demo Step 6 says AI-generated requirements "automatically populate" the plan config and rule builder. No navigation or data-binding mechanism is described.
-- **AI loading/latency UX not designed.** No spec for skeleton loaders, progress bars, streaming text reveal, or timeout messaging for operations taking 30–60 seconds.
-- **Plan comparison interaction undefined.** Feature 3.2 shows a two-plan table. No spec for comparing more than two plans, or whether comparison is a modal, inline, or separate screen.
-- **Document preview / extraction review step absent.** After PDF upload in Epic 5, there is no step to show extracted content before the user commits it to the requirements workspace.
-- **Integration monitoring refresh behavior unspecified.** Feature 4.6 dashboard — no auto-refresh interval, no polling strategy, no "in-progress" visual state.
+- **Rule builder component unspecified.** ✅ **RESOLVED** — Visual IF → AND/OR → THEN rule builder with dropdowns; React Query Builder evaluated; canonical JSON rule AST; AND/OR nested groups up to 2 levels; DRAFT → IN_REVIEW → APPROVED → PUBLISHED → RETIRED lifecycle; only PUBLISHED rules used by rule engine. 14 requirements (REQ-RULE-UI-001–014) in `seed/requirements/ruleBuilderRequirements.json`.
+- **Enrollment wizard back-navigation and draft state not specified.** ✅ **RESOLVED** — 8-step wizard with ✓/●/○/⚠/🔒 stepper states; click Back or any completed step; auto-save on step completion; Save & Exit with draft ID; server-side persistence; draft lifecycle DRAFT → IN_PROGRESS → READY_FOR_SUBMISSION → SUBMITTED → PROCESSING → ACTIVE. 15 requirements (REQ-ENROLL-UX-001–015) in `seed/requirements/enrollmentWizardRequirements.json`.
+- **Requirements Studio → Plan Config auto-population transition.** ✅ **RESOLVED** — Canonical requirement bridge: AI Extraction → Requirements Studio → Human Review → Approve → Normalize → [Create Rule | Apply to Plan] → Draft → Human Review → Publish; preview diff before applying; changes never directly modify published plan; bidirectional traceability graph. 12 requirements (REQ-REQPLAN-001–012) in `seed/requirements/requirementsPlanTransitionRequirements.json`.
+- **AI loading/latency UX not designed.** ✅ **RESOLVED** — Immediate feedback < 200ms; skeleton loaders for structured content; 7-stage progress indicator (not fake %); SSE streaming for chat/interview; extended-processing message at 30s; background job support with Global AI Job Center in header; status model QUEUED → PROCESSING → COMPLETED | FAILED | CANCELLED | PARTIAL | TIMED_OUT | RETRYING. 15 requirements (REQ-AI-UX-001–015) in `seed/requirements/aiProcessingUXRequirements.json`.
+- **Plan comparison interaction undefined.** ✅ **RESOLVED** — Dedicated comparison view (not modal); 2–4 plans side-by-side launched from Plan Catalog; "Differences Only" mode hides identical values; collapsible categories (Plan Overview / Eligibility / Coverage / Cost & Premiums / Network / HSA-FSA / etc.); sticky plan headers on scroll; enrollment workflow integration; optional AI comparison summary. 14 requirements (REQ-PLAN-COMP-001–014) in `seed/requirements/planComparisonRequirements.json`.
+- **Document preview / extraction review step absent.** ✅ **RESOLVED** — Three-panel workspace: PDF Preview | Extracted Content | AI Findings; two-stage review (Extraction Review: did AI understand? + Requirements Review: did AI interpret correctly?); confidence-based prioritization (≥90% pre-selected / 70–89% review required / <70% manual); explicit commit workflow; never auto-commit; document lifecycle UPLOADED → VALIDATING → EXTRACTING → ANALYZING → REVIEW_REQUIRED → PARTIALLY_COMMITTED → COMMITTED. 14 requirements (REQ-DOC-REV-001–014) in `seed/requirements/documentPreviewRequirements.json`.
+- **Integration monitoring refresh behavior unspecified.** ✅ **RESOLVED** — setInterval polling every 10 seconds; manual [↻ Refresh Now] resets timer; last-updated timestamp always visible; in-progress state with records counter (N/total) and deterministic progress bar; pause polling when browser tab inactive; immediate refresh on tab activation; prevent overlapping polls; stale-data warning on refresh failure. 14 requirements (REQ-INT-MON-001–014) in `seed/requirements/integrationMonitoringRequirements.json`.
 
 ---
 
@@ -108,17 +108,18 @@ The requirements document covers 5 EPICs, ~35 features, and a clear demo story. 
 
 ## 9. Non-Functional / Cross-Cutting Gaps
 
-- **No field-level validation rules.** FR-1.1.2 captures employer fields but no validation is specified (required vs. optional, numeric ranges, date constraints, format rules for EIN, SSN, etc.).
-- **No API error response schema.** No standard HTTP error envelope (code, message, field-level errors) defined for the API layer or client-side display.
-- **No test strategy.** No unit, integration, or E2E testing requirements. A demo with financial calculations needs at minimum eligibility date and premium calculation unit tests.
-- **Gemini API rate-limit handling absent.** No retry, backoff, or graceful degradation for 429 errors during a live demo with rapid document uploads.
-- **No deployment or hosting spec.** Localhost only? Docker? Cloud-deployed for remote demo? No containerization or environment parity guidance.
+- **No field-level validation rules.** ✅ **RESOLVED** — Metadata-driven validation engine: configurable field metadata JSON with required/optional/conditional/system classification, regex patterns (EIN, SSN, ZIP, email, phone), cross-field rules, conditionalExamples, 8-layer validation pipeline, 14 error codes. 15 requirements (REQ-VALIDATION-001–015) in `seed/requirements/fieldValidationRequirements.json`. Companion seed: `seed/validation/fieldValidationMetadata.json`.
+- **No API error response schema.** ✅ **RESOLVED** — Standard error envelope `{ success, error: { code, message, details, requestId, timestamp } }`. HTTP status mapping (400/401/403/404/409/422/429/500/502/503/504). Field-level validation details with field + code + message. Business-rule violation format. Carrier/AI/timeout error formats. Retryable flag. No stack-trace exposure. Centralized frontend error routing (validation → inline, unauthorized → login, rate-limit → auto-retry, internal → generic + requestId). 17-code error taxonomy. 10 requirements (API-ERR-001–010) in `seed/requirements/apiErrorSchemaRequirements.json`.
+- **No test strategy.** ✅ **RESOLVED** — Cross-cutting quality engineering epic: unit tests for all financial/date/rule business logic (eligibility dates with 7 edge cases, premium calculation for all 4 frequencies + rounding, dependent age-out, life events, enrollment validation), API integration tests (INT-001–004), 5 E2E journeys (E2E-001–005 including CT-10045 carrier rejection path and AI requirements engineering flow), AI golden dataset evaluation, test seed composition (30 employees / 9 plans / 5 carriers), CI/CD gate, minimum regression suite. 15 requirements (REQ-TEST-001–015) in `seed/requirements/qualityEngineeringRequirements.json`.
+- **Gemini API rate-limit handling absent.** ✅ **RESOLVED** — Exponential backoff + jitter (`delay = min(baseDelay × 2^attempt + randomJitter, maxDelay)`); max 3 retries; circuit breaker (threshold 5 failures, cooldown 30s); request queue (max 2 concurrent, max queue size 10); SHA-256 document fingerprinting cache prevents duplicate calls; idempotency key (AI-REQ-YYYYMMDD-NNN); graceful degradation (document saved, retry available); demo pre-warm / CACHED_DEMO fallback mode. 16 requirements (REQ-AI-RELIABILITY-001–016) in `seed/requirements/aiReliabilityRequirements.json`.
+- **No deployment or hosting spec.** ✅ **RESOLVED** — Primary path: Node.js + React direct execution with `concurrently` (`npm run dev:all`). Docker optional. `.env.example` committed; `.env` and service-account*.json in `.gitignore`. 15-variable env catalog. Startup validation (6 checks, non-zero exit on failure). Demo reset endpoint (`POST /api/demo/reset`). Version footer and demo environment banner. 16 requirements (REQ-DEPLOY-001–016) in `seed/requirements/deploymentRequirements.json`.
 
 ---
 
 ## Gaps vs. PetLife AI Factory Pattern
 
-The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload). Group Benefits breaks that in three ways:
+The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload). 
+Group Benefits breaks that in three ways:
 
 | Dimension | PetLife | Group Benefits |
 |-----------|---------|----------------|

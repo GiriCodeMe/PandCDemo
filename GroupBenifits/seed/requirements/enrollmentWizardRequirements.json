@@ -1,0 +1,187 @@
+[
+  {
+    "requirementId": "REQ-ENROLL-UX-001",
+    "type": "Functional Requirement",
+    "title": "Non-Linear Back/Forward Navigation Without Losing Saved Selections",
+    "description": "The enrollment wizard shall support navigation between previously completed steps without losing saved selections. Users shall be able to click Back or select a completed step from the stepper directly.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "wizardSteps": [
+      "1. Employee", "2. Eligibility", "3. Life Event",
+      "4. Medical", "5. Dental", "6. Vision / Life / Disability",
+      "7. Dependents", "8. Review & Submit"
+    ],
+    "stepperStates": {
+      "COMPLETED": "✓",
+      "CURRENT": "●",
+      "NOT_STARTED": "○",
+      "NEEDS_ATTENTION": "⚠",
+      "LOCKED": "🔒"
+    }
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-002",
+    "type": "Functional Requirement",
+    "title": "Persistent Progress and Step Completion Status Display",
+    "description": "The enrollment wizard shall display the user's current progress and completion status for each step using a persistent stepper component visible at all times during enrollment.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-003",
+    "type": "Functional Requirement",
+    "title": "Auto-Save on Step Completion and Major Selection Changes",
+    "description": "The system shall automatically save enrollment progress when a user completes a step or changes a significant enrollment selection. The UI shall display 'Last saved: HH:MM AM/PM'. Save triggers: step completion, plan selection, coverage tier selection, dependent add/remove, life event changes, explicit Save, user exits wizard.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "saveTriggers": [
+      "Step completion",
+      "Plan selection",
+      "Coverage tier selection",
+      "Dependent addition or removal",
+      "Life event changes",
+      "Explicit Save button",
+      "User exits wizard"
+    ],
+    "displayText": "Last saved: 2:34 PM"
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-004",
+    "type": "Functional Requirement",
+    "title": "Explicit Save & Exit with Enrollment Draft ID and Resume Option",
+    "description": "The user shall be able to explicitly save an enrollment as a draft and exit the enrollment workflow. Every wizard step shall include a Save & Exit action. The save confirmation shall display Enrollment ID, Status (Draft), and options to Return to Dashboard or Continue Enrollment.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "saveConfirmationDisplay": {
+      "enrollmentId": "ENR-2027-10045",
+      "status": "Draft",
+      "actions": ["Return to Dashboard", "Continue Enrollment"]
+    }
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-005",
+    "type": "Functional Requirement",
+    "title": "Server-Side Draft Enrollment Persistence",
+    "description": "The system shall persist draft enrollment data server-side. Client-side state may be used as a secondary mechanism for temporary recovery, but the server-side draft is the source of truth.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "draftDataModel": {
+      "enrollmentId": "ENR-2027-10045",
+      "employeeId": "EMP-10045",
+      "planYear": 2027,
+      "status": "DRAFT",
+      "currentStep": 4,
+      "completedSteps": [1, 2, 3],
+      "selections": {
+        "medical": { "planId": "MED-PPO-500", "coverageTier": "EMPLOYEE_PLUS_SPOUSE" },
+        "dental": null,
+        "vision": null
+      },
+      "dependents": [{ "dependentId": "DEP-10045-01", "coverageRequested": true }],
+      "lastSavedAt": "2027-01-15T14:34:00Z",
+      "lastSavedBy": "USER-123"
+    }
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-006",
+    "type": "Functional Requirement",
+    "title": "Resume Previously Saved Draft Enrollment",
+    "description": "The system shall allow users to resume a previously saved draft enrollment. Employees and benefits administrators shall see incomplete enrollments in a list with a Resume action.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "draftListDisplay": {
+      "columns": ["Employee", "Status", "Action"],
+      "statuses": ["Draft (Resume)", "Submitted (View)", "Active (View)"]
+    }
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-007",
+    "type": "Functional Requirement",
+    "title": "Restore Last Active Step When Resuming a Draft Enrollment",
+    "description": "The system shall restore the user's last active step and all previous step selections when resuming a draft enrollment.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-008",
+    "type": "Functional Requirement",
+    "title": "Draft Enrollment Survives Browser Refresh and Browser Closure",
+    "description": "Draft enrollment data shall survive browser refresh and browser closure. A browser refresh on Step 5 shall restore the user to Step 5 with all previous selections intact from the server-side draft.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-009",
+    "type": "Functional Requirement",
+    "title": "Draft Saves Without Requiring All Submission Validations to Pass",
+    "description": "The system shall allow incomplete enrollment records to be saved as drafts without requiring all submission validations to pass. Incomplete steps shall show a warning indicator (⚠) but shall not block saving.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-010",
+    "type": "Functional Requirement",
+    "title": "Submission Blocked Until All Required Validations Pass",
+    "description": "The system shall prevent submission until all required enrollment validations have passed. The Review & Submit step shall remain locked (🔒) until required steps are complete.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-011",
+    "type": "Functional Requirement",
+    "title": "Warn User When Earlier Step Change Invalidates a Downstream Selection",
+    "description": "If a change to an earlier enrollment step would invalidate a downstream selection, the system shall notify the user, identify the impacted selections, and require explicit confirmation before applying the change.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "warningExample": {
+      "scenario": "User changes Employment Status from Full-Time to Part-Time on Step 2",
+      "downstreamImpact": "PPO 500 plan selection (Step 4) is no longer valid — employee becomes ineligible",
+      "warningMessage": "Changing employment status may affect your eligibility and current plan selections. Do you want to continue?",
+      "actions": ["Continue and Recalculate", "Cancel"]
+    }
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-012",
+    "type": "Functional Requirement",
+    "title": "Recalculate Eligibility and Downstream Impacts on Upstream Data Change",
+    "description": "The system shall recalculate eligibility and downstream enrollment impacts when relevant upstream data changes. Affected steps shall be marked Needs Attention (⚠).",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "recalculationFlow": [
+      "User changes upstream data (e.g., Employment Type)",
+      "Eligibility recalculated",
+      "Affected downstream plans identified",
+      "Invalidated selections removed",
+      "Downstream steps marked ⚠ Needs Attention"
+    ]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-013",
+    "type": "Functional Requirement",
+    "title": "Confirmation Dialog Before Discarding or Cancelling a Draft Enrollment",
+    "description": "The system shall provide a confirmation dialog before discarding or cancelling a draft enrollment. Options: Keep Draft | Cancel Enrollment.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"],
+    "confirmationText": "Are you sure you want to cancel this enrollment? All draft selections will be discarded.",
+    "confirmationActions": ["Keep Draft", "Cancel Enrollment"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-014",
+    "type": "Functional Requirement",
+    "title": "Last Saved Timestamp Displayed for Draft Enrollment Records",
+    "description": "The system shall display the last saved timestamp for draft enrollment records within the enrollment wizard.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard"]
+  },
+  {
+    "requirementId": "REQ-ENROLL-UX-015",
+    "type": "Functional Requirement",
+    "title": "Audit Record for Enrollment Draft Creation, Changes, Submission, Cancellation, and Finalization",
+    "description": "The system shall maintain an audit record of enrollment draft creation, changes, submission, cancellation, and finalization. Cancelled drafts shall be retained in the audit trail but shall no longer be editable.",
+    "status": "Approved",
+    "tags": ["ui", "enrollment", "wizard", "audit"],
+    "draftLifecycle": ["DRAFT", "IN_PROGRESS", "READY_FOR_SUBMISSION", "SUBMITTED", "PROCESSING", "ACTIVE"],
+    "alternativeOutcomes": ["SUBMITTED → REJECTED", "SUBMITTED → PENDING_REVIEW"],
+    "draftRetentionPolicy": "MVP: Drafts remain available until explicitly cancelled or the enrollment period closes."
+  }
+]

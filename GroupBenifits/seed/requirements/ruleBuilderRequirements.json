@@ -1,0 +1,191 @@
+[
+  {
+    "requirementId": "REQ-RULE-UI-001",
+    "type": "Functional Requirement",
+    "title": "Visual Rule Builder for Creating and Editing Business Rules",
+    "description": "The system shall provide a visual rule builder for creating and editing business rules using structured dropdown condition rows. Not drag-and-drop, not raw code editor. The interaction pattern shall be: Field → Operator → Value with AND/OR grouping.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder", "epic2"],
+    "recommendedApproach": "Dropdown + inline value controls + AND/OR groups + rule testing",
+    "rejectedApproaches": ["Drag-and-drop canvas", "Code editor", "Raw JSON editing", "Natural language only"],
+    "evaluatedLibrary": "React Query Builder as the underlying interaction model, customized to Group Benefits domain",
+    "demoLayout": {
+      "header": "Rule Name + Rule ID + Domain + Status",
+      "conditionsSection": "IF [ Field ] [ Operator ] [ Value ] [delete] | AND/OR | [ + Add Condition ]",
+      "actionsSection": "THEN [ Action Field ] [ Action Type ] [ Value ] [delete] | [ + Add Action ]",
+      "footerActions": "[ Test Rule ] [ Save Draft ] [ Publish ]"
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-002",
+    "type": "Functional Requirement",
+    "title": "Field → Operator → Value Condition Construction",
+    "description": "The rule builder shall support Field → Operator → Value condition construction for each condition row.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "fieldExamples": ["Employee Status", "Employment Type", "Job Class", "Hours Per Week", "Hire Date", "Work Location", "State", "Plan", "Age"],
+    "operatorsByType": {
+      "string_enum": ["equals", "does not equal", "is one of", "is not one of"],
+      "numeric": ["equals", "greater than", "greater than or equal to", "less than", "less than or equal to"],
+      "date": ["equals", "before", "after", "on or before", "on or after", "between"]
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-003",
+    "type": "Functional Requirement",
+    "title": "Dynamic Operators and Value Controls Based on Field Data Type",
+    "description": "The rule builder shall dynamically determine available operators and value control types based on the selected field data type. Selecting a string/enum field shall show a dropdown value; selecting a numeric field shall show a number input; selecting a date field shall show a date picker.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "dynamicValueExamples": [
+      { "field": "Employment Type",  "valueControl": "Dropdown (Full-Time | Part-Time | Executive | Hourly)" },
+      { "field": "Hours Per Week",   "valueControl": "Number input" },
+      { "field": "Hire Date",        "valueControl": "Date picker" },
+      { "field": "Work State",       "valueControl": "Dropdown (US states)" }
+    ]
+  },
+  {
+    "requirementId": "REQ-RULE-UI-004",
+    "type": "Functional Requirement",
+    "title": "AND and OR Logical Operator Support",
+    "description": "The rule builder shall support AND and OR logical operators between condition rows and between nested condition groups.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"]
+  },
+  {
+    "requirementId": "REQ-RULE-UI-005",
+    "type": "Functional Requirement",
+    "title": "Nested Condition Groups Up to Configurable Depth",
+    "description": "The rule builder shall support nested condition groups. MVP shall support AND/OR nesting up to 2 levels. Deeper nesting is configurable.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "mvpNestingDepth": 2,
+    "example": {
+      "topLevel": "Employment Type = Full-Time AND Employment Status = Active",
+      "nestedGroup": "ANY OF: State = NJ OR State = NY"
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-006",
+    "type": "Functional Requirement",
+    "title": "THEN Action Builder — One or More Actions per Rule",
+    "description": "The rule builder shall support one or more THEN actions per rule. Action types include: Set Eligibility, Set Coverage Effective Date, Create Exception, Require Manual Review, Trigger Notification.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "actionExamples": [
+      { "type": "SET_ELIGIBILITY",             "example": "Eligibility Status = Eligible" },
+      { "type": "SET_COVERAGE_EFFECTIVE_DATE",  "example": "Coverage Effective Date = First of Following Month" },
+      { "type": "CREATE_EXCEPTION",            "example": "Create Exception: PART_TIME_ELIGIBILITY_EXCEPTION" },
+      { "type": "REQUIRE_MANUAL_REVIEW",       "example": "Route to Benefits Administrator for review" },
+      { "type": "TRIGGER_NOTIFICATION",        "example": "Send ELIGIBILITY_CONFIRMED notification to employee" }
+    ]
+  },
+  {
+    "requirementId": "REQ-RULE-UI-007",
+    "type": "Functional Requirement",
+    "title": "Rule Testing Capability Using Representative Employee and Enrollment Data",
+    "description": "The system shall provide a rule-testing capability. Users can select a representative employee record, run the rule against that employee, and see pass/fail results per condition.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "testPanelExample": {
+      "employee": "John Smith",
+      "inputs": { "employmentType": "Full-Time", "status": "Active", "hoursPerWeek": 40, "location": "NJ" },
+      "result": "RULE PASSED",
+      "outcome": "Eligibility = ELIGIBLE"
+    },
+    "failureExample": {
+      "failedCondition": "Hours Per Week >= 30",
+      "actual": 20,
+      "expected": ">= 30",
+      "result": "RULE FAILED"
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-008",
+    "type": "Functional Requirement",
+    "title": "Rule Test Results Identify Which Conditions Passed and Failed",
+    "description": "Rule test results shall identify which individual conditions passed and which failed, with actual vs. expected values for failed conditions.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"]
+  },
+  {
+    "requirementId": "REQ-RULE-UI-009",
+    "type": "Functional Requirement",
+    "title": "Rule Lifecycle States: Draft, In Review, Approved, Published, Retired",
+    "description": "The system shall support rule lifecycle states: DRAFT → IN_REVIEW → APPROVED → PUBLISHED → RETIRED. Only PUBLISHED rules shall be used by the business rule evaluation service.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"],
+    "lifecycle": ["DRAFT", "IN_REVIEW", "APPROVED", "PUBLISHED", "RETIRED"],
+    "publishConstraint": "Only PUBLISHED rules shall be evaluated in the production business-rule engine."
+  },
+  {
+    "requirementId": "REQ-RULE-UI-010",
+    "type": "Functional Requirement",
+    "title": "Rule Versioning and Version Comparison",
+    "description": "The system shall maintain rule versions and provide version comparison. Modifying a PUBLISHED rule creates a new version. Version comparison shows changed fields, previous and new values, changed-by actor, and effective date.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder", "versioning"],
+    "versionComparisonDisplay": {
+      "changed": "Hours Per Week",
+      "previous": ">= 32",
+      "new": ">= 30",
+      "changedBy": "Benefits Administrator",
+      "effectiveDate": "2027-01-01"
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-011",
+    "type": "Functional Requirement",
+    "title": "Source Traceability Between Rule and Originating Document or Requirement",
+    "description": "The system shall maintain source traceability between a rule and the document or requirement from which it originated. The rule UI shall display source document, page reference, and linked requirement ID.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder", "traceability"]
+  },
+  {
+    "requirementId": "REQ-RULE-UI-012",
+    "type": "Functional Requirement",
+    "title": "AI-Generated Rules Displayed as Proposed — Require Human Review Before Publication",
+    "description": "AI-generated rules shall be presented as proposed rules requiring human review and explicit approval before publication. The Rule Builder shall open pre-populated from the AI proposal with a banner indicating the AI source and confidence.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder", "ai", "epic5"],
+    "aiRuleBanner": {
+      "message": "AI-generated rule imported from REQ-ELIG-001",
+      "source": "Acme_Eligibility_Policy.pdf, Page 4",
+      "confidence": "96%",
+      "actions": ["View Requirement", "Edit Rule", "Test Rule", "Approve", "Reject"]
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-013",
+    "type": "Functional Requirement",
+    "title": "Canonical Machine-Readable Rule Representation Independent of UI",
+    "description": "The system shall serialize rules into a canonical machine-readable JSON representation independent of the UI component implementation. The canonical representation supports Visual Builder ↔ Canonical JSON ↔ Rule Engine ↔ AI bidirectionally.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder", "architecture"],
+    "canonicalRuleModel": {
+      "ruleId": "ELIG-001",
+      "version": "1.0",
+      "domain": "ELIGIBILITY",
+      "name": "Full-Time Employee Eligibility",
+      "effectiveDate": "2027-01-01",
+      "conditions": {
+        "operator": "AND",
+        "rules": [
+          { "field": "employmentType",   "operator": "EQUALS",                  "value": "FULL_TIME" },
+          { "field": "employmentStatus", "operator": "EQUALS",                  "value": "ACTIVE" },
+          { "field": "hoursPerWeek",     "operator": "GREATER_THAN_OR_EQUAL",   "value": 30 }
+        ]
+      },
+      "actions": [{ "type": "SET_ELIGIBILITY", "value": "ELIGIBLE" }],
+      "source": { "documentId": "DOC-10001", "documentName": "Acme_Eligibility_Policy.pdf", "page": 4 }
+    }
+  },
+  {
+    "requirementId": "REQ-RULE-UI-014",
+    "type": "Functional Requirement",
+    "title": "Only Published Rules Used by Business Rule Evaluation Service",
+    "description": "Only rules in PUBLISHED status shall be used by the production business rule evaluation service. DRAFT and IN_REVIEW rules shall be visible only within the Rule Builder and shall not affect live eligibility, enrollment, or carrier processing.",
+    "status": "Approved",
+    "tags": ["ui", "rule-builder"]
+  }
+]

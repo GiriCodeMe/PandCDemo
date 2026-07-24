@@ -1,0 +1,170 @@
+[
+  {
+    "requirementId": "REQ-DOC-REV-001",
+    "type": "Functional Requirement",
+    "title": "In-Application Preview of Uploaded PDF Documents",
+    "description": "The system shall provide an in-application preview of uploaded PDF documents. Users shall view PDF pages, navigate pages, zoom, and search within the document without leaving the application.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "threeStageFlow": "Upload PDF → Document Validation → Document Preview & Extraction → AI Extraction → Extraction Review → User Approve/Reject → Commit to Requirements Workspace → Requirements Studio",
+    "keyDistinction": "AI Extraction ≠ Requirement Commitment. Human must explicitly commit approved requirements to the Requirements Workspace.",
+    "reviewWorkspaceLayout": {
+      "panel1": "PDF Preview — original document pages with page navigation, zoom, search, and source highlighting",
+      "panel2": "Extracted Content — text, tables, sections extracted from PDF",
+      "panel3": "AI Findings — requirements, confidence, source citations, Approve/Reject actions"
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-002",
+    "type": "Functional Requirement",
+    "title": "Document Processing Status During Validation, Extraction, and AI Analysis",
+    "description": "The system shall display document processing status during validation, extraction, and AI analysis using a defined lifecycle.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "documentLifecycle": ["UPLOADED", "VALIDATING", "EXTRACTING", "ANALYZING", "REVIEW_REQUIRED", "PARTIALLY_COMMITTED", "COMMITTED"],
+    "exceptionStates": ["FAILED", "CANCELLED"],
+    "statusDisplayExample": {
+      "document": "Acme_2027_Benefits_Guide.pdf",
+      "status": "Review Required",
+      "stages": ["✓ PDF Validated", "✓ Text Extracted", "✓ Tables Extracted", "✓ Requirements Generated", "⚠ 9 Items Need Review"]
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-003",
+    "type": "Functional Requirement",
+    "title": "Display Extracted Text and Structured Content for User Review Before Requirements Are Committed",
+    "description": "The system shall display extracted text and structured content for user review before requirements are committed. Users shall be able to toggle between Original PDF, Extracted Text, and Structured Content views.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "reviewStages": [
+      "Stage 1 — Extraction Review: Did AI correctly understand the document? (text, tables, sections, source locations, OCR quality)",
+      "Stage 2 — Requirements Review: Did AI correctly interpret business requirements? (wording, rules, eligibility logic, conflicts, confidence, traceability)"
+    ]
+  },
+  {
+    "requirementId": "REQ-DOC-REV-004",
+    "type": "Functional Requirement",
+    "title": "Display Extracted Tables in Structured Format",
+    "description": "The system shall display extracted tables in a structured format where table extraction is detected. Users shall be able to mark table extraction as correct or flag for correction.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "tableExtractionActions": ["✓ Correct", "⚠ Needs Correction"]
+  },
+  {
+    "requirementId": "REQ-DOC-REV-005",
+    "type": "Functional Requirement",
+    "title": "Display AI-Generated Requirements Separately from Extracted Content",
+    "description": "The system shall display AI-generated requirements separately from the original extracted content in a distinct panel. The distinction between raw extracted text and AI-interpreted requirements shall be visually clear.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "aiExtractionSummaryDisplay": {
+      "requirements": 48,
+      "businessRules": 17,
+      "planAttributes": 35,
+      "conflicts": 6,
+      "unclearItems": 9
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-006",
+    "type": "Functional Requirement",
+    "title": "Each AI-Generated Requirement Includes Source Document Reference and Page Citation",
+    "description": "Each AI-generated requirement shall include a source document reference and page-level citation where available. The citation shall be displayed on the requirement review card.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "requirementReviewCard": {
+      "requirementId": "REQ-ELIG-001",
+      "title": "Full-Time Employee Eligibility",
+      "text": "Employees working 30+ hours per week are eligible for medical coverage.",
+      "type": "Eligibility Rule",
+      "confidence": "96%",
+      "source": "Benefits Guide — Page 4",
+      "actions": ["[View Source]", "[Edit]", "[Approve]", "[Reject]"]
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-007",
+    "type": "Functional Requirement",
+    "title": "Navigate from AI-Generated Requirement to Corresponding Source Page",
+    "description": "Users shall be able to navigate from an AI-generated requirement to the corresponding source page in the original document. Clicking [View Source] shall navigate the PDF preview to the relevant page.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"]
+  },
+  {
+    "requirementId": "REQ-DOC-REV-008",
+    "type": "Functional Requirement",
+    "title": "Highlight Source Text in PDF Associated with AI-Generated Requirement",
+    "description": "The system shall highlight the source text associated with an AI-generated requirement where technically feasible. Source highlighting is a key demo differentiator for AI traceability.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "highlightFlow": "Requirement → Source Citation → PDF Page → Highlighted Text",
+    "note": "Implement where PDF text layer enables it. Fallback: scroll to page without highlight if text layer is unavailable."
+  },
+  {
+    "requirementId": "REQ-DOC-REV-009",
+    "type": "Functional Requirement",
+    "title": "Approve, Edit, or Reject AI-Generated Requirements Before Committing to Requirements Workspace",
+    "description": "Users shall be able to approve, edit, or reject AI-generated requirements before committing them to the Requirements Workspace. Status values per finding: APPROVED, EDITED, REJECTED, PENDING_REVIEW.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "findingDataModel": {
+      "findingId": "F-001",
+      "type": "REQUIREMENT",
+      "text": "Full-time employees working 30+ hours...",
+      "confidence": 0.96,
+      "source": { "page": 4 },
+      "reviewStatus": "APPROVED"
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-010",
+    "type": "Functional Requirement",
+    "title": "Select Individual Requirements for Commitment to Requirements Workspace",
+    "description": "The system shall allow users to select individual requirements for commitment. A bulk-select and [Commit N Requirements] action shall be provided.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "commitConfirmation": {
+      "message": "4 requirements will be added to Acme Corp 2027 Benefits Requirements Workspace and become available for review and downstream Plan Configuration / Rule Builder actions.",
+      "actions": ["[Cancel]", "[Commit Requirements]"]
+    }
+  },
+  {
+    "requirementId": "REQ-DOC-REV-011",
+    "type": "Functional Requirement",
+    "title": "No Automatic Commitment of AI-Generated Requirements Without Explicit User Approval",
+    "description": "The system shall not automatically commit AI-generated requirements to the Requirements Workspace without explicit user approval. Human review is always required between AI extraction and requirement commitment.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "architecturePrinciple": "AI Requirements Engineering positions AI as an accelerator for human experts, not as an autonomous system. Auto-commitment would undermine the trust and governance story of the demo."
+  },
+  {
+    "requirementId": "REQ-DOC-REV-012",
+    "type": "Functional Requirement",
+    "title": "Preserve Original Extracted Document Content Independently from Committed Requirements",
+    "description": "The system shall preserve the original extracted document content independently from committed requirements. The finding record (pre-commitment) and the requirement record (post-commitment) are distinct data objects.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"]
+  },
+  {
+    "requirementId": "REQ-DOC-REV-013",
+    "type": "Functional Requirement",
+    "title": "Traceability Between Source Document, Extracted Finding, Committed Requirement, and Downstream Artifacts",
+    "description": "The system shall maintain traceability between the source document, extracted finding, committed requirement, and downstream artifacts (rules, plan configurations, test cases).",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5", "traceability"]
+  },
+  {
+    "requirementId": "REQ-DOC-REV-014",
+    "type": "Functional Requirement",
+    "title": "Configurable Confidence Thresholds for Prioritizing AI-Generated Requirements for Human Review",
+    "description": "The system shall support configurable confidence thresholds for prioritizing AI-generated requirements for human review.",
+    "status": "Approved",
+    "tags": ["ui", "document", "epic5"],
+    "defaultThresholds": [
+      { "confidence": ">= 90%",   "defaultAction": "Pre-selected for approval",  "indicator": "High Confidence" },
+      { "confidence": "70–89%",   "defaultAction": "Review required",            "indicator": "⚠ Needs Review" },
+      { "confidence": "< 70%",    "defaultAction": "Manual review required",     "indicator": "🔴 Manual Review Required" }
+    ],
+    "thresholdNote": "Confidence is a review prioritization signal only — not a correctness guarantee. Thresholds are configurable."
+  }
+]

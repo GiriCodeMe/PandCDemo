@@ -1,0 +1,176 @@
+[
+  {
+    "requirementId": "REQ-INT-MON-001",
+    "type": "Functional Requirement",
+    "title": "Integration Monitoring Dashboard Auto-Refresh at Configurable Interval",
+    "description": "The Integration Monitoring dashboard shall automatically refresh monitoring data at a configurable interval.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "recommendedTechnicalApproach": "setInterval() polling GET /api/integrations/monitoring. No WebSockets needed for MVP. SSE or WebSockets only if real-time per-transaction streaming is required.",
+    "dashboardLayout": {
+      "header": "Last updated: 10:32:14 AM | Auto-refresh: 10 sec ● | [↻ Refresh Now]",
+      "statusCards": "One card per carrier integration showing status, record count, error count",
+      "statusTable": "Carrier | Status | Records processed / total"
+    },
+    "integrationMonitoringDataModel": {
+      "integrationId": "INT-MED-2027-001",
+      "carrier": "Acme Medical Carrier",
+      "benefitType": "MEDICAL",
+      "transmissionType": "EDI_834",
+      "status": "COMPLETED",
+      "totalRecords": 4892,
+      "successfulRecords": 4880,
+      "failedRecords": 12,
+      "startedAt": "2027-01-15T10:00:00Z",
+      "completedAt": "2027-01-15T10:04:32Z",
+      "lastUpdatedAt": "2027-01-15T10:04:32Z"
+    }
+  },
+  {
+    "requirementId": "REQ-INT-MON-002",
+    "type": "Functional Requirement",
+    "title": "Default Monitoring Refresh Interval — 10 Seconds",
+    "description": "The default monitoring refresh interval shall be 10 seconds.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "defaultIntervalSeconds": 10
+  },
+  {
+    "requirementId": "REQ-INT-MON-003",
+    "type": "Functional Requirement",
+    "title": "Manual Refresh Now Action",
+    "description": "The dashboard shall provide a manual [↻ Refresh Now] action. Clicking it shall immediately trigger a data refresh and reset the polling timer.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "refreshStates": ["[↻ Refresh Now]", "[⟳ Refreshing...]", "✓ Updated just now"]
+  },
+  {
+    "requirementId": "REQ-INT-MON-004",
+    "type": "Functional Requirement",
+    "title": "Display Timestamp of Last Successful Data Refresh",
+    "description": "The dashboard shall display the timestamp of the last successful data refresh. If refresh fails, retain last good data and indicate it may be stale.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "staleDataDisplay": "⚠ Unable to refresh | Last successful update: 10:31:42 AM | [Retry]"
+  },
+  {
+    "requirementId": "REQ-INT-MON-005",
+    "type": "Functional Requirement",
+    "title": "Visual In-Progress State for Actively Processing Carrier Transmissions",
+    "description": "The system shall display a visual in-progress state for carrier transmissions that are actively processing. The display shall include record counts and elapsed time.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "inProgressDisplay": {
+      "carrier": "Dental",
+      "status": "● Processing",
+      "progress": "1,250 / 2,100",
+      "progressBar": "████████████░░░░ 60%",
+      "started": "10:30 AM",
+      "elapsed": "2m 14s"
+    },
+    "demoSimulationNote": "For demo: advance 500 records every 2 seconds to create visible operational progress. Use deterministic simulation, not random."
+  },
+  {
+    "requirementId": "REQ-INT-MON-006",
+    "type": "Functional Requirement",
+    "title": "Processing Progress Using Processed Records and Total Records",
+    "description": "The system shall display processing progress using processed records and total records where available. Do not use a fake percentage.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"]
+  },
+  {
+    "requirementId": "REQ-INT-MON-007",
+    "type": "Functional Requirement",
+    "title": "Standardized Integration Status Values",
+    "description": "The system shall support standardized integration statuses with distinct visual indicators.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "statusValues": [
+      { "status": "QUEUED",          "indicator": "◷ Queued" },
+      { "status": "IN_PROGRESS",     "indicator": "● Processing" },
+      { "status": "COMPLETED",       "indicator": "✓ Completed" },
+      { "status": "PARTIAL_SUCCESS", "indicator": "⚠ Partial Success" },
+      { "status": "FAILED",          "indicator": "✕ Failed" },
+      { "status": "RETRYING",        "indicator": "↻ Retrying" },
+      { "status": "CANCELLED",       "indicator": "○ Cancelled" }
+    ]
+  },
+  {
+    "requirementId": "REQ-INT-MON-008",
+    "type": "Functional Requirement",
+    "title": "Aggregate Integration Metrics — Records, Errors, Status Per Integration",
+    "description": "The system shall display aggregate integration metrics including total records, successful records, failed records, and processing status for each integration.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "summaryKPIRow": {
+      "integrations": 6,
+      "processing": 1,
+      "completed": 4,
+      "errors": 54
+    }
+  },
+  {
+    "requirementId": "REQ-INT-MON-009",
+    "type": "Functional Requirement",
+    "title": "Drill Down from Aggregate Integration Results to Individual Transactions",
+    "description": "Users shall be able to drill down from aggregate integration results to individual transaction records. Clicking on a carrier's error count opens the transaction-level error detail.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "transactionDetailColumns": ["Transaction ID", "Employee ID", "Error Code", "Error Message"]
+  },
+  {
+    "requirementId": "REQ-INT-MON-010",
+    "type": "Functional Requirement",
+    "title": "Retry Failed Transactions",
+    "description": "Users shall be able to retry failed transactions where supported. A [Retry N Failed Transactions] action shall be available on partial-failure integrations.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "retryResultExample": {
+      "initial": { "successful": 4850, "failed": 42 },
+      "afterRetry": { "successful": 4890, "failed": 2 }
+    }
+  },
+  {
+    "requirementId": "REQ-INT-MON-011",
+    "type": "Functional Requirement",
+    "title": "Pause Polling When Browser Tab Inactive, Resume on Tab Active",
+    "description": "The system shall pause automatic polling when the monitoring browser tab is inactive and perform an immediate refresh when the tab becomes active.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"],
+    "pollingLogic": [
+      "Dashboard opens → Initial API call → Start 10-second polling",
+      "Tab hidden → Pause polling",
+      "Tab active → Immediate refresh → Resume 10-sec polling"
+    ]
+  },
+  {
+    "requirementId": "REQ-INT-MON-012",
+    "type": "Functional Requirement",
+    "title": "Prevent Overlapping Monitoring Polling Requests",
+    "description": "The system shall prevent overlapping monitoring polling requests. If a polling request is still in flight when the next interval fires, skip the duplicate request.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"]
+  },
+  {
+    "requirementId": "REQ-INT-MON-013",
+    "type": "Functional Requirement",
+    "title": "Retain Last Good Data and Flag Staleness When Monitoring Refresh Fails",
+    "description": "If a monitoring refresh fails, the system shall retain the last successfully retrieved data and clearly indicate that the displayed data may be stale.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring"]
+  },
+  {
+    "requirementId": "REQ-INT-MON-014",
+    "type": "Functional Requirement",
+    "title": "Deterministic Carrier Response Simulations for Demo",
+    "description": "The demo environment shall support deterministic carrier response simulations including full success, partial failure, and full rejection. The simulation mode shall be configurable rather than random.",
+    "status": "Approved",
+    "tags": ["ui", "integration", "monitoring", "demo"],
+    "simulationModes": [
+      { "mode": "Accept All",      "outcome": "All transmissions COMPLETED" },
+      { "mode": "Partial Failure", "outcome": "PARTIAL_SUCCESS with seeded error counts" },
+      { "mode": "Reject All",      "outcome": "All transmissions FAILED" }
+    ],
+    "linkedRequirement": "REQ-CARRIER-SIM-011"
+  }
+]

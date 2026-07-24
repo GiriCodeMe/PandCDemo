@@ -87,6 +87,18 @@ seed/
                  carrierSimulationRequirements.json          (REQ-CARRIER-SIM-001–015)
                  edi834Requirements.json                     (REQ-EDI-834-001–015)
                  transmissionScheduleRequirements.json       (REQ-TRANSMISSION-001–015)
+                 fieldValidationRequirements.json            (REQ-VALIDATION-001–015)
+                 qualityEngineeringRequirements.json         (REQ-TEST-001–015)
+                 aiReliabilityRequirements.json              (REQ-AI-RELIABILITY-001–016)
+                 deploymentRequirements.json                 (REQ-DEPLOY-001–016)
+                 ruleBuilderRequirements.json                (REQ-RULE-UI-001–014)
+                 enrollmentWizardRequirements.json           (REQ-ENROLL-UX-001–015)
+                 requirementsPlanTransitionRequirements.json (REQ-REQPLAN-001–012)
+                 aiProcessingUXRequirements.json             (REQ-AI-UX-001–015)
+                 planComparisonRequirements.json             (REQ-PLAN-COMP-001–014)
+                 documentPreviewRequirements.json            (REQ-DOC-REV-001–014)
+                 integrationMonitoringRequirements.json      (REQ-INT-MON-001–014)
+  validation/    fieldValidationMetadata.json
   documents/     documents.json
 samples/
   Acme_2027_Benefits_Guide.pdf
@@ -124,4 +136,17 @@ Requirements seeded in `seed/requirements/` — each file is a self-contained JS
 | EDI 834 Generation | `edi834Requirements.json` | REQ-EDI-834-001–015 | 15 | True ANSI X12 834 (not CSV-as-EDI); canonical model → EDI mapper; Add/Change/Terminate/Dependent; structural + business validation; sample artifacts: guide, segment map, 4 .edi files |
 | Transmission Scheduling | `transmissionScheduleRequirements.json` | REQ-TRANSMISSION-001–015 | 15 | Manual trigger (primary) + optional cron job; same processing service; WEEKLY demo frequency; simulated time advance; batch lifecycle; PARTIALLY_ACCEPTED outcome |
 
-**Total seeded requirements (seed/requirements/):** 253+ across 19 requirement sets.
+| Field Validation | `fieldValidationRequirements.json` | REQ-VALIDATION-001–015 | 15 | Metadata-driven engine; regex patterns for EIN/SSN/ZIP/email; 8-layer validation pipeline; 14 error codes; conditional rules; SSN never in logs |
+| Quality Engineering & Testing | `qualityEngineeringRequirements.json` | REQ-TEST-001–015 | 15 | Unit: eligibility dates (7 edge cases), premium calc (4 frequencies), age-out, life events; 5 E2E journeys; AI golden dataset; test seed composition; CI/CD gate |
+| AI Reliability & Rate Limiting | `aiReliabilityRequirements.json` | REQ-AI-RELIABILITY-001–016 | 16 | Exponential backoff + jitter; circuit breaker (threshold 5 / cooldown 30s); queue (max 2 concurrent / 10 size); SHA-256 fingerprint cache; idempotency; graceful degradation; demo pre-warm mode |
+| Deployment & Environment | `deploymentRequirements.json` | REQ-DEPLOY-001–016 | 16 | Node.js + React primary path (Docker optional); concurrently dev:all; .env.example committed; .env in .gitignore; startup validation; demo reset endpoint; version footer |
+| Rule Builder UX | `ruleBuilderRequirements.json` | REQ-RULE-UI-001–014 | 14 | Visual IF → AND/OR → THEN dropdown builder; React Query Builder; canonical JSON rule AST; DRAFT → PUBLISHED lifecycle; only PUBLISHED rules evaluated |
+| Enrollment Wizard UX | `enrollmentWizardRequirements.json` | REQ-ENROLL-UX-001–015 | 15 | 8-step wizard; stepper states ✓/●/○/⚠/🔒; backward navigation; auto-save; server-side draft persistence; submission blocked until all validations pass |
+| Requirements → Plan Transition | `requirementsPlanTransitionRequirements.json` | REQ-REQPLAN-001–012 | 12 | Canonical requirement bridge; [Create Rule] / [Apply to Plan] actions; preview diff before apply; changes to draft only; traceability graph; 6 API endpoints |
+| AI Processing UX | `aiProcessingUXRequirements.json` | REQ-AI-UX-001–015 | 15 | Immediate feedback < 200ms; skeleton loaders; 7-stage progress (no fake %); SSE streaming for chat; background jobs with AI Job Center; status model QUEUED → COMPLETED/FAILED/PARTIAL/TIMED_OUT/RETRYING |
+| Plan Comparison | `planComparisonRequirements.json` | REQ-PLAN-COMP-001–014 | 14 | Dedicated comparison view (not modal); 2–4 plans; "Differences Only" mode; collapsible categories; sticky plan headers; enrollment workflow integration; AI comparison summary |
+| Document Preview & Extraction Review | `documentPreviewRequirements.json` | REQ-DOC-REV-001–014 | 14 | Three-panel workspace: PDF Preview / Extracted Content / AI Findings; confidence-based review (≥90%/70–89%/<70%); explicit commit workflow; never auto-commit; document lifecycle UPLOADED → COMMITTED |
+| Integration Monitoring | `integrationMonitoringRequirements.json` | REQ-INT-MON-001–014 | 14 | setInterval polling 10s; manual refresh; last-updated timestamp; records counter progress bar; pause on tab hidden; prevent overlapping polls; deterministic carrier simulations |
+| API Error Schema | `apiErrorSchemaRequirements.json` | API-ERR-001–010 | 10 | Standard error envelope { success, error: { code, message, details, requestId, timestamp } }; HTTP status mapping; field-level validation details; retryable flag; no stack-trace exposure; 17-code error taxonomy |
+
+**Total seeded requirements (seed/requirements/):** 423+ across 31 requirement sets.

@@ -1,0 +1,148 @@
+[
+  {
+    "requirementId": "REQ-PLAN-COMP-001",
+    "type": "Functional Requirement",
+    "title": "Select Two or More Plans for Comparison from Plan Catalog",
+    "description": "The system shall allow users to select two or more plans for comparison from the Plan Catalog. Each plan row shall have a checkbox. A [Compare Selected] button activates when 2 or more plans are selected.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "navigationPattern": "Plan Catalog → Select Plans → [Compare Selected] → Dedicated Comparison View",
+    "urlPattern": "/plans/compare?ids=PPO500,PPO1000,HDHP3000"
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-002",
+    "type": "Functional Requirement",
+    "title": "Support Comparison of Up to Four Plans Simultaneously",
+    "description": "The system shall support comparison of up to four plans simultaneously. Beyond four columns, readability degrades on standard laptop screens. Horizontal scrolling is acceptable for narrow viewports.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "minimumPlans": 2,
+    "maximumPlans": 4,
+    "underMinimumMessage": "Select at least 2 plans to compare.",
+    "overMaximumMessage": "You can compare up to 4 plans at a time. Please deselect 1 plan."
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-003",
+    "type": "Functional Requirement",
+    "title": "Dedicated Plan Comparison View — Not a Modal",
+    "description": "The system shall provide a dedicated Plan Comparison view rather than relying solely on a modal dialog. A modal is too constrained for benefits plans with many attributes.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "rationale": "Benefits plan comparison has many attributes across multiple categories. A dedicated page provides better readability and navigation than a constrained modal."
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-004",
+    "type": "Functional Requirement",
+    "title": "Side-by-Side Column Layout for Plan Comparison",
+    "description": "The Plan Comparison view shall display plans as side-by-side columns. Each column represents one plan. Attribute rows run horizontally across all columns.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"]
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-005",
+    "type": "Functional Requirement",
+    "title": "Plan Comparison Attributes Organized into Logical Categories",
+    "description": "The system shall organize comparison attributes into logical collapsible categories.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "comparisonCategories": [
+      "Plan Overview",
+      "Eligibility",
+      "Coverage",
+      "Cost & Premiums",
+      "Employer Contribution",
+      "Deductibles & Out-of-Pocket",
+      "Network",
+      "HSA / FSA",
+      "Enrollment",
+      "Carrier"
+    ]
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-006",
+    "type": "Functional Requirement",
+    "title": "'Differences Only' Mode — Hide Identical Values",
+    "description": "The system shall provide a 'Differences Only' mode that hides attributes with identical values across all selected plans, making it easier to compare 3–4 plans with many shared attributes.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "defaultMode": "Show All",
+    "differencesOnlyToggle": "Switch hides rows where all plan values are identical"
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-007",
+    "type": "Functional Requirement",
+    "title": "Visually Identify and Accessibly Label Differences Between Plans",
+    "description": "The system shall visually identify differences between plans using both visual indicators and accessible text labels. Do not rely solely on color for difference indication.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison", "accessibility"],
+    "visualIndicators": {
+      "difference": "⚠ Difference",
+      "same": "✓ Same"
+    }
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-008",
+    "type": "Functional Requirement",
+    "title": "Sticky Plan Column Headers While Scrolling",
+    "description": "Plan headers shall remain visible while users scroll through the comparison table.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"]
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-009",
+    "type": "Functional Requirement",
+    "title": "Navigate from Comparison View to Individual Plan Detail",
+    "description": "Users shall be able to navigate from the comparison view to the detailed configuration of an individual plan via a [View Plan Details] action per plan column.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"],
+    "planDetailRoute": "/plans/{planId}"
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-010",
+    "type": "Functional Requirement",
+    "title": "Select Plan from Comparison and Return to Enrollment Workflow Without Losing State",
+    "description": "When comparison is initiated from an enrollment workflow, users shall be able to select a plan and return to the enrollment workflow without losing enrollment state.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison", "enrollment"],
+    "enrollmentReturnBehavior": "After [Select PPO 500], enrollment wizard resumes at the plan selection step with PPO 500 pre-selected."
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-011",
+    "type": "Functional Requirement",
+    "title": "Block Comparison When Fewer Than Two Plans Are Selected",
+    "description": "The system shall prevent comparison when fewer than two plans are selected and display a clear message.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"]
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-012",
+    "type": "Functional Requirement",
+    "title": "Notify User When More Than Four Plans Selected and Require Reduction",
+    "description": "The system shall notify users when more than four plans are selected and require them to reduce the selection to four or fewer before launching comparison.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison"]
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-013",
+    "type": "Functional Requirement",
+    "title": "Optional AI-Generated Comparison Summary Based Exclusively on Structured Plan Data",
+    "description": "The system shall optionally provide an AI-generated comparison summary. The summary shall be based exclusively on the structured plan data being compared, and shall not invent or generalize beyond what is in the plan records.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison", "ai"],
+    "aiSummaryExample": {
+      "display": "✨ AI Comparison Summary",
+      "content": "PPO 500 has the lowest deductible but the highest employee premium. HDHP 3000 has the lowest employee premium and is HSA eligible, but has the highest deductible. PPO 1000 provides a middle-ground option.",
+      "action": "[Ask AI About These Plans]",
+      "disclaimer": "AI-generated explanation based on plan configuration data."
+    }
+  },
+  {
+    "requirementId": "REQ-PLAN-COMP-014",
+    "type": "Functional Requirement",
+    "title": "AI Comparison Summary Identifies the Underlying Plan Attributes Used",
+    "description": "AI-generated comparison summaries shall identify the underlying plan attributes used to generate the summary, ensuring the user can verify the basis of the AI's conclusions.",
+    "status": "Approved",
+    "tags": ["ui", "plan", "comparison", "ai"],
+    "exampleAttributeSource": "Source: Plan Configuration → HDHP 3000 → HSA Eligibility = true"
+  }
+]

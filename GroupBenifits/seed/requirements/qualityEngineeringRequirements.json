@@ -1,0 +1,327 @@
+[
+  {
+    "requirementId": "REQ-TEST-001",
+    "type": "Non-Functional Requirement",
+    "title": "Automated Unit Tests for All Critical Deterministic Business Logic",
+    "description": "The system shall maintain automated unit tests for all critical deterministic business logic. Deterministic logic includes eligibility date calculation, premium calculation, dependent age-out, enrollment validation, carrier simulation response, EDI 834 generation, and payroll deduction calculation.",
+    "status": "Approved",
+    "tags": ["testing", "quality", "cross-cutting"],
+    "testStrategy": {
+      "mandatoryMVP": ["Unit Tests", "Integration Tests", "E2E Tests", "AI Evaluation Tests (Epic 5)"],
+      "recommended": ["Contract Tests", "Regression Tests"],
+      "outOfScope": ["Performance Tests", "Security Penetration Tests"],
+      "architecture": "E2E Tests → Integration Tests + AI Workflow Tests → Unit Tests → Business Rule Engine"
+    }
+  },
+  {
+    "requirementId": "REQ-TEST-002",
+    "type": "Non-Functional Requirement",
+    "title": "Eligibility Date Calculation Unit Tests — Month-End, February, Leap Year, Year Boundary",
+    "description": "The system shall maintain unit tests for eligibility date calculations covering all edge cases. Tests must resolve the previously identified ambiguity around 30-day waiting period vs. first-of-following-month activation.",
+    "status": "Approved",
+    "tags": ["testing", "eligibility"],
+    "testCases": [
+      { "hireDate": "Jan 1",  "expectedEligibility": "Mar 1",  "note": "Month boundary — see REQ-ELIG-001" },
+      { "hireDate": "Jan 15", "expectedEligibility": "Mar 1" },
+      { "hireDate": "Jan 31", "expectedEligibility": "Mar 1" },
+      { "hireDate": "Feb 1",  "expectedEligibility": "Apr 1" },
+      { "hireDate": "Feb 28", "expectedEligibility": "Apr 1" },
+      { "hireDate": "Mar 15", "expectedEligibility": "May 1" }
+    ],
+    "mandatoryEdgeCases": [
+      "Hire Date = 1st of month",
+      "Hire Date = last day of month",
+      "February 28",
+      "February 29 (leap year)",
+      "30-day month (April, June, September, November)",
+      "31-day month",
+      "Year boundary (December hire → January/February eligibility)"
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-003",
+    "type": "Non-Functional Requirement",
+    "title": "Premium Calculation Unit Tests — All Pay Frequencies",
+    "description": "The system shall maintain unit tests for premium calculations across Weekly, Biweekly, Semi-monthly, and Monthly pay frequencies.",
+    "status": "Approved",
+    "tags": ["testing", "premium"],
+    "testCases": [
+      { "annualPremium": 1800, "frequency": "Weekly",      "formula": "1800 / 52",  "expected": 34.62 },
+      { "annualPremium": 1800, "frequency": "Biweekly",    "formula": "1800 / 26",  "expected": 69.23 },
+      { "annualPremium": 1800, "frequency": "Semi-monthly","formula": "1800 / 24",  "expected": 75.00 },
+      { "annualPremium": 1800, "frequency": "Monthly",     "formula": "1800 / 12",  "expected": 150.00 }
+    ],
+    "roundingTestCases": [
+      { "annualPremium": 1799, "frequency": "Weekly",       "expected": 34.60 },
+      { "annualPremium": 1799, "frequency": "Biweekly",     "expected": 69.19 },
+      { "annualPremium": 1799, "frequency": "Semi-monthly", "expected": 74.96 },
+      { "annualPremium": 1799, "frequency": "Monthly",      "expected": 149.92 }
+    ],
+    "roundingSpecification": "All payroll deductions shall be rounded to two decimal places using standard half-up rounding. Any cumulative rounding difference shall be reconciled in the final payroll period of the plan year."
+  },
+  {
+    "requirementId": "REQ-TEST-004",
+    "type": "Non-Functional Requirement",
+    "title": "Premium Rounding and Final-Period Reconciliation Tests",
+    "description": "The system shall maintain unit tests for premium rounding method (half-up to 2 decimal places), decimal precision, floating-point error prevention, and final-period true-up reconciliation ensuring total annual deductions match annual premium exactly.",
+    "status": "Approved",
+    "tags": ["testing", "premium", "rounding"],
+    "verifyItems": [
+      "Decimal precision to 2 places",
+      "Rounding method: half-up",
+      "No floating-point accumulation errors",
+      "Final-period reconciliation: sum(all deductions) = annual premium"
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-005",
+    "type": "Non-Functional Requirement",
+    "title": "Dependent Age-Out Boundary Condition Tests",
+    "description": "The system shall maintain unit tests for dependent age-out boundary conditions. All expected results shall be driven by the configured policy rule, not hardcoded age 26.",
+    "status": "Approved",
+    "tags": ["testing", "dependent"],
+    "configuredPolicy": { "maxAge": 26, "cutoffRule": "END_OF_MONTH_26TH_BIRTHDAY" },
+    "testBoundaries": [
+      "Age 25 — coverage still active",
+      "Age 26 — coverage active through end of birth month",
+      "Day before 26th birthday",
+      "26th birthday",
+      "Day after 26th birthday",
+      "End of birthday month — last day of coverage",
+      "First day of following month — termination effective date",
+      "End of plan year"
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-006",
+    "type": "Non-Functional Requirement",
+    "title": "Life Event Enrollment Window Unit Tests — All Event Types and Boundaries",
+    "description": "The system shall maintain unit tests for all configured life event enrollment windows and boundary conditions. Tests shall cover Event Date, Enrollment Date, Window Start, Window End, and Expected Result for each configured event type.",
+    "status": "Approved",
+    "tags": ["testing", "life-events"],
+    "eventTypes": ["Marriage", "Birth", "Adoption", "Divorce", "Loss of Coverage", "Death of Dependent"],
+    "boundaryTests": ["Day 0 of window", "Last valid day of window", "First invalid day after window"]
+  },
+  {
+    "requirementId": "REQ-TEST-007",
+    "type": "Non-Functional Requirement",
+    "title": "Business Rule Unit Tests — Eligibility, Enrollment, Carrier Simulation, Payroll, EDI 834",
+    "description": "The system shall maintain unit tests for all configured business rules across eligibility, enrollment validation, carrier simulation deterministic responses, payroll deductions, and EDI 834 generation.",
+    "status": "Approved",
+    "tags": ["testing"],
+    "eligibilityTests": [
+      "Full-Time → Eligible",
+      "Part-Time → Not Eligible",
+      "Executive → Eligible",
+      "Hourly → Eligible",
+      "Terminated → Not Eligible",
+      "Leave of Absence → Policy-dependent",
+      "New Hire → Waiting Period applies"
+    ],
+    "enrollmentTests": [
+      "Open Enrollment → Allowed",
+      "Closed Enrollment → Rejected",
+      "New Hire during waiting period → Rejected",
+      "Life Event within window → Allowed",
+      "Life Event outside window → Rejected",
+      "Duplicate Enrollment → Rejected",
+      "Invalid Plan → Rejected",
+      "Ineligible Employee → Rejected"
+    ],
+    "carrierSimTests": [
+      { "input": "Valid Transaction",        "expected": "ACCEPTED" },
+      { "input": "Invalid Employee",         "expected": "REJECTED / INVALID_EMPLOYEE" },
+      { "input": "Invalid Dependent SSN",    "expected": "REJECTED / INVALID_DEPENDENT_SSN", "scenarioRef": "CT-10045" },
+      { "input": "Invalid Plan",             "expected": "REJECTED / INVALID_PLAN" },
+      { "input": "Configured Timeout",       "expected": "SYSTEM_ERROR / CARRIER_TIMEOUT" }
+    ],
+    "deterministicNote": "The same input must always generate the same result in DETERMINISTIC mode."
+  },
+  {
+    "requirementId": "REQ-TEST-008",
+    "type": "Non-Functional Requirement",
+    "title": "Integration Tests Covering Enrollment-to-Carrier, Enrollment-to-Payroll, EDI Generation, and Reconciliation",
+    "description": "The system shall maintain integration tests validating complete service interactions across four flows.",
+    "status": "Approved",
+    "tags": ["testing", "integration"],
+    "integrationFlows": [
+      {
+        "id": "INT-001",
+        "name": "Enrollment → Carrier",
+        "steps": ["Create Enrollment", "Eligibility Validation", "Generate Carrier Transaction", "Carrier Simulator", "Persist Response"],
+        "expectedOutcome": { "enrollment": "ACTIVE", "carrier": "ACCEPTED" }
+      },
+      {
+        "id": "INT-002",
+        "name": "Enrollment → EDI 834",
+        "steps": ["Enrollment", "Canonical Model", "834 Generator", "File Validation", "Transmission"]
+      },
+      {
+        "id": "INT-003",
+        "name": "Enrollment → Payroll",
+        "steps": ["Enrollment", "Premium Calculation", "Payroll Deduction", "Payroll Interface"]
+      },
+      {
+        "id": "INT-004",
+        "name": "Reconciliation",
+        "description": "Verify configured benefitsPersonId → HR employeeId / Carrier memberId / Payroll employeeId mapping reconciles correctly"
+      }
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-009",
+    "type": "Non-Functional Requirement",
+    "title": "End-to-End Tests — Five Critical User Journeys",
+    "description": "The system shall maintain end-to-end tests covering at minimum five critical Group Benefits user journeys.",
+    "status": "Approved",
+    "tags": ["testing", "e2e"],
+    "e2eJourneys": [
+      {
+        "id": "E2E-001",
+        "name": "New Hire Enrollment",
+        "steps": ["Create Employee", "Eligibility Determination", "Plan Selection", "Enrollment", "Premium Calculation", "Carrier Transaction", "Payroll Deduction"],
+        "assertions": ["Employee Eligible", "Enrollment Active", "Carrier Accepted", "Payroll Deduction Created"]
+      },
+      {
+        "id": "E2E-002",
+        "name": "Life Event — Marriage",
+        "steps": ["Employee", "Marriage life event", "Life Event Enrollment", "Add Spouse", "Carrier Transaction", "Payroll Update", "Employee Notification"]
+      },
+      {
+        "id": "E2E-003",
+        "name": "Invalid Dependent — CT-10045",
+        "seedDataRef": ["CT-10045", "Linda White", "DEP-INVALID-SSN"],
+        "assertions": ["Dependent Validation → REJECTED", "INVALID_DEPENDENT_SSN", "No Carrier Enrollment", "Exception Created"]
+      },
+      {
+        "id": "E2E-004",
+        "name": "Weekly Carrier Transmission",
+        "steps": ["Pending Transactions", "Weekly Schedule", "Generate 834", "Transmit", "Carrier Simulator", "Accepted / Rejected / Errors", "Integration Dashboard"]
+      },
+      {
+        "id": "E2E-005",
+        "name": "AI Requirements Engineering",
+        "steps": ["Upload Benefits Guide", "Document Ingestion", "AI Requirement Extraction", "Conflict Detection", "AI Interview", "Impact Analysis", "Human Approval", "Backlog Generation"]
+      }
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-010",
+    "type": "Non-Functional Requirement",
+    "title": "Automated Negative Scenario and Validation Exception Tests",
+    "description": "The system shall maintain automated tests for negative scenarios and validation exceptions including carrier rejection, dependent validation failure, enrollment outside window, field validation errors, and business rule violations.",
+    "status": "Approved",
+    "tags": ["testing", "negative-scenarios"]
+  },
+  {
+    "requirementId": "REQ-TEST-011",
+    "type": "Non-Functional Requirement",
+    "title": "Deterministic Seed Data for Repeatable Automated Testing",
+    "description": "The system shall maintain a deterministic seed dataset for repeatable automated testing. The test dataset shall include Acme Corp with 30 employees spanning employment classes, 10 dependents, 9 benefit plans, 5 carriers, 20 enrollments, 5 life events, 5 eligibility exceptions, and 10 carrier transactions.",
+    "status": "Approved",
+    "tags": ["testing", "seed-data"],
+    "testSeedComposition": {
+      "employer": "Acme Corp",
+      "employees": 30,
+      "employeeClasses": ["Full-Time", "Part-Time", "Executive", "Hourly"],
+      "dependents": 10,
+      "benefitPlans": 9,
+      "carriers": 5,
+      "enrollments": 20,
+      "lifeEvents": 5,
+      "eligibilityExceptions": 5,
+      "carrierTransactions": 10
+    },
+    "namedEdgeCaseEmployees": [
+      { "id": "EMP-10001", "scenario": "Normal enrollment" },
+      { "id": "EMP-10002", "scenario": "New hire — in waiting period" },
+      { "id": "EMP-10003", "scenario": "Part-time — not eligible" },
+      { "id": "EMP-10004", "scenario": "Terminated — COBRA qualifying event" },
+      { "id": "EMP-10005", "scenario": "Life event in progress" },
+      { "id": "EMP-10045", "scenario": "Invalid dependent SSN — CT-10045 path" }
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-012",
+    "type": "Non-Functional Requirement",
+    "title": "Golden Datasets for AI Requirement Extraction Evaluation",
+    "description": "The system shall maintain golden datasets for evaluating AI requirement extraction quality. Each golden dataset pairs a source document with its expected extraction output.",
+    "status": "Approved",
+    "tags": ["testing", "ai", "epic5"],
+    "goldenDatasetStructure": {
+      "input": "Source PDF document (e.g., Acme_2027_Benefits_Guide.pdf)",
+      "expected": "Validated list of requirements expected to be extracted",
+      "evaluation": "Compare AI extraction output against expected set"
+    },
+    "goldDatasetExample": {
+      "document": "Acme_2027_Eligibility_Policy.pdf",
+      "expectedRequirement": { "field": "Waiting Period", "value": "30 Days", "source": "Acme Eligibility Policy Page 4" },
+      "aiOutput": { "field": "Waiting Period", "value": "30 Days", "citation": "Acme Eligibility Policy Page 4" },
+      "result": "PASS"
+    }
+  },
+  {
+    "requirementId": "REQ-TEST-013",
+    "type": "Non-Functional Requirement",
+    "title": "AI-Generated Requirements Evaluation for Accuracy, Completeness, Traceability, and Hallucination",
+    "description": "The system shall evaluate AI-generated requirements against golden datasets measuring: requirement extraction precision, recall, field extraction accuracy, conflict detection accuracy, impact analysis accuracy, hallucination rate, and citation/source traceability.",
+    "status": "Approved",
+    "tags": ["testing", "ai", "epic5"],
+    "evaluationMetrics": [
+      "Requirement extraction precision (correctly extracted / total extracted)",
+      "Requirement extraction recall (correctly extracted / total expected)",
+      "Field extraction accuracy (correct field values / total fields)",
+      "Conflict detection accuracy",
+      "Impact analysis accuracy",
+      "Hallucination rate (AI claims not grounded in source documents)",
+      "Citation traceability (AI output references source document and page)"
+    ]
+  },
+  {
+    "requirementId": "REQ-TEST-014",
+    "type": "Non-Functional Requirement",
+    "title": "Automated Tests Execute as Part of Application Build or CI/CD Process",
+    "description": "Automated tests shall execute as part of the application build or CI/CD pipeline. CI/CD gate order: Commit → Lint → Unit Tests → Integration Tests → Build → E2E Smoke Tests → Deploy Demo.",
+    "status": "Approved",
+    "tags": ["testing", "ci-cd"],
+    "ciCdPipeline": ["Commit", "Lint", "Unit Tests", "Integration Tests", "Build Docker Image", "E2E Tests", "Push Image", "Deploy Demo"]
+  },
+  {
+    "requirementId": "REQ-TEST-015",
+    "type": "Non-Functional Requirement",
+    "title": "Critical Test Failures Block Demo Build Promotion",
+    "description": "Critical unit, integration, and E2E test failures shall prevent a successful demo build from being promoted. Minimum mandatory gate: Unit Tests MUST PASS, Integration Tests MUST PASS, Critical E2E Tests MUST PASS, Build MUST PASS.",
+    "status": "Approved",
+    "tags": ["testing", "ci-cd"],
+    "mandatoryPassGate": [
+      "Unit Tests → MUST PASS",
+      "Integration Tests → MUST PASS",
+      "Critical E2E → MUST PASS",
+      "Build → MUST PASS"
+    ],
+    "minimumRegressionSuite": [
+      "Eligibility Date Calculation Tests",
+      "Premium Calculation Tests",
+      "Enrollment Validation Tests",
+      "Carrier Simulation Tests",
+      "EDI 834 Generation Tests",
+      "E2E-001: New Hire Enrollment",
+      "E2E-002: Life Event (Marriage)",
+      "E2E-003: Negative/Exception (CT-10045)",
+      "AI Golden Dataset Evaluation"
+    ],
+    "testCoverageMatrix": [
+      { "domain": "Eligibility Date",    "unit": "✓✓", "integration": "✓", "e2e": "✓", "priority": "Critical" },
+      { "domain": "Premium Calculation", "unit": "✓✓", "integration": "✓", "e2e": "✓", "priority": "Critical" },
+      { "domain": "Enrollment",          "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "Critical" },
+      { "domain": "Dependent Age-Out",   "unit": "✓✓", "integration": "✓", "e2e": "✓", "priority": "High" },
+      { "domain": "Life Events",         "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "High" },
+      { "domain": "Carrier Simulation",  "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "High" },
+      { "domain": "EDI 834",             "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "High" },
+      { "domain": "Payroll",             "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "Critical" },
+      { "domain": "Reconciliation",      "unit": "✓",  "integration": "✓", "e2e": "✓", "priority": "High" },
+      { "domain": "AI Extraction",       "unit": "Golden Set", "integration": "✓", "e2e": "✓", "priority": "Critical" },
+      { "domain": "AI Impact Analysis",  "unit": "Golden Set", "integration": "✓", "e2e": "✓", "priority": "High" }
+    ]
+  }
+]

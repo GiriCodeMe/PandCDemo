@@ -1,0 +1,190 @@
+[
+  {
+    "requirementId": "REQ-REQPLAN-001",
+    "type": "Functional Requirement",
+    "title": "Navigation Mechanism from Approved Requirement to Plan Configuration and Rule Builder",
+    "description": "The system shall provide navigation actions from an approved requirement to applicable Plan Configuration and Rule Builder components. The Requirements Studio shall expose [Create Rule] and [Apply to Plan] actions on each approved requirement.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "plan-config", "rule-builder", "epic5"],
+    "architectureDecision": {
+      "principle": "Approved AI-generated requirements shall be converted into structured domain objects and made available through a shared Requirements API. Users shall explicitly select 'Apply to Plan Configuration' or 'Create Rule'. Raw LLM output shall never directly modify published plan configuration.",
+      "flow": "Documents → AI Extraction → Requirements Studio → Human Review → Approve Requirement → Normalize → [Create Rule | Apply to Plan] → Draft → Human Review → Publish"
+    },
+    "apiDesign": [
+      { "method": "GET",  "path": "/api/requirements/:id",               "purpose": "Retrieve requirement" },
+      { "method": "POST", "path": "/api/requirements/:id/approve",        "purpose": "Approve requirement" },
+      { "method": "POST", "path": "/api/requirements/:id/create-rule",    "purpose": "Generate rule draft pre-populated from requirement" },
+      { "method": "POST", "path": "/api/requirements/:id/apply-to-plan",  "purpose": "Apply requirement to selected plan draft" },
+      { "method": "GET",  "path": "/api/requirements/:id/impact",         "purpose": "Return impacted plans, rules, and artifacts" },
+      { "method": "GET",  "path": "/api/requirements/:id/traceability",   "purpose": "Return source and downstream traceability relationships" }
+    ]
+  },
+  {
+    "requirementId": "REQ-REQPLAN-002",
+    "type": "Functional Requirement",
+    "title": "Canonical Requirement Representation Independent of AI Model and UI",
+    "description": "Approved requirements shall be stored in a canonical, structured representation independent of the AI model and UI implementation. The canonical requirement is the bridge between Requirements Studio, Rule Builder, and Plan Configuration.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "architecture"],
+    "canonicalRequirementModel": {
+      "requirementId": "REQ-ELIG-001",
+      "type": "ELIGIBILITY_RULE",
+      "status": "APPROVED",
+      "title": "Full-Time Employee Eligibility",
+      "source": { "documentId": "DOC-001", "documentName": "Acme_Eligibility_Policy.pdf", "page": 4 },
+      "conditions": [
+        { "field": "employmentType", "operator": "EQUALS",              "value": "FULL_TIME" },
+        { "field": "hoursPerWeek",   "operator": "GREATER_THAN_OR_EQUAL","value": 30 }
+      ],
+      "actions": [{ "type": "SET_ELIGIBILITY", "value": "ELIGIBLE" }]
+    }
+  },
+  {
+    "requirementId": "REQ-REQPLAN-003",
+    "type": "Functional Requirement",
+    "title": "Requirement Type to Downstream Configuration Target Mapping",
+    "description": "The system shall map requirement types to appropriate downstream configuration targets. Not every requirement type applies to every screen.",
+    "status": "Approved",
+    "tags": ["requirements-studio"],
+    "requirementTypeTargetMapping": [
+      { "type": "Eligibility Rule",       "targets": ["Rule Builder"] },
+      { "type": "Waiting Period",         "targets": ["Plan Config", "Rule Builder"] },
+      { "type": "Coverage Tier",          "targets": ["Plan Config"] },
+      { "type": "Premium",                "targets": ["Plan Config"] },
+      { "type": "Employer Contribution",  "targets": ["Plan Config"] },
+      { "type": "Enrollment Window",      "targets": ["Enrollment Config"] },
+      { "type": "Life Event Window",      "targets": ["Life Event Config"] },
+      { "type": "Carrier Format",         "targets": ["Carrier Integration"] },
+      { "type": "Payroll Deduction",      "targets": ["Payroll Integration"] }
+    ]
+  },
+  {
+    "requirementId": "REQ-REQPLAN-004",
+    "type": "Functional Requirement",
+    "title": "Create Draft Business Rule from Approved Eligibility or Business-Rule Requirement",
+    "description": "Users shall be able to create a draft business rule from an approved eligibility or business-rule requirement using the [Create Rule] action in Requirements Studio.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "rule-builder"]
+  },
+  {
+    "requirementId": "REQ-REQPLAN-005",
+    "type": "Functional Requirement",
+    "title": "Rule Builder Pre-Populated from Approved Requirement Conditions and Actions",
+    "description": "The Rule Builder shall pre-populate rule conditions and actions from the approved requirement when opened via [Create Rule]. A banner shall indicate the AI source requirement, document citation, and confidence.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "rule-builder"],
+    "ruleBannerExample": {
+      "message": "AI-generated rule imported from REQ-ELIG-001",
+      "source": "Acme_Eligibility_Policy.pdf, Page 4",
+      "actions": ["View Requirement", "Edit Rule", "Test Rule", "Approve", "Reject"]
+    }
+  },
+  {
+    "requirementId": "REQ-REQPLAN-006",
+    "type": "Functional Requirement",
+    "title": "Apply Approved Requirement to Selected Plan Configuration",
+    "description": "Users shall be able to apply an approved requirement to a selected plan configuration using the [Apply to Plan] action. A modal shall show the target plan dropdown and a list of configuration fields affected.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "plan-config"],
+    "applyToPlanModal": {
+      "requirementTitle": "Full-Time Employee Eligibility",
+      "targetPlanDropdown": "[ PPO 500 - 2027 ▼ ]",
+      "configurationImpact": ["✓ Eligibility Criteria", "✓ Waiting Period", "○ Coverage Tier", "○ Employer Contribution"],
+      "actions": ["Preview Changes", "Cancel"]
+    }
+  },
+  {
+    "requirementId": "REQ-REQPLAN-007",
+    "type": "Functional Requirement",
+    "title": "Preview Proposed Plan Configuration Changes Before Applying",
+    "description": "The system shall display a preview of proposed plan configuration changes before applying them. The preview shall show the field, current value, proposed value, source requirement, and AI confidence as a diff.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "plan-config"],
+    "previewDiffExamples": [
+      {
+        "field": "Minimum Hours",
+        "currentValue": "No minimum hours configured",
+        "proposedValue": "30",
+        "sourceRequirement": "REQ-ELIG-001",
+        "aiConfidence": "96%",
+        "requiresConfirmation": false
+      },
+      {
+        "field": "Minimum Hours",
+        "currentValue": "32",
+        "proposedValue": "30",
+        "warning": "⚠ Existing configuration will be changed.",
+        "requiresConfirmation": true
+      }
+    ]
+  },
+  {
+    "requirementId": "REQ-REQPLAN-008",
+    "type": "Functional Requirement",
+    "title": "AI-Generated Changes Applied to Plan Draft — Never Directly to Published Plan",
+    "description": "AI-generated changes shall be applied to a plan draft and shall not directly modify a published plan. The user must explicitly review and publish the draft for changes to take effect.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "plan-config", "architecture"],
+    "safetyPrinciple": "Raw AI output shall never directly modify production benefits configuration. Human review of the plan draft is always required before publication."
+  },
+  {
+    "requirementId": "REQ-REQPLAN-009",
+    "type": "Functional Requirement",
+    "title": "Bidirectional Traceability: Source Document → Requirement → Rule → Plan Configuration",
+    "description": "The system shall maintain traceability between source document, requirement, rule, and plan configuration. The traceability graph shall be navigable — clicking any node navigates to that object.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "traceability"],
+    "traceabilityGraph": {
+      "root": "Acme Eligibility Policy PDF",
+      "requirement": "REQ-ELIG-001",
+      "rule": "ELIG-001 v1.0",
+      "plans": ["PPO 500 Eligibility", "PPO 1000 Eligibility", "HDHP 3000 Eligibility"]
+    },
+    "routingPattern": {
+      "requirementDetail": "/requirements/REQ-ELIG-001",
+      "createRule": "/rules/new?requirementId=REQ-ELIG-001",
+      "applyToPlan": "/plans/PPO-500/configure?requirementId=REQ-ELIG-001"
+    }
+  },
+  {
+    "requirementId": "REQ-REQPLAN-010",
+    "type": "Functional Requirement",
+    "title": "Bidirectional Navigation Between Requirement and Its Downstream Rules and Plan Configurations",
+    "description": "The system shall provide bidirectional navigation between a requirement and its downstream rules and plan configurations. From a rule or plan configuration, users shall be able to navigate back to the originating requirement.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "traceability"],
+    "requirementStudioActions": ["[Edit]", "[Approve]", "[Reject]", "[Create Rule]", "[Apply to Plan]", "[View Impact]", "[View Traceability]"]
+  },
+  {
+    "requirementId": "REQ-REQPLAN-011",
+    "type": "Functional Requirement",
+    "title": "Impact Detection When an Approved Requirement Is Modified",
+    "description": "The system shall identify downstream artifacts affected when an approved requirement is modified. Impact detection shall cover rules, plans, and test cases. Users shall see an impact warning before confirming the modification.",
+    "status": "Approved",
+    "tags": ["requirements-studio", "impact-analysis"],
+    "impactWarningExample": {
+      "requirementChange": "REQ-ELIG-001: Minimum Hours 30 → 32",
+      "affectedArtifacts": {
+        "rules": ["ELIG-001"],
+        "plans": ["PPO 500", "PPO 1000", "HDHP 3000"],
+        "testCases": ["TC-ELIG-001"]
+      },
+      "action": "[Review Impact]"
+    }
+  },
+  {
+    "requirementId": "REQ-REQPLAN-012",
+    "type": "Functional Requirement",
+    "title": "Only Approved Requirements Eligible for Downstream Application",
+    "description": "Only requirements in APPROVED status shall be eligible for downstream application to plan configuration or published business rules. Requirements in AI_EXTRACTED, UNDER_REVIEW, or REJECTED status shall not be applicable.",
+    "status": "Approved",
+    "tags": ["requirements-studio"],
+    "requirementStatusFlow": ["AI_EXTRACTED", "UNDER_REVIEW", "APPROVED", "APPLIED"],
+    "appliedStatusDisplay": {
+      "requirement": "REQ-ELIG-001",
+      "status": "APPROVED",
+      "appliedTo": ["PPO 500 Plan", "PPO 1000 Plan", "HDHP 3000 Plan"],
+      "derivedRule": "ELIG-001 v1.0"
+    }
+  }
+]

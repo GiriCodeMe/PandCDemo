@@ -1,0 +1,120 @@
+{
+  "_note": "Metadata-driven validation engine seed. Each field entry is the authoritative validation specification for that field across all contexts.",
+  "entities": {
+    "employer": [
+      { "field": "employerId",       "label": "Employer ID",       "required": "SYSTEM",       "type": "string",  "description": "System-generated, unique" },
+      { "field": "legalName",        "label": "Legal Name",        "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 200 },
+      { "field": "dbaName",          "label": "DBA Name",          "required": "OPTIONAL",     "type": "string",  "maxLength": 200 },
+      { "field": "ein",              "label": "EIN",               "required": "REQUIRED",     "type": "string",  "pattern": "^\\d{2}-\\d{7}$", "errorCode": "INVALID_FORMAT", "message": "EIN must be in XX-XXXXXXX format" },
+      { "field": "groupNumber",      "label": "Group Number",      "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 50, "unique": true },
+      { "field": "industry",         "label": "Industry",          "required": "OPTIONAL",     "type": "enum",    "enumRef": "INDUSTRY_CODES" },
+      { "field": "employeeCount",    "label": "Employee Count",    "required": "REQUIRED",     "type": "integer", "min": 1, "max": 1000000 },
+      { "field": "addressLine1",     "label": "Address Line 1",    "required": "REQUIRED",     "type": "string",  "maxLength": 200 },
+      { "field": "addressLine2",     "label": "Address Line 2",    "required": "OPTIONAL",     "type": "string",  "maxLength": 200 },
+      { "field": "city",             "label": "City",              "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "state",            "label": "State",             "required": "REQUIRED",     "type": "enum",    "enumRef": "US_STATES" },
+      { "field": "zipCode",          "label": "ZIP Code",          "required": "REQUIRED",     "type": "string",  "pattern": "^\\d{5}(-\\d{4})?$" },
+      { "field": "country",          "label": "Country",           "required": "REQUIRED",     "type": "enum",    "enumRef": "ISO_3166_COUNTRIES" },
+      { "field": "contactName",      "label": "Contact Name",      "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "contactEmail",     "label": "Contact Email",     "required": "REQUIRED",     "type": "string",  "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" },
+      { "field": "contactPhone",     "label": "Contact Phone",     "required": "REQUIRED",     "type": "string",  "pattern": "^\\+?1?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$" },
+      { "field": "effectiveDate",    "label": "Effective Date",    "required": "REQUIRED",     "type": "date" },
+      { "field": "terminationDate",  "label": "Termination Date",  "required": "OPTIONAL",     "type": "date",    "crossFieldRule": "terminationDate >= effectiveDate" }
+    ],
+    "employee": [
+      { "field": "employeeId",       "label": "Employee ID",       "required": "REQUIRED",     "type": "string",  "unique": "within_employer" },
+      { "field": "firstName",        "label": "First Name",        "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "lastName",         "label": "Last Name",         "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "middleName",       "label": "Middle Name",       "required": "OPTIONAL",     "type": "string",  "maxLength": 100 },
+      { "field": "ssn",              "label": "SSN",               "required": "CONDITIONAL",  "type": "string",  "pattern": "^\\d{3}-\\d{2}-\\d{4}$", "condition": "US employee", "masked": true, "encrypted": true },
+      { "field": "dateOfBirth",      "label": "Date of Birth",     "required": "REQUIRED",     "type": "date",    "ageMin": 16 },
+      { "field": "gender",           "label": "Gender",            "required": "OPTIONAL",     "type": "enum",    "enumRef": "GENDER_CODES" },
+      { "field": "employmentType",   "label": "Employment Type",   "required": "REQUIRED",     "type": "enum",    "allowedValues": ["FULL_TIME", "PART_TIME", "EXECUTIVE", "HOURLY"] },
+      { "field": "employmentStatus", "label": "Employment Status", "required": "REQUIRED",     "type": "enum",    "allowedValues": ["ACTIVE", "ON_LEAVE", "TERMINATED"] },
+      { "field": "hireDate",         "label": "Hire Date",         "required": "REQUIRED",     "type": "date",    "maxDate": "TODAY" },
+      { "field": "terminationDate",  "label": "Termination Date",  "required": "CONDITIONAL",  "type": "date",    "condition": "employmentStatus = TERMINATED", "crossFieldRule": "terminationDate >= hireDate" },
+      { "field": "workHoursPerWeek", "label": "Work Hours/Week",   "required": "REQUIRED",     "type": "decimal", "min": 0, "max": 168 },
+      { "field": "workLocation",     "label": "Work Location",     "required": "REQUIRED",     "type": "string" },
+      { "field": "jobClass",         "label": "Job Class",         "required": "REQUIRED",     "type": "enum",    "enumRef": "CONFIGURED_JOB_CLASSES" },
+      { "field": "salary",           "label": "Salary",            "required": "CONDITIONAL",  "type": "decimal", "min": 0, "condition": "salaried employee" },
+      { "field": "email",            "label": "Email",             "required": "OPTIONAL",     "type": "string",  "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" },
+      { "field": "phone",            "label": "Phone",             "required": "OPTIONAL",     "type": "string",  "pattern": "^\\+?1?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$" }
+    ],
+    "dependent": [
+      { "field": "dependentId",      "label": "Dependent ID",      "required": "REQUIRED",     "type": "string",  "unique": "within_employee" },
+      { "field": "firstName",        "label": "First Name",        "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "lastName",         "label": "Last Name",         "required": "REQUIRED",     "type": "string",  "minLength": 1, "maxLength": 100 },
+      { "field": "relationship",     "label": "Relationship",      "required": "REQUIRED",     "type": "enum",    "allowedValues": ["SPOUSE", "CHILD", "DOMESTIC_PARTNER"] },
+      { "field": "dateOfBirth",      "label": "Date of Birth",     "required": "REQUIRED",     "type": "date" },
+      { "field": "ssn",              "label": "SSN",               "required": "CONDITIONAL",  "type": "string",  "pattern": "^\\d{3}-\\d{2}-\\d{4}$", "condition": "carrier requires dependent SSN — see REQ-DEP-SSN-014", "masked": true, "encrypted": true, "configurable": true },
+      { "field": "gender",           "label": "Gender",            "required": "OPTIONAL",     "type": "enum",    "enumRef": "GENDER_CODES" },
+      { "field": "disabled",         "label": "Disabled",          "required": "OPTIONAL",     "type": "boolean" },
+      {
+        "field": "ageEligibility",   "label": "Age Eligibility",   "required": "SYSTEM",       "type": "derived",
+        "rule": "Derived from dependentEligibilityConfig — NOT hardcoded. Config: { relationship: CHILD, maxAge: 26, cutoffRule: END_OF_MONTH_26TH_BIRTHDAY }",
+        "note": "Do not hardcode age 26 in validation logic. Use configurable dependentEligibility rule. See REQ-DEP-001 and ER-DEP-AGE-001."
+      }
+    ],
+    "plan": [
+      { "field": "planId",           "label": "Plan ID",           "required": "REQUIRED",     "type": "string",  "unique": true },
+      { "field": "planName",         "label": "Plan Name",         "required": "REQUIRED",     "type": "string",  "maxLength": 200 },
+      { "field": "productType",      "label": "Product Type",      "required": "REQUIRED",     "type": "enum",    "allowedValues": ["MEDICAL", "DENTAL", "VISION", "LIFE", "STD", "LTD", "HSA", "FSA"] },
+      { "field": "carrierId",        "label": "Carrier",           "required": "REQUIRED",     "type": "string",  "referentialIntegrity": "carriers" },
+      { "field": "planYear",         "label": "Plan Year",         "required": "REQUIRED",     "type": "integer", "pattern": "^\\d{4}$" },
+      { "field": "effectiveDate",    "label": "Effective Date",    "required": "REQUIRED",     "type": "date" },
+      { "field": "terminationDate",  "label": "Termination Date",  "required": "OPTIONAL",     "type": "date",    "crossFieldRule": "terminationDate >= effectiveDate" },
+      { "field": "employeePremium",  "label": "Employee Premium",  "required": "REQUIRED",     "type": "decimal", "min": 0 },
+      { "field": "employerContrib",  "label": "Employer Contribution", "required": "REQUIRED", "type": "decimal", "min": 0 },
+      { "field": "coverageTiers",    "label": "Coverage Tiers",    "required": "REQUIRED",     "type": "array",   "minItems": 1 },
+      { "field": "networkType",      "label": "Network Type",      "required": "CONDITIONAL",  "type": "enum",    "allowedValues": ["PPO", "HMO", "HDHP", "EPO", "POS"], "condition": "productType = MEDICAL" },
+      { "field": "deductible",       "label": "Deductible",        "required": "CONDITIONAL",  "type": "decimal", "min": 0, "condition": "productType = MEDICAL" },
+      { "field": "outOfPocketMax",   "label": "Out-of-Pocket Max", "required": "CONDITIONAL",  "type": "decimal", "min": 0, "condition": "productType = MEDICAL", "crossFieldRule": "outOfPocketMax >= deductible" }
+    ],
+    "enrollment": [
+      { "field": "enrollmentId",     "label": "Enrollment ID",     "required": "REQUIRED",     "type": "string",  "unique": true },
+      { "field": "employeeId",       "label": "Employee ID",       "required": "REQUIRED",     "type": "string",  "referentialIntegrity": "employees" },
+      { "field": "planId",           "label": "Plan ID",           "required": "REQUIRED",     "type": "string",  "referentialIntegrity": "plans" },
+      { "field": "coverageTier",     "label": "Coverage Tier",     "required": "REQUIRED",     "type": "enum",    "allowedValues": ["EMPLOYEE_ONLY", "EMPLOYEE_SPOUSE", "EMPLOYEE_CHILDREN", "FAMILY"] },
+      { "field": "enrollmentType",   "label": "Enrollment Type",   "required": "REQUIRED",     "type": "enum",    "allowedValues": ["OPEN_ENROLLMENT", "NEW_HIRE", "LIFE_EVENT"] },
+      { "field": "electionDate",     "label": "Election Date",     "required": "REQUIRED",     "type": "date" },
+      { "field": "effectiveDate",    "label": "Effective Date",    "required": "REQUIRED",     "type": "date",    "businessRule": "Must comply with eligibility waiting period and first-of-month rule — see REQ-ELIG-001" },
+      { "field": "lifeEventType",    "label": "Life Event Type",   "required": "CONDITIONAL",  "type": "enum",    "condition": "enrollmentType = LIFE_EVENT", "referentialIntegrity": "lifeEventRuleCatalog" },
+      { "field": "eventDate",        "label": "Event Date",        "required": "CONDITIONAL",  "type": "date",    "condition": "enrollmentType = LIFE_EVENT", "businessRule": "Enrollment date must be within configured window for event type — see REQ-LE-003" }
+    ],
+    "carrier": [
+      { "field": "carrierId",        "label": "Carrier ID",        "required": "REQUIRED",     "type": "string",  "unique": true },
+      { "field": "carrierName",      "label": "Carrier Name",      "required": "REQUIRED",     "type": "string" },
+      { "field": "carrierType",      "label": "Carrier Type",      "required": "REQUIRED",     "type": "enum",    "allowedValues": ["MEDICAL", "DENTAL", "VISION", "LIFE", "DISABILITY", "HSA", "FSA"] },
+      { "field": "apiEndpoint",      "label": "API Endpoint",      "required": "CONDITIONAL",  "type": "string",  "pattern": "^https://", "condition": "carrier uses REST API" },
+      { "field": "ediSupported",     "label": "EDI Supported",     "required": "REQUIRED",     "type": "boolean" },
+      { "field": "ediFormat",        "label": "EDI Format",        "required": "CONDITIONAL",  "type": "enum",    "allowedValues": ["X12_834"], "condition": "ediSupported = true" },
+      { "field": "transmissionFrequency", "label": "Transmission Frequency", "required": "REQUIRED", "type": "enum", "allowedValues": ["DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "MANUAL"] },
+      { "field": "groupNumber",      "label": "Group Number",      "required": "REQUIRED",     "type": "string" },
+      { "field": "effectiveDate",    "label": "Effective Date",    "required": "REQUIRED",     "type": "date" },
+      { "field": "requiresDependentSSN", "label": "Requires Dependent SSN", "required": "REQUIRED", "type": "boolean", "note": "Configurable — see REQ-DEP-SSN-014" }
+    ],
+    "payroll": [
+      { "field": "payrollSystem",    "label": "Payroll System",    "required": "REQUIRED",     "type": "string" },
+      { "field": "employeeId",       "label": "Employee ID",       "required": "REQUIRED",     "type": "string",  "referentialIntegrity": "employees" },
+      { "field": "payrollEmployeeId","label": "Payroll Employee ID","required": "REQUIRED",    "type": "string",  "unique": true },
+      { "field": "payFrequency",     "label": "Pay Frequency",     "required": "REQUIRED",     "type": "enum",    "allowedValues": ["WEEKLY", "BIWEEKLY", "SEMI_MONTHLY", "MONTHLY"],
+        "premiumFormulas": {
+          "WEEKLY":       "Annual / 52",
+          "BIWEEKLY":     "Annual / 26",
+          "SEMI_MONTHLY": "Annual / 24",
+          "MONTHLY":      "Annual / 12"
+        },
+        "rounding": "ROUND(result, 2) — half-up. See REQ-PREM-001."
+      },
+      { "field": "deductionCode",    "label": "Deduction Code",    "required": "REQUIRED",     "type": "string" },
+      { "field": "deductionAmount",  "label": "Deduction Amount",  "required": "REQUIRED",     "type": "decimal", "min": 0 },
+      { "field": "effectiveDate",    "label": "Effective Date",    "required": "REQUIRED",     "type": "date" }
+    ]
+  },
+  "validationErrorCodes": [
+    "REQUIRED_FIELD_MISSING", "INVALID_TYPE", "INVALID_FORMAT", "INVALID_LENGTH",
+    "INVALID_RANGE", "INVALID_ENUM", "INVALID_DATE", "DATE_PRECEDES_EFFECTIVE_DATE",
+    "DATE_IN_FUTURE", "CROSS_FIELD_CONFLICT", "REFERENTIAL_INTEGRITY_VIOLATION",
+    "DUPLICATE_VALUE", "CONDITIONAL_FIELD_REQUIRED", "BUSINESS_RULE_VIOLATION"
+  ]
+}

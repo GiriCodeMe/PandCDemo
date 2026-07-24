@@ -1,0 +1,228 @@
+[
+  {
+    "requirementId": "REQ-DEPLOY-001",
+    "type": "Non-Functional Requirement",
+    "title": "Direct Local Execution Without Requiring Docker",
+    "description": "The application shall support direct local execution using Node.js and React without requiring Docker. All components — frontend, backend, carrier simulator, and payroll simulator — shall be runnable natively on a developer's machine.",
+    "status": "Approved",
+    "tags": ["deployment", "environment", "cross-cutting"],
+    "localArchitecture": {
+      "frontend": "React (npm run dev)",
+      "backend": "Node.js (npm run dev)",
+      "dataStore": "JSON / lowdb under /data",
+      "uploads": "/uploads",
+      "generatedFiles": "/generated",
+      "carrierSimulator": "localhost:4001",
+      "payrollSimulator": "localhost:4002",
+      "ai": "Gemini API (internet)"
+    },
+    "recommendedStartCommand": "npm run dev:all (using concurrently or similar Node-based process manager to start frontend, backend, carrier simulator, and payroll simulator in one command)"
+  },
+  {
+    "requirementId": "REQ-DEPLOY-002",
+    "type": "Non-Functional Requirement",
+    "title": "Docker Containerization — Optional, Not Required",
+    "description": "Docker containerization may be provided as an optional deployment mechanism but shall not be required for local development or demonstration. The application shall be fully functional without Docker.",
+    "status": "Approved",
+    "tags": ["deployment", "docker"],
+    "dockerStatus": "OPTIONAL",
+    "rationale": "Developer does not have Docker installed. Node.js + React direct execution is the primary path. Docker may be added later if remote deployment to cloud is required."
+  },
+  {
+    "requirementId": "REQ-DEPLOY-003",
+    "type": "Non-Functional Requirement",
+    "title": "Documented Startup Process for All Local Services",
+    "description": "The application shall provide a documented startup process that allows the frontend, backend, carrier simulator, and payroll simulator to be launched locally in a single command or via a simple documented procedure.",
+    "status": "Approved",
+    "tags": ["deployment"],
+    "suggestedCommands": {
+      "all": "npm run dev:all",
+      "frontend": "npm run dev (from /client)",
+      "backend": "npm run dev (from /server)",
+      "carrierSimulator": "npm run mock:carrier",
+      "payrollSimulator": "npm run mock:payroll"
+    },
+    "toolSuggestion": "Use 'concurrently' Node.js package to run all services in one terminal with a single command."
+  },
+  {
+    "requirementId": "REQ-DEPLOY-004",
+    "type": "Non-Functional Requirement",
+    "title": "Future Cloud Deployment Without Core Business Logic Changes",
+    "description": "The application shall support a future cloud deployment without requiring changes to core business logic. Environment-specific differences shall be handled through configuration and deployment environment only.",
+    "status": "Approved",
+    "tags": ["deployment", "cloud"],
+    "preferredCloudTarget": "Google Cloud Run (natural fit with Gemini API; also portable to AWS ECS/Fargate or Azure Container Apps)",
+    "cloudPortabilityPrinciple": "Business logic shall not depend on any specific cloud provider."
+  },
+  {
+    "requirementId": "REQ-DEPLOY-005",
+    "type": "Non-Functional Requirement",
+    "title": "Externalized Environment-Specific Configuration",
+    "description": "Environment-specific configuration shall be externalized from application source code. The application shall support separate Local, Test, and Demo environment configurations.",
+    "status": "Approved",
+    "tags": ["deployment", "configuration"],
+    "environments": [
+      { "env": "Local (NODE_ENV=development)",  "purpose": "Developer development — Node.js direct" },
+      { "env": "Test (NODE_ENV=test)",           "purpose": "Automated CI/CD testing" },
+      { "env": "Demo (NODE_ENV=demo)",           "purpose": "Customer demonstration — cloud or local" }
+    ]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-006",
+    "type": "Non-Functional Requirement",
+    "title": "Environment Variable Configuration for API Keys, Endpoints, and Runtime Settings",
+    "description": "The application shall use environment variables for Gemini API configuration, service endpoints, ports, storage paths, and runtime settings.",
+    "status": "Approved",
+    "tags": ["deployment", "configuration"],
+    "envVarCatalog": [
+      "NODE_ENV",
+      "PORT",
+      "GEMINI_API_KEY",
+      "GEMINI_MODEL_FLASH",
+      "GEMINI_MODEL_PRO",
+      "DATA_STORE_PATH",
+      "UPLOAD_DIR",
+      "MAX_FILE_SIZE_MB",
+      "CARRIER_API_URL",
+      "PAYROLL_API_URL",
+      "AI_MAX_CONCURRENT_REQUESTS",
+      "AI_MAX_RETRIES",
+      "AI_INITIAL_BACKOFF_MS",
+      "AI_MAX_BACKOFF_MS",
+      "DEMO_CACHE_ENABLED"
+    ],
+    "neverHardcode": ["Gemini API keys", "Database credentials", "Carrier endpoints", "Payroll endpoints", "Encryption keys", "Environment-specific URLs"]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-007",
+    "type": "Non-Functional Requirement",
+    "title": "Environment Files — .env.example Committed, Secrets Never Committed",
+    "description": "API keys, credentials, and other secrets shall not be committed to source control. The .env.example file containing only variable names and safe defaults SHALL be committed. .env files containing actual secrets shall never be committed.",
+    "status": "Approved",
+    "tags": ["deployment", "security"],
+    "envFileConventions": {
+      ".env.example": "Committed to Git — variable names and safe defaults only",
+      ".env.local": "Developer-specific — NOT committed to Git",
+      ".env.test": "Automated test environment — NOT committed if it contains secrets",
+      ".env.demo": "Demo environment — NOT committed if it contains secrets"
+    },
+    "gitignoreRequired": [".env", ".env.local", ".env.test", ".env.demo", "*.pem", "service-account*.json"]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-008",
+    "type": "Non-Functional Requirement",
+    "title": "Health and Readiness Endpoints",
+    "description": "The application shall expose health and readiness endpoints that indicate the status of all dependencies.",
+    "status": "Approved",
+    "tags": ["deployment", "observability"],
+    "healthEndpoints": {
+      "GET /health": "Liveness check — is the process alive?",
+      "GET /ready": "Readiness check — are all dependencies up?"
+    },
+    "readinessChecks": {
+      "api": "UP",
+      "dataStore": "UP",
+      "fileStorage": "UP",
+      "carrierMock": "UP",
+      "payrollMock": "UP",
+      "gemini": "CONFIGURED | AVAILABLE | RATE_LIMITED | UNAVAILABLE"
+    }
+  },
+  {
+    "requirementId": "REQ-DEPLOY-009",
+    "type": "Non-Functional Requirement",
+    "title": "Startup Validation of Required Configuration and Dependencies",
+    "description": "Application startup shall validate required configuration and dependencies. Do not silently start with broken configuration.",
+    "status": "Approved",
+    "tags": ["deployment"],
+    "startupChecks": [
+      "GEMINI_API_KEY is set and non-empty",
+      "Data store path is writable",
+      "Upload directory is writable",
+      "Carrier simulator is reachable (if configured)",
+      "Payroll simulator is reachable (if configured)",
+      "Required seed data is present"
+    ],
+    "startupFailureBehavior": "Log startup failure reason and exit with non-zero code. Example: 'Application startup FAILED: GEMINI_API_KEY is not configured.'"
+  },
+  {
+    "requirementId": "REQ-DEPLOY-010",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Data Reset Mechanism",
+    "description": "The demo shall provide a mechanism to restore seed data to a known baseline state, available only in development and demo environments.",
+    "status": "Approved",
+    "tags": ["deployment", "demo"],
+    "resetEndpoint": "POST /api/demo/reset",
+    "resetScope": ["Employers", "Employees", "Plans", "Enrollments", "Carrier transactions", "Requirements", "AI extraction results", "Audit logs", "Integration monitoring"],
+    "enabledInEnvironments": ["NODE_ENV=development", "NODE_ENV=demo"],
+    "disabledInEnvironments": ["NODE_ENV=production"]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-011",
+    "type": "Non-Functional Requirement",
+    "title": "Demo Reset Not Enabled in Production",
+    "description": "Demo-only reset functionality (POST /api/demo/reset) shall not be enabled in production environments. The endpoint shall return HTTP 403 when NODE_ENV is not 'development' or 'demo'.",
+    "status": "Approved",
+    "tags": ["deployment", "security"]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-012",
+    "type": "Non-Functional Requirement",
+    "title": "Cloud Container Deployment for Remote Customer Demonstrations",
+    "description": "The application shall support deployment to a managed cloud container environment for remote demonstrations. The same application that runs locally shall be deployable to cloud without business logic changes.",
+    "status": "Approved",
+    "tags": ["deployment", "cloud"],
+    "cloudTargets": ["Google Cloud Run (preferred — Gemini integration)", "AWS ECS / Fargate", "Azure Container Apps"],
+    "cloudDataPersistence": "Cloud deployments shall use persistent managed storage (database + object storage) rather than local file store."
+  },
+  {
+    "requirementId": "REQ-DEPLOY-013",
+    "type": "Non-Functional Requirement",
+    "title": "Persistent Storage for Uploads and Generated Artifacts per Environment",
+    "description": "Uploaded documents and generated artifacts shall use persistent storage appropriate to the deployment environment. Local: filesystem paths. Cloud: managed object storage.",
+    "status": "Approved",
+    "tags": ["deployment"],
+    "storageStrategy": {
+      "local": { "database": "JSON / lowdb", "uploads": "./data/uploads", "generated": "./data/generated" },
+      "cloud": { "database": "Managed database (PostgreSQL or equivalent)", "uploads": "Object Storage (GCS / S3 / Azure Blob)", "generated": "Object Storage" }
+    }
+  },
+  {
+    "requirementId": "REQ-DEPLOY-014",
+    "type": "Non-Functional Requirement",
+    "title": "Environment and Build Version Display",
+    "description": "The application shall display environment name, application version, build number, and deployment date. A visible environment banner shall prevent confusion between local, test, and demo environments.",
+    "status": "Approved",
+    "tags": ["deployment", "ux"],
+    "versionFooter": {
+      "appName": "Group Benefits AI Demo",
+      "version": "1.4.0",
+      "build": "#238",
+      "environment": "DEMO",
+      "deployed": "July 23, 2026"
+    },
+    "demoBanner": "UI header banner showing: ACME GROUP BENEFITS DEMO | Environment: DEMO | Version: 1.4.0"
+  },
+  {
+    "requirementId": "REQ-DEPLOY-015",
+    "type": "Non-Functional Requirement",
+    "title": "CI/CD Automated Test Gates Before Demo Build Promotion",
+    "description": "CI/CD shall execute automated tests before deploying a new demo build. A deployment shall not be promoted if critical tests fail.",
+    "status": "Approved",
+    "tags": ["deployment", "ci-cd"],
+    "ciCdPipeline": ["Pull Request", "Lint", "Unit Tests", "Integration Tests", "Build", "E2E Tests", "Push Image", "Deploy Demo"]
+  },
+  {
+    "requirementId": "REQ-DEPLOY-016",
+    "type": "Non-Functional Requirement",
+    "title": "Carrier and Payroll Mock Services Consistently Provisioned",
+    "description": "The application shall consistently provision the carrier and payroll mock services required for the demo. These mock services shall start with the application using a single command (e.g., npm run dev:all with concurrently).",
+    "status": "Approved",
+    "tags": ["deployment"],
+    "mockServices": [
+      { "service": "Carrier Simulator", "port": 4001, "startCommand": "npm run mock:carrier" },
+      { "service": "Payroll Simulator",  "port": 4002, "startCommand": "npm run mock:payroll" }
+    ],
+    "note": "Docker is optional. Use a Node-based process manager (concurrently, npm-run-all) to launch all services from a single command."
+  }
+]

@@ -1,0 +1,237 @@
+[
+  {
+    "requirementId": "REQ-VALIDATION-001",
+    "type": "Functional Requirement",
+    "title": "Field-Level Validation Metadata for All Core Entities",
+    "description": "The system shall maintain field-level validation metadata for all core Group Benefits data entities: Employer/Group Profile, Employee, Dependent, Plan, Enrollment, Life Event, Carrier, Payroll, and EDI 834 transaction.",
+    "status": "Approved",
+    "tags": ["validation", "cross-cutting"],
+    "validationLayers": [
+      "1. Required / Optional validation",
+      "2. Data type validation",
+      "3. Format validation",
+      "4. Range / Length validation",
+      "5. Cross-field validation",
+      "6. Business rule validation",
+      "7. Persistence",
+      "8. Integration validation"
+    ],
+    "architectureDecision": {
+      "approach": "Metadata-driven validation engine",
+      "principle": "Use configurable field metadata rather than hardcoded validation logic",
+      "example": {
+        "field": "ein",
+        "required": true,
+        "type": "string",
+        "pattern": "^\\d{2}-\\d{7}$",
+        "maxLength": 10
+      },
+      "aiRequirementsStory": "AI ingests Benefits Guide → AI proposes field validation rule → Human approves → Rule registered in validation engine → Application enforces rule → AI traces rule back to source document."
+    }
+  },
+  {
+    "requirementId": "REQ-VALIDATION-002",
+    "type": "Functional Requirement",
+    "title": "Required, Optional, and Conditional Field Classification",
+    "description": "The system shall classify each field as Required, Optional, or Conditional. Conditional fields specify the condition that makes them required.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "classifications": {
+      "REQUIRED": "Field must be present and non-empty",
+      "OPTIONAL": "Field may be absent or empty",
+      "CONDITIONAL": "Required when a specified condition is met (e.g., Termination Date required when Employment Status = TERMINATED)"
+    }
+  },
+  {
+    "requirementId": "REQ-VALIDATION-003",
+    "type": "Functional Requirement",
+    "title": "Data Type, Format, Length, and Allowable Value Validation",
+    "description": "The system shall validate data type (string, integer, decimal, boolean, date, enum), format (regex pattern where applicable), field length (min/max characters), and allowable values (enum sets).",
+    "status": "Approved",
+    "tags": ["validation"],
+    "validationCategories": [
+      { "category": "Data Type",    "example": "Employee Count must be integer" },
+      { "category": "Format",       "example": "EIN must match XX-XXXXXXX" },
+      { "category": "Length",       "example": "Legal Name max 200 chars" },
+      { "category": "Enum",         "example": "State must be valid US state/territory" }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-004",
+    "type": "Functional Requirement",
+    "title": "Numeric Minimum and Maximum Range Validation",
+    "description": "The system shall validate numeric minimum and maximum ranges where applicable. Employee Count must be greater than 0. Deduction amount must be ≥ 0. Work hours per week must be 0–168.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "examples": [
+      { "field": "employeeCount", "min": 1,   "max": 1000000 },
+      { "field": "workHoursPerWeek", "min": 0, "max": 168 },
+      { "field": "deductionAmount", "min": 0 },
+      { "field": "salary", "min": 0 }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-005",
+    "type": "Functional Requirement",
+    "title": "Date Format and Relationship Validation",
+    "description": "The system shall validate date field formats and date relationships. Cross-date rules: Termination Date ≥ Effective Date; Hire Date ≤ current date; Coverage Effective Date within configured eligibility rules.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "crossDateRules": [
+      { "rule": "Termination Date ≥ Hire Date",                   "entities": ["Employee"] },
+      { "rule": "Termination Date ≥ Effective Date",              "entities": ["Employer"] },
+      { "rule": "Hire Date ≤ current date",                       "entities": ["Employee"] },
+      { "rule": "Out-of-Pocket Max ≥ Deductible",                 "entities": ["Plan"] },
+      { "rule": "Plan Termination Date ≥ Effective Date",         "entities": ["Plan"] },
+      { "rule": "Enrollment Effective Date per eligibility rules","entities": ["Enrollment"] }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-006",
+    "type": "Functional Requirement",
+    "title": "Configurable Regex Validation for Structured Fields",
+    "description": "The system shall support configurable regular-expression validation for structured fields such as EIN, SSN, ZIP Code, email address, and phone number. Patterns shall be stored in field metadata and not hardcoded.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "regexPatterns": {
+      "ein":       "^\\d{2}-\\d{7}$",
+      "ssn":       "^\\d{3}-\\d{2}-\\d{4}$",
+      "zipCode":   "^\\d{5}(-\\d{4})?$",
+      "email":     "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "phone":     "^\\+?1?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$"
+    }
+  },
+  {
+    "requirementId": "REQ-VALIDATION-007",
+    "type": "Functional Requirement",
+    "title": "Conditional Validation Based on Other Field Values",
+    "description": "The system shall support conditional validation rules that activate based on other field values. Examples: SSN required when employee is US-based; Termination Date required when Employment Status = TERMINATED; Life Event required when Enrollment Type = LIFE_EVENT.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "conditionalExamples": [
+      { "condition": "IF Employment Status = TERMINATED",    "then": "Termination Date is required" },
+      { "condition": "IF Enrollment Type = LIFE_EVENT",      "then": "Life Event Type and Event Date are required" },
+      { "condition": "IF Carrier requires dependent SSN",    "then": "Dependent SSN required — see REQ-DEP-SSN-014" },
+      { "condition": "IF Relationship = CHILD",              "then": "DOB must satisfy configured dependent age eligibility rule — not hardcoded age 26" }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-008",
+    "type": "Functional Requirement",
+    "title": "Cross-Field Validation Rules",
+    "description": "The system shall support cross-field validation rules that compare values across multiple fields within the same entity. Cross-field validation occurs after individual field validation passes.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "crossFieldRules": [
+      { "entity": "Employer",    "rule": "Termination Date must be ≥ Effective Date" },
+      { "entity": "Employee",    "rule": "Termination Date must be ≥ Hire Date" },
+      { "entity": "Plan",        "rule": "Out-of-Pocket Maximum must be ≥ Deductible" },
+      { "entity": "Plan",        "rule": "Termination Date must be ≥ Effective Date" },
+      { "entity": "Enrollment",  "rule": "Enrollment Effective Date must comply with eligibility waiting period rule" },
+      { "entity": "Enrollment",  "rule": "Life Event enrollment date within configured window for event type" },
+      { "entity": "Payroll",     "rule": "Payroll Employee ID must map to a valid Employee ID" }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-009",
+    "type": "Functional Requirement",
+    "title": "Referential Integrity Validation for Key Identifiers",
+    "description": "The system shall validate referential integrity for key identifiers: Employee ID must exist in the employee record store; Dependent ID must be associated with the claimed employee; Plan ID must exist in the configured plan catalog; Carrier ID must exist in the carrier configuration; Payroll Employee ID must map to a valid employee.",
+    "status": "Approved",
+    "tags": ["validation"]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-010",
+    "type": "Functional Requirement",
+    "title": "Separation of Field-Level and Business-Rule Validation",
+    "description": "The system shall separate field-level validation (type, format, length, range, cross-field) from business-rule validation (eligibility criteria, enrollment windows, plan rules, carrier rules). Field validation executes first; business rules execute only on structurally valid data.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "validationPipeline": [
+      "1. Required / Optional check",
+      "2. Data type check",
+      "3. Format / pattern check",
+      "4. Range / length check",
+      "5. Cross-field check",
+      "6. Referential integrity check",
+      "7. Business rule evaluation (eligibility, enrollment window, plan rules)",
+      "8. Integration validation (carrier/payroll/EDI-specific requirements)"
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-011",
+    "type": "Functional Requirement",
+    "title": "Standardized Validation Error Codes and Human-Readable Messages",
+    "description": "The system shall return standardized validation error codes and human-readable messages for all validation failures. Each error shall include: field name, error code, severity (ERROR or WARNING), human-readable message, and the rejected value.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "errorResponseSchema": {
+      "singleError": {
+        "field": "ein",
+        "code": "INVALID_FORMAT",
+        "severity": "ERROR",
+        "message": "EIN must be in XX-XXXXXXX format.",
+        "value": "123456789"
+      },
+      "multipleErrors": {
+        "valid": false,
+        "errors": [
+          { "field": "ein",           "code": "INVALID_FORMAT",  "severity": "ERROR" },
+          { "field": "employeeCount", "code": "INVALID_RANGE",   "severity": "ERROR" },
+          { "field": "terminationDate","code": "DATE_PRECEDES_EFFECTIVE_DATE", "severity": "ERROR" }
+        ]
+      }
+    },
+    "errorCodes": [
+      "REQUIRED_FIELD_MISSING", "INVALID_TYPE", "INVALID_FORMAT", "INVALID_LENGTH",
+      "INVALID_RANGE", "INVALID_ENUM", "INVALID_DATE", "DATE_PRECEDES_EFFECTIVE_DATE",
+      "DATE_IN_FUTURE", "CROSS_FIELD_CONFLICT", "REFERENTIAL_INTEGRITY_VIOLATION",
+      "DUPLICATE_VALUE", "CONDITIONAL_FIELD_REQUIRED", "BUSINESS_RULE_VIOLATION"
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-012",
+    "type": "Functional Requirement",
+    "title": "Prevent Invalid Records from Persisting or Transmitting",
+    "description": "The system shall prevent records that fail required field-level or business-rule validation from being persisted to the data store or transmitted to downstream systems (carrier, payroll, EDI). Validation errors shall block the operation and return errors to the caller.",
+    "status": "Approved",
+    "tags": ["validation"]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-013",
+    "type": "Functional Requirement",
+    "title": "Server-Side Validation for All API Submissions",
+    "description": "The system shall perform server-side validation for all data submitted through APIs, independent of client-side validation. Client-side validation provides immediate UX feedback; server-side validation is authoritative.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "validationTiming": [
+      { "level": "UI",           "purpose": "Immediate user feedback — not authoritative" },
+      { "level": "API",          "purpose": "Authoritative — always validates regardless of UI" },
+      { "level": "Business Rule","purpose": "Eligibility, enrollment windows, plan rules" },
+      { "level": "Integration",  "purpose": "Carrier, EDI, payroll-specific requirements" }
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-014",
+    "type": "Functional Requirement",
+    "title": "Configurable Validation Rules by Employer, Plan, Carrier, and Product Type",
+    "description": "The system shall support configurable validation rules per employer group, plan, carrier, and product type where applicable. Dependent SSN requirements vary by carrier. Premium contribution limits may vary by employer. Dependent age cutoff is configured, not hardcoded.",
+    "status": "Approved",
+    "tags": ["validation"],
+    "configurableRuleExamples": [
+      "Dependent SSN required per carrier configuration — not universal",
+      "Dependent child max age rule from eligibility config — not hardcoded 26",
+      "Premium calculation formula per payroll frequency — not fixed divisor",
+      "Enrollment window duration per life event type — not universal 30 days"
+    ]
+  },
+  {
+    "requirementId": "REQ-VALIDATION-015",
+    "type": "Functional Requirement",
+    "title": "Audit Trail When Validation Rules Are Changed",
+    "description": "The system shall maintain an audit trail when validation rules are added, modified, or deactivated. Audit record includes: rule ID, entity, field, prior configuration, new configuration, changed-by actor, and timestamp. Links to REQ-AUD-001.",
+    "status": "Approved",
+    "tags": ["validation", "audit"],
+    "linkedRequirement": "REQ-AUD-001"
+  }
+]

@@ -1,0 +1,266 @@
+[
+  {
+    "requirementId": "REQ-AI-RELIABILITY-001",
+    "type": "Non-Functional Requirement",
+    "title": "Handle Gemini API HTTP 429 Without Terminating User Workflow",
+    "description": "The system shall handle Gemini API HTTP 429 rate-limit responses without terminating the user workflow. The user shall remain able to interact with the application while AI processing is paused for retry.",
+    "status": "Approved",
+    "tags": ["ai", "reliability", "epic5", "cross-cutting"],
+    "architectureDecision": {
+      "principle": "Do not call Gemini directly from the React frontend. Route all AI operations through a server-side AI Orchestration Service.",
+      "architecture": "React → AI Orchestration API → Queue/Rate Limiter → Gemini",
+      "rationale": "This provides a single point to implement retry, backoff, concurrency control, caching, idempotency, circuit breaking, logging, and graceful degradation."
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-002",
+    "type": "Non-Functional Requirement",
+    "title": "Configurable Retry Logic with Exponential Backoff for Retryable AI Failures",
+    "description": "The system shall implement configurable retry logic with exponential backoff for retryable AI service failures (429, 500, 502, 503, Timeout).",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "retryPolicy": {
+      "formula": "delay = min(baseDelay × 2^attempt + randomJitter, maxDelay)",
+      "mvpDefaults": {
+        "maxRetries": 3,
+        "initialDelay": 1000,
+        "maxDelay": 10000,
+        "jitter": true
+      },
+      "attemptDelays": [
+        { "attempt": 1, "delay": "1 second" },
+        { "attempt": 2, "delay": "2 seconds" },
+        { "attempt": 3, "delay": "4 seconds" },
+        { "attempt": 4, "delay": "8 seconds" }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-003",
+    "type": "Non-Functional Requirement",
+    "title": "Honor Gemini API Retry-After Header When Provided",
+    "description": "The system shall read and honor the Retry-After header value when included in Gemini API 429 responses. When Retry-After is not provided, fall back to exponential backoff.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"]
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-004",
+    "type": "Non-Functional Requirement",
+    "title": "Configurable Maximum Retry Attempt Limit",
+    "description": "The system shall limit the maximum number of retry attempts to a configurable value. Do not retry indefinitely. Default: 3 retries.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "defaultConfig": { "maxRetries": 3 }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-005",
+    "type": "Non-Functional Requirement",
+    "title": "Jitter on Exponential Backoff Intervals",
+    "description": "The system shall apply random jitter to exponential backoff intervals to reduce synchronized retry behavior when multiple requests are retrying concurrently.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"]
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-006",
+    "type": "Non-Functional Requirement",
+    "title": "Distinguish Retryable from Non-Retryable AI Errors",
+    "description": "The system shall distinguish retryable errors from non-retryable errors and apply retry logic only to retryable errors.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "errorClassification": {
+      "retryable": [
+        { "error": "429 Rate Limit",          "strategy": "Exponential backoff, honor Retry-After" },
+        { "error": "500 Internal Error",      "strategy": "Exponential backoff" },
+        { "error": "502 Bad Gateway",         "strategy": "Exponential backoff" },
+        { "error": "503 Service Unavailable", "strategy": "Exponential backoff" },
+        { "error": "Timeout",                 "strategy": "Retry up to 2–3 times" }
+      ],
+      "nonRetryable": [
+        { "error": "400 Bad Request",  "action": "Return validation error" },
+        { "error": "401 Unauthorized", "action": "Configuration error" },
+        { "error": "403 Forbidden",    "action": "Configuration or quota issue" },
+        { "error": "Invalid API Key",  "action": "Configuration error" },
+        { "error": "Malformed Prompt", "action": "Application error" }
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-007",
+    "type": "Non-Functional Requirement",
+    "title": "Queue AI Processing Requests at Concurrent Request Limit",
+    "description": "The system shall queue AI processing requests when concurrent Gemini request limits are reached. Rapid document uploads shall not trigger unlimited concurrent AI calls.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "mvpQueueConfig": {
+      "maxConcurrentRequests": 2,
+      "maxQueueSize": 10
+    },
+    "queueBehavior": "When queue is full, reject new requests with a user-visible queued state rather than silently dropping them."
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-008",
+    "type": "Non-Functional Requirement",
+    "title": "Document Fingerprinting and Idempotency to Prevent Duplicate AI Processing",
+    "description": "The system shall prevent duplicate AI processing for the same document through document fingerprinting (SHA-256 hash of file content) and/or idempotency controls using unique AI request IDs.",
+    "status": "Approved",
+    "tags": ["ai", "reliability", "caching"],
+    "fingerprintBehavior": {
+      "hash": "SHA-256(PDF content)",
+      "onMatch": "Return cached extraction result — do not re-call Gemini",
+      "onNoMatch": "Call Gemini and cache result keyed by hash"
+    },
+    "idempotencyModel": {
+      "requestId": "AI-REQ-20270723-001",
+      "documentId": "DOC-10001",
+      "operation": "REQUIREMENT_EXTRACTION",
+      "model": "gemini",
+      "status": "PROCESSING"
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-009",
+    "type": "Non-Functional Requirement",
+    "title": "Persist Uploaded Documents Before Initiating AI Processing",
+    "description": "The system shall persist uploaded documents to local storage before initiating AI processing. Document storage shall not be contingent on AI processing success.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "processingPipeline": [
+      "Upload PDF",
+      "Store File (status: QUEUED)",
+      "Create Processing Job",
+      "Extract Text (status: EXTRACTING)",
+      "Gemini Requirement Extraction (status: PROCESSING)",
+      "Retry if 429 (status: RETRYING)",
+      "Save Results (status: COMPLETED)"
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-010",
+    "type": "Non-Functional Requirement",
+    "title": "Preserve Document and Previously Generated Requirements on AI Processing Failure",
+    "description": "The system shall preserve the uploaded document and all previously generated requirements when AI processing fails. AI processing failure shall not delete or corrupt prior work.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"]
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-011",
+    "type": "Non-Functional Requirement",
+    "title": "User-Accessible Retry Option After AI Processing Failure",
+    "description": "The system shall provide users with a retry option after AI processing failure. The document and its processing state shall remain accessible with a 'Retry Processing' action.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "uiDegradedState": {
+      "status": "AI_PROCESSING_FAILED",
+      "message": "AI processing is temporarily unavailable. Your document has been safely saved.",
+      "availableActions": [
+        "View uploaded documents",
+        "View previously extracted requirements",
+        "Review saved requirements",
+        "Manually create requirements",
+        "Continue using non-AI features",
+        "Retry AI processing"
+      ]
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-012",
+    "type": "Non-Functional Requirement",
+    "title": "User-Friendly Messages for Rate Limits, Timeouts, and AI Service Failures",
+    "description": "The system shall provide meaningful user-facing messages for rate limits, timeouts, and AI service failures. Raw HTTP status codes (429, RESOURCE_EXHAUSTED) shall never be the primary user-facing error message.",
+    "status": "Approved",
+    "tags": ["ai", "reliability", "ux"],
+    "userMessages": {
+      "rateLimit": "AI processing is temporarily busy. Your document has been saved and will be retried automatically.",
+      "permanentFailure": "AI processing could not be completed after multiple attempts. Your document and existing requirements are safe. You can retry processing or continue manually.",
+      "configurationError": "The AI service is not configured correctly. Please verify the Gemini API configuration.",
+      "retrying": "AI service is temporarily busy. Retrying automatically... (Attempt 2 of 3, next attempt in 4 seconds)"
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-013",
+    "type": "Non-Functional Requirement",
+    "title": "Circuit Breaker for Repeated AI Service Failures",
+    "description": "The system shall implement circuit-breaker behavior for repeated AI service failures to prevent cascade failures and unnecessary quota consumption.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "circuitBreakerConfig": {
+      "failureThreshold": 5,
+      "cooldownSeconds": 30,
+      "states": ["CLOSED (normal)", "OPEN (blocking requests)", "HALF-OPEN (testing recovery)"],
+      "transitions": {
+        "CLOSED_to_OPEN": "N consecutive failures reaches threshold",
+        "OPEN_to_HALF_OPEN": "After cooldown period",
+        "HALF_OPEN_to_CLOSED": "Successful test request",
+        "HALF_OPEN_to_OPEN": "Test request fails"
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-014",
+    "type": "Non-Functional Requirement",
+    "title": "AI Processing Status States: Queued, Processing, Retrying, Completed, Failed, Degraded",
+    "description": "The system shall maintain explicit AI processing status states and display them to users.",
+    "status": "Approved",
+    "tags": ["ai", "reliability"],
+    "processingStates": ["QUEUED", "PROCESSING", "RETRYING", "COMPLETED", "FAILED", "DEGRADED"],
+    "uiExampleRetrying": {
+      "document": "Acme_2027_Benefits_Guide.pdf",
+      "status": "RETRYING",
+      "reason": "Gemini API Rate Limit",
+      "attempt": "2 of 3",
+      "nextAttempt": "In 4 seconds"
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-015",
+    "type": "Non-Functional Requirement",
+    "title": "Log AI Request IDs, Document IDs, Model, Retry Counts, Response Times, Final Status",
+    "description": "The system shall log AI request IDs, document IDs, model names, retry counts, response times, token usage, and final processing status for all AI operations.",
+    "status": "Approved",
+    "tags": ["ai", "reliability", "observability"],
+    "logFields": [
+      "AI Request ID", "Document ID", "Operation", "Model", "Attempt Number",
+      "Response Time", "HTTP Status", "Retry Count", "Token Usage", "Estimated Cost", "Final Status"
+    ],
+    "dashboardExample": {
+      "totalOperations": 42,
+      "successful": 38,
+      "retried": 3,
+      "failed": 1,
+      "rateLimitHits": 2,
+      "averageResponseMs": 4200
+    }
+  },
+  {
+    "requirementId": "REQ-AI-RELIABILITY-016",
+    "type": "Non-Functional Requirement",
+    "title": "Cached or Pre-Generated AI Results for Critical Demo Scenarios",
+    "description": "The system shall support cached or pre-generated AI results for critical demo scenarios to allow continued demonstration when the Gemini service is temporarily unavailable.",
+    "status": "Approved",
+    "tags": ["ai", "reliability", "demo"],
+    "demoModeStrategy": {
+      "modes": {
+        "CACHED_DEMO": "Use pre-extracted requirements from cached responses — guaranteed to work",
+        "LIVE_AI": "Call Gemini in real time — best experience, subject to rate limits"
+      },
+      "presenterChoice": true,
+      "modelFallbackRecommendation": "Do not automatically switch between Gemini 2.0 Flash and Gemini 1.5 Pro solely due to 429 unless the fallback has been validated for equivalent output quality. Treat rate limiting as a service-level problem handled by queuing and retries."
+    },
+    "mvpConfiguration": {
+      "maxConcurrentRequests": 2,
+      "queueSize": 10,
+      "maxRetries": 3,
+      "initialBackoffMs": 1000,
+      "maxBackoffMs": 10000,
+      "jitter": true,
+      "retry429": true,
+      "retry5xx": true,
+      "retryTimeout": true,
+      "retry4xxValidation": false,
+      "circuitBreakerThreshold": 5,
+      "circuitBreakerCooldownSeconds": 30,
+      "documentHashCache": true,
+      "demoCachedResults": true
+    }
+  }
+]

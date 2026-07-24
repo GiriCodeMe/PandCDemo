@@ -1,0 +1,189 @@
+[
+  {
+    "requirementId": "REQ-AI-UX-001",
+    "type": "Functional Requirement",
+    "title": "Immediate Visual Feedback When AI or Long-Running Operation Is Initiated",
+    "description": "The system shall provide immediate visual feedback (< 200ms) when an AI or long-running operation is initiated. Buttons shall transition to a loading state and duplicate submissions shall be disabled immediately.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "feedbackPattern": "User clicks [Analyze Benefits Guide] → button immediately shows [⟳ Analyzing...] → display 'AI is analyzing your document...' — even before backend returns first status update",
+    "operationDurationBenchmarks": [
+      { "operation": "Chat response",          "expectedDuration": "2–10 sec",  "uxPattern": "Streaming text" },
+      { "operation": "AI interview",           "expectedDuration": "2–10 sec",  "uxPattern": "Streaming response" },
+      { "operation": "PDF upload",             "expectedDuration": "1–5 sec",   "uxPattern": "Upload progress bar" },
+      { "operation": "PDF ingestion",          "expectedDuration": "5–30 sec",  "uxPattern": "Stage progress" },
+      { "operation": "Requirement extraction", "expectedDuration": "10–60 sec", "uxPattern": "Progress stages" },
+      { "operation": "Conflict detection",     "expectedDuration": "10–45 sec", "uxPattern": "Progress stages" },
+      { "operation": "Impact analysis",        "expectedDuration": "10–45 sec", "uxPattern": "Progress stages" },
+      { "operation": "Backlog generation",     "expectedDuration": "10–60 sec", "uxPattern": "Progress stages" },
+      { "operation": "Rule generation",        "expectedDuration": "3–15 sec",  "uxPattern": "Skeleton + status" }
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-UX-002",
+    "type": "Functional Requirement",
+    "title": "Skeleton Loading States for Structured Content Being Retrieved or Generated",
+    "description": "The system shall display skeleton loading states for structured content that is being retrieved or generated. Use skeletons for: requirements list, plan details, employee details, dashboard cards, impact analysis results. Never show a blank page with only a spinner.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"]
+  },
+  {
+    "requirementId": "REQ-AI-UX-003",
+    "type": "Functional Requirement",
+    "title": "Long-Running AI Operations Display Meaningful Processing Stages",
+    "description": "Long-running AI operations shall display meaningful processing stages. Stages must reflect actual processing steps, not invented percentages.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "documentAnalysisStages": [
+      "1. Uploading",
+      "2. Extracting text",
+      "3. Understanding document",
+      "4. Identifying requirements",
+      "5. Detecting conflicts",
+      "6. Building traceability",
+      "7. Finalizing results"
+    ],
+    "progressModalExample": {
+      "title": "AI Requirements Analysis",
+      "stages": ["✓ Document uploaded", "✓ Text extracted", "✓ Sections identified", "● Extracting requirements...", "○ Detecting conflicts", "○ Building traceability"],
+      "footer": "You can continue working in other areas."
+    }
+  },
+  {
+    "requirementId": "REQ-AI-UX-004",
+    "type": "Functional Requirement",
+    "title": "No Fabricated Percentage Progress When Actual Progress Cannot Be Determined",
+    "description": "The system shall not display fabricated percentage progress when actual progress cannot be determined. Use 'Step 4 of 7' stage counting instead of an invented percentage.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "preferredPattern": "Step 4 of 7",
+    "antiPattern": "67% (when actual progress is unknown)"
+  },
+  {
+    "requirementId": "REQ-AI-UX-005",
+    "type": "Functional Requirement",
+    "title": "AI Conversational Responses Support Progressive Streaming",
+    "description": "AI conversational responses shall support progressive streaming where technically feasible. Use SSE for AI chat, AI interview, requirement explanation, conflict explanation, and impact analysis narrative. Do not stream structured JSON or UI components.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "streamingOperations": ["AI Interview", "AI assistant / chat", "Requirement explanation", "Conflict explanation", "Impact analysis narrative"],
+    "nonStreamingOperations": ["Structured JSON responses", "UI component renders", "Deterministic eligibility simulation", "Conflict detection algorithm results"]
+  },
+  {
+    "requirementId": "REQ-AI-UX-006",
+    "type": "Functional Requirement",
+    "title": "Extended-Processing Message for Operations Exceeding Expected Duration",
+    "description": "AI operations exceeding the expected response duration shall display an extended-processing message reassuring the user that processing is still active.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "timeoutThresholds": [
+      { "threshold": "0–15 sec",  "message": "Normal processing — no special message" },
+      { "threshold": "15–30 sec", "message": "Still processing..." },
+      { "threshold": "30–60 sec", "message": "This analysis is taking longer than expected. The AI is still processing your documents. You can continue waiting or leave this screen." },
+      { "threshold": "> 60 sec",  "message": "Timeout warning + retry options" }
+    ]
+  },
+  {
+    "requirementId": "REQ-AI-UX-007",
+    "type": "Functional Requirement",
+    "title": "Retry and Recovery Options on AI Timeout",
+    "description": "AI operations exceeding the configured timeout shall provide retry and recovery options. Users shall be able to try again, view partial results, or return to requirements without losing uploaded documents.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "timeoutActions": ["[Continue Waiting]", "[Run in Background]", "[Try Again]", "[View Partial Results]", "[Return to Requirements]"]
+  },
+  {
+    "requirementId": "REQ-AI-UX-008",
+    "type": "Functional Requirement",
+    "title": "Preserve Successful Results If Multi-Stage AI Operation Partially Fails",
+    "description": "The system shall preserve successfully completed results if a multi-document or multi-stage AI operation partially fails. Do not discard successful results.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "partialResultsExample": {
+      "benefitsGuide": "✓ Complete",
+      "eligibilityPolicy": "✓ Complete",
+      "carrierRequirements": "⚠ Failed",
+      "availableResults": "42 Requirements, 3 Conflicts",
+      "actions": ["[Review Available Results]", "[Retry Failed Document]"]
+    }
+  },
+  {
+    "requirementId": "REQ-AI-UX-009",
+    "type": "Functional Requirement",
+    "title": "Long-Running AI Operations Support Background Processing",
+    "description": "Long-running AI operations shall support background processing where appropriate, allowing users to navigate away without cancelling the operation.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "backgroundJobModel": {
+      "jobId": "JOB-10045",
+      "type": "REQUIREMENT_EXTRACTION",
+      "status": "PROCESSING",
+      "stage": "EXTRACTING_REQUIREMENTS",
+      "stageNumber": 4,
+      "totalStages": 7
+    },
+    "globalHeaderIndicator": "🔄 1 AI Job — click to see AI Job Center panel"
+  },
+  {
+    "requirementId": "REQ-AI-UX-010",
+    "type": "Functional Requirement",
+    "title": "Notify Users When Background AI Operation Completes",
+    "description": "The system shall notify users when a background AI operation completes. The notification shall include a summary of results and a direct action to review them.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "notificationExample": {
+      "title": "AI Analysis Complete",
+      "document": "Acme_2027_Benefits_Guide.pdf",
+      "summary": "48 requirements extracted, 6 conflicts detected",
+      "action": "[Review Results]"
+    }
+  },
+  {
+    "requirementId": "REQ-AI-UX-011",
+    "type": "Functional Requirement",
+    "title": "Consistent AI Job Status Model Across the Application",
+    "description": "The system shall provide consistent AI job statuses including Queued, Processing, Completed, Failed, Cancelled, Partial, Timed Out, and Retrying across all AI operations.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "jobStatuses": ["QUEUED", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED", "PARTIAL", "TIMED_OUT", "RETRYING"]
+  },
+  {
+    "requirementId": "REQ-AI-UX-012",
+    "type": "Functional Requirement",
+    "title": "Transient AI Failures Trigger Automatic Retry with Exponential Backoff",
+    "description": "Transient AI service failures and rate-limit errors shall trigger automatic retry with exponential backoff. See REQ-AI-RELIABILITY-002 for retry configuration.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "linkedRequirement": "REQ-AI-RELIABILITY-002"
+  },
+  {
+    "requirementId": "REQ-AI-UX-013",
+    "type": "Functional Requirement",
+    "title": "Business-Friendly Error Messages — No Raw HTTP Errors Exposed to Users",
+    "description": "The UI shall present business-friendly error messages rather than raw API or HTTP errors. HTTP 429 shall never be the primary user-facing error message.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"],
+    "linkedRequirement": "REQ-AI-RELIABILITY-012"
+  },
+  {
+    "requirementId": "REQ-AI-UX-014",
+    "type": "Functional Requirement",
+    "title": "Retry Failed AI Operation Without Re-Uploading Document",
+    "description": "Users shall be able to retry a failed AI operation without re-uploading the original document. The backend shall retain Document ID, Job ID, and Request ID to support retry of an existing operation.",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux"]
+  },
+  {
+    "requirementId": "REQ-AI-UX-015",
+    "type": "Functional Requirement",
+    "title": "Accessible Status Announcements for AI Processing and Completion Events",
+    "description": "The system shall provide accessible status announcements for AI processing and completion events using aria-live regions. Loading indicators must not rely solely on animation. Example: 'Document analysis is 3 of 7 stages complete.'",
+    "status": "Approved",
+    "tags": ["ui", "ai", "ux", "accessibility"],
+    "ariaExamples": [
+      "Document analysis is 3 of 7 stages complete.",
+      "Analysis completed. 48 requirements found.",
+      "AI processing failed. Your document has been saved."
+    ]
+  }
+]

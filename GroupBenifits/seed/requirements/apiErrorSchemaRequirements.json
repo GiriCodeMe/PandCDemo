@@ -1,0 +1,190 @@
+[
+  {
+    "requirementId": "API-ERR-001",
+    "type": "Non-Functional Requirement",
+    "title": "Standardized Error Envelope for All API Error Responses",
+    "description": "All API error responses shall use a standardized error envelope containing a success flag, machine-readable error code, user-friendly message, optional details array, unique request ID, and server timestamp.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "cross-cutting"],
+    "standardErrorEnvelope": {
+      "success": false,
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "Human-readable error message.",
+        "details": [],
+        "requestId": "REQ-123456",
+        "timestamp": "2027-01-15T10:32:14.123Z"
+      }
+    },
+    "principle": "The frontend shall never need to interpret arbitrary backend error formats."
+  },
+  {
+    "requirementId": "API-ERR-002",
+    "type": "Non-Functional Requirement",
+    "title": "HTTP Status Codes Map to Defined Error Categories",
+    "description": "The API shall use standard HTTP status codes to distinguish validation, authorization, resource, business-rule, integration, rate-limit, timeout, and server errors.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "cross-cutting"],
+    "httpStatusMapping": [
+      { "httpStatus": 400, "code": "BAD_REQUEST",           "useCase": "Malformed request" },
+      { "httpStatus": 401, "code": "UNAUTHORIZED",          "useCase": "Authentication required" },
+      { "httpStatus": 403, "code": "FORBIDDEN",             "useCase": "User lacks permission" },
+      { "httpStatus": 404, "code": "NOT_FOUND",             "useCase": "Resource does not exist" },
+      { "httpStatus": 409, "code": "CONFLICT",              "useCase": "Duplicate or version conflict" },
+      { "httpStatus": 422, "code": "VALIDATION_ERROR",      "useCase": "Field-level validation failure" },
+      { "httpStatus": 422, "code": "BUSINESS_RULE_VIOLATION","useCase": "Business rule prevents action" },
+      { "httpStatus": 429, "code": "RATE_LIMITED",          "useCase": "Gemini or external API rate limit" },
+      { "httpStatus": 500, "code": "INTERNAL_ERROR",        "useCase": "Unexpected server error" },
+      { "httpStatus": 502, "code": "CARRIER_ERROR",         "useCase": "Carrier API failure" },
+      { "httpStatus": 503, "code": "SERVICE_UNAVAILABLE",   "useCase": "External service unavailable" },
+      { "httpStatus": 504, "code": "TIMEOUT",               "useCase": "External or AI operation timeout" }
+    ]
+  },
+  {
+    "requirementId": "API-ERR-003",
+    "type": "Non-Functional Requirement",
+    "title": "Field-Level Validation Errors Identify Affected Field, Code, and User-Facing Message",
+    "description": "Field-level validation errors shall identify the affected field, machine-readable validation code, and user-friendly message. The React UI maps error.details[].field to inline form field errors.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "validation"],
+    "validationErrorExample": {
+      "success": false,
+      "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Please correct the highlighted fields.",
+        "details": [
+          { "field": "ein",          "code": "INVALID_FORMAT", "message": "EIN must contain exactly 9 digits." },
+          { "field": "contactEmail", "code": "INVALID_EMAIL",  "message": "Enter a valid email address." },
+          { "field": "planYear",     "code": "INVALID_RANGE",  "message": "Plan year must be between 2026 and 2035." }
+        ],
+        "requestId": "REQ-2027-001245",
+        "timestamp": "2027-01-15T10:32:14.123Z"
+      }
+    }
+  },
+  {
+    "requirementId": "API-ERR-004",
+    "type": "Non-Functional Requirement",
+    "title": "Centralized Frontend Error Handler Based on HTTP Status and Error Code",
+    "description": "The client application shall provide centralized error handling based on HTTP status and machine-readable error codes. The handler shall route each error type to the appropriate UI response.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "frontend"],
+    "frontendErrorRoutingTable": [
+      { "errorCode": "VALIDATION_ERROR",      "uiPattern": "Inline field error" },
+      { "errorCode": "BUSINESS_RULE_VIOLATION","uiPattern": "Alert banner or confirmation modal" },
+      { "errorCode": "UNAUTHORIZED",          "uiPattern": "Redirect to login" },
+      { "errorCode": "FORBIDDEN",             "uiPattern": "Access denied state" },
+      { "errorCode": "NOT_FOUND",             "uiPattern": "Contextual empty state" },
+      { "errorCode": "CONFLICT",              "uiPattern": "Resolve conflict panel" },
+      { "errorCode": "RATE_LIMITED",          "uiPattern": "Auto-retry notification (no raw 429 shown)" },
+      { "errorCode": "CARRIER_ERROR",         "uiPattern": "Transaction error card + Retry action" },
+      { "errorCode": "AI_PROCESSING_FAILED",  "uiPattern": "AI error banner + Retry + document safe" },
+      { "errorCode": "TIMEOUT",               "uiPattern": "Continue Waiting / Run in Background options" },
+      { "errorCode": "INTERNAL_ERROR",        "uiPattern": "Generic error + requestId reference" }
+    ]
+  },
+  {
+    "requirementId": "API-ERR-005",
+    "type": "Non-Functional Requirement",
+    "title": "Unique Request ID in Every API Response for Troubleshooting and Audit Correlation",
+    "description": "Every API response — both success and error — shall include a unique request ID for troubleshooting and audit trail correlation.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "audit"],
+    "successEnvelopeExample": {
+      "success": true,
+      "data": {},
+      "meta": {
+        "requestId": "REQ-10045",
+        "timestamp": "2027-01-15T10:32:14.123Z"
+      }
+    }
+  },
+  {
+    "requirementId": "API-ERR-006",
+    "type": "Non-Functional Requirement",
+    "title": "Internal Server Errors Never Expose Stack Traces, API Keys, or Infrastructure Details",
+    "description": "Internal server errors shall not expose stack traces, API keys, infrastructure details, or sensitive information in client-facing API responses. Detailed error information shall be logged server-side only.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "security"],
+    "internalErrorClientResponse": {
+      "success": false,
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "Something went wrong while processing your request.",
+        "details": [],
+        "requestId": "REQ-ERR-10045",
+        "timestamp": "2027-01-15T10:32:14.123Z"
+      }
+    },
+    "uiDisplay": "Something went wrong. Please try again. Reference ID: REQ-ERR-10045"
+  },
+  {
+    "requirementId": "API-ERR-007",
+    "type": "Non-Functional Requirement",
+    "title": "Retryable Errors Identify Whether the Operation Can Be Safely Retried",
+    "description": "Retryable errors shall include a retryable flag in the error details. Non-retryable errors shall not prompt the user to retry an operation that will fail again.",
+    "status": "Approved",
+    "tags": ["api", "error-handling"],
+    "retryableErrorExample": {
+      "details": [{ "retryable": true, "retryAfterSeconds": 10 }]
+    },
+    "nonRetryableErrorExample": {
+      "details": [{ "retryable": false, "reason": "INVALID_DOCUMENT_FORMAT" }]
+    }
+  },
+  {
+    "requirementId": "API-ERR-008",
+    "type": "Non-Functional Requirement",
+    "title": "Rate-Limited AI Operations Include Retry Metadata",
+    "description": "Rate-limited AI operations shall include retry metadata in the error response. The UI shall display a non-technical user message and handle retry automatically without exposing HTTP 429 or RESOURCE_EXHAUSTED to the user.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "ai"],
+    "rateLimitErrorExample": {
+      "success": false,
+      "error": {
+        "code": "RATE_LIMITED",
+        "message": "The AI service is temporarily busy. Please try again.",
+        "details": [{ "retryable": true, "retryAfterSeconds": 10 }],
+        "requestId": "REQ-AI-10045",
+        "timestamp": "2027-07-01T14:32:10Z"
+      }
+    },
+    "uiDisplay": "AI Service Temporarily Busy — we'll retry automatically. Retry attempt 1 of 3.",
+    "prohibited": ["HTTP 429", "RESOURCE_EXHAUSTED", "Gemini API Error"]
+  },
+  {
+    "requirementId": "API-ERR-009",
+    "type": "Non-Functional Requirement",
+    "title": "Integration Errors Include Transaction-Level Error Information",
+    "description": "Carrier and payroll integration errors shall include transaction-level error information where available, enabling the user to navigate directly to the specific failing transaction.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "integration"],
+    "carrierErrorExample": {
+      "success": false,
+      "error": {
+        "code": "CARRIER_ERROR",
+        "message": "The carrier rejected the enrollment transmission.",
+        "details": [{ "transactionId": "TX-10045", "carrierCode": "INVALID_MEMBER_ID", "message": "Carrier Member ID is invalid." }],
+        "requestId": "REQ-CAR-10045",
+        "timestamp": "2027-01-15T10:32:14.123Z"
+      }
+    },
+    "uiActions": ["[View Transaction]", "[Correct Data]", "[Retry]"]
+  },
+  {
+    "requirementId": "API-ERR-010",
+    "type": "Non-Functional Requirement",
+    "title": "All API Errors Logged Server-Side with Request ID for End-to-End Traceability",
+    "description": "API errors shall be logged server-side with document ID (where applicable), job ID (where applicable), attempt number, error code, and request ID. Logs shall not contain SSN, API keys, or other sensitive values.",
+    "status": "Approved",
+    "tags": ["api", "error-handling", "observability"],
+    "errorCodeTaxonomy": [
+      "BAD_REQUEST", "VALIDATION_ERROR", "BUSINESS_RULE_VIOLATION",
+      "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "CONFLICT", "DUPLICATE_RESOURCE",
+      "RATE_LIMITED", "TIMEOUT", "AI_PROCESSING_FAILED", "DOCUMENT_PROCESSING_FAILED",
+      "CARRIER_ERROR", "PAYROLL_ERROR", "INTEGRATION_ERROR",
+      "SERVICE_UNAVAILABLE", "INTERNAL_ERROR"
+    ],
+    "linkedRequirements": ["REQ-AI-RELIABILITY-012", "REQ-AUD-001"]
+  }
+]
