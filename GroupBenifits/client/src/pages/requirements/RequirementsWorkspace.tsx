@@ -165,6 +165,21 @@ export default function RequirementsWorkspace() {
     URL.revokeObjectURL(url);
   };
 
+  const exportCSV = () => {
+    const header = ['requirementId', 'title', 'type', 'category', 'priority', 'status', 'sourceDocumentId'];
+    const rows = reqs.map((r) => [
+      r.requirementId, r.title, r.type, r.category, r.priority, r.status, r.sourceDocumentId ?? '',
+    ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'requirements-export.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-4">
       {/* Summary */}
@@ -223,6 +238,13 @@ export default function RequirementsWorkspace() {
           >
             <Download className="w-3.5 h-3.5" />
             Export JSON
+          </button>
+          <button
+            onClick={exportCSV}
+            className="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-900 text-xs font-medium border border-emerald-300 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Export CSV
           </button>
         </div>
       )}

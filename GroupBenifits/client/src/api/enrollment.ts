@@ -3,7 +3,8 @@ import type { Enrollment, Plan, PlanRate, PremiumSummary, WizardElection, Wizard
 const BASE = '/api/enrollment';
 
 function authHeaders() {
-  return { Authorization: 'Bearer P-001', 'Content-Type': 'application/json' };
+  const token = sessionStorage.getItem('persona_token') ?? 'P-001';
+  return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 }
 
 async function get<T>(url: string): Promise<T> {
@@ -81,4 +82,9 @@ export const enrollmentApi = {
       `${BASE}/wizard/${sessionId}/submit`,
       {}
     ),
+
+  getAll: (employerId?: string) => {
+    const qs = employerId ? `?employerId=${employerId}` : '';
+    return get<{ enrollments: Enrollment[]; total: number }>(`${BASE}${qs}`);
+  },
 };

@@ -41,7 +41,7 @@
   },
   {
     "carrierId": "CAR-005",
-    "name": "Unum",
+    "name": "Life Carrier",
     "supportedProductTypes": ["STD", "LTD"],
     "connectionType": "REST",
     "fileFormat": "JSON",

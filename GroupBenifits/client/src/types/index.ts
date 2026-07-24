@@ -39,6 +39,7 @@ export interface Persona {
   description: string;
   defaultScreen: string;
   permissions: string[];
+  employeeId?: string;
 }
 
 export interface Employee {

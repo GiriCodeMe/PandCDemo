@@ -15,6 +15,11 @@ import IntegrationsHub from './pages/integrations/IntegrationsHub';
 import CobraHub from './pages/cobra/CobraHub';
 import NotificationsHub from './pages/notifications/NotificationsHub';
 import ReportsHub from './pages/reports/ReportsHub';
+import PlanDetail from './pages/plans/PlanDetail';
+import DemoControlCenter from './pages/demo/DemoControlCenter';
+import AuditTrail from './pages/audit/AuditTrail';
+import SmallBusinessWizard from './pages/small-business/SmallBusinessWizard';
+import SmallBusinessPortfolio from './pages/small-business/SmallBusinessPortfolio';
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div className="flex flex-col items-center justify-center h-64">
@@ -60,6 +65,10 @@ export const router = createBrowserRouter([
     element: <AppShell><PlansHub /></AppShell>,
   },
   {
+    path: '/plans/:planId',
+    element: <AppShell><PlanDetail /></AppShell>,
+  },
+  {
     path: '/enrollment',
     element: <AppShell><EnrollmentHub /></AppShell>,
   },
@@ -86,6 +95,22 @@ export const router = createBrowserRouter([
   {
     path: '/requirements',
     element: <AppShell><RequirementsStudio /></AppShell>,
+  },
+  {
+    path: '/audit',
+    element: <AppShell><AuditTrail /></AppShell>,
+  },
+  {
+    path: '/demo',
+    element: <AppShell><DemoControlCenter /></AppShell>,
+  },
+  {
+    path: '/small-business',
+    element: <AppShell><SmallBusinessWizard /></AppShell>,
+  },
+  {
+    path: '/small-business/portfolio',
+    element: <AppShell><SmallBusinessPortfolio /></AppShell>,
   },
   {
     path: '*',

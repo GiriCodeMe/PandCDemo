@@ -99,7 +99,7 @@
     "processingWindowEnd": "2026-12-15T23:59:59-05:00",
     "integrationType": "CARRIER",
     "integrationId": "CARRIER-DIS",
-    "carrierName": "Unum",
+    "carrierName": "Life Carrier",
     "productType": "DISABILITY",
     "status": "IN_PROGRESS",
     "recordsReceived": 612,

@@ -79,6 +79,48 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What is an HSA and how does it work?',
     'When does my coverage become effective?',
   ],
+  '/enrollment:Employee': [
+    'How do I compare PPO vs HDHP for my family?',
+    'What does my 30-day waiting period mean?',
+    'How much will I pay per paycheck for medical?',
+    'Can I add dependents during open enrollment?',
+  ],
+  '/enrollment:HR Administrator': [
+    'How do I override an eligibility exception?',
+    'What documents are required for a marriage life event?',
+    'Why is Linda White\'s enrollment blocked?',
+    'How do I submit a manual enrollment correction?',
+  ],
+  '/enrollment:Benefits Administrator': [
+    'What does publishing a plan year do?',
+    'How do I configure a new waiting period rule?',
+    'What happens if I miss the OE window close date?',
+    'How do I review eligibility rule conflicts?',
+  ],
+  '/enrollment:Payroll Administrator': [
+    'Why are there 32 deduction mismatches this period?',
+    'How is the payroll deduction file generated?',
+    'What causes an effective date change mismatch?',
+    'How do I resolve a suspended deduction?',
+  ],
+  '/enrollment:Carrier Administrator': [
+    'Why was carrier transaction CT-10045 rejected?',
+    'How do I retry a failed 834 transmission?',
+    'What does DEP-INVALID-ID mean?',
+    'How long does a carrier resubmission take?',
+  ],
+  '/enrollment:Employer/Group Admin': [
+    'What is driving the 3% eligibility exception rate?',
+    'How does enrollment pace compare to last year?',
+    'What is the projected annual benefits cost?',
+    'What is the carrier success rate threshold?',
+  ],
+  '/enrollment:Benefits Analyst': [
+    'What evidence is required for an eligibility decision?',
+    'How does the 30-day waiting period apply to part-time employees?',
+    'What triggers a compliance audit flag?',
+    'How is Linda White\'s eligibility decision documented?',
+  ],
   '/life-events': [
     'What qualifies as a life event?',
     'How long is the enrollment window after a life event?',
@@ -172,6 +214,7 @@ interface Message {
 interface BenChatProps {
   open: boolean;
   onClose: () => void;
+  contextKey?: string;
 }
 
 function renderText(text: string) {
@@ -187,7 +230,7 @@ function renderText(text: string) {
   });
 }
 
-export default function BenChat({ open, onClose }: BenChatProps) {
+export default function BenChat({ open, onClose, contextKey }: BenChatProps) {
   const location = useLocation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -195,8 +238,9 @@ export default function BenChat({ open, onClose }: BenChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const resolvedKey = contextKey ?? sessionStorage.getItem('benchat_context_key') ?? location.pathname;
   const pageLabel = getPageLabel(location.pathname);
-  const starters = getStarters(location.pathname);
+  const starters = STARTER_QUESTIONS[resolvedKey] ?? getStarters(location.pathname);
 
   useEffect(() => {
     if (open && messages.length === 0) {

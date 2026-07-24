@@ -1,0 +1,189 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 4767 >>
+stream
+BT /F2 16 Tf 1 0 0 1 72 722 Tm (ACME CORPORATION) Tj ET
+BT /F2 14 Tf 1 0 0 1 72 694 Tm (Benefits Enrollment Process Guide) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 666 Tm (Document ID: OPS-ENROLL-2027  |  Version: 3.0  |  Effective: January 1, 2027) Tj ET
+0.6 G 72 650 m 540 650 l S 0 G
+BT /F2 13 Tf 1 0 0 1 72 624 Tm (1. Enrollment Types) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 610 Tm (Enrollment Type) Tj ET
+BT /F2 9 Tf 1 0 0 1 231 610 Tm (When) Tj ET
+BT /F2 9 Tf 1 0 0 1 341 610 Tm (Window) Tj ET
+BT /F2 9 Tf 1 0 0 1 421 610 Tm (Override Required) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 594 Tm (Open Enrollment) Tj ET
+BT /F1 9 Tf 1 0 0 1 231 594 Tm (Annual / Nov 1-30) Tj ET
+BT /F1 9 Tf 1 0 0 1 341 594 Tm (30 days) Tj ET
+BT /F1 9 Tf 1 0 0 1 421 594 Tm (No) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 578 Tm (New Hire Enrollment) Tj ET
+BT /F1 9 Tf 1 0 0 1 231 578 Tm (Within 30 days of hire) Tj ET
+BT /F1 9 Tf 1 0 0 1 341 578 Tm (30 days) Tj ET
+BT /F1 9 Tf 1 0 0 1 421 578 Tm (No) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 562 Tm (Life Event Enrollment) Tj ET
+BT /F1 9 Tf 1 0 0 1 231 562 Tm (Within 30 days of event) Tj ET
+BT /F1 9 Tf 1 0 0 1 341 562 Tm (30 days) Tj ET
+BT /F1 9 Tf 1 0 0 1 421 562 Tm (No) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 546 Tm (Late Enrollment) Tj ET
+BT /F1 9 Tf 1 0 0 1 231 546 Tm (Outside any window) Tj ET
+BT /F1 9 Tf 1 0 0 1 341 546 Tm (N/A) Tj ET
+BT /F1 9 Tf 1 0 0 1 421 546 Tm (HR Director approval) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 530 Tm (COBRA Continuation) Tj ET
+BT /F1 9 Tf 1 0 0 1 231 530 Tm (Within 60 days of qualifying event) Tj ET
+BT /F1 9 Tf 1 0 0 1 341 530 Tm (60 days) Tj ET
+BT /F1 9 Tf 1 0 0 1 421 530 Tm (No) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 500 Tm (2. Enrollment Workflow Steps) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 486 Tm (The standard 8-step enrollment process:) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 458 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 458 Tm (Step 1: Eligibility Verification -- System confirms employee meets all) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 444 Tm (eligibility rules) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 430 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 430 Tm (Step 2: Plan Selection -- Employee selects medical, dental, vision plans) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 416 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 416 Tm (Step 3: Coverage Tier Selection -- Employee selects tier \(EE only, EE+Spouse,) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 402 Tm (etc.\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 388 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 388 Tm (Step 4: Dependent Addition -- Employee adds and verifies eligible dependents) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 374 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 374 Tm (Step 5: Life Insurance Selection -- Basic auto-enrolled; voluntary options) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 360 Tm (presented) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 346 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 346 Tm (Step 6: Disability Coverage -- STD/LTD options with cost calculator) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 332 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 332 Tm (Step 7: Cost Review -- Employee reviews total monthly and per-paycheck costs) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 318 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 318 Tm (Step 8: Confirmation -- Employee confirms elections; system locks enrollment) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 290 Tm (3. Default Coverage Rules) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 276 Tm (Employees who do not actively enroll during open enrollment or the new hire window) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 262 Tm (will be automatically enrolled in the following default plans:) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 234 Tm (Benefit Type) Tj ET
+BT /F2 9 Tf 1 0 0 1 216 234 Tm (Default Plan) Tj ET
+BT /F2 9 Tf 1 0 0 1 406 234 Tm (Default Tier) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 218 Tm (Medical) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 218 Tm (PPO 500 \(MED-PPO-500\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 218 Tm (Employee Only) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 202 Tm (Dental) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 202 Tm (Dental Basic \(DEN-BASIC\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 202 Tm (Employee Only) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 186 Tm (Vision) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 186 Tm (Vision Standard \(VIS-STD\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 186 Tm (Employee Only) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 170 Tm (Basic Life) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 170 Tm (LIFE-BASIC \(1x salary\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 170 Tm (Automatic) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 154 Tm (Voluntary Life) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 154 Tm (Not enrolled) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 154 Tm (N/A) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 138 Tm (STD/LTD) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 138 Tm (Employer-paid portion only) Tj ET
+BT /F1 9 Tf 1 0 0 1 406 138 Tm (N/A) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 108 Tm (\(AI DEMO: Default plan is now explicitly defined. AI should link this to the) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 94 Tm (ambiguous statements in Benefits Guide Section 9 and Eligibility Policy Section 7.\)) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 4477 >>
+stream
+BT /F2 13 Tf 1 0 0 1 72 736 Tm (4. Status Lifecycle) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 722 Tm (Status) Tj ET
+BT /F2 9 Tf 1 0 0 1 166 722 Tm (Meaning) Tj ET
+BT /F2 9 Tf 1 0 0 1 366 722 Tm (Next State) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 706 Tm (Pending) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 706 Tm (Employee has started but not submitted e) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 706 Tm (Submitted) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 690 Tm (Submitted) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 690 Tm (Elections submitted, awaiting HR review) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 690 Tm (Approved / Rejected) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 674 Tm (Approved) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 674 Tm (HR has approved enrollment, carrier file) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 674 Tm (Active) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 658 Tm (Active) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 658 Tm (Coverage is in force, deductions running) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 658 Tm (Terminated / Changed) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 642 Tm (Rejected) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 642 Tm (HR rejected due to missing docs or eligi) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 642 Tm (Pending) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 626 Tm (Terminated) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 626 Tm (Coverage ended due to termination or vol) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 626 Tm (N/A) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 610 Tm (Waived) Tj ET
+BT /F1 9 Tf 1 0 0 1 166 610 Tm (Employee actively waived coverage) Tj ET
+BT /F1 9 Tf 1 0 0 1 366 610 Tm (Open Enrollment eligible) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 580 Tm (5. Life Event Processing) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 566 Tm (When an employee experiences a qualifying life event:) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 552 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 552 Tm (Employee submits life event notification in the Benefits Portal) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 538 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 538 Tm (System opens a 30-day enrollment window from the event date) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 524 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 524 Tm (Employee submits supporting documentation within the window) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 510 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 510 Tm (HR reviews and approves documentation) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 496 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 496 Tm (Enrollment changes are processed and sent to carriers) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 482 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 482 Tm (Payroll deductions are updated before the next payroll cycle) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 454 Tm (AI Validation: The AI assistant will review the submitted life event details,) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 440 Tm (verify documentation requirements, and confirm eligibility for the requested) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 426 Tm (changes.) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 398 Tm (6. Carrier File Generation) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 384 Tm (Upon approval of enrollment or life event changes:) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 370 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 370 Tm (Benefits platform generates carrier transaction file) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 356 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 356 Tm (Transaction includes all required fields per carrier specification) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 342 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 342 Tm (File is transmitted according to carrier schedule) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 328 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 328 Tm (Carrier acknowledgment is received and logged) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 314 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 314 Tm (Rejected transactions are flagged for manual review) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 286 Tm (Integration Reference: See Acme_Carrier_Requirements.pdf for complete field) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 272 Tm (specifications.) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 244 Tm (7. Audit Requirements) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 230 Tm (All enrollment actions must be logged with the following information:) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 216 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 216 Tm (Timestamp of action) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 202 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 202 Tm (User or system that performed the action) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 188 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 188 Tm (Previous values and new values \(for changes\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 174 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 174 Tm (Reason for change \(for life events and administrative overrides\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 146 Tm (Audit logs must be retained for a minimum of 7 years per ERISA requirements.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000009883 00000 n 
+0000000064 00000 n 
+0000000161 00000 n 
+0000000263 00000 n 
+0000005082 00000 n 
+0000005218 00000 n 
+0000009747 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+9946
+%%EOF

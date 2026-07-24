@@ -1,0 +1,187 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 4973 >>
+stream
+BT /F2 16 Tf 1 0 0 1 72 722 Tm (ACME CORPORATION) Tj ET
+BT /F2 14 Tf 1 0 0 1 72 694 Tm (Payroll Interface Specification) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 666 Tm (Document ID: INT-PAY-2027  |  Version: 1.0  |  Effective: January 1, 2027) Tj ET
+0.6 G 72 650 m 540 650 l S 0 G
+BT /F2 13 Tf 1 0 0 1 72 624 Tm (1. Overview) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 610 Tm (This specification defines the data exchange between the Acme Benefits platform and) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 596 Tm (the ADP payroll system for benefit deduction management.) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 568 Tm (2. Deduction Code Mapping) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 554 Tm (Benefit) Tj ET
+BT /F2 9 Tf 1 0 0 1 221 554 Tm (Deduction Code) Tj ET
+BT /F2 9 Tf 1 0 0 1 331 554 Tm (Tax Treatment) Tj ET
+BT /F2 9 Tf 1 0 0 1 451 554 Tm (Frequency) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 538 Tm (Medical PPO 500) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 538 Tm (MED-PPO-500) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 538 Tm (Pre-tax \(Section 125\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 538 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 522 Tm (Medical HDHP 3000) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 522 Tm (MED-HDHP-3000) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 522 Tm (Pre-tax \(Section 125\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 522 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 506 Tm (Dental Basic) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 506 Tm (DEN-BASIC) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 506 Tm (Pre-tax \(Section 125\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 506 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 490 Tm (Dental Premium) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 490 Tm (DEN-PREM) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 490 Tm (Pre-tax \(Section 125\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 490 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 474 Tm (Vision Standard) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 474 Tm (VIS-STD) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 474 Tm (Pre-tax \(Section 125\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 474 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 458 Tm (Voluntary Life) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 458 Tm (LIFE-VOL) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 458 Tm (Post-tax) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 458 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 442 Tm (STD Employee Share) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 442 Tm (DIS-STD-EE) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 442 Tm (Post-tax) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 442 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 426 Tm (LTD Employee Share) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 426 Tm (DIS-LTD-EE) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 426 Tm (Post-tax) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 426 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 410 Tm (HSA Contribution) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 410 Tm (HSA-CONT) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 410 Tm (Pre-tax) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 410 Tm (Per paycheck) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 394 Tm (FSA Contribution) Tj ET
+BT /F1 9 Tf 1 0 0 1 221 394 Tm (FSA-CONT) Tj ET
+BT /F1 9 Tf 1 0 0 1 331 394 Tm (Pre-tax) Tj ET
+BT /F1 9 Tf 1 0 0 1 451 394 Tm (Per paycheck) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 364 Tm (3. Pay Period Calculation) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 350 Tm (All monthly benefit costs are converted to per-paycheck amounts using the following) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 336 Tm (divisors:) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 308 Tm (Pay Frequency) Tj ET
+BT /F2 9 Tf 1 0 0 1 196 308 Tm (Annual Pay Periods) Tj ET
+BT /F2 9 Tf 1 0 0 1 306 308 Tm (Monthly Divisor) Tj ET
+BT /F2 9 Tf 1 0 0 1 416 308 Tm (Example \($150/month\)) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 292 Tm (Weekly) Tj ET
+BT /F1 9 Tf 1 0 0 1 196 292 Tm (52) Tj ET
+BT /F1 9 Tf 1 0 0 1 306 292 Tm (4.333) Tj ET
+BT /F1 9 Tf 1 0 0 1 416 292 Tm ($34.62) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 276 Tm (Biweekly) Tj ET
+BT /F1 9 Tf 1 0 0 1 196 276 Tm (26) Tj ET
+BT /F1 9 Tf 1 0 0 1 306 276 Tm (2.167) Tj ET
+BT /F1 9 Tf 1 0 0 1 416 276 Tm ($69.23) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 260 Tm (Semi-Monthly) Tj ET
+BT /F1 9 Tf 1 0 0 1 196 260 Tm (24) Tj ET
+BT /F1 9 Tf 1 0 0 1 306 260 Tm (2.000) Tj ET
+BT /F1 9 Tf 1 0 0 1 416 260 Tm ($75.00) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 244 Tm (Monthly) Tj ET
+BT /F1 9 Tf 1 0 0 1 196 244 Tm (12) Tj ET
+BT /F1 9 Tf 1 0 0 1 306 244 Tm (1.000) Tj ET
+BT /F1 9 Tf 1 0 0 1 416 244 Tm ($150.00) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 214 Tm (Acme Corporation uses Biweekly payroll. All benefit deductions are calculated using) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 200 Tm (the Biweekly divisor of 2.167.) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 172 Tm (4. Deduction Reconciliation) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 158 Tm (A three-way reconciliation is performed monthly between:) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 144 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 144 Tm (Benefits system: configured employee contribution amounts) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 130 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 130 Tm (Payroll system: actual deduction amounts per employee per paycheck) Tj ET
+BT /F1 10 Tf 1 0 0 1 80 116 Tm (-) Tj ET
+BT /F1 10 Tf 1 0 0 1 92 116 Tm (Carrier: billed premium amounts) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 88 Tm (Reconciliation matching key: Employee ID \(primary\) + Plan Code \(secondary\)) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 3426 >>
+stream
+BT /F1 10 Tf 1 0 0 1 72 736 Tm (Tolerance: Differences of $0.02 or less per paycheck are acceptable rounding) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 722 Tm (errors.) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 708 Tm (Differences greater than $0.02 must be flagged for review.) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 680 Tm (\(AI DEMO - PAYROLL MISMATCH SCENARIO\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 666 Tm (Employee: John Smith \(EE-001\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 652 Tm (Plan: Medical PPO 500 \(MED-PPO-500\), Employee Only tier) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 638 Tm (Expected deduction: $75.00 per paycheck \(based on $150/month employee share\)) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 624 Tm (Actual deduction: $200.00 per paycheck) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 610 Tm (Variance: $125.00 per paycheck -- EXCEEDS TOLERANCE) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 596 Tm (AI should identify: Payroll system may still be using prior year rate or wrong) Tj ET
+BT /F1 10 Tf 1 0 0 1 72 582 Tm (coverage tier.) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 554 Tm (5. Required Payroll File Fields) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 540 Tm (Field) Tj ET
+BT /F2 9 Tf 1 0 0 1 216 540 Tm (Type) Tj ET
+BT /F2 9 Tf 1 0 0 1 296 540 Tm (Description) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 524 Tm (EmployeeID) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 524 Tm (String) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 524 Tm (EE-NNN format) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 508 Tm (DeductionCode) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 508 Tm (String) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 508 Tm (Plan deduction code) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 492 Tm (ExpectedAmount) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 492 Tm (Decimal) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 492 Tm (Benefits system configured amount) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 476 Tm (ActualAmount) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 476 Tm (Decimal) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 476 Tm (Payroll system deduction amount) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 460 Tm (PayFrequency) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 460 Tm (Enum) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 460 Tm (Biweekly / Semi-Monthly / Monthly) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 444 Tm (EffectiveDate) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 444 Tm (Date) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 444 Tm (YYYY-MM-DD) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 428 Tm (CoverageMonth) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 428 Tm (String) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 428 Tm (YYYY-MM) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 412 Tm (ReconciliationStatus) Tj ET
+BT /F1 9 Tf 1 0 0 1 216 412 Tm (Enum) Tj ET
+BT /F1 9 Tf 1 0 0 1 296 412 Tm (Matched / Mismatch / Pending) Tj ET
+BT /F2 13 Tf 1 0 0 1 72 382 Tm (6. Error Scenarios) Tj ET
+BT /F2 9 Tf 1 0 0 1 76 368 Tm (Error Code) Tj ET
+BT /F2 9 Tf 1 0 0 1 186 368 Tm (Description) Tj ET
+BT /F2 9 Tf 1 0 0 1 386 368 Tm (Action Required) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 352 Tm (PAY-MISMATCH) Tj ET
+BT /F1 9 Tf 1 0 0 1 186 352 Tm (Deduction amount does not match configur) Tj ET
+BT /F1 9 Tf 1 0 0 1 386 352 Tm (HR review within 2 days) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 336 Tm (PAY-MISSING) Tj ET
+BT /F1 9 Tf 1 0 0 1 186 336 Tm (Employee enrolled but no deduction found) Tj ET
+BT /F1 9 Tf 1 0 0 1 386 336 Tm (Payroll team to add) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 320 Tm (PAY-EXTRA) Tj ET
+BT /F1 9 Tf 1 0 0 1 186 320 Tm (Deduction found but employee is not enro) Tj ET
+BT /F1 9 Tf 1 0 0 1 386 320 Tm (Payroll team to remove) Tj ET
+BT /F1 9 Tf 1 0 0 1 76 304 Tm (PAY-TERM) Tj ET
+BT /F1 9 Tf 1 0 0 1 186 304 Tm (Deduction continues after termination da) Tj ET
+BT /F1 9 Tf 1 0 0 1 386 304 Tm (Immediate correction) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000009038 00000 n 
+0000000064 00000 n 
+0000000161 00000 n 
+0000000263 00000 n 
+0000005288 00000 n 
+0000005424 00000 n 
+0000008902 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+9101
+%%EOF

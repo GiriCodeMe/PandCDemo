@@ -61,7 +61,7 @@
   },
   {
     "carrierId": "CAR-005",
-    "carrierName": "Unum",
+    "carrierName": "Life Carrier",
     "productType": "Disability",
     "transactions": {
       "submitted": 158,
@@ -71,7 +71,7 @@
     },
     "successRate": 76.0,
     "status": "Degraded",
-    "alertMessage": "36 STD/LTD transactions pending beyond expected SLA. Unum API response time elevated.",
+    "alertMessage": "36 STD/LTD transactions pending beyond expected SLA. Life Carrier API response time elevated.",
     "lastTransmission": "2026-12-13T23:00:00Z",
     "nextScheduled": "2026-12-15T23:00:00Z"
   }

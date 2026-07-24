@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen, Layers, Heart, Link2, ShieldCheck, Bell, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen, Layers, Heart, Link2, ShieldCheck, Bell, BarChart3, Monitor, Briefcase } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '../../stores/uiStore';
 
@@ -9,6 +9,7 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   soon?: boolean;
+  demo?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -24,6 +25,10 @@ const navItems: NavItem[] = [
   { label: 'Notifications', href: '/notifications', icon: Bell },
   { label: 'Reports', href: '/reports', icon: BarChart3 },
   { label: 'Requirements', href: '/requirements', icon: BookOpen },
+  { label: 'Audit Trail', href: '/audit', icon: ShieldCheck },
+  { label: 'Small Business', href: '/small-business', icon: Briefcase },
+  { label: 'SMB Portfolio', href: '/small-business/portfolio', icon: Briefcase },
+  { label: 'Demo Center', href: '/demo', icon: Monitor, demo: true },
 ];
 
 export default function Sidebar() {
@@ -48,8 +53,8 @@ export default function Sidebar() {
                   clsx(
                     'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-brand-50 text-brand-700'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                      ? item.demo ? 'bg-violet-50 text-violet-700' : 'bg-brand-50 text-brand-700'
+                      : item.demo ? 'text-violet-500 hover:bg-violet-50 hover:text-violet-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
                     item.soon && 'opacity-60',
                   )
                 }

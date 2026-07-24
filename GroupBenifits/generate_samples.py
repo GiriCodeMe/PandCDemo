@@ -449,7 +449,7 @@ def build_benefits_guide():
             ["Dental (Delta Dental)", "Weekly", "SFTP"],
             ["Vision (VSP)", "Weekly", "CSV File"],
             ["Life / AD&D (MetLife)", "Weekly", "SFTP"],
-            ["Disability (Unum)", "Daily", "REST API"],
+            ["Disability (Life Carrier)", "Daily", "REST API"],
         ],
         widths=[180, 148, 140]
     )
@@ -617,7 +617,7 @@ def build_carrier_requirements():
             ["Delta Dental", "Dental", "SFTP", "Weekly", "CSV/834"],
             ["VSP", "Vision", "CSV Upload", "Weekly", "CSV"],
             ["MetLife", "Life / AD&D", "SFTP", "Weekly", "EDI 834"],
-            ["Unum", "STD / LTD", "REST API", "Daily", "JSON"],
+            ["Life Carrier", "STD / LTD", "REST API", "Daily", "JSON"],
             ["Fidelity", "HSA", "REST API", "Monthly", "JSON"],
             ["WEX", "FSA", "REST API", "Monthly", "JSON"],
         ],
