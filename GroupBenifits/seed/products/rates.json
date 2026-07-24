@@ -1,0 +1,47 @@
+[
+  { "tierId": "TIER-001", "planId": "PLAN-001", "planCode": "MED-PPO-500",   "versionId": "VER-001", "tierType": "EE Only",       "monthlyPremium": 600,  "employerContribution": 450, "employeeContribution": 150 },
+  { "tierId": "TIER-002", "planId": "PLAN-001", "planCode": "MED-PPO-500",   "versionId": "VER-001", "tierType": "EE + Spouse",   "monthlyPremium": 725,  "employerContribution": 450, "employeeContribution": 275 },
+  { "tierId": "TIER-003", "planId": "PLAN-001", "planCode": "MED-PPO-500",   "versionId": "VER-001", "tierType": "EE + Child",    "monthlyPremium": 690,  "employerContribution": 450, "employeeContribution": 240 },
+  { "tierId": "TIER-004", "planId": "PLAN-001", "planCode": "MED-PPO-500",   "versionId": "VER-001", "tierType": "Family",        "monthlyPremium": 825,  "employerContribution": 450, "employeeContribution": 375 },
+
+  { "tierId": "TIER-005", "planId": "PLAN-002", "planCode": "MED-PPO-1000",  "versionId": "VER-002", "tierType": "EE Only",       "monthlyPremium": 550,  "employerContribution": 450, "employeeContribution": 100 },
+  { "tierId": "TIER-006", "planId": "PLAN-002", "planCode": "MED-PPO-1000",  "versionId": "VER-002", "tierType": "EE + Spouse",   "monthlyPremium": 650,  "employerContribution": 450, "employeeContribution": 200 },
+  { "tierId": "TIER-007", "planId": "PLAN-002", "planCode": "MED-PPO-1000",  "versionId": "VER-002", "tierType": "EE + Child",    "monthlyPremium": 625,  "employerContribution": 450, "employeeContribution": 175 },
+  { "tierId": "TIER-008", "planId": "PLAN-002", "planCode": "MED-PPO-1000",  "versionId": "VER-002", "tierType": "Family",        "monthlyPremium": 750,  "employerContribution": 450, "employeeContribution": 300 },
+
+  { "tierId": "TIER-009", "planId": "PLAN-003", "planCode": "MED-HDHP-3000", "versionId": "VER-003", "tierType": "EE Only",       "monthlyPremium": 500,  "employerContribution": 450, "employeeContribution": 50  },
+  { "tierId": "TIER-010", "planId": "PLAN-003", "planCode": "MED-HDHP-3000", "versionId": "VER-003", "tierType": "EE + Spouse",   "monthlyPremium": 550,  "employerContribution": 450, "employeeContribution": 100 },
+  { "tierId": "TIER-011", "planId": "PLAN-003", "planCode": "MED-HDHP-3000", "versionId": "VER-003", "tierType": "EE + Child",    "monthlyPremium": 540,  "employerContribution": 450, "employeeContribution": 90  },
+  { "tierId": "TIER-012", "planId": "PLAN-003", "planCode": "MED-HDHP-3000", "versionId": "VER-003", "tierType": "Family",        "monthlyPremium": 600,  "employerContribution": 450, "employeeContribution": 150 },
+
+  { "tierId": "TIER-013", "planId": "PLAN-004", "planCode": "DEN-BASIC",     "versionId": "VER-004", "tierType": "EE Only",       "monthlyPremium": 45,   "employerContribution": 25,  "employeeContribution": 20  },
+  { "tierId": "TIER-014", "planId": "PLAN-004", "planCode": "DEN-BASIC",     "versionId": "VER-004", "tierType": "EE + Spouse",   "monthlyPremium": 65,   "employerContribution": 25,  "employeeContribution": 40  },
+  { "tierId": "TIER-015", "planId": "PLAN-004", "planCode": "DEN-BASIC",     "versionId": "VER-004", "tierType": "EE + Child",    "monthlyPremium": 60,   "employerContribution": 25,  "employeeContribution": 35  },
+  { "tierId": "TIER-016", "planId": "PLAN-004", "planCode": "DEN-BASIC",     "versionId": "VER-004", "tierType": "Family",        "monthlyPremium": 85,   "employerContribution": 25,  "employeeContribution": 60  },
+
+  { "tierId": "TIER-017", "planId": "PLAN-005", "planCode": "DEN-PREM",      "versionId": "VER-005", "tierType": "EE Only",       "monthlyPremium": 65,   "employerContribution": 25,  "employeeContribution": 40  },
+  { "tierId": "TIER-018", "planId": "PLAN-005", "planCode": "DEN-PREM",      "versionId": "VER-005", "tierType": "EE + Spouse",   "monthlyPremium": 105,  "employerContribution": 25,  "employeeContribution": 80  },
+  { "tierId": "TIER-019", "planId": "PLAN-005", "planCode": "DEN-PREM",      "versionId": "VER-005", "tierType": "EE + Child",    "monthlyPremium": 95,   "employerContribution": 25,  "employeeContribution": 70  },
+  { "tierId": "TIER-020", "planId": "PLAN-005", "planCode": "DEN-PREM",      "versionId": "VER-005", "tierType": "Family",        "monthlyPremium": 145,  "employerContribution": 25,  "employeeContribution": 120 },
+
+  { "tierId": "TIER-021", "planId": "PLAN-006", "planCode": "VIS-STD",       "versionId": "VER-006", "tierType": "EE Only",       "monthlyPremium": 20,   "employerContribution": 10,  "employeeContribution": 10  },
+  { "tierId": "TIER-022", "planId": "PLAN-006", "planCode": "VIS-STD",       "versionId": "VER-006", "tierType": "EE + Spouse",   "monthlyPremium": 30,   "employerContribution": 10,  "employeeContribution": 20  },
+  { "tierId": "TIER-023", "planId": "PLAN-006", "planCode": "VIS-STD",       "versionId": "VER-006", "tierType": "EE + Child",    "monthlyPremium": 28,   "employerContribution": 10,  "employeeContribution": 18  },
+  { "tierId": "TIER-024", "planId": "PLAN-006", "planCode": "VIS-STD",       "versionId": "VER-006", "tierType": "Family",        "monthlyPremium": 40,   "employerContribution": 10,  "employeeContribution": 30  },
+
+  { "tierId": "TIER-025", "planId": "PLAN-007", "planCode": "VIS-PREM",      "versionId": "VER-007", "tierType": "EE Only",       "monthlyPremium": 30,   "employerContribution": 10,  "employeeContribution": 20  },
+  { "tierId": "TIER-026", "planId": "PLAN-007", "planCode": "VIS-PREM",      "versionId": "VER-007", "tierType": "EE + Spouse",   "monthlyPremium": 50,   "employerContribution": 10,  "employeeContribution": 40  },
+  { "tierId": "TIER-027", "planId": "PLAN-007", "planCode": "VIS-PREM",      "versionId": "VER-007", "tierType": "EE + Child",    "monthlyPremium": 45,   "employerContribution": 10,  "employeeContribution": 35  },
+  { "tierId": "TIER-028", "planId": "PLAN-007", "planCode": "VIS-PREM",      "versionId": "VER-007", "tierType": "Family",        "monthlyPremium": 70,   "employerContribution": 10,  "employeeContribution": 60  },
+
+  { "tierId": "TIER-029", "planId": "PLAN-008", "planCode": "LIFE-BASIC",    "versionId": "VER-008", "tierType": "EE Only",       "monthlyPremium": 0,    "employerContribution": 0,   "employeeContribution": 0, "_note": "Employer-paid 100%; premium calculated from salary" },
+
+  { "tierId": "TIER-030", "planId": "PLAN-009", "planCode": "LIFE-VOL",      "versionId": "VER-009", "tierType": "EE Only",       "monthlyPremium": null, "employerContribution": 0,   "employeeContribution": null, "_note": "Age-banded rate; use ageBands in plan object" },
+
+  { "tierId": "TIER-031", "planId": "PLAN-010", "planCode": "DIS-STD",       "versionId": "VER-010", "tierType": "EE Only",       "monthlyPremium": 0,    "employerContribution": 0,   "employeeContribution": 0, "_note": "100% employer-paid; premium calculated from salary" },
+
+  { "tierId": "TIER-032", "planId": "PLAN-011", "planCode": "DIS-LTD",       "versionId": "VER-011", "tierType": "EE Only",       "monthlyPremium": null, "employerContribution": null,"employeeContribution": null, "_note": "50/50 split; premium calculated from salary. Employer pays 50%." },
+
+  { "tierId": "TIER-033", "planId": "PLAN-012", "planCode": "SAV-HSA",       "versionId": "VER-012", "tierType": "EE Only",       "monthlyPremium": 0,    "employerContribution": 62.50,"employeeContribution": 0, "_note": "Employer $750/yr = $62.50/month EE Only. Employee contributes voluntarily up to IRS max." },
+  { "tierId": "TIER-034", "planId": "PLAN-012", "planCode": "SAV-HSA",       "versionId": "VER-012", "tierType": "Family",        "monthlyPremium": 0,    "employerContribution": 125, "employeeContribution": 0, "_note": "Employer $1,500/yr = $125/month Family." }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "ruleId": "DR-001",
+    "ruleType": "Spouse",
+    "description": "A legal spouse may be covered. Marriage certificate required.",
+    "ageLimit": null,
+    "ageLimitType": null,
+    "documentationRequired": ["Marriage Certificate"],
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-002",
+    "ruleType": "Domestic Partner",
+    "description": "A domestic partner may be covered. Affidavit of domestic partnership required. Imputed income applies for federal tax purposes.",
+    "ageLimit": null,
+    "ageLimitType": null,
+    "documentationRequired": ["Domestic Partnership Affidavit", "Proof of joint residency"],
+    "imputed Income": true,
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-003",
+    "ruleType": "Child",
+    "description": "Dependent children may be covered until the end of the month in which they reach age 26. Applies to natural children, adopted children, and stepchildren.",
+    "ageLimit": 26,
+    "ageLimitType": "EndOfBirthMonth",
+    "documentationRequired": ["Birth Certificate"],
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-004",
+    "ruleType": "Stepchild",
+    "description": "Stepchildren are eligible as dependents. Both a marriage certificate (to the custodial parent) and a birth certificate are required.",
+    "ageLimit": 26,
+    "ageLimitType": "EndOfBirthMonth",
+    "documentationRequired": ["Marriage Certificate", "Birth Certificate"],
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-005",
+    "ruleType": "Adopted Child",
+    "description": "Adopted children are eligible from the date of placement. Adoption decree or placement order required.",
+    "ageLimit": 26,
+    "ageLimitType": "EndOfBirthMonth",
+    "documentationRequired": ["Adoption Decree or Placement Order"],
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-006",
+    "ruleType": "Disabled Dependent",
+    "description": "Disabled dependents who are incapable of self-support due to mental or physical disability may qualify for continued coverage beyond age 26, subject to annual physician certification.",
+    "ageLimit": null,
+    "ageLimitType": "NoLimit",
+    "documentationRequired": ["Physician Certification", "Annual review"],
+    "status": "Active"
+  },
+  {
+    "ruleId": "DR-007-AMBIGUOUS",
+    "ruleType": "Newborn",
+    "description": "[INTENTIONAL AMBIGUITY] Newborns are eligible from birth. SSN must be provided. However, newborns do not have a SSN at birth — typically issued 2–4 weeks after birth.",
+    "ageLimit": 26,
+    "ageLimitType": "EndOfBirthMonth",
+    "documentationRequired": ["Birth Certificate", "SSN when available"],
+    "status": "Active",
+    "ambiguityNote": "System requires SSN for all dependents. Newborns cannot provide SSN immediately. AI should ask: What is the grace period for SSN submission for newborn dependents?"
+  }
+]

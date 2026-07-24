@@ -1,0 +1,150 @@
+[
+  {
+    "linkId": "TL-001",
+    "sourceType": "Requirement",
+    "sourceId": "FR-5.4",
+    "targetType": "BusinessRule",
+    "targetId": "BR-001",
+    "linkType": "Implements",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-002",
+    "sourceType": "Requirement",
+    "sourceId": "FR-5.4",
+    "targetType": "BusinessRule",
+    "targetId": "BR-002",
+    "linkType": "Implements",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-003",
+    "sourceType": "Requirement",
+    "sourceId": "FR-5.4",
+    "targetType": "BusinessRule",
+    "targetId": "BR-003",
+    "linkType": "Implements",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-004",
+    "sourceType": "Requirement",
+    "sourceId": "FR-5.6",
+    "targetType": "BusinessRule",
+    "targetId": "BR-001",
+    "linkType": "DetectsConflict",
+    "conflictNote": "BR-001 conflicts with BR-002 on waiting period interpretation.",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-005",
+    "sourceType": "Requirement",
+    "sourceId": "FR-5.6",
+    "targetType": "BusinessRule",
+    "targetId": "BR-007-AMBIGUOUS",
+    "linkType": "DetectsAmbiguity",
+    "ambiguityNote": "BR-007 uses undefined term 'promptly'.",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-006",
+    "sourceType": "BusinessRule",
+    "sourceId": "BR-001",
+    "targetType": "Document",
+    "targetId": "DOC-2027-0001",
+    "linkType": "ExtractedFrom",
+    "pageRef": "Benefits_Guide#Section2",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-007",
+    "sourceType": "BusinessRule",
+    "sourceId": "BR-002",
+    "targetType": "Document",
+    "targetId": "DOC-2027-0002",
+    "linkType": "ExtractedFrom",
+    "pageRef": "Eligibility_Policy#RuleB",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-008",
+    "sourceType": "UserStory",
+    "sourceId": "US-001",
+    "targetType": "Requirement",
+    "targetId": "FR-5.1",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-009",
+    "sourceType": "UserStory",
+    "sourceId": "US-001",
+    "targetType": "Requirement",
+    "targetId": "FR-5.2",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-010",
+    "sourceType": "UserStory",
+    "sourceId": "US-001",
+    "targetType": "Requirement",
+    "targetId": "FR-5.3",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-011",
+    "sourceType": "UserStory",
+    "sourceId": "US-002",
+    "targetType": "Requirement",
+    "targetId": "FR-5.4",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-012",
+    "sourceType": "UserStory",
+    "sourceId": "US-002",
+    "targetType": "Requirement",
+    "targetId": "FR-5.5",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-013",
+    "sourceType": "UserStory",
+    "sourceId": "US-003",
+    "targetType": "Requirement",
+    "targetId": "FR-5.6",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-014",
+    "sourceType": "UserStory",
+    "sourceId": "US-004",
+    "targetType": "Requirement",
+    "targetId": "FR-5.7",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-015",
+    "sourceType": "UserStory",
+    "sourceId": "US-004",
+    "targetType": "Requirement",
+    "targetId": "FR-5.8",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  },
+  {
+    "linkId": "TL-016",
+    "sourceType": "UserStory",
+    "sourceId": "US-005",
+    "targetType": "Requirement",
+    "targetId": "FR-5.9",
+    "linkType": "Satisfies",
+    "createdAt": "2026-10-22T00:00:00Z"
+  }
+]

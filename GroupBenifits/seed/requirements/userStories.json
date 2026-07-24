@@ -1,0 +1,95 @@
+[
+  {
+    "storyId": "US-001",
+    "epicId": "EPIC-5",
+    "title": "Upload Benefits Plan Documents",
+    "userRole": "Benefits Administrator",
+    "narrative": "As a Benefits Administrator, I want to upload benefits plan documents (PDF, Word) so that the AI system can analyze them for requirements and conflicts.",
+    "acceptanceCriteria": [
+      "Can upload PDF or DOCX files up to 25 MB",
+      "System validates file type and rejects non-supported formats",
+      "Upload progress is visible",
+      "Uploaded document appears in the document library with status 'Uploaded'",
+      "System begins validation and extraction automatically after upload",
+      "Cannot upload more than 10 documents per workspace"
+    ],
+    "priority": "P0",
+    "status": "Draft",
+    "linkedRequirements": ["FR-5.1", "FR-5.2", "FR-5.3"],
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "storyId": "US-002",
+    "epicId": "EPIC-5",
+    "title": "AI Document Analysis and Requirements Extraction",
+    "userRole": "Benefits Administrator",
+    "narrative": "As a Benefits Administrator, I want the AI to automatically extract business rules and requirements from uploaded documents so that I do not have to manually read every page.",
+    "acceptanceCriteria": [
+      "AI identifies and lists all extracted business rules with source page reference",
+      "Each extracted rule shows the verbatim source text",
+      "Extraction completes within 60 seconds for a 50-page PDF",
+      "Extracted rules are saved and traceable to source document and page",
+      "Rules are categorized (Eligibility, Enrollment, Life Events, etc.)"
+    ],
+    "priority": "P0",
+    "status": "Draft",
+    "linkedRequirements": ["FR-5.4", "FR-5.5"],
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "storyId": "US-003",
+    "epicId": "EPIC-5",
+    "title": "AI Conflict Detection",
+    "userRole": "Benefits Administrator",
+    "narrative": "As a Benefits Administrator, I want the AI to automatically detect conflicts and ambiguities between extracted rules so that I can resolve them before they cause enrollment errors.",
+    "acceptanceCriteria": [
+      "AI flags rules from different documents that contradict each other",
+      "Each conflict shows both conflicting rules with their source references",
+      "AI provides a plain-English explanation of the conflict",
+      "AI suggests a recommended resolution",
+      "Conflicts are listed in a dedicated review queue",
+      "Resolved conflicts are tracked with the resolution rationale"
+    ],
+    "priority": "P0",
+    "status": "Draft",
+    "linkedRequirements": ["FR-5.6"],
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "storyId": "US-004",
+    "epicId": "EPIC-5",
+    "title": "Interactive AI Requirements Refinement Chat",
+    "userRole": "Benefits Administrator",
+    "narrative": "As a Benefits Administrator, I want to ask the AI follow-up questions about extracted requirements so that I can clarify ambiguous rules through a conversation rather than re-reading the source documents.",
+    "acceptanceCriteria": [
+      "Chat interface is available within the requirements workspace",
+      "AI answers are grounded in the uploaded documents (no hallucination)",
+      "AI cites the specific document and page for each answer",
+      "Conversation history is preserved within the session",
+      "AI can update a requirement based on chat clarification",
+      "Clarified requirements are marked with 'AI-assisted' flag"
+    ],
+    "priority": "P0",
+    "status": "Draft",
+    "linkedRequirements": ["FR-5.7", "FR-5.8"],
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "storyId": "US-005",
+    "epicId": "EPIC-5",
+    "title": "Requirements Traceability Report",
+    "userRole": "Benefits Administrator",
+    "narrative": "As a Benefits Administrator, I want to generate a traceability report showing how each system requirement maps to source documents and business rules so that I can demonstrate compliance during audits.",
+    "acceptanceCriteria": [
+      "Report shows requirement → business rule → source document → page mapping",
+      "Report is exportable as PDF or CSV",
+      "Broken traceability links (e.g. deleted document) are flagged",
+      "Report includes timestamp and document version information",
+      "Requirements with no source traceability are highlighted"
+    ],
+    "priority": "P1",
+    "status": "Draft",
+    "linkedRequirements": ["FR-5.9"],
+    "createdAt": "2026-10-20T00:00:00Z"
+  }
+]

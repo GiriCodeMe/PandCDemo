@@ -1,0 +1,83 @@
+[
+  {
+    "ruleId": "BR-001",
+    "name": "30-Day Waiting Period",
+    "category": "Eligibility",
+    "description": "All benefits-eligible employees must complete a 30-day waiting period before coverage becomes effective.",
+    "sourceDocumentIds": ["DOC-2027-0001", "DOC-2027-0002"],
+    "sourcePageRefs": ["Benefits_Guide#Section2", "Eligibility_Policy#RuleA"],
+    "status": "Active",
+    "conflictFlag": true,
+    "conflictNote": "Conflicts with BR-002. Guide says '30 days'. Eligibility policy says 'first of month following 30 days'. These produce different effective dates.",
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-002",
+    "name": "First-of-Month Coverage Start",
+    "category": "Eligibility",
+    "description": "Coverage begins on the first day of the month following the completion of the waiting period.",
+    "sourceDocumentIds": ["DOC-2027-0002"],
+    "sourcePageRefs": ["Eligibility_Policy#RuleB"],
+    "status": "Active",
+    "conflictFlag": true,
+    "conflictNote": "Conflicts with BR-001. See analysis: employee hired Nov 5 — BR-001 gives coverage Dec 6, BR-002 gives coverage Jan 1. Delta = 26 days.",
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-003",
+    "name": "HSA-HDHP Coupling Rule",
+    "category": "Eligibility",
+    "description": "Employees may contribute to a Health Savings Account (HSA) only if they are enrolled in a qualifying High Deductible Health Plan (HDHP). Enrollment in any non-HDHP medical plan disqualifies HSA contributions.",
+    "sourceDocumentIds": ["DOC-2027-0001"],
+    "sourcePageRefs": ["Benefits_Guide#HSASection"],
+    "status": "Active",
+    "conflictFlag": false,
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-004",
+    "name": "Life Event 30-Day Enrollment Window",
+    "category": "Life Events",
+    "description": "When an employee experiences a qualifying life event (marriage, birth, adoption, divorce, loss of other coverage), they have 30 days from the event date to make changes to their benefit elections.",
+    "sourceDocumentIds": ["DOC-2027-0001"],
+    "sourcePageRefs": ["Benefits_Guide#LifeEvents"],
+    "status": "Active",
+    "conflictFlag": false,
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-005",
+    "name": "Voluntary Life EOI Threshold",
+    "category": "Life Insurance",
+    "description": "Voluntary Life coverage above $100,000 requires Evidence of Insurability (EOI). Coverage amounts at or below $100,000 are available as a guaranteed issue during initial enrollment.",
+    "sourceDocumentIds": ["DOC-2027-0001"],
+    "sourcePageRefs": ["Benefits_Guide#LifeSection"],
+    "status": "Active",
+    "conflictFlag": false,
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-006",
+    "name": "Dependent Age-26 Cutoff",
+    "category": "Eligibility",
+    "description": "Dependent children lose eligibility at the end of the month in which they turn 26. Automatic termination notice must be sent 90 days prior to the birthday.",
+    "sourceDocumentIds": ["DOC-2027-0001", "DOC-2027-0002"],
+    "sourcePageRefs": ["Benefits_Guide#DependentEligibility", "Eligibility_Policy#DependentSection"],
+    "status": "Active",
+    "conflictFlag": false,
+    "createdAt": "2026-10-15T00:00:00Z"
+  },
+  {
+    "ruleId": "BR-007-AMBIGUOUS",
+    "name": "Notification Timeliness — AMBIGUOUS",
+    "category": "Life Events",
+    "description": "Employees must notify HR of qualifying life events promptly. 'Promptly' is not defined in the source document.",
+    "sourceDocumentIds": ["DOC-2027-0001"],
+    "sourcePageRefs": ["Benefits_Guide#LifeEvents"],
+    "status": "Active",
+    "conflictFlag": false,
+    "ambiguityFlag": true,
+    "ambiguityNote": "The word 'promptly' is undefined. Best practice is 30 days; IRS rules allow 30 days for some events; HIPAA allows 30 days. AI should flag for clarification and recommend defining 'promptly' as 30 calendar days.",
+    "createdAt": "2026-10-15T00:00:00Z"
+  }
+]

@@ -1,0 +1,95 @@
+[
+  { "versionId": "VER-001", "planId": "PLAN-001", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "MED-PPO-500", "deductible": 500, "outOfPocketMax": 3000, "copay": 25 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-002", "planId": "PLAN-002", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "MED-PPO-1000", "deductible": 1000, "outOfPocketMax": 4500, "copay": 30 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-003", "planId": "PLAN-003", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "MED-HDHP-3000", "deductible": 3000, "outOfPocketMax": 6000, "copay": 0, "hsaEligible": true }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  {
+    "versionId": "VER-004-2026",
+    "planId": "PLAN-004",
+    "versionNumber": "2026-v1",
+    "effectiveDate": "2026-01-01",
+    "expiryDate": "2026-12-31",
+    "planSnapshot": {
+      "planCode": "DEN-BASIC",
+      "deductible": 50,
+      "annualMax": 1000,
+      "preventivePct": 100,
+      "basicPct": 80,
+      "majorPct": 50
+    },
+    "changeLog": null,
+    "createdBy": "Benefits Admin",
+    "createdAt": "2025-10-01T09:00:00Z",
+    "status": "Expired",
+    "_notes": "2026 plan year. Annual max $1,000. Upgraded to $1,500 for 2027."
+  },
+  {
+    "versionId": "VER-004-2027",
+    "planId": "PLAN-004",
+    "versionNumber": "2027-v1",
+    "effectiveDate": "2027-01-01",
+    "expiryDate": null,
+    "planSnapshot": {
+      "planCode": "DEN-BASIC",
+      "deductible": 50,
+      "annualMax": 1500,
+      "preventivePct": 100,
+      "basicPct": 80,
+      "majorPct": 50
+    },
+    "changeLog": "Annual maximum increased from $1,000 (2026) to $1,500 (2027) following carrier renegotiation.",
+    "previousVersionId": "VER-004-2026",
+    "createdBy": "Benefits Admin",
+    "createdAt": "2026-10-01T09:00:00Z",
+    "status": "Active",
+    "_notes": "DEMO: Plan versioning scenario. AI can compare 2026 vs 2027 and show $500 annual max improvement."
+  },
+  {
+    "versionId": "VER-005-2026",
+    "planId": "PLAN-005",
+    "versionNumber": "2026-v1",
+    "effectiveDate": "2026-01-01",
+    "expiryDate": "2026-12-31",
+    "planSnapshot": {
+      "planCode": "DEN-PREM",
+      "deductible": 25,
+      "annualMax": 2000,
+      "preventivePct": 100,
+      "basicPct": 90,
+      "majorPct": 60,
+      "orthoPct": 50
+    },
+    "changeLog": null,
+    "createdBy": "Benefits Admin",
+    "createdAt": "2025-10-01T09:00:00Z",
+    "status": "Expired"
+  },
+  {
+    "versionId": "VER-005-2027",
+    "planId": "PLAN-005",
+    "versionNumber": "2027-v1",
+    "effectiveDate": "2027-01-01",
+    "expiryDate": null,
+    "planSnapshot": {
+      "planCode": "DEN-PREM",
+      "deductible": 25,
+      "annualMax": 2500,
+      "preventivePct": 100,
+      "basicPct": 90,
+      "majorPct": 70,
+      "orthoPct": 50
+    },
+    "changeLog": "Annual max increased from $2,000 to $2,500. Major services coverage increased from 60% to 70%.",
+    "previousVersionId": "VER-005-2026",
+    "createdBy": "Benefits Admin",
+    "createdAt": "2026-10-01T09:00:00Z",
+    "status": "Active"
+  },
+  { "versionId": "VER-006", "planId": "PLAN-006", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "VIS-STD", "copay": 10, "framesAllowance": 150, "contactsAllowance": 150 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-007", "planId": "PLAN-007", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "VIS-PREM", "copay": 0, "framesAllowance": 250, "contactsAllowance": 250 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-008", "planId": "PLAN-008", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "LIFE-BASIC", "coverage": "1x salary", "maxCoverage": 500000, "ageReduction65": "35%", "ageReduction70": "50%" }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-009", "planId": "PLAN-009", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "LIFE-VOL", "incrementAmount": 10000, "maxCoverage": 500000, "eoiThreshold": 100000, "spouseMax": 250000, "childAmount": 10000 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-010", "planId": "PLAN-010", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "DIS-STD", "benefitPct": 60, "weeklyMax": 1500, "eliminationDays": 7, "maxBenefitWeeks": 26 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-011", "planId": "PLAN-011", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "DIS-LTD", "benefitPct": 60, "monthlyMax": 10000, "eliminationDays": 90, "benefitToAge": "SSNRA" }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-012", "planId": "PLAN-012", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "SAV-HSA", "irsMaxSingle": 4300, "irsMaxFamily": 8550, "employerContributionSingle": 750, "employerContributionFamily": 1500 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" },
+  { "versionId": "VER-013", "planId": "PLAN-013", "versionNumber": "2027-v1", "effectiveDate": "2027-01-01", "expiryDate": null, "planSnapshot": { "planCode": "SPE-FSA", "irsMax": 3300, "rollover": 640 }, "changeLog": null, "createdBy": "Benefits Admin", "createdAt": "2026-10-01T09:00:00Z", "status": "Active" }
+]

@@ -1,0 +1,148 @@
+[
+  {
+    "enrollmentId": "ENR-10001", "employeeId": "ACM-E001", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical",  "planCode": "MED-PPO-500", "tierId": "TIER-001", "tierType": "EE Only",    "monthlyEmployeeContribution": 150 },
+      { "productType": "Dental",   "planCode": "DEN-BASIC",   "tierId": "TIER-013", "tierType": "EE Only",    "monthlyEmployeeContribution": 20  },
+      { "productType": "Vision",   "planCode": "VIS-STD",     "tierId": "TIER-021", "tierType": "EE Only",    "monthlyEmployeeContribution": 10  },
+      { "productType": "Life",     "planCode": "LIFE-BASIC",  "tierId": "TIER-029", "tierType": "EE Only",    "monthlyEmployeeContribution": 0   }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-15T10:00:00Z",
+    "_notes": "Post-divorce enrollment. EE Only tier after spouse removed. Payroll mismatch: system shows $150/month EE Only but payroll deducting at old EE+Spouse rate."
+  },
+  {
+    "enrollmentId": "ENR-10002", "employeeId": "ACM-E002", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-HDHP-3000", "tierId": "TIER-009", "tierType": "EE + Child", "monthlyEmployeeContribution": 90 },
+      { "productType": "Dental",  "planCode": "DEN-PREM",      "tierId": "TIER-019", "tierType": "EE + Child", "monthlyEmployeeContribution": 70 },
+      { "productType": "Vision",  "planCode": "VIS-STD",       "tierId": "TIER-023", "tierType": "EE + Child", "monthlyEmployeeContribution": 18 },
+      { "productType": "HSA",     "planCode": "SAV-HSA",       "tierId": "TIER-033", "tierType": "EE Only",    "monthlyEmployeeContribution": 0  },
+      { "productType": "Life",    "planCode": "LIFE-BASIC",    "tierId": "TIER-029", "tierType": "EE Only",    "monthlyEmployeeContribution": 0  }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-20T14:00:00Z",
+    "_notes": "Upgraded to EE+Child tier after birth of Liam (LE-002). HSA enabled with HDHP."
+  },
+  {
+    "enrollmentId": "ENR-10003", "employeeId": "ACM-E003", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Dental",  "planCode": "DEN-BASIC",   "tierId": "TIER-013", "tierType": "EE Only", "monthlyEmployeeContribution": 20 },
+      { "productType": "Vision",  "planCode": "VIS-STD",     "tierId": "TIER-021", "tierType": "EE Only", "monthlyEmployeeContribution": 10 }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-10T09:30:00Z",
+    "_notes": "Part-time 25 hrs. Medical not eligible. Dental/Vision only."
+  },
+  {
+    "enrollmentId": "ENR-10004", "employeeId": "ACM-E004", "planYear": 2027,
+    "status": "Pending", "enrollmentSource": "New Hire",
+    "elections": [],
+    "effectiveDate": null, "createdAt": "2026-12-15T00:00:00Z",
+    "_notes": "New hire Dec 1 2026. In waiting period. Enrollment opens Feb 1 2027."
+  },
+  {
+    "enrollmentId": "ENR-10005", "employeeId": "ACM-E005", "planYear": 2027,
+    "status": "Terminated", "enrollmentSource": "Open Enrollment",
+    "elections": [],
+    "effectiveDate": "2026-07-01", "terminationDate": "2026-06-30", "createdAt": "2026-01-01T00:00:00Z",
+    "_notes": "Terminated Jun 30 2026. COBRA election window 60 days from Jul 1 2026."
+  },
+  {
+    "enrollmentId": "ENR-10006", "employeeId": "ACM-E006", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-PPO-500", "tierId": "TIER-003", "tierType": "EE + Child", "monthlyEmployeeContribution": 240 },
+      { "productType": "Dental",  "planCode": "DEN-PREM",    "tierId": "TIER-019", "tierType": "EE + Child", "monthlyEmployeeContribution": 70  },
+      { "productType": "Vision",  "planCode": "VIS-STD",     "tierId": "TIER-023", "tierType": "EE + Child", "monthlyEmployeeContribution": 18  },
+      { "productType": "Life",    "planCode": "LIFE-BASIC",  "tierId": "TIER-029", "tierType": "EE Only",    "monthlyEmployeeContribution": 0   }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-18T11:00:00Z",
+    "_notes": "Updated to EE+Child after adoption LE-005 approved."
+  },
+  {
+    "enrollmentId": "ENR-10007", "employeeId": "ACM-E007", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical",      "planCode": "MED-PPO-500",  "tierId": "TIER-004", "tierType": "Family",    "monthlyEmployeeContribution": 375 },
+      { "productType": "Dental",       "planCode": "DEN-PREM",     "tierId": "TIER-020", "tierType": "Family",    "monthlyEmployeeContribution": 120 },
+      { "productType": "Vision",       "planCode": "VIS-PREM",     "tierId": "TIER-028", "tierType": "Family",    "monthlyEmployeeContribution": 60  },
+      { "productType": "Life",         "planCode": "LIFE-BASIC",   "tierId": "TIER-029", "tierType": "EE Only",   "monthlyEmployeeContribution": 0   },
+      { "productType": "Voluntary Life","planCode": "LIFE-VOL",    "tierId": "TIER-030", "tierType": "EE Only",   "monthlyEmployeeContribution": 33  }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-05T09:00:00Z",
+    "_notes": "Executive. Voluntary Life $220k. Age band 45-54 = $2.50/10k. 22 increments = $55/month. EOI not required (under $220k guarantee). Wait — LIFE-VOL max GI is $100k. $220k > $100k so EOI IS required. Demo: EOI exception."
+  },
+  {
+    "enrollmentId": "ENR-10008", "employeeId": "ACM-E008", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-HDHP-3000", "tierId": "TIER-010", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 100 },
+      { "productType": "Dental",  "planCode": "DEN-BASIC",     "tierId": "TIER-014", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 40  },
+      { "productType": "Vision",  "planCode": "VIS-STD",       "tierId": "TIER-022", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 20  },
+      { "productType": "HSA",     "planCode": "SAV-HSA",       "tierId": "TIER-033", "tierType": "EE Only",     "monthlyEmployeeContribution": 0   }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-12T10:00:00Z"
+  },
+  {
+    "enrollmentId": "ENR-10009", "employeeId": "ACM-E009", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Dental", "planCode": "DEN-BASIC", "tierId": "TIER-013", "tierType": "EE Only", "monthlyEmployeeContribution": 20 },
+      { "productType": "Vision", "planCode": "VIS-STD",   "tierId": "TIER-021", "tierType": "EE Only", "monthlyEmployeeContribution": 10 }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-10T09:00:00Z"
+  },
+  {
+    "enrollmentId": "ENR-10010", "employeeId": "ACM-E010", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical",       "planCode": "MED-PPO-500",  "tierId": "TIER-002", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 275 },
+      { "productType": "Dental",        "planCode": "DEN-PREM",     "tierId": "TIER-018", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 80  },
+      { "productType": "Vision",        "planCode": "VIS-PREM",     "tierId": "TIER-026", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 40  },
+      { "productType": "Life",          "planCode": "LIFE-BASIC",   "tierId": "TIER-029", "tierType": "EE Only",     "monthlyEmployeeContribution": 0   },
+      { "productType": "Voluntary Life","planCode": "LIFE-VOL",     "tierId": "TIER-030", "tierType": "EE Only",     "monthlyEmployeeContribution": 52  }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-01T08:00:00Z",
+    "_notes": "CRO. Salary $280k, Basic Life capped at $500k. Voluntary Life $100k (EOI threshold)."
+  },
+  {
+    "enrollmentId": "ENR-10011", "employeeId": "ACM-E011", "planYear": 2027,
+    "status": "Active", "enrollmentSource": "Open Enrollment",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-PPO-1000", "tierId": "TIER-005", "tierType": "EE Only", "monthlyEmployeeContribution": 100 },
+      { "productType": "Dental",  "planCode": "DEN-BASIC",    "tierId": "TIER-013", "tierType": "EE Only", "monthlyEmployeeContribution": 20  },
+      { "productType": "Vision",  "planCode": "VIS-STD",      "tierId": "TIER-021", "tierType": "EE Only", "monthlyEmployeeContribution": 10  }
+    ],
+    "effectiveDate": "2027-01-01", "createdAt": "2026-11-22T10:00:00Z"
+  },
+  {
+    "enrollmentId": "ENR-10012", "employeeId": "ACM-E012", "planYear": 2027,
+    "status": "Pending", "enrollmentSource": "Life Event",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-PPO-500", "tierId": "TIER-001", "tierType": "EE Only", "monthlyEmployeeContribution": 150 },
+      { "productType": "Dental",  "planCode": "DEN-BASIC",   "tierId": "TIER-013", "tierType": "EE Only", "monthlyEmployeeContribution": 20  },
+      { "productType": "Vision",  "planCode": "VIS-STD",     "tierId": "TIER-021", "tierType": "EE Only", "monthlyEmployeeContribution": 10  }
+    ],
+    "effectiveDate": null, "lifeEventId": "LE-003", "createdAt": "2026-06-10T09:00:00Z",
+    "_notes": "Enrollment pending — carrier transaction CT-10045 rejected due to invalid dependent SSN. Blocked on carrier resolution."
+  },
+  {
+    "enrollmentId": "ENR-10021", "employeeId": "ACM-E021", "planYear": 2027,
+    "status": "Pending", "enrollmentSource": "Open Enrollment",
+    "elections": [],
+    "effectiveDate": null, "createdAt": "2026-12-01T00:00:00Z",
+    "_notes": "Eligible since Feb 15 2026. Did not complete enrollment during open enrollment period. Will default to PPO 500 EE Only if not resolved."
+  },
+  {
+    "enrollmentId": "ENR-10030", "employeeId": "ACM-E030", "planYear": 2027,
+    "status": "Life Event In Progress", "enrollmentSource": "Life Event",
+    "elections": [
+      { "productType": "Medical", "planCode": "MED-PPO-500", "tierId": "TIER-002", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 275 },
+      { "productType": "Dental",  "planCode": "DEN-BASIC",   "tierId": "TIER-014", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 40  },
+      { "productType": "Vision",  "planCode": "VIS-STD",     "tierId": "TIER-022", "tierType": "EE + Spouse", "monthlyEmployeeContribution": 20  }
+    ],
+    "effectiveDate": null, "lifeEventId": "LE-001", "createdAt": "2026-06-20T00:00:00Z",
+    "_notes": "Marriage life event LE-001. Pending documentation (marriage certificate). Enrollment window closes Jul 15 2026."
+  }
+]

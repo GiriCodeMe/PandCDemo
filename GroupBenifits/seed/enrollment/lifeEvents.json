@@ -1,0 +1,72 @@
+[
+  {
+    "lifeEventId": "LE-001",
+    "employeeId": "ACM-E030",
+    "eventType": "Marriage",
+    "eventDate": "2026-06-15",
+    "enrollmentWindowStart": "2026-06-15",
+    "enrollmentWindowEnd": "2026-07-15",
+    "status": "Pending Documentation",
+    "documentsRequired": ["Marriage Certificate"],
+    "documentsSubmitted": [],
+    "submittedAt": "2026-06-20T10:00:00Z",
+    "processedAt": null,
+    "_notes": "Carol Lopez. Documentation not yet submitted. Window closes Jul 15. AI demo: life event journey."
+  },
+  {
+    "lifeEventId": "LE-002",
+    "employeeId": "ACM-E002",
+    "eventType": "Birth",
+    "eventDate": "2026-07-01",
+    "enrollmentWindowStart": "2026-07-01",
+    "enrollmentWindowEnd": "2026-07-31",
+    "status": "Approved",
+    "documentsRequired": ["Birth Certificate"],
+    "documentsSubmitted": ["Birth Certificate"],
+    "submittedAt": "2026-07-05T14:00:00Z",
+    "processedAt": "2026-07-08T09:00:00Z",
+    "_notes": "Sarah Johnson. Newborn Liam Johnson. SSN not yet available. Coverage started Jul 1 2026 (birth date)."
+  },
+  {
+    "lifeEventId": "LE-003",
+    "employeeId": "ACM-E012",
+    "eventType": "Loss of Other Coverage",
+    "eventDate": "2026-06-01",
+    "enrollmentWindowStart": "2026-06-01",
+    "enrollmentWindowEnd": "2026-07-01",
+    "status": "Submitted",
+    "documentsRequired": ["Carrier Termination Letter"],
+    "documentsSubmitted": ["Carrier Termination Letter"],
+    "submittedAt": "2026-06-05T10:00:00Z",
+    "processedAt": null,
+    "_notes": "Linda White. Enrollment triggered. Carrier transaction CT-10045 rejected — invalid dependent ID. Enrollment blocked."
+  },
+  {
+    "lifeEventId": "LE-004",
+    "employeeId": "ACM-E001",
+    "eventType": "Divorce",
+    "eventDate": "2026-05-20",
+    "enrollmentWindowStart": "2026-05-20",
+    "enrollmentWindowEnd": "2026-06-19",
+    "status": "Completed",
+    "documentsRequired": ["Divorce Decree"],
+    "documentsSubmitted": ["Divorce Decree"],
+    "submittedAt": "2026-05-22T10:00:00Z",
+    "processedAt": "2026-05-28T14:00:00Z",
+    "_notes": "John Smith. Spouse Jennifer Smith removed from coverage effective Jun 1 2026. Enrollment changed from EE+Spouse to EE Only. Payroll should have updated — but mismatch detected."
+  },
+  {
+    "lifeEventId": "LE-005",
+    "employeeId": "ACM-E006",
+    "eventType": "Adoption",
+    "eventDate": "2026-08-10",
+    "enrollmentWindowStart": "2026-08-10",
+    "enrollmentWindowEnd": "2026-09-09",
+    "status": "Approved",
+    "documentsRequired": ["Adoption Decree"],
+    "documentsSubmitted": ["Adoption Decree"],
+    "submittedAt": "2026-08-12T09:00:00Z",
+    "processedAt": "2026-08-15T16:00:00Z",
+    "_notes": "Lisa Miller. Adopted Sophia Miller (DEP-005). Enrollment updated to EE+Child."
+  }
+]

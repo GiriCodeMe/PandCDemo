@@ -1,0 +1,130 @@
+[
+  {
+    "planId": "PLAN-001", "productId": "PROD-001", "carrierId": "CAR-001",
+    "name": "PPO 500", "planCode": "MED-PPO-500",
+    "network": "Aetna Choice POS II",
+    "deductible": 500, "outOfPocketMax": 3000, "copay": 25, "specialistCopay": 50, "erCopay": 250, "coinsurance": 20,
+    "hsaEligible": false,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-002", "productId": "PROD-001", "carrierId": "CAR-001",
+    "name": "PPO 1000", "planCode": "MED-PPO-1000",
+    "network": "Aetna Choice POS II",
+    "deductible": 1000, "outOfPocketMax": 4500, "copay": 30, "specialistCopay": 60, "erCopay": 300, "coinsurance": 20,
+    "hsaEligible": false,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-003", "productId": "PROD-001", "carrierId": "CAR-001",
+    "name": "HDHP 3000", "planCode": "MED-HDHP-3000",
+    "network": "Aetna Choice POS II",
+    "deductible": 3000, "outOfPocketMax": 6000, "copay": 0, "specialistCopay": 0, "erCopay": 0, "coinsurance": 20,
+    "hsaEligible": true,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-004", "productId": "PROD-002", "carrierId": "CAR-002",
+    "name": "Dental Basic", "planCode": "DEN-BASIC",
+    "network": "Delta Dental Premier",
+    "deductible": 50, "outOfPocketMax": 1500, "copay": 0, "coinsurance": 20,
+    "preventiveCoverage": 100, "basicServicesCoverage": 80, "majorServicesCoverage": 50, "orthodontiaCoverage": 0,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-005", "productId": "PROD-002", "carrierId": "CAR-002",
+    "name": "Dental Premium", "planCode": "DEN-PREM",
+    "network": "Delta Dental Premier",
+    "deductible": 25, "outOfPocketMax": 2500, "copay": 0, "coinsurance": 10,
+    "preventiveCoverage": 100, "basicServicesCoverage": 90, "majorServicesCoverage": 70, "orthodontiaCoverage": 50, "orthodontiaMax": 2000,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-006", "productId": "PROD-003", "carrierId": "CAR-003",
+    "name": "Vision Standard", "planCode": "VIS-STD",
+    "network": "VSP Choice",
+    "deductible": 0, "outOfPocketMax": 300, "copay": 10, "lensesCopay": 25,
+    "framesAllowance": 150, "contactsAllowance": 150,
+    "examFrequencyMonths": 12, "lensesFrequencyMonths": 12, "framesFrequencyMonths": 24,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-007", "productId": "PROD-003", "carrierId": "CAR-003",
+    "name": "Vision Premium", "planCode": "VIS-PREM",
+    "network": "VSP Choice",
+    "deductible": 0, "outOfPocketMax": 600, "copay": 0, "lensesCopay": 10,
+    "framesAllowance": 250, "contactsAllowance": 250,
+    "examFrequencyMonths": 12, "lensesFrequencyMonths": 12, "framesFrequencyMonths": 12,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-008", "productId": "PROD-004", "carrierId": "CAR-004",
+    "name": "Basic Life 1x Salary", "planCode": "LIFE-BASIC",
+    "network": null,
+    "coverageFormula": "1x Annual Base Salary", "minCoverage": 25000, "maxCoverage": 500000,
+    "ageReduction65": 65, "ageReduction70": 50,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-009", "productId": "PROD-005", "carrierId": "CAR-004",
+    "name": "Voluntary Life", "planCode": "LIFE-VOL",
+    "network": null,
+    "coverageIncrement": 10000, "minCoverage": 10000, "maxCoverage": 500000,
+    "guaranteedIssue": 100000, "eoiRequired": true, "eoiThreshold": 100000,
+    "spouseMaxCoverage": 250000, "childCoverage": 10000,
+    "ageBands": [
+      { "ageMin": 0,  "ageMax": 24, "ratePer10k": 0.80 },
+      { "ageMin": 25, "ageMax": 34, "ratePer10k": 1.00 },
+      { "ageMin": 35, "ageMax": 44, "ratePer10k": 1.50 },
+      { "ageMin": 45, "ageMax": 54, "ratePer10k": 2.50 },
+      { "ageMin": 55, "ageMax": 64, "ratePer10k": 4.00 },
+      { "ageMin": 65, "ageMax": 99, "ratePer10k": 6.50 }
+    ],
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-010", "productId": "PROD-006", "carrierId": "CAR-005",
+    "name": "STD 60%", "planCode": "DIS-STD",
+    "network": null,
+    "benefitPct": 60, "weeklyMaxBenefit": 1500, "eliminationPeriodDays": 7, "maxBenefitWeeks": 26,
+    "benefitFormula": "MIN(Weekly Salary * 0.60, 1500)",
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-011", "productId": "PROD-007", "carrierId": "CAR-005",
+    "name": "LTD 60%", "planCode": "DIS-LTD",
+    "network": null,
+    "benefitPct": 60, "monthlyMaxBenefit": 10000, "eliminationPeriodDays": 90, "benefitToAge": "SSNRA",
+    "benefitFormula": "MIN(Monthly Salary * 0.60, 10000)",
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-012", "productId": "PROD-008", "carrierId": "CAR-006",
+    "name": "HSA", "planCode": "SAV-HSA",
+    "network": null,
+    "eligibilityRequirement": "Must be enrolled in MED-HDHP-3000",
+    "irsMaxSingle2027": 4300, "irsMaxFamily2027": 8550,
+    "employerContributionSingle": 750, "employerContributionFamily": 1500,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  },
+  {
+    "planId": "PLAN-013", "productId": "PROD-009", "carrierId": "CAR-007",
+    "name": "FSA", "planCode": "SPE-FSA",
+    "network": null,
+    "irsMax2027": 3300, "rolloverMax": 640,
+    "effectiveDate": "2027-01-01", "coveragePeriodStart": "2027-01-01", "coveragePeriodEnd": "2027-12-31",
+    "status": "Active"
+  }
+]

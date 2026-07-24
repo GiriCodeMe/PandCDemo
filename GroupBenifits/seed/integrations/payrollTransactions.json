@@ -1,0 +1,95 @@
+[
+  {
+    "deductionId": "DED-10001",
+    "employeeId": "ACM-E001",
+    "enrollmentId": "ENR-10001",
+    "planCode": "MED-PPO-500",
+    "deductionCode": "MED-PPO-500",
+    "monthlyAmount": 150,
+    "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 69.23,
+    "perPaycheckAmountActual": 200.00,
+    "effectiveDate": "2027-01-01",
+    "terminationDate": null,
+    "status": "Mismatch",
+    "reconciliationStatus": "Mismatch",
+    "_notes": "DEMO: Critical payroll mismatch for John Smith. Expected $69.23/paycheck (PPO 500 EE Only $150/month biweekly). Actual deduction $200/paycheck — system still using old EE+Spouse rate from before divorce. Difference: $130.77/paycheck. AI should detect and explain root cause.",
+    "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10002", "employeeId": "ACM-E001", "enrollmentId": "ENR-10001",
+    "planCode": "DEN-BASIC", "deductionCode": "DEN-BASIC",
+    "monthlyAmount": 20, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 9.23, "perPaycheckAmountActual": 9.23,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10003", "employeeId": "ACM-E001", "enrollmentId": "ENR-10001",
+    "planCode": "VIS-STD", "deductionCode": "VIS-STD",
+    "monthlyAmount": 10, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 4.62, "perPaycheckAmountActual": 4.62,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10004", "employeeId": "ACM-E002", "enrollmentId": "ENR-10002",
+    "planCode": "MED-HDHP-3000", "deductionCode": "MED-HDHP-3000",
+    "monthlyAmount": 90, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 41.54, "perPaycheckAmountActual": 41.54,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10005", "employeeId": "ACM-E002", "enrollmentId": "ENR-10002",
+    "planCode": "DEN-PREM", "deductionCode": "DEN-PREM",
+    "monthlyAmount": 70, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 32.31, "perPaycheckAmountActual": 32.31,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10006", "employeeId": "ACM-E003", "enrollmentId": "ENR-10003",
+    "planCode": "DEN-BASIC", "deductionCode": "DEN-BASIC",
+    "monthlyAmount": 20, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 9.23, "perPaycheckAmountActual": 9.23,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10007", "employeeId": "ACM-E006", "enrollmentId": "ENR-10006",
+    "planCode": "MED-PPO-500", "deductionCode": "MED-PPO-500",
+    "monthlyAmount": 240, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 110.77, "perPaycheckAmountActual": 110.77,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10008", "employeeId": "ACM-E007", "enrollmentId": "ENR-10007",
+    "planCode": "MED-PPO-500", "deductionCode": "MED-PPO-500",
+    "monthlyAmount": 375, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": 173.08, "perPaycheckAmountActual": 173.08,
+    "effectiveDate": "2027-01-01", "terminationDate": null,
+    "status": "Active", "reconciliationStatus": "Matched", "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10009", "employeeId": "ACM-E030", "enrollmentId": "ENR-10030",
+    "planCode": "MED-PPO-500", "deductionCode": "MED-PPO-500",
+    "monthlyAmount": null, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": null, "perPaycheckAmountActual": null,
+    "effectiveDate": null, "terminationDate": null,
+    "status": "Pending", "reconciliationStatus": "Pending",
+    "_notes": "Carol Lopez life event in progress. Payroll deduction not yet set up — awaiting enrollment approval.",
+    "coverageMonth": "2027-01"
+  },
+  {
+    "deductionId": "DED-10010", "employeeId": "ACM-E012", "enrollmentId": "ENR-10012",
+    "planCode": "MED-PPO-500", "deductionCode": "MED-PPO-500",
+    "monthlyAmount": null, "payFrequency": "Biweekly",
+    "perPaycheckAmountExpected": null, "perPaycheckAmountActual": null,
+    "effectiveDate": null, "terminationDate": null,
+    "status": "Pending", "reconciliationStatus": "Pending",
+    "_notes": "Linda White. Carrier transaction rejected (CT-10045). No deduction set up until enrollment resolved.",
+    "coverageMonth": "2027-01"
+  }
+]

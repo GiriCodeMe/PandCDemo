@@ -1,0 +1,95 @@
+[
+  {
+    "transactionId": "CT-10001", "carrierId": "CAR-001", "employeeId": "ACM-E001",
+    "enrollmentId": "ENR-10001", "transactionType": "Change", "status": "Accepted",
+    "requestPayload": { "action": "CHANGE", "employeeId": "ACM-E001", "planCode": "MED-PPO-500", "coverageTier": "EE_ONLY", "effectiveDate": "2026-06-01", "reason": "Life Event - Divorce" },
+    "responsePayload": { "acknowledgment": "ACCEPTED", "memberId": "AET-E001-2026" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-05-29T11:00:00Z", "respondedAt": "2026-05-29T11:05:00Z",
+    "_notes": "John Smith — tier change EE+Spouse to EE Only after divorce. Accepted by Aetna."
+  },
+  {
+    "transactionId": "CT-10002", "carrierId": "CAR-001", "employeeId": "ACM-E002",
+    "enrollmentId": "ENR-10002", "transactionType": "Change", "status": "Accepted",
+    "requestPayload": { "action": "CHANGE", "employeeId": "ACM-E002", "planCode": "MED-HDHP-3000", "coverageTier": "EE_CHILD", "effectiveDate": "2026-07-01", "dependentId": "DEP-004" },
+    "responsePayload": { "acknowledgment": "ACCEPTED", "memberId": "AET-E002-2026" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-07-09T10:00:00Z", "respondedAt": "2026-07-09T10:12:00Z",
+    "_notes": "Sarah Johnson — tier change after birth of Liam."
+  },
+  {
+    "transactionId": "CT-10003", "carrierId": "CAR-002", "employeeId": "ACM-E001",
+    "enrollmentId": "ENR-10001", "transactionType": "Change", "status": "Accepted",
+    "requestPayload": { "action": "CHANGE", "employeeId": "ACM-E001", "planCode": "DEN-BASIC", "coverageTier": "EE_ONLY", "effectiveDate": "2026-06-01" },
+    "responsePayload": { "acknowledgment": "ACCEPTED" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-05-29T11:00:00Z", "respondedAt": "2026-06-03T08:00:00Z"
+  },
+  {
+    "transactionId": "CT-10004", "carrierId": "CAR-001", "employeeId": "ACM-E006",
+    "enrollmentId": "ENR-10006", "transactionType": "Change", "status": "Accepted",
+    "requestPayload": { "action": "CHANGE", "employeeId": "ACM-E006", "planCode": "MED-PPO-500", "coverageTier": "EE_CHILD", "effectiveDate": "2026-09-01", "dependentId": "DEP-005" },
+    "responsePayload": { "acknowledgment": "ACCEPTED" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-08-16T09:00:00Z", "respondedAt": "2026-08-16T09:08:00Z"
+  },
+  {
+    "transactionId": "CT-10045",
+    "carrierId": "CAR-001",
+    "employeeId": "ACM-E012",
+    "enrollmentId": "ENR-10012",
+    "transactionType": "Add",
+    "status": "Rejected",
+    "requestPayload": {
+      "action": "ADD",
+      "employeeId": "ACM-E012",
+      "planCode": "MED-PPO-500",
+      "coverageTier": "EE_ONLY",
+      "effectiveDate": "2026-07-01",
+      "ssn": "XXX-XX-5679",
+      "dependentId": "DEP-INVALID"
+    },
+    "responsePayload": null,
+    "errorCode": "DEP-INVALID-ID",
+    "errorMessage": "Dependent ID DEP-INVALID not found in carrier member records. Verify dependent SSN and resubmit.",
+    "sentAt": "2026-06-06T10:00:00Z",
+    "respondedAt": "2026-06-06T10:15:00Z",
+    "_notes": "DEMO: Primary carrier rejection scenario. Linda White enrollment blocked. AI should: identify root cause, suggest corrective action, generate carrier support ticket. Underlying issue: DEP-INVALID sent instead of ACM-E012 dependent."
+  },
+  {
+    "transactionId": "CT-10046", "carrierId": "CAR-004", "employeeId": "ACM-E007",
+    "enrollmentId": "ENR-10007", "transactionType": "Add", "status": "Pending",
+    "requestPayload": { "action": "ADD", "employeeId": "ACM-E007", "planCode": "LIFE-VOL", "coverageAmount": 220000, "eoiRequired": true },
+    "responsePayload": null,
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-11-20T14:00:00Z", "respondedAt": null,
+    "_notes": "Voluntary Life for Robert Moore. Awaiting EOI approval from MetLife. Coverage > $100k GI threshold."
+  },
+  {
+    "transactionId": "CT-10047", "carrierId": "CAR-001", "employeeId": "ACM-E015",
+    "enrollmentId": "ENR-10015", "transactionType": "Add", "status": "Accepted",
+    "requestPayload": { "action": "ADD", "employeeId": "ACM-E015", "planCode": "MED-PPO-500", "coverageTier": "FAMILY", "effectiveDate": "2027-01-01" },
+    "responsePayload": { "acknowledgment": "ACCEPTED", "memberId": "AET-E015-2026" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-12-16T09:00:00Z", "respondedAt": "2026-12-16T09:06:00Z"
+  },
+  {
+    "transactionId": "CT-10048", "carrierId": "CAR-002", "employeeId": "ACM-E021",
+    "enrollmentId": "ENR-10021", "transactionType": "Add", "status": "Failed",
+    "requestPayload": { "action": "ADD", "employeeId": "ACM-E021", "planCode": "DEN-BASIC", "coverageTier": "EE_ONLY", "effectiveDate": "2027-01-01" },
+    "responsePayload": null,
+    "errorCode": "ENROLL-TIMEOUT",
+    "errorMessage": "Enrollment submission timed out. Please retry.",
+    "sentAt": "2026-12-15T23:55:00Z", "respondedAt": null,
+    "_notes": "Thomas Lewis enrollment failed due to system timeout at year-end batch. Needs manual retry."
+  },
+  {
+    "transactionId": "CT-10049", "carrierId": "CAR-005", "employeeId": "ACM-E001",
+    "enrollmentId": "ENR-10001", "transactionType": "Terminate", "status": "Accepted",
+    "requestPayload": { "action": "TERMINATE", "employeeId": "ACM-E001", "dependentId": "DEP-001", "terminationDate": "2026-05-31", "reason": "Divorce" },
+    "responsePayload": { "acknowledgment": "ACCEPTED" },
+    "errorCode": null, "errorMessage": null,
+    "sentAt": "2026-05-29T11:00:00Z", "respondedAt": "2026-05-30T08:00:00Z",
+    "_notes": "Jennifer Smith (DEP-001) terminated from coverage effective May 31 2026 following divorce."
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "employerId": "ACM-001",
+    "name": "Acme Corporation",
+    "industry": "Technology Services",
+    "address": { "street": "100 Corporate Plaza", "city": "Newark", "state": "NJ", "zip": "07101" },
+    "numberOfEmployees": 5000,
+    "activeEmployees": 4850,
+    "effectiveDate": "2027-01-01",
+    "renewalDate": "2028-01-01",
+    "enrollmentPeriodStart": "2026-11-01",
+    "enrollmentPeriodEnd": "2026-11-30",
+    "states": ["NJ", "NY", "TX", "CA", "IL"],
+    "payrollFrequency": "Biweekly",
+    "status": "Active",
+    "createdAt": "2026-01-01T00:00:00Z"
+  }
+]

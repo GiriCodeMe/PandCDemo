@@ -1,0 +1,113 @@
+[
+  {
+    "requirementId": "FR-5.1",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "Document Upload",
+    "title": "Supported File Types",
+    "description": "The system SHALL accept uploads of PDF (.pdf) and Microsoft Word (.docx) files only. All other file types SHALL be rejected with an informative error message.",
+    "priority": "P0",
+    "status": "Draft",
+    "sourceDocumentId": null,
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.2",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "Document Upload",
+    "title": "Maximum File Size",
+    "description": "The system SHALL enforce a maximum file size of 25 MB per uploaded document. Files exceeding this limit SHALL be rejected with a clear error.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.3",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "Document Upload",
+    "title": "Workspace Document Limit",
+    "description": "Each requirements workspace SHALL be limited to a maximum of 10 documents. Attempting to upload an 11th document SHALL be rejected with a workspace capacity error.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.4",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "AI Extraction",
+    "title": "Business Rule Extraction",
+    "description": "The system SHALL use an AI model to extract all explicit and implicit business rules from uploaded documents. Each extracted rule SHALL include: rule text, source document ID, page number, and confidence score.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.5",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "AI Extraction",
+    "title": "Extraction Performance",
+    "description": "Document extraction SHALL complete within 60 seconds for documents up to 50 pages. Progress SHALL be communicated to the user via a real-time status indicator.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.6",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "Conflict Detection",
+    "title": "Cross-Document Conflict Detection",
+    "description": "The system SHALL automatically compare extracted rules across all documents in the workspace and flag any rules that are contradictory or ambiguous. Each detected conflict SHALL include both conflicting rules, their sources, and a plain-English explanation.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.7",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "AI Chat",
+    "title": "Document-Grounded Q&A",
+    "description": "The system SHALL provide a conversational AI interface where users can ask questions about the requirements. All AI answers SHALL be grounded in the uploaded documents and SHALL cite the source document and page number.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.8",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "AI Chat",
+    "title": "Conversation Session Persistence",
+    "description": "Conversation history within a requirements workspace SHALL be persisted for the duration of the session. Users SHALL be able to scroll back through prior exchanges.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "FR-5.9",
+    "epicId": "EPIC-5",
+    "type": "Functional",
+    "category": "Traceability",
+    "title": "Requirements Traceability Matrix",
+    "description": "The system SHALL generate a traceability matrix linking each system requirement to its source business rules and source documents. The matrix SHALL be exportable in PDF and CSV formats.",
+    "priority": "P1",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "requirementId": "NFR-5.1",
+    "epicId": "EPIC-5",
+    "type": "Non-Functional",
+    "category": "Security",
+    "title": "Document Storage Security",
+    "description": "All uploaded documents SHALL be stored with server-side encryption at rest. Access to documents SHALL be scoped to the employer workspace. Documents SHALL not be shared across employers.",
+    "priority": "P0",
+    "status": "Draft",
+    "createdAt": "2026-10-20T00:00:00Z"
+  }
+]

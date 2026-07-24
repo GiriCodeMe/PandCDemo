@@ -1,0 +1,75 @@
+[
+  {
+    "personaId": "P-001",
+    "name": "Alex Chen",
+    "role": "Benefits Administrator",
+    "email": "alex.chen@acme.com",
+    "description": "Primary demo persona. Configures plans, processes life events, monitors carrier/payroll integration, and uses the AI Requirements Studio.",
+    "defaultScreen": "/plan-config",
+    "permissions": ["plan:read", "plan:write", "eligibility:read", "eligibility:write", "enrollment:read", "enrollment:write", "carrier:read", "carrier:write", "payroll:read", "requirements:read", "requirements:write"]
+  },
+  {
+    "personaId": "P-002",
+    "name": "Maria Torres",
+    "role": "HR Administrator",
+    "email": "maria.torres@acme.com",
+    "description": "Manages employee data, approves life events, and handles enrollment exceptions.",
+    "defaultScreen": "/employees",
+    "permissions": ["employee:read", "employee:write", "enrollment:read", "enrollment:write", "lifeevents:read", "lifeevents:write"]
+  },
+  {
+    "personaId": "P-003",
+    "name": "James Wilson",
+    "role": "Employer/Group Admin",
+    "email": "james.wilson@acme.com",
+    "description": "Reviews benefits program at the group level. Can see enrollment summaries and plan performance dashboards.",
+    "defaultScreen": "/dashboard",
+    "permissions": ["plan:read", "employee:read", "enrollment:read", "carrier:read", "payroll:read", "requirements:read"]
+  },
+  {
+    "personaId": "P-004",
+    "name": "Rachel Kim",
+    "role": "Employee",
+    "email": "rachel.kim@acme.com",
+    "description": "Employee self-service portal. Enrolls in benefits, views elections, submits life events.",
+    "employeeId": "ACM-E004",
+    "defaultScreen": "/self-service",
+    "permissions": ["myenrollment:read", "myenrollment:write", "mylifeevents:read", "mylifeevents:write"]
+  },
+  {
+    "personaId": "P-005",
+    "name": "David Park",
+    "role": "Benefits Analyst",
+    "email": "david.park@acme.com",
+    "description": "Analyzes enrollment trends, plan utilization, and premium cost modeling. Heavy user of AI requirements output.",
+    "defaultScreen": "/analytics",
+    "permissions": ["plan:read", "enrollment:read", "requirements:read", "analytics:read"]
+  },
+  {
+    "personaId": "P-006",
+    "name": "Susan Carter",
+    "role": "Carrier Administrator",
+    "email": "susan.carter@aetna.com",
+    "description": "Carrier-side representative. Reviews eligibility submissions, responds to transactions, manages carrier configuration.",
+    "defaultScreen": "/carrier-portal",
+    "permissions": ["carrier:read", "carrier:write", "transactions:read", "transactions:write"]
+  },
+  {
+    "personaId": "P-007",
+    "name": "Mark Johnson",
+    "role": "Payroll Administrator",
+    "email": "mark.johnson@acme.com",
+    "description": "Manages payroll deduction files, reconciles benefit deductions, resolves mismatches.",
+    "defaultScreen": "/payroll",
+    "permissions": ["payroll:read", "payroll:write", "deductions:read", "deductions:write"]
+  },
+  {
+    "personaId": "P-008",
+    "name": "Lisa Anderson",
+    "role": "Business Analyst / Product Manager",
+    "email": "lisa.anderson@acme.com",
+    "description": "Uses AI Requirements Studio to extract, refine, and export requirements. Primary Epic 5 persona.",
+    "defaultScreen": "/requirements",
+    "permissions": ["requirements:read", "requirements:write", "documents:read", "documents:write"]
+  }
+]

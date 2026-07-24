@@ -1,0 +1,77 @@
+import { Router } from 'express';
+import { sendSuccess } from '../utils/apiResponse';
+
+const router = Router();
+
+const KB: Array<{ patterns: string[]; answer: string }> = [
+  {
+    patterns: ['enrollment rate', 'what does enrollment', 'enrollment metric'],
+    answer: '**Enrollment Rate** is the percentage of eligible employees who have enrolled in at least one benefit plan.\n\nFormula: (Total Enrolled ÷ Total Eligible) × 100\n\nA rate above 85% is considered healthy. Rates below 80% may indicate communication issues, affordability concerns, or gaps in the enrollment experience. The dashboard color-codes this metric: green ≥85%, amber <85%.',
+  },
+  {
+    patterns: ['eligibility exception', 'what is an exception', 'exceptions'],
+    answer: '**Eligibility Exceptions** are cases where employee eligibility data does not match what the carrier or payroll system expects.\n\nCommon causes:\n- Hire date or termination date discrepancies\n- Missing dependent relationship data\n- SSN format mismatches\n- Waiting period violations\n\nExceptions must be resolved before the affected employee can be enrolled or their deductions processed. Open exceptions are tracked by week so you can monitor backlog.',
+  },
+  {
+    patterns: ['carrier success', 'carrier rate', 'edi 834', 'carrier submission'],
+    answer: '**Carrier Success Rate** measures the percentage of EDI 834 transactions (benefit enrollment files) accepted by the carrier without errors.\n\nA rate above 95% is healthy. Common rejection reasons:\n- Invalid SSN format\n- Missing subscriber relationship code\n- Duplicate transaction IDs\n- Carrier system timeouts\n\nRejected transactions require manual resubmission or carrier coordination.',
+  },
+  {
+    patterns: ['payroll', 'deduction', 'payroll success'],
+    answer: '**Payroll Success Rate** tracks how many employee benefit deductions are being processed correctly by the payroll system.\n\n**Active Deductions** = employees currently having premiums withheld from their paycheck.\n\n**Pending Updates** = deductions that have been changed (new enrollment, life event, termination) but not yet confirmed by payroll.\n\n**Reconciliation Exceptions** = mismatches between what the benefits system expects and what payroll actually deducted.',
+  },
+  {
+    patterns: ['plan year', 'what is a plan year', 'plan years'],
+    answer: '**Plan Year** is the 12-month period during which an employer\'s benefit plans are active. Each plan year has a status:\n\n- **DRAFT** — Being configured; no employee elections yet\n- **CONFIGURATION** — Rates and plan designs being finalized\n- **OPEN_ENROLLMENT** — Active enrollment window; employees can make elections\n- **ACTIVE** — Enrollment closed; benefits are live and deductions are running\n- **CLOSED** — Plan year ended; historical data only\n\nEmployers typically have 3 plan years visible: prior year (ACTIVE/CLOSED), current year (ACTIVE), and next year (DRAFT/OPEN_ENROLLMENT).',
+  },
+  {
+    patterns: ['open enrollment', 'enrollment period', 'enrollment window'],
+    answer: '**Open Enrollment** is the annual window during which employees can:\n- Enroll in benefit plans for the first time\n- Change their existing coverage selections\n- Add or remove dependents\n- Waive coverage\n\nOutside of Open Enrollment, employees can only make changes due to a Qualifying Life Event (QLE) such as marriage, birth, divorce, or loss of other coverage.\n\nThe enrollment period dates are shown on the employer\'s Plan Years table.',
+  },
+  {
+    patterns: ['employer status', 'what does active mean', 'status mean'],
+    answer: '**Employer Status** indicates whether the employer account is currently active in the system:\n\n- **ACTIVE** — The employer has running benefit plans and active employees\n- **PENDING** — The account is being set up; configuration not complete\n- **INACTIVE** — The employer account is suspended or terminated\n\nOnly ACTIVE employers can process enrollments, submit EDI files, or run payroll deductions.',
+  },
+  {
+    patterns: ['draft', 'what does draft', 'draft status'],
+    answer: '**DRAFT plan year** means the plan year is in the initial configuration phase. No employees can enroll yet.\n\nDuring DRAFT:\n- HR administrators define which plans to offer\n- Carriers configure rates and plan designs\n- Employee eligibility rules are set up\n- The system validates configuration completeness\n\nOnce configuration is approved, the plan year transitions to CONFIGURATION, then OPEN_ENROLLMENT when the enrollment window opens.',
+  },
+  {
+    patterns: ['renewal', 'renewal date', 'how is renewal'],
+    answer: '**Renewal Date** is when the current plan year ends and the next plan year begins. It marks the start of the new 12-month benefit period.\n\nTypically, Open Enrollment for the *next* plan year opens 60–90 days before the renewal date, giving employees time to review and elect their new year coverage.\n\nAfter renewal:\n- New premium rates take effect\n- All employee elections reset (or roll over, depending on plan rules)\n- New deduction amounts are transmitted to payroll',
+  },
+  {
+    patterns: ['industry', 'what industry', 'sic code'],
+    answer: '**Industry** classification determines which benefit products and rate tables apply to an employer.\n\nIndustry affects:\n- Available plan designs (some carriers restrict certain industries)\n- Risk pricing for life and disability products\n- Regulatory requirements (certain industries have specific mandates)\n- Wellness program eligibility\n\nThe industry field uses standard SIC (Standard Industrial Classification) descriptions.',
+  },
+  {
+    patterns: ['payroll frequency', 'biweekly', 'semi-monthly', 'how often'],
+    answer: '**Payroll Frequency** determines how often benefit premiums are deducted from employee paychecks.\n\nCommon frequencies:\n- **Weekly** — 52 pay periods/year\n- **Bi-Weekly** — 26 pay periods/year (most common)\n- **Semi-Monthly** — 24 pay periods/year\n- **Monthly** — 12 pay periods/year\n\nThe payroll frequency affects the per-paycheck deduction amount: annual premium ÷ number of pay periods.',
+  },
+  {
+    patterns: ['what is this page', 'what can i do', 'help', 'explain this'],
+    answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, or payroll deductions.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is a plan year?"\n- "What does DRAFT status mean?"',
+  },
+];
+
+function findAnswer(message: string): string {
+  const lower = message.toLowerCase();
+  for (const entry of KB) {
+    if (entry.patterns.some((p) => lower.includes(p))) {
+      return entry.answer;
+    }
+  }
+  return 'I can explain enrollment rates, eligibility exceptions, carrier submissions, payroll deductions, plan year statuses, and employer configuration.\n\nTry rephrasing your question or choose one of the suggested prompts. Full AI assistance (Claude-powered Q&A) is coming in a later release.';
+}
+
+router.post('/chat', (req, res) => {
+  const { message } = req.body as { message?: string };
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    sendSuccess(res, { answer: 'Please enter a question.' });
+    return;
+  }
+  const answer = findAnswer(message.trim());
+  sendSuccess(res, { answer });
+});
+
+export default router;

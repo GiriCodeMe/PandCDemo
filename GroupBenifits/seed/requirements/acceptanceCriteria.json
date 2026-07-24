@@ -1,0 +1,74 @@
+[
+  {
+    "criterionId": "AC-001",
+    "storyId": "US-001",
+    "requirementId": "FR-5.1",
+    "description": "System rejects a .txt file upload with error: 'Unsupported file type. Please upload a PDF or DOCX file.'",
+    "testInputs": { "fileName": "benefits-notes.txt", "mimeType": "text/plain", "fileSize": 4096 },
+    "expectedOutcome": "HTTP 422, error code FILE_TYPE_NOT_SUPPORTED",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-002",
+    "storyId": "US-001",
+    "requirementId": "FR-5.2",
+    "description": "System rejects a PDF larger than 25 MB.",
+    "testInputs": { "fileName": "large-guide.pdf", "mimeType": "application/pdf", "fileSizeBytes": 27262976 },
+    "expectedOutcome": "HTTP 413, error code FILE_TOO_LARGE",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-003",
+    "storyId": "US-001",
+    "requirementId": "FR-5.3",
+    "description": "System rejects an 11th document upload when workspace already has 10 documents.",
+    "testInputs": { "workspaceDocumentCount": 10, "newFile": "11th-doc.pdf" },
+    "expectedOutcome": "HTTP 409, error code WORKSPACE_DOCUMENT_LIMIT_REACHED",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-004",
+    "storyId": "US-002",
+    "requirementId": "FR-5.4",
+    "description": "After uploading Acme_2027_Benefits_Guide.pdf, AI extracts at least 7 business rules each with source page reference.",
+    "testInputs": { "documentId": "DOC-2027-0001" },
+    "expectedOutcome": "extractedRuleCount >= 7, all rules have sourcePageRef field populated",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-005",
+    "storyId": "US-002",
+    "requirementId": "FR-5.5",
+    "description": "Extraction of the 12-page Benefits Guide completes in under 60 seconds.",
+    "testInputs": { "documentId": "DOC-2027-0001", "pageCount": 12 },
+    "expectedOutcome": "lifecycleState transitions to EXTRACTED within 60 seconds of upload",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-006",
+    "storyId": "US-003",
+    "requirementId": "FR-5.6",
+    "description": "After uploading both Benefits_Guide.pdf and Eligibility_Policy.pdf, system detects the waiting period conflict between BR-001 (30 days) and BR-002 (first of month following 30 days).",
+    "testInputs": { "documentIds": ["DOC-2027-0001", "DOC-2027-0002"] },
+    "expectedOutcome": "conflictCount >= 1; conflict shows both BR-001 and BR-002 with their source documents",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-007",
+    "storyId": "US-004",
+    "requirementId": "FR-5.7",
+    "description": "When user asks 'What is the waiting period for new employees?', AI cites the specific document and section in its response.",
+    "testInputs": { "question": "What is the waiting period for new employees?" },
+    "expectedOutcome": "Response includes citation to DOC-2027-0001 or DOC-2027-0002 with page reference; does not hallucinate a number not in the documents",
+    "status": "Draft"
+  },
+  {
+    "criterionId": "AC-008",
+    "storyId": "US-003",
+    "requirementId": "FR-5.6",
+    "description": "AI flags the ambiguous use of 'promptly' in the notification policy and recommends a specific number of days.",
+    "testInputs": { "documentId": "DOC-2027-0001", "keyword": "promptly" },
+    "expectedOutcome": "ambiguityFlag detected on BR-007-AMBIGUOUS; AI recommends defining 'promptly' as a number of calendar days",
+    "status": "Draft"
+  }
+]

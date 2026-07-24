@@ -1,0 +1,56 @@
+[
+  {
+    "productId": "PROD-001", "employerId": "ACM-001", "carrierId": "CAR-001",
+    "name": "Acme Medical 2027", "type": "Medical",
+    "description": "Comprehensive medical coverage through Aetna Choice POS II network",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-002", "employerId": "ACM-001", "carrierId": "CAR-002",
+    "name": "Acme Dental 2027", "type": "Dental",
+    "description": "Dental coverage through Delta Dental Premier network",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-003", "employerId": "ACM-001", "carrierId": "CAR-003",
+    "name": "Acme Vision 2027", "type": "Vision",
+    "description": "Vision care through VSP Choice network",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-004", "employerId": "ACM-001", "carrierId": "CAR-004",
+    "name": "Acme Basic Life 2027", "type": "Life",
+    "description": "Employer-paid basic life insurance — 1x annual salary up to $500,000",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-005", "employerId": "ACM-001", "carrierId": "CAR-004",
+    "name": "Acme Voluntary Life 2027", "type": "Life",
+    "description": "Employee-paid voluntary life insurance in $10,000 increments",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-006", "employerId": "ACM-001", "carrierId": "CAR-005",
+    "name": "Acme STD 2027", "type": "STD",
+    "description": "Short-term disability: 60% of base weekly earnings, up to 12 weeks",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-007", "employerId": "ACM-001", "carrierId": "CAR-005",
+    "name": "Acme LTD 2027", "type": "LTD",
+    "description": "Long-term disability: 60% of base monthly earnings, to age 65",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-008", "employerId": "ACM-001", "carrierId": "CAR-006",
+    "name": "Acme HSA 2027", "type": "HSA",
+    "description": "Health Savings Account — available with HDHP 3000 only",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  },
+  {
+    "productId": "PROD-009", "employerId": "ACM-001", "carrierId": "CAR-007",
+    "name": "Acme FSA 2027", "type": "FSA",
+    "description": "Flexible Spending Account — available with PPO 500",
+    "effectiveDate": "2027-01-01", "terminationDate": null, "status": "Active"
+  }
+]

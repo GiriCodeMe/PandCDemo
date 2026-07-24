@@ -1,0 +1,72 @@
+[
+  {
+    "carrierId": "CAR-001",
+    "name": "Aetna",
+    "supportedProductTypes": ["Medical"],
+    "connectionType": "REST",
+    "fileFormat": "JSON",
+    "transmissionSchedule": "Daily",
+    "mockApiEndpoint": "http://localhost:4001/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-002",
+    "name": "Delta Dental",
+    "supportedProductTypes": ["Dental"],
+    "connectionType": "SFTP",
+    "fileFormat": "CSV",
+    "transmissionSchedule": "Weekly",
+    "mockApiEndpoint": "http://localhost:4002/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-003",
+    "name": "VSP",
+    "supportedProductTypes": ["Vision"],
+    "connectionType": "SFTP",
+    "fileFormat": "CSV",
+    "transmissionSchedule": "Weekly",
+    "mockApiEndpoint": "http://localhost:4003/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-004",
+    "name": "MetLife",
+    "supportedProductTypes": ["Life", "AD&D"],
+    "connectionType": "SFTP",
+    "fileFormat": "EDI",
+    "transmissionSchedule": "Weekly",
+    "mockApiEndpoint": "http://localhost:4004/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-005",
+    "name": "Unum",
+    "supportedProductTypes": ["STD", "LTD"],
+    "connectionType": "REST",
+    "fileFormat": "JSON",
+    "transmissionSchedule": "Daily",
+    "mockApiEndpoint": "http://localhost:4005/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-006",
+    "name": "Fidelity",
+    "supportedProductTypes": ["HSA"],
+    "connectionType": "REST",
+    "fileFormat": "JSON",
+    "transmissionSchedule": "Monthly",
+    "mockApiEndpoint": "http://localhost:4006/api/v1",
+    "status": "Active"
+  },
+  {
+    "carrierId": "CAR-007",
+    "name": "WEX",
+    "supportedProductTypes": ["FSA"],
+    "connectionType": "REST",
+    "fileFormat": "JSON",
+    "transmissionSchedule": "Monthly",
+    "mockApiEndpoint": "http://localhost:4007/api/v1",
+    "status": "Active"
+  }
+]

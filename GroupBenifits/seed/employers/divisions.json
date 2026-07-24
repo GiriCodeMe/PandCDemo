@@ -1,0 +1,9 @@
+[
+  { "divisionId": "DIV-001", "employerId": "ACM-001", "name": "Engineering",       "location": "Newark, NJ" },
+  { "divisionId": "DIV-002", "employerId": "ACM-001", "name": "Sales",             "location": "New York, NY" },
+  { "divisionId": "DIV-003", "employerId": "ACM-001", "name": "Human Resources",   "location": "New York, NY" },
+  { "divisionId": "DIV-004", "employerId": "ACM-001", "name": "Finance",           "location": "Newark, NJ" },
+  { "divisionId": "DIV-005", "employerId": "ACM-001", "name": "Operations",        "location": "Austin, TX" },
+  { "divisionId": "DIV-006", "employerId": "ACM-001", "name": "Marketing",         "location": "New York, NY" },
+  { "divisionId": "DIV-007", "employerId": "ACM-001", "name": "Midwest Operations","location": "Chicago, IL" }
+]
