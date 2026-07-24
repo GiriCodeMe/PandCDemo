@@ -145,7 +145,7 @@ function PlansForProduct({
   rates,
   onSetElection,
   onSetTier,
-}: StepContentProps & { prefix: string }) {
+}: StepContentProps & { prefix: string; productType: string }) {
   const filtered = plans.filter((p) => p.planCode.startsWith(prefix));
   const current = elections.find((e) => e.productType === productType);
 

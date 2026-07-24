@@ -315,7 +315,7 @@ export interface Plan {
   basicServicesCoverage?: number;
   majorServicesCoverage?: number;
   orthodontiaCoverage?: number;
-  status: string;
+  status?: string;
 }
 
 export interface PremiumSummary {
