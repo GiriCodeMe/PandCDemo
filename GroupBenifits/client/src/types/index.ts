@@ -133,6 +133,76 @@ export interface Carrier {
   website?: string;
 }
 
+export interface BenefitsDocument {
+  documentId: string;
+  employerId: string;
+  workspaceId: string;
+  originalFilename: string;
+  mimeType: string;
+  fileSizeBytes: number;
+  documentType: string;
+  planYear: number;
+  lifecycleState: string;
+  uploadedAt: string;
+  validatedAt?: string | null;
+  extractedAt?: string | null;
+  analyzedAt?: string | null;
+  requirementsGeneratedAt?: string | null;
+  pageCount?: number | null;
+  extractedRuleCount?: number | null;
+  conflictCount?: number | null;
+  ambiguityCount?: number | null;
+  uploadedBy: string;
+}
+
+export interface Requirement {
+  requirementId: string;
+  epicId?: string;
+  type: string;
+  category: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  sourceDocumentId?: string | null;
+  createdAt: string;
+}
+
+export interface UserStory {
+  storyId: string;
+  epicId?: string;
+  title: string;
+  userRole: string;
+  narrative: string;
+  acceptanceCriteria?: string[];
+  priority?: string;
+  status?: string;
+}
+
+export interface BusinessRule {
+  ruleId: string;
+  category?: string;
+  title: string;
+  rule: string;
+  rationale?: string;
+  enforcementLevel?: string;
+  sourceDocumentId?: string | null;
+}
+
+export interface GenerateResult {
+  documentId: string;
+  generatedAt: string;
+  requirementsCount: number;
+  userStoriesCount: number;
+  businessRulesCount: number;
+  requirements: Requirement[];
+  userStories: UserStory[];
+  businessRules: BusinessRule[];
+  conflicts: Array<{ conflictId: string; description: string; severity: string; resolution: string }>;
+  model: string;
+  processingTimeMs: number;
+}
+
 export interface SearchResult {
   id: string;
   type: 'employer' | 'employee' | 'plan' | 'product' | 'carrier';

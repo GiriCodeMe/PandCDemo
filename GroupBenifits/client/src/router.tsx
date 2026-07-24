@@ -7,6 +7,7 @@ import EmployerDetail from './pages/employers/EmployerDetail';
 import EmployeeDirectory from './pages/employees/EmployeeDirectory';
 import EmployeeDetail from './pages/employees/EmployeeDetail';
 import ProductCatalog from './pages/catalog/ProductCatalog';
+import RequirementsStudio from './pages/requirements/RequirementsStudio';
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div className="flex flex-col items-center justify-center h-64">
@@ -57,7 +58,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/requirements',
-    element: <AppShell><ComingSoon page="Requirements" /></AppShell>,
+    element: <AppShell><RequirementsStudio /></AppShell>,
   },
   {
     path: '*',

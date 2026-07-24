@@ -18,7 +18,7 @@ const navItems: NavItem[] = [
   { label: 'Products', href: '/products', icon: Layers },
   { label: 'Plans', href: '/plans', icon: FileText, soon: true },
   { label: 'Enrollment', href: '/enrollment', icon: ClipboardCheck, soon: true },
-  { label: 'Requirements', href: '/requirements', icon: BookOpen, soon: true },
+  { label: 'Requirements', href: '/requirements', icon: BookOpen },
 ];
 
 export default function Sidebar() {

@@ -12,6 +12,8 @@ import benchatRoutes from './routes/benchat.routes';
 import employeeRoutes from './routes/employee.routes';
 import productRoutes from './routes/product.routes';
 import carrierRoutes from './routes/carrier.routes';
+import documentRoutes from './routes/document.routes';
+import requirementsRoutes from './routes/requirements.routes';
 
 export function createApp(): express.Application {
   const app = express();
@@ -34,6 +36,8 @@ export function createApp(): express.Application {
   app.use('/api/employees', employeeRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/carriers', carrierRoutes);
+  app.use('/api/documents', documentRoutes);
+  app.use('/api/requirements', requirementsRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
