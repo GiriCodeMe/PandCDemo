@@ -163,6 +163,36 @@ The 14 new requirement sets implement the horizontal platform layer that cuts ac
 
 ---
 
+## 11. Phase 3 — Feature Completeness Gaps
+
+_Identified during Phase 3 gap review (2026-07-23). These gaps are open — no requirement files exist yet._
+
+| # | Gap | Priority | Status | Notes |
+|---|-----|----------|--------|-------|
+| 1 | **Employee Self-Service Portal** | P0 | ⬜ OPEN | No requirement set for the Employee persona's read experience: view my current benefits, view my elections, view my payroll deduction history, download benefit summary PDF. `REQ-AI-COP-005` covers enrollment assistant; `REQ-AI-KNOW-013` covers benefits chat — but the portal screens themselves (My Benefits, My Deductions, My Documents) are unspecified. Critical: the demo presenter flow step 11 ("Switch to Enrollment → find Linda White") assumes this view exists. |
+| 2 | **Payroll Transmission Lifecycle** | P0 | ⬜ OPEN | `REQ-TRANSMISSION` covers carrier file generation and transmission only. No requirement set for the payroll side: generating the deduction file, transmitting to payroll system, receiving acknowledgment, handling rejections, and the payroll transmission monitoring view. Payroll deductions appear throughout seed data and reconciliation but the payroll transmission workflow is unspecified. |
+| 3 | **Dependent Documentation Upload & Verification** | P0 | ⬜ OPEN | `REQ-LE` specifies that documentation is required per life event (marriage certificate, birth certificate) but the workflow is not defined: file upload step in the life event wizard, document review queue for HR Admin, verification approve/reject action, and coverage-hold behavior while verification is pending. The marriage life event demo scenario explicitly involves document upload (LE-001, ACM-E030). |
+| 4 | **HSA / FSA Business Rules** | P1 | ⬜ OPEN | HSA and FSA are listed as plan types in the product catalog but have no business logic requirements: IRS annual contribution limits ($4,150 employee / $8,300 family for 2027; $1,000 catch-up), HDHP minimum deductible qualification check before HSA enrollment, FSA use-it-or-lose-it rule with grace period option, FSA run-out period, HSA employer seed contribution, FSA carryover limit. These rules are materially different from medical plan eligibility. |
+| 5 | **COBRA Election Tracking** | P1 | ⬜ OPEN | `REQ-TERM` covers qualifying event generation and qualifying beneficiary identification but the COBRA election workflow is not covered: election deadline tracking (60 days from qualifying event notice), election recording UI, continuation coverage activation on election, COBRA premium calculation (102% of group rate), and election confirmation notification. |
+| 6 | **Rate Table Management UI** | P1 | ⬜ OPEN | Rate tables are seeded in `rates.json` and referenced throughout premium calculation requirements, but there is no requirement set for: rate table creation/editing UI, carrier-provided rate import (CSV), mid-year rate amendment workflow, age-banded rate tiers for life and AD&D coverage, and rate table effective dating. Without this, plan configuration has no data entry path for premiums. |
+| 7 | **Enrollment Confirmation & Post-Enrollment Experience** | P1 | ⬜ OPEN | The enrollment wizard (`REQ-ENROLL-UX-001–015`) ends at submission. The post-submission experience is unspecified: confirmation screen design, benefit summary PDF generation (the document the employee receives), confirmation email content and format, and the visual transition from SUBMITTED to ACTIVE once carrier acceptance is confirmed. `REQ-NOTIFY` covers the notification events but not the confirmation screen or summary document artifact. |
+| 8 | **Cross-Application Search** | P2 | ⬜ OPEN | Mentioned in Demo.MD gap backlog as item #30 but never formalized. Searching across employees, plans, requirements, audit records, and carrier transactions is standard enterprise app behavior and is expected by all personas. Minimum scope: employee search by name/ID, plan search by name/type, requirement search by keyword, audit search by actor/entity/date. |
+| 9 | **Employee Demographics & Profile Management UI** | P2 | ⬜ OPEN | Employees are seeded but there are no requirements for the HR Admin workflow of creating or updating an employee record: new hire data entry, employment class changes, compensation changes, address updates, name changes, and how each change type propagates to carrier identity mappings and payroll deduction codes. |
+| 10 | **Notification Template Editor UI** | P2 | ⬜ OPEN | `REQ-NOTIFY-001–017` specifies that templates exist with named merge fields and are configurable, but the admin UI for managing notification templates is not defined: template list, template editor (with merge field picker), preview with sample data, and activation/deactivation. |
+| 11 | **Standard Compliance Reports** | P2 | ⬜ OPEN | Beyond AI analytics (`REQ-AI-COP-013`), HR and Benefits Admins expect tabular, exportable reports: enrollment census, ACA eligibility status report, dependent verification status, benefits cost summary by plan and coverage tier, life event activity log, and open enrollment completion report. No requirement set covers structured report generation or export. |
+| 12 | **Multi-Employer / Employer Profile Management** | P2 | ⬜ OPEN | The seed has one employer (Acme Corp). No requirements cover the employer setup flow: creating an employer profile, configuring plan year start/end dates, setting payroll frequency and FEIN, linking products to employer, and the employer selection context switch in the global header. This is the starting point of the demo story and must be defined before Epic 1 screens can be built. |
+
+### Gap Status Summary
+
+| Priority | Open | Resolved |
+|----------|------|---------|
+| P0 | 3 (Employee Portal, Payroll Transmission, Dependent Docs) | 0 |
+| P1 | 4 (HSA/FSA, COBRA Election, Rate Table UI, Enrollment Confirmation) | 0 |
+| P2 | 5 (Search, Employee Profile, Notification Templates, Reports, Multi-Employer) | 0 |
+| **Total** | **12** | **0** |
+
+---
+
 ## Gaps vs. PetLife AI Factory Pattern
 
 The PetLife pattern works because all routes are stateless (no persistence, no multi-turn AI, no file upload). 
