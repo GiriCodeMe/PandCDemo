@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { label: 'Employees', href: '/employees', icon: Users },
   { label: 'Products', href: '/products', icon: Layers },
   { label: 'Plans', href: '/plans', icon: FileText },
-  { label: 'Enrollment', href: '/enrollment', icon: ClipboardCheck, soon: true },
+  { label: 'Enrollment', href: '/enrollment', icon: ClipboardCheck },
   { label: 'Requirements', href: '/requirements', icon: BookOpen },
 ];
 

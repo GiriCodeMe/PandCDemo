@@ -271,6 +271,82 @@ export interface OpenEnrollmentPeriod {
   };
 }
 
+export interface EnrollmentElection {
+  productType: string;
+  planCode: string;
+  tierId: string;
+  tierType: string;
+  monthlyEmployeeContribution: number;
+}
+
+export interface Enrollment {
+  enrollmentId: string;
+  employeeId: string;
+  planYear: number;
+  status: string;
+  enrollmentSource: string;
+  elections: EnrollmentElection[];
+  effectiveDate: string;
+  createdAt: string;
+}
+
+export interface PlanRate {
+  tierId: string;
+  planCode: string;
+  tierType: string;
+  monthlyPremium: number;
+  employerContribution: number;
+  employeeContribution: number;
+}
+
+export interface Plan {
+  planId: string;
+  productId: string;
+  name: string;
+  planCode: string;
+  deductible?: number;
+  outOfPocketMax?: number;
+  copay?: number;
+  specialistCopay?: number;
+  erCopay?: number;
+  coinsurance?: number;
+  hsaEligible?: boolean;
+  preventiveCoverage?: number;
+  basicServicesCoverage?: number;
+  majorServicesCoverage?: number;
+  orthodontiaCoverage?: number;
+  status: string;
+}
+
+export interface PremiumSummary {
+  monthlyEmployeeTotal: number;
+  monthlyEmployerTotal: number;
+  perPaycheck: number;
+  breakdown: Array<{
+    productType: string;
+    planCode: string;
+    tierType: string;
+    employeeContribution: number;
+    employerContribution: number;
+  }>;
+}
+
+export interface WizardElection {
+  productType: string;
+  planCode: string | null;
+  tierType: string;
+  waived: boolean;
+}
+
+export interface WizardSession {
+  sessionId: string;
+  employeeId: string;
+  planYear: number;
+  currentStep: number;
+  elections: WizardElection[];
+  submittedAt?: string;
+}
+
 export interface SearchResult {
   id: string;
   type: 'employer' | 'employee' | 'plan' | 'product' | 'carrier';

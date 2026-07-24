@@ -16,6 +16,7 @@ import documentRoutes from './routes/document.routes';
 import requirementsRoutes from './routes/requirements.routes';
 import eligibilityRoutes from './routes/eligibility.routes';
 import planConfigRoutes from './routes/planConfig.routes';
+import enrollmentRoutes from './routes/enrollment.routes';
 
 export function createApp(): express.Application {
   const app = express();
@@ -42,6 +43,7 @@ export function createApp(): express.Application {
   app.use('/api/requirements', requirementsRoutes);
   app.use('/api/eligibility-rules', eligibilityRoutes);
   app.use('/api/plan-config', planConfigRoutes);
+  app.use('/api/enrollment', enrollmentRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

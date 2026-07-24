@@ -105,6 +105,22 @@ const KB: Array<{ patterns: string[]; answer: string }> = [
     answer: '**Business Rules vs User Stories** serve different purposes in requirements:\n\n**Business Rule** — A constraint or policy that the system MUST enforce:\n- Example: "Employees must complete enrollment within 30 days of hire date"\n- Has enforcement level: MANDATORY (system-enforced) or RECOMMENDED (warning only)\n- Sourced from HR policy documents, carrier contracts, or regulatory requirements\n\n**User Story** — A narrative describing what a user needs to accomplish:\n- Format: "As [HR Administrator], I want [to view enrollment rates] so that [I can identify at-risk groups]"\n- Has acceptance criteria that define when the story is "done"\n- Used by developers to understand the feature from the user\'s perspective\n\nBoth types are generated from the same documents — rules capture the *what must not happen*, stories capture the *what the user does*.',
   },
   {
+    patterns: ['how do i choose', 'choose between', 'which plan', 'best plan', 'plan recommendation'],
+    answer: '**How to Choose a Medical Plan:**\n\n**PPO 500** — Best if you visit doctors frequently and want predictable copays. Higher premium, lowest deductible ($500).\n\n**PPO 1000** — Middle ground. Lower premium than PPO 500, slightly higher deductible ($1000). Good for moderate health care users.\n\n**HDHP 3000** — Lowest premium. High deductible ($3000) but you can open an HSA to save pre-tax dollars. Best for healthy employees who want to build long-term savings.\n\n**Rule of thumb:**\n- Frequent doctor visits → PPO 500\n- Occasional visits, cost-conscious → PPO 1000\n- Generally healthy, want HSA savings → HDHP 3000',
+  },
+  {
+    patterns: ['enrollment wizard', 'how do i enroll', 'how to enroll', 'make elections', 'submit enrollment'],
+    answer: '**Enrollment Wizard** is an 8-step guided process for making your benefit elections:\n\n1. **Welcome** — Overview of what you\'re selecting\n2. **Medical** — Choose PPO or HDHP, or waive\n3. **Dental** — Basic or Premium, or waive\n4. **Vision** — Standard coverage, or waive\n5. **Life Insurance** — Basic life (employer-paid) + voluntary options\n6. **Savings Account** — HSA (with HDHP) or FSA\n7. **Dependents** — Review dependent coverage tier\n8. **Review & Submit** — Final cost summary before submitting\n\nYou can navigate back at any time until you hit Submit. Elections are final once submitted — changes after the window require a Qualifying Life Event.',
+  },
+  {
+    patterns: ['coverage effective', 'when does coverage start', 'coverage date', 'january 1'],
+    answer: '**Coverage Effective Date** for the Acme 2027 plan year is **January 1, 2027**.\n\nAll elections made during the Open Enrollment window (Oct 1–15, 2026) become effective on this date.\n\n**New hire coverage** follows a different timeline based on your waiting period:\n- Most products: First of the month following 30 days of employment\n- HSA (when enrolled in HDHP): Effective on hire date\n\nIf you miss the open enrollment window, you cannot make changes until the next open enrollment — unless you experience a Qualifying Life Event (marriage, birth, divorce, loss of other coverage).',
+  },
+  {
+    patterns: ['what is fsa', 'flexible spending account', 'fsa vs hsa', 'savings account choice'],
+    answer: '**FSA vs HSA — Which Savings Account is Right for You?**\n\n| Feature | FSA | HSA |\n|---|---|---|\n| Eligibility | Any health plan | HDHP only |\n| 2027 Limit | $3,300 | $4,300 individual / $8,550 family |\n| Rollover | Up to $610 | Unlimited |\n| Tax benefit | Pre-tax contributions | Triple tax advantage |\n| Ownership | Employer-held | Yours permanently |\n\n**Choose FSA if:** You\'re enrolled in PPO 500 or PPO 1000 and want to set aside pre-tax dollars for known medical costs.\n\n**Choose HSA if:** You\'re enrolled in HDHP 3000 and want to build long-term medical savings that grow tax-free.\n\nYou cannot have both an HSA and a standard FSA at the same time.',
+  },
+  {
     patterns: ['what is this page', 'what can i do', 'help', 'explain this'],
     answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, payroll deductions, employee eligibility, or product benefits.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is the difference between HSA and FSA?"\n- "What does DRAFT plan year mean?"',
   },

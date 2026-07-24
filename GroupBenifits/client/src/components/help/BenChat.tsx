@@ -10,6 +10,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/products': 'Product Catalog',
   '/requirements': 'AI Requirements Studio',
   '/plans': 'Plan Configuration',
+  '/enrollment': 'Open Enrollment',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -67,6 +68,12 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'What is the difference between PPO and HDHP?',
     'What are eligibility rules?',
   ],
+  '/enrollment': [
+    'What is the difference between PPO and HDHP?',
+    'How do I choose between medical plans?',
+    'What is an HSA and how does it work?',
+    'When does my coverage become effective?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
@@ -75,6 +82,7 @@ function getPageLabel(pathname: string): string {
   if (pathname.startsWith('/employees/') && pathname.length > '/employees/'.length) return 'Employee 360';
   if (pathname.startsWith('/requirements')) return 'AI Requirements Studio';
   if (pathname.startsWith('/plans')) return 'Plan Configuration';
+  if (pathname.startsWith('/enrollment')) return 'Open Enrollment';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
     if (pathname === key) return label;
   }
@@ -93,6 +101,9 @@ function getStarters(pathname: string): string[] {
   }
   if (pathname.startsWith('/plans')) {
     return STARTER_QUESTIONS['/plans'];
+  }
+  if (pathname.startsWith('/enrollment')) {
+    return STARTER_QUESTIONS['/enrollment'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }
