@@ -1,0 +1,173 @@
+[
+  {
+    "requirementId": "REQ-EDI-834-001",
+    "type": "Functional Requirement",
+    "title": "Generate ANSI ASC X12 834 Benefit Enrollment Transaction",
+    "description": "The system shall generate a true ANSI ASC X12 834 Benefit Enrollment and Maintenance transaction for supported enrollment scenarios. The demo implements a constrained subset of 834 segments based on a mock Acme Carrier 834 Implementation Guide. Full production-grade X12 834 compliance and carrier-specific companion-guide certification are out of scope.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "integration", "epic4"],
+    "mvpBoundary": "Constrained ANSI X12 834 generator using a mock Acme Carrier implementation guide. Demonstrates enrollment-to-EDI transformation, segment mapping, basic validation, and carrier simulation. Does not represent a production-grade X12 translator or certify compliance with a specific carrier's companion guide.",
+    "supportedSegments": ["ISA", "GS", "ST", "BGN", "REF", "DTP", "INS", "NM1", "DMG", "HD", "SE", "GE", "IEA"],
+    "optionalDependentSegments": ["INS", "NM1", "DMG", "HD", "DTP"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-002",
+    "type": "Functional Requirement",
+    "title": "Transform Canonical Enrollment Model to X12 834",
+    "description": "The system shall transform the canonical enrollment model into the configured X12 834 structure via a dedicated EDI mapper. The 834 shall not be generated directly from UI fields.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"],
+    "canonicalModelExample": {
+      "employeeId": "ACM-E001",
+      "memberId": "ACME10001",
+      "firstName": "John",
+      "lastName": "Smith",
+      "dob": "1985-04-15",
+      "gender": "M",
+      "ssn": "XXX-XX-1234",
+      "planId": "MED-PPO-500",
+      "coverageTier": "EMPLOYEE_ONLY",
+      "effectiveDate": "2027-01-01",
+      "transactionType": "ADD"
+    },
+    "architectureNote": "Canonical model supports JSON API (Carrier REST), EDI 834, and CSV export from the same source — the mapper is the only layer that changes per output format."
+  },
+  {
+    "requirementId": "REQ-EDI-834-003",
+    "type": "Functional Requirement",
+    "title": "Configurable Segment Mapping Specification",
+    "description": "The system shall maintain a configurable segment mapping between canonical enrollment fields and X12 834 segments. The mapping shall be documented in the Acme Carrier 834 Segment Map specification artifact.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"],
+    "segmentMap": [
+      { "segment": "ISA", "purpose": "Interchange Header",        "canonicalData": "Sender/Receiver IDs" },
+      { "segment": "GS",  "purpose": "Functional Group",          "canonicalData": "Transaction type, date, group ID" },
+      { "segment": "ST",  "purpose": "Transaction Set Header",    "canonicalData": "834 set ID" },
+      { "segment": "BGN", "purpose": "Beginning Segment",         "canonicalData": "Batch ID, submission date" },
+      { "segment": "REF", "purpose": "Reference",                 "canonicalData": "Employer group ID" },
+      { "segment": "DTP", "purpose": "Date (batch)",              "canonicalData": "Effective date" },
+      { "segment": "INS", "purpose": "Member Level Detail",       "canonicalData": "Add/Change/Terminate; subscriber/dependent indicator" },
+      { "segment": "NM1", "purpose": "Member Name",               "canonicalData": "First, last, member ID" },
+      { "segment": "DMG", "purpose": "Demographics",              "canonicalData": "DOB, gender" },
+      { "segment": "HD",  "purpose": "Health Coverage",           "canonicalData": "Plan code, coverage tier" },
+      { "segment": "DTP", "purpose": "Coverage Date",             "canonicalData": "Coverage effective / termination date" },
+      { "segment": "SE",  "purpose": "Transaction Set Trailer",   "canonicalData": "Segment count" },
+      { "segment": "GE",  "purpose": "Functional Group Trailer",  "canonicalData": "Transaction count" },
+      { "segment": "IEA", "purpose": "Interchange Trailer",       "canonicalData": "Interchange control number" }
+    ]
+  },
+  {
+    "requirementId": "REQ-EDI-834-004",
+    "type": "Functional Requirement",
+    "title": "Documented Constrained 834 Segment Subset",
+    "description": "The system shall support a documented subset of X12 834 segments defined in the Acme Carrier 834 Implementation Guide. The implementation guide shall be included as a demo artifact.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"],
+    "demoArtifacts": [
+      "docs/edi834/Acme_834_Implementation_Guide.pdf",
+      "docs/edi834/Acme_834_Segment_Map.xlsx",
+      "docs/edi834/Acme_834_Sample_Add.edi",
+      "docs/edi834/Acme_834_Sample_Change.edi",
+      "docs/edi834/Acme_834_Sample_Termination.edi",
+      "docs/edi834/Acme_834_Sample_Dependent.edi"
+    ]
+  },
+  {
+    "requirementId": "REQ-EDI-834-005",
+    "type": "Functional Requirement",
+    "title": "Employee Enrollment Transactions",
+    "description": "The system shall support generation of 834 ADD transactions for new employee enrollment, with correct INS, NM1, DMG, HD, and DTP segments.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-006",
+    "type": "Functional Requirement",
+    "title": "Dependent Enrollment Transactions",
+    "description": "The system shall support generation of 834 ADD transactions for dependent enrollment, with dependent-level INS, NM1, DMG, HD, and DTP segments following the subscriber loop.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"],
+    "demoScenario": {
+      "employee": "Linda White",
+      "employeeId": "ACM-E001",
+      "plan": "MED-PPO-500",
+      "coverageTier": "EMPLOYEE_CHILDREN",
+      "effectiveDate": "2027-01-01",
+      "transactionType": "ADD",
+      "negativePathVariant": "If dependent SSN fails validation → REJECTED INVALID_DEPENDENT_SSN (links to CT-10045, REQ-DEP-SSN-007)"
+    }
+  },
+  {
+    "requirementId": "REQ-EDI-834-007",
+    "type": "Functional Requirement",
+    "title": "Coverage Change Transactions",
+    "description": "The system shall support generation of 834 CHANGE transactions for plan changes, coverage tier changes, and mid-year coverage updates resulting from life events.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-008",
+    "type": "Functional Requirement",
+    "title": "Coverage Termination Transactions",
+    "description": "The system shall support generation of 834 TERMINATE transactions for employment termination, COBRA qualifying events, and dependent coverage termination.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-009",
+    "type": "Functional Requirement",
+    "title": "Basic X12 Structural Validation Before Submission",
+    "description": "The system shall perform basic X12 structural validation before submitting the generated 834 to the carrier simulator. Structural validation includes: ISA/IEA pairing and control number match, GS/GE pairing, ST/SE pairing and segment count, required segments present, delimiter consistency.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "validation"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-010",
+    "type": "Functional Requirement",
+    "title": "Business Validation Before 834 Generation",
+    "description": "The system shall perform business validation before generating the 834 transaction: employee exists, plan exists, coverage tier valid, effective date valid, employee eligible, dependent exists and valid, enrollment window open.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "validation"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-011",
+    "type": "Functional Requirement",
+    "title": "Deterministic Control Numbers for Demo Transactions",
+    "description": "The system shall generate deterministic control numbers for demo 834 transactions to ensure reproducible demo scenarios. Control numbers shall be based on a configurable prefix and incrementing sequence, not random values.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-012",
+    "type": "Functional Requirement",
+    "title": "Retain Canonical Enrollment, Generated 834, Validation Results, and Carrier Response",
+    "description": "The system shall retain the canonical enrollment record, the generated 834 file content, validation results, and carrier simulator response for each transaction. These records support audit trail, traceability, and reconciliation.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "audit"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-013",
+    "type": "Functional Requirement",
+    "title": "Sample 834 Implementation Guide and Segment Mapping",
+    "description": "The system shall include a sample 834 implementation guide and segment mapping specification as demo artifacts. These documents shall be accessible from the Integration section of the demo.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "documentation"]
+  },
+  {
+    "requirementId": "REQ-EDI-834-014",
+    "type": "Functional Requirement",
+    "title": "Sample 834 Files for Add, Change, Termination, and Dependent Scenarios",
+    "description": "The demo shall include sample 834 files for: Add (new employee enrollment), Change (coverage update), Termination (employment or coverage end), and Dependent enrollment scenarios.",
+    "status": "Approved",
+    "tags": ["edi", "carrier", "documentation"],
+    "sampleISAStructure": "ISA*00*          *00*          *ZZ*ACMEHEALTH     *ZZ*ACMECARRIER    *270101*1200*U*00501*000000001*0*P*:~"
+  },
+  {
+    "requirementId": "REQ-EDI-834-015",
+    "type": "Functional Requirement",
+    "title": "Clearly Distinguish ANSI X12 834 from CSV or Tabular Exports",
+    "description": "The system shall clearly distinguish a true ANSI X12 834 file from CSV or other tabular exports in all UI labels, documentation, and file naming. Files with .edi extension shall contain true X12 834 segment notation, not comma-separated data.",
+    "status": "Approved",
+    "tags": ["edi", "carrier"]
+  }
+]

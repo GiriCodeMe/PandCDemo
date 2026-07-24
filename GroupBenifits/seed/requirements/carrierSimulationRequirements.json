@@ -1,0 +1,184 @@
+[
+  {
+    "requirementId": "REQ-CARRIER-SIM-001",
+    "type": "Functional Requirement",
+    "title": "Carrier API Simulation for Benefits Transactions",
+    "description": "The system shall simulate carrier API responses for supported benefits transactions: enrollment, eligibility verification, life event, and termination/COBRA transactions.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "integration", "epic4"],
+    "simulationModel": {
+      "description": "Hybrid: Schema Validation → Business Rule Validation → Seeded Scenario Matching → Default Processing",
+      "defaultMode": "DETERMINISTIC",
+      "principle": "The same transaction shall always produce the same result unless a scenario is explicitly configured to introduce variability. Random rejection is prohibited as the default."
+    }
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-002",
+    "type": "Functional Requirement",
+    "title": "Support Accepted, Rejected, and System Error Response States",
+    "description": "The carrier simulator shall support three response states: ACCEPTED (passes all validation), REJECTED (valid structure but fails business or carrier rules), SYSTEM_ERROR (simulated technical failure — carrier unavailable or timeout). This distinction is required to support integration monitoring dashboard differentiation of business failures vs. technical failures.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation"],
+    "responseContracts": {
+      "accepted": {
+        "transactionId": "TXN-10001",
+        "status": "ACCEPTED",
+        "carrierTransactionId": "CAR-874512",
+        "processedAt": "2027-01-15T14:32:00Z"
+      },
+      "rejected": {
+        "transactionId": "TXN-10003",
+        "status": "REJECTED",
+        "reasonCode": "INELIGIBLE_EMPLOYEE",
+        "reason": "Employee is not eligible for the selected plan.",
+        "field": "employeeId",
+        "carrierTransactionId": "CAR-874513"
+      },
+      "systemError": {
+        "transactionId": "TXN-10004",
+        "status": "SYSTEM_ERROR",
+        "reasonCode": "CARRIER_TIMEOUT",
+        "reason": "Carrier endpoint did not respond within timeout threshold."
+      }
+    }
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-003",
+    "type": "Functional Requirement",
+    "title": "Default Simulation Mode Deterministic and Reproducible",
+    "description": "The default carrier simulation mode shall be DETERMINISTIC. Given the same transaction inputs, the simulator shall always return the same response. Deterministic behavior is required to ensure repeatable demo scenarios and to support the AI Requirements Engineering traceability story.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-004",
+    "type": "Functional Requirement",
+    "title": "Required Transaction Field Validation",
+    "description": "The carrier simulator shall validate required fields before processing. Missing required fields shall return REJECTED with reasonCode MISSING_REQUIRED_FIELD and a field reference. Required fields for medical enrollment: employeeId, memberId, planId, coverageTier, effectiveDate, transactionType.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-005",
+    "type": "Functional Requirement",
+    "title": "Employee Existence and Eligibility Validation",
+    "description": "The carrier simulator shall validate that the employee ID exists and that the employee is eligible for the requested plan. Unknown employee IDs shall return INVALID_EMPLOYEE. Part-time employees submitting for full-time-only plans shall return INELIGIBLE_EMPLOYEE.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-006",
+    "type": "Functional Requirement",
+    "title": "Plan and Coverage Tier Validation",
+    "description": "The carrier simulator shall validate that the planId references a configured plan and that the coverageTier is a valid value for that plan (EMPLOYEE_ONLY, EMPLOYEE_SPOUSE, EMPLOYEE_CHILDREN, FAMILY). Invalid plan: INVALID_PLAN. Invalid tier: INVALID_COVERAGE_TIER.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-007",
+    "type": "Functional Requirement",
+    "title": "Effective Date Validation Against Eligibility and Enrollment Rules",
+    "description": "The carrier simulator shall validate coverage effective dates against the applicable eligibility policy. If the submitted effective date does not comply with the configured rule (e.g., first of following month after waiting period), the transaction shall be REJECTED with reasonCode INVALID_EFFECTIVE_DATE.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-008",
+    "type": "Functional Requirement",
+    "title": "Enrollment Window and Life Event Window Validation",
+    "description": "The carrier simulator shall reject transactions for closed enrollment windows. For Open Enrollment: ENROLLMENT_WINDOW_CLOSED when OE period is not active. For Life Events: ENROLLMENT_WINDOW_CLOSED when submission exceeds the configured event-type window (e.g., Marriage > 30 days after event date).",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-009",
+    "type": "Functional Requirement",
+    "title": "Dependent Validation Including SSN",
+    "description": "The carrier simulator shall validate dependent information. Where the carrier configuration requires a valid dependent SSN, a dependent with failed SSN validation shall result in REJECTED with reasonCode INVALID_DEPENDENT / DEPENDENT_SSN_VALIDATION_FAILED. Linked to REQ-DEP-SSN-007.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "validation"],
+    "linkedRequirement": "REQ-DEP-SSN-007",
+    "seedScenario": {
+      "scenarioId": "SCN-INVALID-DEPENDENT-SSN",
+      "caseId": "CT-10045",
+      "dependentName": "Linda White",
+      "employeeId": "ACM-E001",
+      "response": "REJECTED",
+      "reasonCode": "INVALID_DEPENDENT_SSN"
+    }
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-010",
+    "type": "Functional Requirement",
+    "title": "Standardized Rejection Reason Codes",
+    "description": "The carrier simulator shall return standardized rejection reason codes for all REJECTED responses.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation"],
+    "rejectionReasonCodes": [
+      "SCHEMA_VALIDATION_ERROR", "MISSING_REQUIRED_FIELD", "INVALID_FIELD_VALUE",
+      "INVALID_EMPLOYEE", "INVALID_DEPENDENT", "INVALID_DEPENDENT_SSN",
+      "INVALID_PLAN", "INVALID_COVERAGE_TIER", "INELIGIBLE_EMPLOYEE",
+      "INELIGIBLE_DEPENDENT", "DUPLICATE_ENROLLMENT", "INVALID_EFFECTIVE_DATE",
+      "ENROLLMENT_WINDOW_CLOSED", "INVALID_LIFE_EVENT", "INVALID_CARRIER_ID",
+      "INVALID_MEMBER_ID", "BUSINESS_RULE_VIOLATION"
+    ]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-011",
+    "type": "Functional Requirement",
+    "title": "Configurable Seeded Test Scenarios",
+    "description": "The carrier simulator shall support configurable seeded test scenarios that override default validation to return a specific response for a matched transaction.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation"],
+    "seedScenarios": [
+      { "scenarioId": "SCN-001", "description": "Accepted medical enrollment",     "match": { "employeeId": "ACM-E001", "planId": "MED-PPO-500" }, "response": "ACCEPTED" },
+      { "scenarioId": "SCN-002", "description": "Invalid employee ID",              "match": { "employeeId": "EMP-99999" },                       "response": "REJECTED",      "reasonCode": "INVALID_EMPLOYEE" },
+      { "scenarioId": "SCN-003", "description": "Ineligible part-time employee",   "match": { "employeeId": "ACM-E025", "planId": "MED-PPO-500" }, "response": "REJECTED",     "reasonCode": "INELIGIBLE_EMPLOYEE" },
+      { "scenarioId": "SCN-004", "description": "Invalid dependent SSN (CT-10045)","match": { "employeeId": "ACM-E001", "dependentId": "DEP-10045" },"response": "REJECTED",   "reasonCode": "INVALID_DEPENDENT_SSN" },
+      { "scenarioId": "SCN-005", "description": "Duplicate enrollment",            "match": { "employeeId": "ACM-E001", "planId": "MED-PPO-500", "duplicateCheck": true }, "response": "REJECTED", "reasonCode": "DUPLICATE_ENROLLMENT" },
+      { "scenarioId": "SCN-006", "description": "Closed OE enrollment window",     "match": { "transactionType": "OPEN_ENROLLMENT", "oePeriodClosed": true }, "response": "REJECTED", "reasonCode": "ENROLLMENT_WINDOW_CLOSED" },
+      { "scenarioId": "SCN-007", "description": "Carrier system timeout",          "match": { "scenarioTag": "CARRIER_TIMEOUT" },                  "response": "SYSTEM_ERROR", "reasonCode": "CARRIER_TIMEOUT" }
+    ]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-012",
+    "type": "Functional Requirement",
+    "title": "Optional Chaos Simulation Mode for Monitoring Demos",
+    "description": "The carrier simulator shall support an optional CHAOS simulation mode for integration monitoring demonstrations. Chaos mode may inject configurable random failures (e.g., 5% timeout, 3% HTTP 500, 2% malformed response). Chaos mode shall never be the default mode and shall require explicit configuration.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation"],
+    "simulationModes": {
+      "DETERMINISTIC": "Rules decide the outcome. Default mode.",
+      "SCENARIO": "Specific transaction/employee triggers configured response.",
+      "CHAOS": "Optional random failure injection for monitoring demos. Not default."
+    }
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-013",
+    "type": "Functional Requirement",
+    "title": "Record Every Simulated Transaction and Response",
+    "description": "The carrier simulator shall record every simulated transaction and its response, including: transaction ID, employee ID, dependent ID (if applicable), plan ID, transaction type, request timestamp, response status, reason code (if rejected), and processing duration.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "monitoring"]
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-014",
+    "type": "Functional Requirement",
+    "title": "Distinguish Business Validation Failures from Technical System Failures",
+    "description": "The carrier simulator shall distinguish business validation failures (REJECTED) from technical system failures (SYSTEM_ERROR) in all transaction records and monitoring aggregates. Integration dashboards shall display business failure counts and technical failure counts independently.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "monitoring"],
+    "dashboardExample": {
+      "Medical":  { "processed": 4892, "accepted": 4880, "businessRejections": 12, "systemErrors": 0 },
+      "Vision":   { "processed": 4950, "accepted": 4908, "businessRejections": 0,  "systemErrors": 42 }
+    }
+  },
+  {
+    "requirementId": "REQ-CARRIER-SIM-015",
+    "type": "Functional Requirement",
+    "title": "Aggregate Simulated Transactions for Dashboard Monitoring and Reconciliation",
+    "description": "The carrier simulator shall aggregate simulated transaction outcomes per carrier and per time window for integration monitoring dashboard display and reconciliation processing. Aggregates shall feed into the integration monitoring windows in `seed/integrations/integrationMonitoringAggregates.json`.",
+    "status": "Approved",
+    "tags": ["carrier", "simulation", "monitoring", "reconciliation"]
+  }
+]

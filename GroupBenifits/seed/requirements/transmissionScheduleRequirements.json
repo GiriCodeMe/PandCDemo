@@ -1,0 +1,165 @@
+[
+  {
+    "requirementId": "REQ-TRANSMISSION-001",
+    "type": "Functional Requirement",
+    "title": "Configurable Carrier Transmission Frequencies",
+    "description": "The system shall support configurable carrier transmission frequencies: DAILY, WEEKLY, BIWEEKLY, MONTHLY, and MANUAL. Frequency is defined per carrier transmission schedule. WEEKLY is the primary demo frequency.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission", "scheduling", "epic4"],
+    "demoDecision": "The default demo experience uses manual trigger. Optional Node.js scheduled job is available when enabled. Always-on background processing is out of scope."
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-002",
+    "type": "Functional Requirement",
+    "title": "Manual Transmission Trigger from UI",
+    "description": "The system shall support manual triggering of a configured carrier transmission from the Integration Command Center UI. The UI shall display pending transaction count, configured schedule details, and a 'Run Transmission Now' action.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "uiExample": {
+      "carrier": "Acme Medical",
+      "format": "ANSI X12 834",
+      "frequency": "Weekly",
+      "nextScheduledRun": "Jul 24, 2026 6:00 PM ET",
+      "pendingTransactions": 147,
+      "action": "Run Transmission Now"
+    }
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-003",
+    "type": "Functional Requirement",
+    "title": "Optional Scheduled Execution via Node.js Scheduler",
+    "description": "The system shall support optional automated scheduled execution using a Node.js-based scheduler abstraction (e.g., cron expression 0 18 * * 5 for weekly Friday 6 PM). The scheduler shall be configurable and enable/disable-able without code changes.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-004",
+    "type": "Functional Requirement",
+    "title": "Manual and Scheduled Triggers Use Same Processing Service",
+    "description": "Manual UI trigger and scheduled job trigger shall invoke the same carrier transmission processing service. Business logic for batch creation, 834 generation, validation, and carrier submission shall not be duplicated across trigger paths.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission", "architecture"],
+    "architectureNote": "Manual Button → Transmission Service ← Scheduled Job. Single shared service prevents logic duplication."
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-005",
+    "type": "Functional Requirement",
+    "title": "Generate Unique Transmission Batch Per Execution",
+    "description": "The system shall generate a unique transmission batch record for each execution. The batch captures: batch ID, carrier ID, format, schedule ID, trigger type, scheduled run time, actual run time, transaction count, and status.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "batchModel": {
+      "batchId": "BATCH-2026-0724-001",
+      "carrierId": "CARRIER-MEDICAL",
+      "format": "X12_834",
+      "scheduleId": "SCHED-MED-WEEKLY",
+      "triggerType": "MANUAL",
+      "scheduledRunTime": "2026-07-24T18:00:00-04:00",
+      "actualRunTime": "2026-07-23T20:15:00-04:00",
+      "transactionCount": 147,
+      "status": "COMPLETED"
+    }
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-006",
+    "type": "Functional Requirement",
+    "title": "Record Trigger Type: Manual or Scheduled",
+    "description": "The system shall record the trigger type (MANUAL or SCHEDULED) for each transmission batch. Trigger type shall be visible in the integration audit record and dashboard.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-007",
+    "type": "Functional Requirement",
+    "title": "Configurable Transmission Day, Time, and Timezone",
+    "description": "Each carrier transmission schedule shall support configurable day of week, time of day, and timezone.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "scheduleConfigModel": {
+      "scheduleId": "SCHED-MED-WEEKLY",
+      "carrierId": "CARRIER-MEDICAL",
+      "format": "X12_834",
+      "frequency": "WEEKLY",
+      "dayOfWeek": "FRIDAY",
+      "time": "18:00",
+      "timezone": "America/New_York",
+      "enabled": true,
+      "simulationMode": "MANUAL"
+    }
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-008",
+    "type": "Functional Requirement",
+    "title": "Simulated Time Advancement for Demo",
+    "description": "The system shall support simulated time advancement for demonstration purposes. Users shall be able to advance the demo clock to the next scheduled transmission time without waiting for real time to pass.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "simulationModes": ["MANUAL", "SCHEDULED", "SIMULATED_CLOCK"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-009",
+    "type": "Functional Requirement",
+    "title": "Run Scheduled Job Now Without Waiting",
+    "description": "The system shall support a 'Run Scheduled Job Now' capability for demo purposes. This executes the scheduled transmission immediately without advancing the clock or waiting for the configured schedule time.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-010",
+    "type": "Functional Requirement",
+    "title": "Transmission Status Lifecycle Tracking",
+    "description": "The system shall track transmission status through a defined lifecycle: SCHEDULED → TRIGGERED → BATCH_CREATED → FILE_GENERATED → VALIDATING → TRANSMITTING → ACCEPTED | PARTIALLY_ACCEPTED | REJECTED | SYSTEM_ERROR.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "statusLifecycle": ["SCHEDULED", "TRIGGERED", "BATCH_CREATED", "FILE_GENERATED", "VALIDATING", "TRANSMITTING", "ACCEPTED", "PARTIALLY_ACCEPTED", "REJECTED", "SYSTEM_ERROR"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-011",
+    "type": "Functional Requirement",
+    "title": "Aggregate Transaction Responses into Batch-Level Results",
+    "description": "The system shall aggregate transaction-level carrier responses into a batch-level transmission result: total transactions, accepted count, rejected count, system error count, and batch status.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"],
+    "batchResultExample": {
+      "batchId": "BATCH-2027-001",
+      "label": "Weekly Medical Transmission",
+      "totalTransactions": 147,
+      "accepted": 140,
+      "rejected": 5,
+      "systemErrors": 2,
+      "status": "PARTIALLY_ACCEPTED"
+    }
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-012",
+    "type": "Functional Requirement",
+    "title": "Distinguish Accepted, Rejected, Partially Accepted, and System Error Outcomes",
+    "description": "The system shall distinguish four batch outcomes: ACCEPTED (all transactions accepted), PARTIALLY_ACCEPTED (some accepted, some rejected or errored), REJECTED (all transactions rejected), SYSTEM_ERROR (carrier unavailable or technical failure). These map directly to integration monitoring dashboard status.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission", "monitoring"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-013",
+    "type": "Functional Requirement",
+    "title": "Audit Record for Each Transmission Batch",
+    "description": "The system shall maintain an audit record for each transmission batch including: schedule ID, batch ID, carrier, format, trigger type, scheduled time, actual time, triggered-by actor, transaction count, accepted count, rejected count, error count, and final status.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission", "audit"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-014",
+    "type": "Functional Requirement",
+    "title": "Visibility Into Next Scheduled Transmission",
+    "description": "The system shall display the next scheduled transmission time, carrier, format, and pending transaction count in the Integration Command Center dashboard.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"]
+  },
+  {
+    "requirementId": "REQ-TRANSMISSION-015",
+    "type": "Functional Requirement",
+    "title": "Enable and Disable Transmission Schedules",
+    "description": "The system shall allow authorized users to enable or disable a configured transmission schedule without deleting the schedule configuration.",
+    "status": "Approved",
+    "tags": ["carrier", "transmission"]
+  }
+]

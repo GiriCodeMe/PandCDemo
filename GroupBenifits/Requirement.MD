@@ -84,6 +84,9 @@ seed/
                  aiInterviewConversationStateRequirements.json (REQ-CONV-001–015)
                  requirementsBacklogExportRequirements.json  (REQ-EXPORT-001–016)
                  aiImpactAnalysisRequirements.json           (REQ-IMPACT-001–015)
+                 carrierSimulationRequirements.json          (REQ-CARRIER-SIM-001–015)
+                 edi834Requirements.json                     (REQ-EDI-834-001–015)
+                 transmissionScheduleRequirements.json       (REQ-TRANSMISSION-001–015)
   documents/     documents.json
 samples/
   Acme_2027_Benefits_Guide.pdf
@@ -117,5 +120,8 @@ Requirements seeded in `seed/requirements/` — each file is a self-contained JS
 | AI Interview Conversation State | `aiInterviewConversationStateRequirements.json` | REQ-CONV-001–015 | 15 | Unique Conversation ID; structured memory (facts + open questions); three-layer context; token budget; auto-summarization; pause/resume; contradiction detection; message-to-requirement traceability |
 | Requirements Backlog Export | `requirementsBacklogExportRequirements.json` | REQ-EXPORT-001–016 | 16 | Canonical backlog (Epic → Feature → Story → AC); P0: JSON + CSV; P1: Jira adapter; P2: Azure DevOps; incremental export; external ID persistence; no duplicate creation |
 | AI Impact Analysis | `aiImpactAnalysisRequirements.json` | REQ-IMPACT-001–015 | 15 | Hybrid RAG: metadata filter + vector RAG + graph traversal + deterministic rules; bounded context package; DIRECT/INDIRECT/DEPENDENCY/POTENTIAL/NO_IMPACT; severity + confidence; no full dataset injection |
+| Carrier API Simulation | `carrierSimulationRequirements.json` | REQ-CARRIER-SIM-001–015 | 15 | Deterministic default; ACCEPTED/REJECTED/SYSTEM_ERROR; 17 rejection reason codes; 7 seeded scenarios; optional CHAOS mode; business vs. technical failure distinction |
+| EDI 834 Generation | `edi834Requirements.json` | REQ-EDI-834-001–015 | 15 | True ANSI X12 834 (not CSV-as-EDI); canonical model → EDI mapper; Add/Change/Terminate/Dependent; structural + business validation; sample artifacts: guide, segment map, 4 .edi files |
+| Transmission Scheduling | `transmissionScheduleRequirements.json` | REQ-TRANSMISSION-001–015 | 15 | Manual trigger (primary) + optional cron job; same processing service; WEEKLY demo frequency; simulated time advance; batch lifecycle; PARTIALLY_ACCEPTED outcome |
 
-**Total seeded requirements (seed/requirements/):** 208+ across 16 requirement sets.
+**Total seeded requirements (seed/requirements/):** 253+ across 19 requirement sets.
