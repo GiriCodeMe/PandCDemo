@@ -49,8 +49,32 @@ const KB: Array<{ patterns: string[]; answer: string }> = [
     answer: '**Payroll Frequency** determines how often benefit premiums are deducted from employee paychecks.\n\nCommon frequencies:\n- **Weekly** — 52 pay periods/year\n- **Bi-Weekly** — 26 pay periods/year (most common)\n- **Semi-Monthly** — 24 pay periods/year\n- **Monthly** — 12 pay periods/year\n\nThe payroll frequency affects the per-paycheck deduction amount: annual premium ÷ number of pay periods.',
   },
   {
+    patterns: ['eligibility status', 'employee eligibility', 'eligible employee'],
+    answer: '**Employee Eligibility Status** indicates whether an employee qualifies for benefits based on the employer\'s eligibility rules.\n\n- **Eligible** — All eligibility criteria met (full-time 30+ hours, active, past waiting period)\n- **Partial** — Meets some but not all criteria (e.g., part-time meets Dental/Vision threshold but not Medical 30hr rule)\n- **Ineligible** — Does not meet eligibility requirements\n- **Terminated** — No longer employed\n\nEligibility is checked against the plan year\'s rule set on every change to employment status, hours, or hire date.',
+  },
+  {
+    patterns: ['enrollment status', 'enrolled status', 'what is enrollment status'],
+    answer: '**Enrollment Status** shows whether an employee has completed their benefit elections for the current plan year.\n\n- **Enrolled** — Employee has active coverage for at least the core benefit plans\n- **Partial** — Employee has enrolled in some but not all available products\n- **Pending** — Elections submitted but not yet finalized by carrier\n- **Not Enrolled** — Employee has not made any elections (may have waived or missed the window)\n\nEnrollment status updates when elections are submitted and confirmed by the carrier.',
+  },
+  {
+    patterns: ['dependent', 'what is a dependent', 'add dependent'],
+    answer: '**Dependents** are family members covered under an employee\'s benefit plan.\n\nEligible dependent relationships:\n- **Spouse** — Legal spouse\n- **Domestic Partner** — Registered domestic partner (where plan allows)\n- **Child** — Biological, adopted, or step-child, typically up to age 26\n\nAdding a dependent requires:\n1. A Qualifying Life Event (marriage, birth, adoption)\n2. Documentation (marriage certificate, birth certificate)\n3. HR approval (within the life event window)\n\nOnce approved, the dependent is added to the carrier EDI 834 file.',
+  },
+  {
+    patterns: ['hsa', 'fsa', 'health savings', 'flexible spending'],
+    answer: '**HSA (Health Savings Account)** and **FSA (Flexible Spending Account)** are tax-advantaged accounts for medical expenses.\n\n**HSA:**\n- Requires enrollment in a High Deductible Health Plan (HDHP)\n- Funds roll over year-to-year\n- Triple tax advantage: contributions, earnings, and qualified withdrawals are tax-free\n- 2027 limit: $4,300 individual / $8,550 family\n\n**FSA:**\n- Available with any health plan\n- Use-it-or-lose-it (up to $610 rollover allowed)\n- Employee sets annual election at open enrollment\n- 2027 limit: $3,300\n\nNeither account can be used for insurance premiums.',
+  },
+  {
+    patterns: ['std', 'ltd', 'disability', 'short term disability', 'long term disability'],
+    answer: '**STD (Short-Term Disability)** and **LTD (Long-Term Disability)** replace a portion of an employee\'s income when they cannot work due to illness or injury.\n\n**STD:**\n- Replaces 60-70% of salary\n- Coverage begins after a 7-14 day elimination period\n- Pays for up to 12-26 weeks\n- Often employer-paid\n\n**LTD:**\n- Takes over when STD ends\n- Replaces 60% of salary\n- Coverage until age 65 (or return to work)\n- May be employer-paid (taxable) or employee-paid (tax-free benefit)\n\nBoth products integrate with FMLA (Family and Medical Leave Act) coordination.',
+  },
+  {
+    patterns: ['employee 360', 'employee detail', 'employee profile'],
+    answer: '**Employee 360** is the comprehensive view of a single employee showing all benefit-related information in one place:\n\n- **Employment Information** — hire date, status, hours, salary, department\n- **Coverage Eligibility** — which products (Medical, Dental, Vision, Life) the employee is eligible for\n- **Enrollment Status** — what they are currently enrolled in\n- **Dependents** — family members covered under their plan\n- **Life Events** — marriage, birth, divorce events and their status\n- **Deductions** — per-paycheck premium amounts\n\nThis view is the primary source of truth for HR administrators when handling employee benefit questions.',
+  },
+  {
     patterns: ['what is this page', 'what can i do', 'help', 'explain this'],
-    answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, or payroll deductions.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is a plan year?"\n- "What does DRAFT status mean?"',
+    answer: 'I can help you understand anything on this page — plan year statuses, enrollment metrics, eligibility exceptions, carrier submissions, payroll deductions, employee eligibility, or product benefits.\n\nTry asking:\n- "What does the enrollment rate mean?"\n- "Explain eligibility exceptions"\n- "What is the difference between HSA and FSA?"\n- "What does DRAFT plan year mean?"',
   },
 ];
 

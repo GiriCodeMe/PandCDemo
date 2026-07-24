@@ -4,19 +4,21 @@ import AppShell from './components/layout/AppShell';
 import Dashboard from './pages/dashboard/Dashboard';
 import EmployerDirectory from './pages/employers/EmployerDirectory';
 import EmployerDetail from './pages/employers/EmployerDetail';
-
-// lazy load future pages
-const NotFound = () => (
-  <div className="flex flex-col items-center justify-center h-64">
-    <h1 className="text-2xl font-bold text-slate-200 mb-2">404</h1>
-    <p className="text-slate-400">Page not found</p>
-  </div>
-);
+import EmployeeDirectory from './pages/employees/EmployeeDirectory';
+import EmployeeDetail from './pages/employees/EmployeeDetail';
+import ProductCatalog from './pages/catalog/ProductCatalog';
 
 const ComingSoon = ({ page }: { page: string }) => (
   <div className="flex flex-col items-center justify-center h-64">
-    <h1 className="text-2xl font-bold text-slate-200 mb-2">{page}</h1>
-    <p className="text-slate-400 text-sm">Coming in a future phase</p>
+    <h1 className="text-2xl font-bold text-gray-900 mb-2">{page}</h1>
+    <p className="text-gray-400 text-sm">Coming in a future phase</p>
+  </div>
+);
+
+const NotFound = () => (
+  <div className="flex flex-col items-center justify-center h-64">
+    <h1 className="text-2xl font-bold text-gray-900 mb-2">404</h1>
+    <p className="text-gray-400">Page not found</p>
   </div>
 );
 
@@ -35,7 +37,15 @@ export const router = createBrowserRouter([
   },
   {
     path: '/employees',
-    element: <AppShell><ComingSoon page="Employees" /></AppShell>,
+    element: <AppShell><EmployeeDirectory /></AppShell>,
+  },
+  {
+    path: '/employees/:employeeId',
+    element: <AppShell><EmployeeDetail /></AppShell>,
+  },
+  {
+    path: '/products',
+    element: <AppShell><ProductCatalog /></AppShell>,
   },
   {
     path: '/plans',

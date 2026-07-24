@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, FileText, ClipboardCheck, BookOpen, Layers, Truck } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '../../stores/uiStore';
 
@@ -14,7 +14,8 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/', icon: LayoutDashboard },
   { label: 'Employers', href: '/employers', icon: Building2 },
-  { label: 'Employees', href: '/employees', icon: Users, soon: true },
+  { label: 'Employees', href: '/employees', icon: Users },
+  { label: 'Products', href: '/products', icon: Layers },
   { label: 'Plans', href: '/plans', icon: FileText, soon: true },
   { label: 'Enrollment', href: '/enrollment', icon: ClipboardCheck, soon: true },
   { label: 'Requirements', href: '/requirements', icon: BookOpen, soon: true },
@@ -44,8 +45,10 @@ export default function Sidebar() {
                     isActive
                       ? 'bg-brand-50 text-brand-700'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                    item.soon && 'opacity-60',
                   )
                 }
+                onClick={item.soon ? (e) => e.preventDefault() : undefined}
               >
                 <item.icon className="w-4 h-4 flex-shrink-0" />
                 <span className="flex-1 truncate">{item.label}</span>

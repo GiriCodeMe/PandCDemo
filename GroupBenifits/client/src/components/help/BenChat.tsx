@@ -6,6 +6,8 @@ const PAGE_LABELS: Record<string, string> = {
   '/': 'Dashboard',
   '/dashboard': 'Dashboard',
   '/employers': 'Employer Directory',
+  '/employees': 'Employee Directory',
+  '/products': 'Product Catalog',
 };
 
 const STARTER_QUESTIONS: Record<string, string[]> = {
@@ -33,20 +35,42 @@ const STARTER_QUESTIONS: Record<string, string[]> = {
     'Explain open enrollment',
     'How is the renewal date determined?',
   ],
+  '/employees': [
+    'What does eligibility status mean?',
+    'What is enrollment status?',
+    'Why would an employee be partially eligible?',
+    'What is the Employee 360 view?',
+  ],
+  '/employees/detail': [
+    'Why is this employee only partially eligible?',
+    'What benefits is this employee enrolled in?',
+    'What is a dependent?',
+    'How do I update dependent information?',
+  ],
+  '/products': [
+    'What products are available to employees?',
+    'What is the difference between HSA and FSA?',
+    'What is an STD/LTD product?',
+    'How do I compare plan options?',
+  ],
 };
 
 function getPageLabel(pathname: string): string {
   if (pathname === '/') return 'Dashboard';
+  if (pathname.startsWith('/employers/') && pathname.length > '/employers/'.length) return 'Employer Detail';
+  if (pathname.startsWith('/employees/') && pathname.length > '/employees/'.length) return 'Employee 360';
   for (const [key, label] of Object.entries(PAGE_LABELS)) {
-    if (pathname === key || pathname.startsWith(key + '/')) return label;
+    if (pathname === key) return label;
   }
-  if (pathname.startsWith('/employers/')) return 'Employer Detail';
   return 'Group Benefits Platform';
 }
 
 function getStarters(pathname: string): string[] {
   if (pathname.startsWith('/employers/') && pathname.length > '/employers/'.length) {
     return STARTER_QUESTIONS['/employers/detail'];
+  }
+  if (pathname.startsWith('/employees/') && pathname.length > '/employees/'.length) {
+    return STARTER_QUESTIONS['/employees/detail'];
   }
   return STARTER_QUESTIONS[pathname] ?? STARTER_QUESTIONS['/dashboard'];
 }

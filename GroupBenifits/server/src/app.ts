@@ -9,6 +9,9 @@ import employerRoutes from './routes/employer.routes';
 import searchRoutes from './routes/search.routes';
 import auditRoutes from './routes/audit.routes';
 import benchatRoutes from './routes/benchat.routes';
+import employeeRoutes from './routes/employee.routes';
+import productRoutes from './routes/product.routes';
+import carrierRoutes from './routes/carrier.routes';
 
 export function createApp(): express.Application {
   const app = express();
@@ -28,6 +31,9 @@ export function createApp(): express.Application {
   app.use('/api/search', searchRoutes);
   app.use('/api/audit', auditRoutes);
   app.use('/api/benchat', benchatRoutes);
+  app.use('/api/employees', employeeRoutes);
+  app.use('/api/products', productRoutes);
+  app.use('/api/carriers', carrierRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

@@ -41,6 +41,98 @@ export interface Persona {
   permissions: string[];
 }
 
+export interface Employee {
+  employeeId: string;
+  employerId: string;
+  divisionId?: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  ssn: string;
+  email: string;
+  phone: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  hireDate: string;
+  employmentStatus: string;
+  employmentType?: string;
+  jobClass?: string;
+  department?: string;
+  location: string;
+  hoursPerWeek?: number;
+  annualSalary?: number;
+  eligibilityStatus: string;
+  enrollmentStatus: string;
+  medicalEligible?: boolean;
+  dentalEligible?: boolean;
+  visionEligible?: boolean;
+  lifeEligible?: boolean;
+}
+
+export interface Dependent {
+  dependentId: string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  ssn: string;
+  relationship: string;
+  status: string;
+}
+
+export interface Product {
+  productId: string;
+  employerId: string;
+  carrierId: string;
+  name: string;
+  type: string;
+  description: string;
+  effectiveDate: string;
+  terminationDate: string | null;
+  status: string;
+  plans?: Plan[];
+}
+
+export interface Plan {
+  planId: string;
+  productId: string;
+  carrierId: string;
+  name: string;
+  planCode: string;
+  network?: string;
+  deductible?: number;
+  outOfPocketMax?: number;
+  copay?: number;
+  coinsurance?: number;
+  status?: string;
+  rates?: RateTier[];
+}
+
+export interface RateTier {
+  tierId: string;
+  planId: string;
+  planCode: string;
+  versionId: string;
+  tierType: string;
+  monthlyPremium: number;
+  employerContribution: number;
+  employeeContribution: number;
+}
+
+export interface Carrier {
+  carrierId: string;
+  name: string;
+  type: string;
+  status?: string;
+  contactEmail?: string;
+  phone?: string;
+  website?: string;
+}
+
 export interface SearchResult {
   id: string;
   type: 'employer' | 'employee' | 'plan' | 'product' | 'carrier';
